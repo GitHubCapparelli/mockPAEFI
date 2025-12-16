@@ -14,9 +14,12 @@ var UserService = (function() {
      * Initialize service by loading data from JSON files
      */
     function init() {
+//        return $.when(
+//            loadUsers(),
+//            loadCurrentUser()
+//        );
         return $.when(
-            loadUsers(),
-            loadCurrentUser()
+            loadUsers()
         );
     }
 
@@ -25,7 +28,7 @@ var UserService = (function() {
      */
     function loadUsers() {
         return $.ajax({
-            url: 'data/users.json',
+            url: 'data/usuariosServidores.json',
             method: 'GET',
             dataType: 'json',
             success: function(data) {
