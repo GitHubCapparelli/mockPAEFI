@@ -1,1 +1,476 @@
+/**
+ * User Management System - Custom Styles
+ * Mobile-first responsive design using flexbox
+ */
 
+/* ===== CSS Variables ===== */
+:root {
+    --primary-color: #0d6efd;
+    --secondary-color: #6c757d;
+    --success-color: #198754;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --info-color: #0dcaf0;
+    --light-bg: #f8f9fa;
+    --dark-text: #212529;
+    --border-color: #dee2e6;
+    --header-bg: #ffffff;
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== Global Styles ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background-color: var(--light-bg);
+    color: var(--dark-text);
+    line-height: 1.6;
+}
+
+/* ===== User Profile Header ===== */
+.user-profile-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 1.5rem 0;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 1.5rem;
+}
+
+.profile-content {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.profile-photo {
+    flex-shrink: 0;
+}
+
+.profile-photo img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    object-fit: cover;
+    box-shadow: var(--shadow-sm);
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex-grow: 1;
+    min-width: 0; /* Allow text truncation */
+}
+
+.profile-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.profile-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.profile-department,
+.profile-role {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.profile-role {
+    font-weight: 500;
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+}
+
+/* ===== Action Section ===== */
+.action-section {
+    background-color: var(--header-bg);
+    padding: 1.25rem 0;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 1.5rem;
+}
+
+.action-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.action-buttons .btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* ===== Filter Section ===== */
+.filter-section {
+    background-color: var(--header-bg);
+    padding: 1.5rem 0;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 1.5rem;
+}
+
+.filter-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-end;
+}
+
+.filter-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1 1 200px;
+    min-width: 150px;
+}
+
+.filter-item label {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--dark-text);
+}
+
+.filter-item .form-select {
+    min-height: 38px;
+}
+
+.filter-item:last-child {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.filter-item:last-child .btn {
+    white-space: nowrap;
+}
+
+/* ===== Data Section ===== */
+.data-section {
+    background-color: var(--header-bg);
+    padding: 1.5rem 0;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 1.5rem;
+}
+
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+table {
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+table th {
+    background-color: var(--light-bg);
+    font-weight: 600;
+    white-space: nowrap;
+    padding: 0.75rem;
+}
+
+table td {
+    padding: 0.75rem;
+    vertical-align: middle;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.25rem;
+    justify-content: flex-start;
+}
+
+/* ===== Pagination ===== */
+.pagination-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 1rem;
+}
+
+.pagination-info {
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+}
+
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+}
+
+.pagination {
+    margin: 0;
+}
+
+/* ===== Badges ===== */
+.badge {
+    font-weight: 500;
+    padding: 0.35rem 0.65rem;
+    font-size: 0.85rem;
+}
+
+/* ===== Modals ===== */
+.modal-header {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.modal-header .btn-close {
+    filter: invert(1);
+}
+
+/* ===== Responsive Design ===== */
+
+/* Mobile (default - up to 767px) */
+@media (max-width: 767px) {
+    .user-profile-header {
+        padding: 1rem 0;
+    }
+
+    .profile-photo img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .profile-name {
+        font-size: 1.25rem;
+    }
+
+    .profile-details {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+
+    .profile-role {
+        align-self: flex-start;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .action-buttons .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .filter-controls {
+        flex-direction: column;
+    }
+
+    .filter-item {
+        width: 100%;
+    }
+
+    .filter-item:last-child {
+        flex-direction: column;
+    }
+
+    .filter-item:last-child .btn {
+        width: 100%;
+    }
+
+    table {
+        font-size: 0.85rem;
+    }
+
+    table th,
+    table td {
+        padding: 0.5rem;
+    }
+
+    /* Stack table cells on very small screens */
+    @media (max-width: 576px) {
+        table thead {
+            display: none;
+        }
+
+        table tr {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            background-color: white;
+        }
+
+        table td {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        table td:last-child {
+            border-bottom: none;
+        }
+
+        table td::before {
+            content: attr(data-label);
+            font-weight: 600;
+            margin-right: 1rem;
+        }
+
+        table td:nth-child(1)::before { content: "ID: "; }
+        table td:nth-child(2)::before { content: "Name: "; }
+        table td:nth-child(3)::before { content: "Email: "; }
+        table td:nth-child(4)::before { content: "Role: "; }
+        table td:nth-child(5)::before { content: "Department: "; }
+        table td:nth-child(6)::before { content: "Status: "; }
+        table td:nth-child(7)::before { content: "Actions: "; }
+
+        .action-buttons {
+            justify-content: flex-end;
+        }
+    }
+
+    .pagination-section {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .pagination {
+        flex-wrap: wrap;
+    }
+}
+
+/* Tablet (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .profile-photo img {
+        width: 65px;
+        height: 65px;
+    }
+
+    .profile-name {
+        font-size: 1.35rem;
+    }
+
+    .action-buttons {
+        flex-direction: row;
+    }
+
+    .filter-controls {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .filter-item {
+        flex: 1 1 auto;
+    }
+
+    table {
+        font-size: 0.9rem;
+    }
+}
+
+/* Desktop (1024px and up) */
+@media (min-width: 1024px) {
+    .user-profile-header {
+        padding: 2rem 0;
+    }
+
+    .profile-photo img {
+        width: 80px;
+        height: 80px;
+    }
+
+    .profile-name {
+        font-size: 1.75rem;
+    }
+
+    .action-section,
+    .filter-section,
+    .data-section {
+        padding: 1.5rem 0;
+    }
+
+    .filter-controls {
+        display: flex;
+        flex-direction: row;
+    }
+
+    table {
+        font-size: 1rem;
+    }
+
+    table th,
+    table td {
+        padding: 0.75rem 1rem;
+    }
+
+    /* Hover effects for desktop */
+    table tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.02);
+    }
+
+    .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-sm);
+        transition: all 0.2s ease;
+    }
+
+    .pagination .page-link:hover {
+        transform: translateY(-1px);
+        transition: all 0.2s ease;
+    }
+}
+
+/* Extra large screens */
+@media (min-width: 1400px) {
+    .container-fluid {
+        max-width: 1320px;
+        margin: 0 auto;
+    }
+}
+
+/* ===== Utility Classes ===== */
+.ms-1 {
+    margin-left: 0.25rem !important;
+}
+
+/* ===== Print Styles ===== */
+@media print {
+    .user-profile-header,
+    .action-section,
+    .filter-section,
+    .pagination-section {
+        display: none;
+    }
+
+    .data-section {
+        box-shadow: none;
+    }
+
+    table {
+        page-break-inside: auto;
+    }
+
+    tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
+}
