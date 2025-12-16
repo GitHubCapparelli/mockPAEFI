@@ -1,1 +1,204 @@
-
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Sarah Johnson",
+      "email": "sarah.johnson@company.com",
+      "role": "admin",
+      "department": "IT",
+      "status": "active"
+    },
+    {
+      "id": 2,
+      "name": "Michael Chen",
+      "email": "michael.chen@company.com",
+      "role": "manager",
+      "department": "Sales",
+      "status": "active"
+    },
+    {
+      "id": 3,
+      "name": "Emily Rodriguez",
+      "email": "emily.rodriguez@company.com",
+      "role": "employee",
+      "department": "Marketing",
+      "status": "active"
+    },
+    {
+      "id": 4,
+      "name": "David Kim",
+      "email": "david.kim@company.com",
+      "role": "employee",
+      "department": "HR",
+      "status": "pending"
+    },
+    {
+      "id": 5,
+      "name": "Jessica Brown",
+      "email": "jessica.brown@company.com",
+      "role": "manager",
+      "department": "Finance",
+      "status": "active"
+    },
+    {
+      "id": 6,
+      "name": "Robert Taylor",
+      "email": "robert.taylor@company.com",
+      "role": "employee",
+      "department": "IT",
+      "status": "inactive"
+    },
+    {
+      "id": 7,
+      "name": "Amanda Wilson",
+      "email": "amanda.wilson@company.com",
+      "role": "contractor",
+      "department": "Marketing",
+      "status": "active"
+    },
+    {
+      "id": 8,
+      "name": "Christopher Lee",
+      "email": "christopher.lee@company.com",
+      "role": "employee",
+      "department": "Sales",
+      "status": "active"
+    },
+    {
+      "id": 9,
+      "name": "Maria Garcia",
+      "email": "maria.garcia@company.com",
+      "role": "manager",
+      "department": "Operations",
+      "status": "active"
+    },
+    {
+      "id": 10,
+      "name": "James Anderson",
+      "email": "james.anderson@company.com",
+      "role": "employee",
+      "department": "IT",
+      "status": "pending"
+    },
+    {
+      "id": 11,
+      "name": "Linda Martinez",
+      "email": "linda.martinez@company.com",
+      "role": "employee",
+      "department": "HR",
+      "status": "active"
+    },
+    {
+      "id": 12,
+      "name": "William Thompson",
+      "email": "william.thompson@company.com",
+      "role": "contractor",
+      "department": "Finance",
+      "status": "active"
+    },
+    {
+      "id": 13,
+      "name": "Patricia White",
+      "email": "patricia.white@company.com",
+      "role": "employee",
+      "department": "Marketing",
+      "status": "inactive"
+    },
+    {
+      "id": 14,
+      "name": "Daniel Harris",
+      "email": "daniel.harris@company.com",
+      "role": "employee",
+      "department": "Sales",
+      "status": "active"
+    },
+    {
+      "id": 15,
+      "name": "Jennifer Clark",
+      "email": "jennifer.clark@company.com",
+      "role": "manager",
+      "department": "IT",
+      "status": "active"
+    },
+    {
+      "id": 16,
+      "name": "Matthew Lewis",
+      "email": "matthew.lewis@company.com",
+      "role": "employee",
+      "department": "Operations",
+      "status": "pending"
+    },
+    {
+      "id": 17,
+      "name": "Elizabeth Walker",
+      "email": "elizabeth.walker@company.com",
+      "role": "employee",
+      "department": "HR",
+      "status": "active"
+    },
+    {
+      "id": 18,
+      "name": "Joseph Hall",
+      "email": "joseph.hall@company.com",
+      "role": "contractor",
+      "department": "Marketing",
+      "status": "active"
+    },
+    {
+      "id": 19,
+      "name": "Susan Allen",
+      "email": "susan.allen@company.com",
+      "role": "employee",
+      "department": "Finance",
+      "status": "active"
+    },
+    {
+      "id": 20,
+      "name": "Thomas Young",
+      "email": "thomas.young@company.com",
+      "role": "employee",
+      "department": "Sales",
+      "status": "inactive"
+    },
+    {
+      "id": 21,
+      "name": "Karen King",
+      "email": "karen.king@company.com",
+      "role": "employee",
+      "department": "IT",
+      "status": "active"
+    },
+    {
+      "id": 22,
+      "name": "Charles Wright",
+      "email": "charles.wright@company.com",
+      "role": "manager",
+      "department": "Marketing",
+      "status": "active"
+    },
+    {
+      "id": 23,
+      "name": "Nancy Lopez",
+      "email": "nancy.lopez@company.com",
+      "role": "employee",
+      "department": "HR",
+      "status": "pending"
+    },
+    {
+      "id": 24,
+      "name": "Steven Hill",
+      "email": "steven.hill@company.com",
+      "role": "employee",
+      "department": "Operations",
+      "status": "active"
+    },
+    {
+      "id": 25,
+      "name": "Betty Scott",
+      "email": "betty.scott@company.com",
+      "role": "contractor",
+      "department": "Finance",
+      "status": "active"
+    }
+  ]
+}
