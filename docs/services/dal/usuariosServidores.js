@@ -50,7 +50,7 @@ var UserService = (function() {
      */
     function loadCurrentUser() {
         return $.ajax({
-            url: 'data/currentUser.json',
+            url: '/mockPAEFI/data/currentUser.json',
             method: 'GET',
             dataType: 'json',
             success: function(data) {
