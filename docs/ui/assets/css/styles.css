@@ -479,6 +479,11 @@ table td {
 /* -------------------------------------------------------- */
 
 #cmbPerfil {
-    border: 0 px;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+#cmbPerfil:focus {
+    border-color: transparent;
     box-shadow: none;
 }
