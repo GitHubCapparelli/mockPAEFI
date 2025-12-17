@@ -396,13 +396,13 @@ div.feedback-message-warning {
 
 .item_menu .icone_menu {
     text-align: center;
-    vertical-align: middle;
 }
 
 .item_menu .texto_menu {
     color: rgb(255, 255, 255);
     font-size: 12px;
     text-align: center;
+    vertical-align: middle;
     font-weight: 600;
 }
 
