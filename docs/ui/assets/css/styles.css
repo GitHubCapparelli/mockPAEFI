@@ -482,6 +482,7 @@ table td {
     border: none !important;
     box-shadow: none !important;
     outline: none !important;
+    cursor: pointer;
 }
 #cmbPerfil:focus {
     border-color: transparent;
