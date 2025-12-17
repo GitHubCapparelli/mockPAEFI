@@ -474,3 +474,11 @@ table td {
         page-break-after: auto;
     }
 }
+
+
+/* -------------------------------------------------------- */
+
+#cmbPerfil {
+    border: 0 px;
+    box-shadow: none;
+}
