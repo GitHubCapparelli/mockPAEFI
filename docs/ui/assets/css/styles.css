@@ -490,16 +490,19 @@ table td {
 }
 
 /* ===== Top Nav Bar ===== */
+.top-navbar,
 .top-navbar div {
     color: white;
     background-color: rgb(0, 96, 174);
     height: 80px;
-    font-size: 1rem;
+    font-size: small;
 }
 
 .top-navbar div a {
+    color: white;
     text-decoration: none;
 }
 .top-navbar div a:hover {
+    color: white;
     text-decoration: underline;
 }
