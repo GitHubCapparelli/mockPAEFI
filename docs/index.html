@@ -22,9 +22,32 @@
                 <div data-block="LayoutSIDS.Layout_SIDS" class="OSBlockWidget" id="$b1">
                     <div data-container="" class="layout layout-top fixed-header" id="b1-LayoutWrapper" style="background-color: rgb(255, 255, 255);">
                         <div data-container="" style="background-color: rgb(0, 96, 174); height: 80px;">
-                            <div data-container="" style="text-align: center; font-size: 16px; font-weight: bold;">
-                                <span data-expression="">Planejamento</span>
-                            </div>
+<div class="container-fluid d-flex align-items-stretch text-center bg-white fw-bold">
+
+    <div class="filter-item flex-fill">
+        <label for="perfilServidor">Perfil servidor</label>
+        <select class="form-select" id="perfilServidor">
+            <option value="">Selecione...</option>
+            <option value="subsas">Servidor da GERVIS / SUBSAS</option>
+            <option value="disefi">Servidor da DISEFI / CPSM</option>
+            <option value="equipe">Equipe do CREAS</option>
+            <option value="gestor">Gestor do CREAS</option>
+            <option value="especialista">Especialista do CREAS</option>
+            <option value="agenteSocial">Agente Social do CREAS</option>
+            <option value="outro">Outro...</option>
+        </select>
+    </div>
+
+    <span class="d-flex align-items-center flex-grow-1 justify-content-center">
+        Planejamento
+    </span>
+
+    <a href="#" class="d-flex align-items-center px-3">
+        <i class="fa fa-question fa-2x"></i>
+    </a>
+
+</div>
+
                             <header data-advancedhtml="" role="banner" class="header" id="b1-Header2">
                                 <div data-container="" class="header-top ThemeGrid_Container" style="height: 80px; padding: 0px 2%;">
                                     <div data-container="" class="header-content display-flex  OSInline">
