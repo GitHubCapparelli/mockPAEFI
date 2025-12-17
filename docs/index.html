@@ -1,214 +1,18 @@
 <!DOCTYPE html>
 <html class="" lang="en-US">
 <head>
+    <title>SIDS - Prontuario</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1">
-<!--
-    <meta name="format-detection" content="telephone=no">
-    <script type="text/javascript">window.OutSystemsApp = { basePath: '/Prontuario/' };</script>
-    <script type="text/javascript">
-        (function () {
-            function appendMetaTagAttributes(metaTag, attribute, values) {
-                var elem = document.querySelector("meta[name=" + metaTag + "]");
 
-                if (elem) {
-                    var attrContent = elem.getAttribute(attribute);
-                    elem.setAttribute(attribute, (attrContent ? attrContent + "," : "") + values.join(","));
-                }
-            }
-
-            if (navigator && /OutSystemsApp/i.test(navigator.userAgent)) {
-                // If this app is running on the native shell, we want to disable the zoom
-                appendMetaTagAttributes("viewport", "content", ["user-scalable=no", "minimum-scale=1.0"]);
-            }
-        })();</script>
-
-    <script type="text/javascript" src="scripts/OutSystemsManifestLoader.js?3F3fZzzNKkqKoP2DsjtxFw"></script>
-    <script type="text/javascript" src="scripts/OutSystems.js?JWdAeayonf8Q0Kxiy0oKKw"></script>
-    <script type="text/javascript" src="scripts/OutSystemsSettings.js?X0VX5GKsC2rhbQjvVhFBJQ"></script>
-    <script type="text/javascript" src="scripts/OutSystemsReactView.js?tTCmnaKIcodV2b7hkfqZug"></script>
-    <script type="text/javascript" src="scripts/Debugger.js?bJfSQI_rNi4kewg68n4t2A"></script>
-    <script type="text/javascript" src="scripts/Prontuario.appDefinition.js?L8Y5FHIlnzZzmdjT8gr7YA"></script>
-    <script type="text/javascript" src="scripts/OutSystemsReactWidgets.js?JJ3HMAa6vv2p99ezZWdwzQ"></script>
-    <link type="text/css" rel="stylesheet" href="css/_Basic.css?EqGzAe81QbZLXJyfY3oLwA">
-
-    <script type="text/javascript">OSManifestLoader.indexVersionToken = "cZbbtQ_K0vDS9dJ9TK9BBg";
-    </script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="Prontuario.controller"
-        src="/Prontuario/scripts/Prontuario.controller.js?gyAyOWDgDjAtqrMK99IOtQ"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="Prontuario.model"
-        src="/Prontuario/scripts/Prontuario.model.js?wHfJcGJzYrSQEFK+iv6TWQ"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="Prontuario.clientVariables"
-        src="/Prontuario/scripts/Prontuario.clientVariables.js?AVm5QizNGEGlPRbReXYnfw"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="Prontuario.MainFlow.Home.mvc$model"
-        src="/Prontuario/scripts/Prontuario.MainFlow.Home.mvc.js?jrQ0jpMMLgASCYdaQdzITw"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="Prontuario.MainFlow.controller"
-        src="/Prontuario/scripts/Prontuario.MainFlow.controller.js?+Umemo1nra1C2dyasY1tvA"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="Prontuario.Common.controller"
-        src="/Prontuario/scripts/Prontuario.Common.controller.js?q3QlwYfrKlA02w12P2yUdQ"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="SIDS_CS.model"
-        src="/Prontuario/scripts/SIDS_CS.model.js?83VMtYAFLSggLmax4Da0EA"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="OutSystemsUI.model"
-        src="/Prontuario/scripts/OutSystemsUI.model.js?NLMEEBbUMokbvcfPRApakA"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="Prontuario.referencesHealth"
-        src="/Prontuario/scripts/Prontuario.referencesHealth.js?NIFDhGC4tm1DHnSpSb_LqQ"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="Prontuario.languageResources"
-        src="/Prontuario/scripts/Prontuario.languageResources.js?IK3LYuVYADMZYyFq2h873g"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="SIDS_TH.LayoutSIDS.Layout_SIDS.mvc$view"
-        src="/Prontuario/scripts/SIDS_TH.LayoutSIDS.Layout_SIDS.mvc.js?ERaHkfSWuZ0+vEZkvLD_+w"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="OutSystemsUI.Adaptive.Columns2.mvc$view"
-        src="/Prontuario/scripts/OutSystemsUI.Adaptive.Columns2.mvc.js?F5WkjwLt7yzFFt9NhCPiFg"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="OutSystemsUI.Adaptive.ColumnsSmallRight.mvc$view"
-        src="/Prontuario/scripts/OutSystemsUI.Adaptive.ColumnsSmallRight.mvc.js?H_+I5o8moBTH7KDnYnEDhg"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="OutSystemsUI.Interaction.DropdownSearch.mvc$view"
-        src="/Prontuario/scripts/OutSystemsUI.Interaction.DropdownSearch.mvc.js?UCI23DBgydM5wVDAXZvgdg"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="Prontuario.Common.Loading.mvc$view"
-        src="/Prontuario/scripts/Prontuario.Common.Loading.mvc.js?r6ZlioTawNYzMJlGY0HpfQ"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="OutSystemsUI.Content.Tag.mvc$view"
-        src="/Prontuario/scripts/OutSystemsUI.Content.Tag.mvc.js?Sxg6FeGvfcYVAqReju7q+g"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="OutSystemsUI.Utilities.Separator.mvc$view"
-        src="/Prontuario/scripts/OutSystemsUI.Utilities.Separator.mvc.js?4l2+c1N4bcKPmrQGo3SCLA"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="OutSystemsUI.Interaction.Carousel.mvc$view"
-        src="/Prontuario/scripts/OutSystemsUI.Interaction.Carousel.mvc.js?dPSy9a7jY4C5W534e4yhQw"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_" data-requiremodule="SIDS_TH.model"
-        src="/Prontuario/scripts/SIDS_TH.model.js?IdxVxRm0Xnin3QX3D04LCg"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="SIDS_TH.controller"
-        src="/Prontuario/scripts/SIDS_TH.controller.js?FAYG15dhga2OPiaAi7pFqQ"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="OutSystemsUI.controller"
-        src="/Prontuario/scripts/OutSystemsUI.controller.js?R+mEeFatZwXxbO3YyIwtXQ"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="SIDS_TH.CommonTH.MenuIcon.mvc$model"
-        src="/Prontuario/scripts/SIDS_TH.CommonTH.MenuIcon.mvc.js?hHJMBSGxltoVUabmRqM5mA"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="SIDS_TH.LayoutSIDS.ApplicationTitle.mvc$model"
-        src="/Prontuario/scripts/SIDS_TH.LayoutSIDS.ApplicationTitle.mvc.js?G1ozmUOprxBTymUmba9OVA"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="SIDS_TH.LayoutSIDS.Notificacao.mvc$model"
-        src="/Prontuario/scripts/SIDS_TH.LayoutSIDS.Notificacao.mvc.js?StQ8Ujgwrfg0APwcnTpg_g"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="SIDS_TH.LayoutSIDS.InfoUser.mvc$model"
-        src="/Prontuario/scripts/SIDS_TH.LayoutSIDS.InfoUser.mvc.js?lmmuCawxQI355UT3+1VZSQ"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="OutSystemsUI.Interaction.Animate.mvc$model"
-        src="/Prontuario/scripts/OutSystemsUI.Interaction.Animate.mvc.js?3fMy96Z0MlrHFMU_SaUqZQ"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="SIDS_TH.Padroes.MensagemConfirmacao.mvc$model"
-        src="/Prontuario/scripts/SIDS_TH.Padroes.MensagemConfirmacao.mvc.js?LB_ApuaTZ42HeJ4kqU9uwQ"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="SIDS_TH.CommonTH.Block_InvalidPermissions.mvc$model"
-        src="/Prontuario/scripts/SIDS_TH.CommonTH.Block_InvalidPermissions.mvc.js?SHHHk7wXeWABiDDF_HQ1Jg"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="SIDS_TH.MainFlowTH.Loading.mvc$model"
-        src="/Prontuario/scripts/SIDS_TH.MainFlowTH.Loading.mvc.js?NBcmn+L1sgqJnS0f4CXGLQ"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="SIDS_TH.referencesHealth"
-        src="/Prontuario/scripts/SIDS_TH.referencesHealth.js?7uofD3s9ZW+VhWY6RlnXuA"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="SIDS_TH.clientVariables"
-        src="/Prontuario/scripts/SIDS_TH.clientVariables.js?scl9IZw9ximIxYcVUvJZSQ"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="SIDS_TH.languageResources"
-        src="/Prontuario/scripts/SIDS_TH.languageResources.js?wVLCOBDR25+DzzbrH8Ab2w"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="OutSystemsUI.languageResources"
-        src="/Prontuario/scripts/OutSystemsUI.languageResources.js?UikDUgQksiMsRqluePH2Zw"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="OutSystemsUI.Navigation.Submenu.mvc$model"
-        src="/Prontuario/scripts/OutSystemsUI.Navigation.Submenu.mvc.js?++DKdz+ncoU11U8KTPs7qg"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="OutSystemsUI.Numbers.IconBadge.mvc$model"
-        src="/Prontuario/scripts/OutSystemsUI.Numbers.IconBadge.mvc.js?OODihkv1ceOeVGVMH75K+w"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="OutSystemsUI.Utilities.ButtonLoading.mvc$model"
-        src="/Prontuario/scripts/OutSystemsUI.Utilities.ButtonLoading.mvc.js?P7wzaXHh2GlkM5oRiUK_NQ"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="OutSystemsUI.Content.BlankSlate.mvc$model"
-        src="/Prontuario/scripts/OutSystemsUI.Content.BlankSlate.mvc.js?se0suRPdr5ccUa+V_sXR2A"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="OutSystemsUI.Numbers.Badge.mvc$model"
-        src="/Prontuario/scripts/OutSystemsUI.Numbers.Badge.mvc.js?siQGTYb2p0XCcbosOiJu9Q"></script>
-    <link type="text/css" rel="stylesheet" id="/Prontuario/css/OutSystemsReactWidgets.css?kQjDkbMH8s8gQl+B0cPCxA"
-        href="/Prontuario/css/OutSystemsReactWidgets.css?kQjDkbMH8s8gQl+B0cPCxA" data-os="true">
-    <link type="text/css" rel="stylesheet" id="/Prontuario/css/SIDS_TH.CommonTH.MenuIcon.css?b6WfVvMklDrLftEZq75iEg"
-        href="/Prontuario/css/SIDS_TH.CommonTH.MenuIcon.css?b6WfVvMklDrLftEZq75iEg" data-os="true">
-    <link type="text/css" rel="stylesheet" id="/Prontuario/css/SIDS_TH.LayoutSIDS.InfoUser.css?DnPK30tdHrNeZ5OHXsPW2Q"
-        href="/Prontuario/css/SIDS_TH.LayoutSIDS.InfoUser.css?DnPK30tdHrNeZ5OHXsPW2Q" data-os="true">
-    <link type="text/css" rel="stylesheet"
-        id="/Prontuario/css/SIDS_TH.LayoutSIDS.Layout_SIDS.css?rZ1A+nedjXZJMHihYUUxeg"
-        href="/Prontuario/css/SIDS_TH.LayoutSIDS.Layout_SIDS.css?rZ1A+nedjXZJMHihYUUxeg" data-os="true">
-    <link type="text/css" rel="stylesheet" id="/Prontuario/css/OutSystemsUI.OutSystemsUI.css?SKIBhCG0x2+suehCCkCBVg"
-        href="/Prontuario/css/OutSystemsUI.OutSystemsUI.css?SKIBhCG0x2+suehCCkCBVg" data-os="true">
-    <link type="text/css" rel="stylesheet" id="/Prontuario/css/SIDS_TH.SEDES.css?WprI1cx25ngnBZgxsdSx0A"
-        href="/Prontuario/css/SIDS_TH.SEDES.css?WprI1cx25ngnBZgxsdSx0A" data-os="true">
-    <link type="text/css" rel="stylesheet"
-        id="/Prontuario/css/Prontuario.MainFlow.ProntuarioHome.css?jiDx1iAIc2jzXDiJyUJbiA"
-        href="/Prontuario/css/Prontuario.MainFlow.ProntuarioHome.css?jiDx1iAIc2jzXDiJyUJbiA" data-os="true">
-    <link type="text/css" rel="stylesheet" id="/Prontuario/css/SIDS_TH.SEDES.extra.css?ZrmBtM9p_T8Ol_LV+3nTOA"
-        href="/Prontuario/css/SIDS_TH.SEDES.extra.css?ZrmBtM9p_T8Ol_LV+3nTOA" data-os="true">
-    <script src="/Prontuario/scripts/OutSystemsUI.OutSystemsUI.js?0xHst2OZHsXmPj0w5ka77Q"
-        data-os-finished="true"></script>
-    <script src="/Prontuario/scripts/OutSystemsUI.Virtualselect.js?6k+FdOSs+p79euM4ot_S9A"
-        data-os-finished="true"></script>
-    <script src="/Prontuario/scripts/OutSystemsUI.Splide.js?LcawvhOur6a1pSz6ABpz0w" data-os-finished="true"></script>
-    <script src="/Prontuario/scripts/OutSystemsUI.MWO.js?fZcFt60k3mJDWeENwt0Gbg" data-os-finished="true"></script>
-    <script src="/Prontuario/scripts/OutSystemsUI.FloatingUICore.js?3L8gtehLwnHkVDOln8bm8w"
-        data-os-finished="true"></script>
-    <script src="/Prontuario/scripts/OutSystemsUI.FloatingUIDom.js?iJYMx0VVRD+p2HyuiRx0yw"
-        data-os-finished="true"></script>
-    <link type="image/x-icon" rel="shortcut icon" href="favicon.png">
-    <title>Prontuario Home Teste</title>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="Prontuario.MainFlow.ProntuarioHome.mvc$model"
-        src="/Prontuario/scripts/Prontuario.MainFlow.ProntuarioHome.mvc.js?xmQiqq4uitBJLbmGVU4gAw"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="OutSystemsUI.Navigation.Breadcrumbs.mvc$view"
-        src="/Prontuario/scripts/OutSystemsUI.Navigation.Breadcrumbs.mvc.js?hhBUWpJogk7cdmywcA8blw"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="OutSystemsUI.Navigation.BreadcrumbsItem.mvc$view"
-        src="/Prontuario/scripts/OutSystemsUI.Navigation.BreadcrumbsItem.mvc.js?piWNhppSNVBbsf0eU_n8Fg"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="OutSystemsUI.Content.Tooltip.mvc$view"
-        src="/Prontuario/scripts/OutSystemsUI.Content.Tooltip.mvc.js?d4bmF6Cig1DlMoRGJ7co7w"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="OutSystemsUI.Adaptive.Columns3.mvc$view"
-        src="/Prontuario/scripts/OutSystemsUI.Adaptive.Columns3.mvc.js?gM6a9YcjeL522l9LKvrh8g"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="OutSystemsUI.Content.Accordion.mvc$view"
-        src="/Prontuario/scripts/OutSystemsUI.Content.Accordion.mvc.js?wYE2YGcMwndJm9xeJjez+g"></script>
-    <script type="text/javascript" charset="utf-8" async="" data-requirecontext="_"
-        data-requiremodule="OutSystemsUI.Content.AccordionItem.mvc$view"
-        src="/Prontuario/scripts/OutSystemsUI.Content.AccordionItem.mvc.js?oRF3UVBiC6RAPfjob5Mp0w"></script>
--->
-    <title>SIDS - Prontuario</title>
     <link rel="icon" type="image/svg+xml" href="/mockPAEFI/ui/assets/img/user-avatar.svg">
     <link rel="stylesheet" href="/mockPAEFI/ui/assets/css/all.fontAwesome.min.css">
     <link rel="stylesheet" href="/mockPAEFI/ui/assets/css/styles.css">
-<!-- d -->    
     <link rel="stylesheet" href="/mockPAEFI/ui/assets/css/index_outSystems.css">
     <link rel="stylesheet" href="/mockPAEFI/ui/assets/css/index_SIDS.css">
--->
-
 </head>
+
 <body class="windows edge os-dark-mode is-ltr desktop landscape" style="--b21-\$b14-items: NaN;">
     <div id="reactContainer">
         <div id="transitionContainer">
@@ -230,26 +34,6 @@
                                 <div data-container="" class="header-top ThemeGrid_Container"
                                     style="height: 80px; padding: 0px 2%;">
                                     <div data-container="" class="header-content display-flex  OSInline">
-                                        <div data-block="CommonTH.MenuIcon" class="OSBlockWidget" id="b1-$b1">
-                                            <div data-container="" class="menu-icon" aria-label="Toggle the Menu"
-                                                role="button" tabindex="0" aria-haspopup="true"
-                                                style="cursor: pointer;">
-                                                <div data-container="" class="menu-icon-line" aria-hidden="true"></div>
-                                                <div data-container="" class="menu-icon-line" aria-hidden="true"></div>
-                                                <div data-container="" class="menu-icon-line" aria-hidden="true"></div>
-                                            </div>
-                                        </div>
-                                        <div data-container="" class="Titulo OSInline">
-                                            <div data-block="LayoutSIDS.ApplicationTitle" class="OSBlockWidget"
-                                                id="b1-$b2">
-                                                <div data-container=""
-                                                    class="application-name display-flex align-items-center full-height"
-                                                    role="button" tabindex="0" id="b1-b2-ApplicationTitleWrapper"
-                                                    style="cursor: pointer;"><img data-image=""
-                                                        src="/mockPAEFI/ui/assets/img/user-avatar.svg"
-                                                        style="width: 150px; font-size: 38px; height: 75px;"></div>
-                                            </div>
-                                        </div>
                                         <div data-container="" class="header-navigation">
                                             <div data-container="">
                                                 <nav data-advancedhtml="" class="app-menu-content display-flex"
