@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PoC Teste</title>
+    <title>PAEFI</title>
     <link rel="icon" type="image/svg+xml" href="/mockPAEFI/ui/assets/img/user-avatar.svg">
     <link rel="stylesheet" href="/mockPAEFI/ui/assets/css/bootstrap.css">
     <link rel="stylesheet" href="/mockPAEFI/ui/assets/css/all.fontAwesome.min.css">
@@ -12,7 +12,103 @@
 </head>
 
 <body>
-    <!-- User Profile Header -->
+    <!-- Top Options Bar -->  
+    <section class="top-options">
+        <div class="container-fluid d-flex justify-content-center align-items-center gap-3 bg-white fw-bold">
+            <select id="cmbPerfil" class="form-select form-select-sm w-25">
+                <option value="">Selecione...</option>
+                <option value="subsas">Servidor GERVIS / SUBSAS</option>
+                <option value="disefi">Servidor DISEFI / CPSM</option>
+                <option value="equipe">Equipe do CREAS</option>
+                <option value="gestor">Gestor do CREAS</option>
+                <option value="especialista">Especialista do CREAS</option>
+                <option value="agenteSocial">Agente Social do CREAS</option>
+                <option value="outro">Outro...</option>
+            </select>
+            <a href="#" title="Documentação"><i class="fa fa-question"></i></a>
+        </div>        
+    </section>
+
+    <!-- Top Navigation Bar -->  
+    <section class="top-navbar">
+        <div data-container="">
+            <nav data-advancedhtml="" class="app-menu-content display-flex" role="navigation">
+                <div data-container="" class="app-menu-links  OSInline" role="menubar" id="b1-PageLinks" style="text-align: left; width: 100%; height: 100%;">
+                    <div data-container="" class="itemMenu OSInline">
+                        <a data-link="" href="#">
+                            <span style="color: rgb(255, 255, 255); font-size: 100%;">Menu</span>
+                        </a>
+                    </div>
+                    <div data-container="" class="itemMenu element OSInline">
+                        <a data-link="" href="#">
+                            <span style="color: rgb(255, 255, 255); font-size: 13px;">Home</span>
+                        </a>
+                    </div>
+                    <div data-container="" class="itemMenu element OSInline">
+                        <a aria-current="page" class="active" data-link="" href="#">
+                            <span style="color: rgb(255, 255, 255); font-size: 99%;">Assistência Social</span>
+                        </a>
+                    </div>
+                    <div data-container="" class="itemMenu element OSInline">
+                        <a data-link="" href="#">
+                            <span style="color: rgb(255, 255, 255); font-size: 13px;">Segurança Alimentar </span>
+                        </a>
+                    </div>
+                    <div data-container="" class="itemMenu element OSInline">
+                        <a data-link="" href="#">
+                            <span style="color: rgb(255, 255, 255); font-size: 13px;">Transferência de Renda</span>
+                        </a>
+                    </div>
+                    <div data-container="" class="itemMenu element OSInline">
+                        <a data-link="" href="#">
+                            <span style="color: rgb(255, 255, 255); font-size: 100%;">Tutorial</span>
+                        </a>
+                    </div>
+                </div>
+                <div data-container="" class="app-login-info ph OSInline" id="b1-LoginInfo" style="text-align: right; width: 25%; margin-top: 20px;">
+                    <div data-container="" class="ThemeGrid_Width5">
+                        <div data-block="LayoutSIDS.Notificacao" class="OSBlockWidget" id="b1-$b4">
+                            <div data-container="">
+                                <a data-link="" href="#">
+                                    <div data-block="Numbers.IconBadge" class="OSBlockWidget" id="b1-b4-$b1">
+                                        <div data-container="" class="icon-badge ">
+                                            <div id="b1-b4-b1-Icon">
+                                                <i data-icon="" class="icon fa fa-envelope fa-2x" style="color: rgb(255, 255, 255);"></i>
+                                            </div>
+                                            <div data-block="Numbers.Badge" class="OSBlockWidget" id="b1-b4-b1-$b1">
+                                                <div data-container="" class="badge border-radius-rounded background-red  OSInline">
+                                                    <span data-expression="" class="OSFillParent">0</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div data-container="" class="ThemeGrid_Width6" style="text-align: center; margin-top: 4px;">
+                        <div data-block="LayoutSIDS.InfoUser" class="OSBlockWidget" id="b1-$b5">
+                            <div data-container="">
+                                <div data-block="Navigation.Submenu" class="OSBlockWidget" id="b1-b5-$b1">
+                                    <div data-container="" class="osui-submenu osui-submenu--is-dropdown" name="0.md50jqiv2lj" id="b1-b5-b1-Submenu">
+                                        <div data-container="" class="osui-submenu__header needsclick" id="b1-b5-b1-SubMenuHeader" aria-haspopup="true" tabindex="0" aria-controls="b1-b5-b1-Items" role="menuitem" default-tabindex-element="" aria-expanded="false">
+                                            <div class="osui-submenu__header__item" id="b1-b5-b1-Menu">
+                                                <span data-expression="" style="color: rgb(243, 246, 248); font-size: 14px;">CAPPARELLI</span>
+                                            </div>
+                                            <div data-container="" class="osui-submenu__header__icon"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <div data-container="" class="app-menu-overlay" role="button" style="cursor: pointer;"></div>
+        </div>
+    </section>
+
+    <!-- User Profile Header -->  
     <section class="user-profile-header">
         <div class="container-fluid">
             <div class="profile-content">
