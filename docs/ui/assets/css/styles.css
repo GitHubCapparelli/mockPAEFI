@@ -58,8 +58,7 @@ body {
 }
 
 .profile-name {
-    font-size: 0.9rem;
-    font-weight: 500;
+    font-size: 0.8rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -537,5 +536,5 @@ table td {
     font-size: 2rem;
     font-weight: 500;
     display: inline-block;
-    line-height: 0.9;
+    line-height: 1;
 }
