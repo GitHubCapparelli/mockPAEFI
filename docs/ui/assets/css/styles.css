@@ -525,4 +525,5 @@ table td {
 .page-title {
     color:rgb(0, 96, 174);
     font-size: 2rem;
+    font-weight: bold;
 }
