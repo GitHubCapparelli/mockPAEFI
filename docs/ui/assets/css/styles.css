@@ -509,7 +509,7 @@ table td {
     cursor: pointer;
 }
 
-/* ===== Breadcrumbs Bar ===== */
+/* ===== Title Section ===== */
 .breadcrumbs-bar {
     font-size: .8rem;
 }
@@ -520,4 +520,9 @@ table td {
 .breadcrumbs-bar a:hover {
     color: black;
     text-decoration: underline;
+}
+
+.page-title {
+    color:rgb(0, 96, 174);
+    font-size: 2rem;
 }
