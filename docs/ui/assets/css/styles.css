@@ -34,30 +34,21 @@ body {
 }
 
 /* ===== User Profile Header ===== */
-.user-profile-header {
+.current-user {
     background: lightgreen;
     /*padding: 1.5rem 0;*/
     margin-bottom: 1.5rem;
     height: 80px;
-}
-
-.profile-content {
     display: flex;
     align-items: center;
     /*gap: 1.25rem;*/
-}
-
-.profile-photo {
-    flex-shrink: 0;
 }
 
 .profile-photo img {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    border: 3px solid rgba(255, 255, 255, 0.3);
     object-fit: cover;
-    box-shadow: var(--shadow-sm);
 }
 
 .profile-info {
