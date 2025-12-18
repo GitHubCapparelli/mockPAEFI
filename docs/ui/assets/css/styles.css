@@ -41,7 +41,7 @@ body {
     height: 80px;
     display: flex;
     align-items: center;
-    /*gap: 1.25rem;*/
+    gap: 1rem;
 }
 
 .profile-photo img {
