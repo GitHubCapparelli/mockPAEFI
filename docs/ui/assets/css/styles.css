@@ -35,10 +35,9 @@ body {
 
 /* ===== User Profile Header ===== */
 .current-user {
-    margin: 1rem;
-    padding: 1rem;
+    margin: 1rem 0;
     background-color: lightblue;
-    height: 50px;
+    height: 80px;
     display: flex;
     align-items: center;
     gap: 1.5rem;
