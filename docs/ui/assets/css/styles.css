@@ -468,7 +468,7 @@ table td {
     background-color: var(--primary-color);
     height: 80px;
     font-size: 0.85rem;
-    padding: 0 5rem;
+    padding: 0 10rem;
 }
 .top-navbar div a {
     color: white;
