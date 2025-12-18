@@ -94,17 +94,10 @@ body {
     line-height: 1;
 }
 
-.user-name {
-    font-size: 0.8rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: inline-block;
-    line-height: 1.1;
-}
-
+.user-name,
 .user-scope,
 .user-role {
+    font-size: 0.9rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
