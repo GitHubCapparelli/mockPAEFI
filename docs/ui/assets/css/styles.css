@@ -529,8 +529,8 @@ table td {
 }
 
 .page-title {
+    height: 8px;
     color: var(--primary-color);
     font-size: 2rem;
     font-weight: bolder;
-    line-height: 8pt;
 }
