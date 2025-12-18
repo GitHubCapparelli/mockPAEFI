@@ -109,17 +109,12 @@ body {
     line-height: 1.1;
 }
 
-.user-name {
+.user-name,
+.user-role {
     font-weight: 500;
 }
 
 /* ===== Action Section ===== */
-.action-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-}
-
 .action-buttons .btn {
     display: flex;
     align-items: center;
@@ -127,13 +122,6 @@ body {
 }
 
 /* ===== Filter Section ===== */
-.filter-controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    align-items: flex-end;
-}
-
 .filter-item {
     display: flex;
     flex-direction: column;

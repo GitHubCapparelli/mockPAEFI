@@ -60,51 +60,47 @@
         </div>
     </section>
 
-    <!-- Action Buttons Section -->
-    <section class="mx-5rem mt-3 action-section container-fluid">
-        <div class="action-buttons">
-            <button class="btn btn-primary" id="btnAddNew">
-                <i class="fas fa-plus"></i> Add New
-            </button>
-            <button class="btn btn-secondary" id="btnExport">
-                <i class="fas fa-download"></i> Export
-            </button>
-            <button class="btn btn-info" id="btnRefresh">
-                <i class="fas fa-sync-alt"></i> Refresh
-            </button>
-        </div>
+    <!-- Action Buttons -->
+    <section class="action-buttons mx-5rem mt-3 container-fluid d-flex justify-content-start align-items-center gap-2">
+        <button class="btn btn-primary" id="btnAddNew">
+            <i class="fas fa-plus"></i> Add New
+        </button>
+        <button class="btn btn-secondary" id="btnExport">
+            <i class="fas fa-download"></i> Export
+        </button>
+        <button class="btn btn-info" id="btnRefresh">
+            <i class="fas fa-sync-alt"></i> Refresh
+        </button>
     </section>
 
-    <!-- Filter Section -->
-    <section class="mx-5rem mt-3 filter-section container-fluid">
-        <div class="filter-controls">
-            <div class="filter-item">
-                <label for="filterStatus">Status</label>
-                <select class="form-select" id="filterStatus">
-                    <option value="">All Statuses</option>
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                    <option value="pending">Pending</option>
-                </select>
-            </div>
-            <div class="filter-item">
-                <label for="filterRole">User Role</label>
-                <select class="form-select" id="filterRole">
-                    <option value="">All Roles</option>
-                    <option value="admin">Admin</option>
-                    <option value="manager">Manager</option>
-                    <option value="employee">Employee</option>
-                    <option value="contractor">Contractor</option>
-                </select>
-            </div>
-            <div class="filter-item">
-                <button class="btn btn-primary" id="btnApplyFilter">
-                    <i class="fas fa-filter"></i> Apply Filter
-                </button>
-                <button class="btn btn-outline-secondary" id="btnClearFilter">
-                    <i class="fas fa-times"></i> Clear
-                </button>
-            </div>
+    <!-- Filters -->
+    <section class="filter-items mx-5rem mt-3 container-fluid d-flex justify-content-start align-items-center gap-2">
+        <div class="filter-item">
+            <label for="filterStatus">Status</label>
+            <select class="form-select" id="filterStatus">
+                <option value="">All Statuses</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+                <option value="pending">Pending</option>
+            </select>
+        </div>
+        <div class="filter-item">
+            <label for="filterRole">User Role</label>
+            <select class="form-select" id="filterRole">
+                <option value="">All Roles</option>
+                <option value="admin">Admin</option>
+                <option value="manager">Manager</option>
+                <option value="employee">Employee</option>
+                <option value="contractor">Contractor</option>
+            </select>
+        </div>
+        <div class="filter-item">
+            <button class="btn btn-primary" id="btnApplyFilter">
+                <i class="fas fa-filter"></i> Apply Filter
+            </button>
+            <button class="btn btn-outline-secondary" id="btnClearFilter">
+                <i class="fas fa-times"></i> Clear
+            </button>
         </div>
     </section>
 
