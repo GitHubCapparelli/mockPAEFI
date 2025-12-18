@@ -109,6 +109,10 @@ body {
     line-height: 1.1;
 }
 
+.user-name {
+    font-weight: 500;
+}
+
 /* ===== Action Section ===== */
 .action-buttons {
     display: flex;
