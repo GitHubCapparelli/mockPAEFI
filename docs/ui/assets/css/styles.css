@@ -463,14 +463,12 @@ table td {
 }
 
 /* ===== Top Nav Bar ===== */
-.top-navbar,
-.top-navbar div {
+.top-navbar {
     color: white;
     background-color: rgb(0, 96, 174);
     height: 80px;
     font-size: 0.85rem;
-    flex-grow: 1;
-    
+    padding: 3rem 0;
 }
 .top-navbar div a {
     color: white;
