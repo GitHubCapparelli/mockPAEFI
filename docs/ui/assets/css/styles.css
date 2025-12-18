@@ -35,7 +35,6 @@ body {
 
 /* ===== User Profile Header ===== */
 .current-user {
-    background: lightgreen;
     height: 50px;
     display: flex;
     align-items: center;
@@ -43,8 +42,8 @@ body {
 }
 
 .profile-photo img {
-    width: 10px;
-    height: 10px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
 }
 
