@@ -58,11 +58,13 @@ body {
 }
 
 .profile-name {
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: 0.9rem;
+    font-weight: 500;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    display: inline-block;
+    line-height: 0.9;
 }
 
 .profile-details {
@@ -78,6 +80,8 @@ body {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    display: inline-block;
+    line-height: 0.9;
 }
 
 /* ===== Action Section ===== */
@@ -533,5 +537,5 @@ table td {
     font-size: 2rem;
     font-weight: 500;
     display: inline-block;
-    line-height: 1;
+    line-height: 0.9;
 }
