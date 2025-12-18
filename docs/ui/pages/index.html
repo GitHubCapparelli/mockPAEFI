@@ -13,9 +13,8 @@
 
 <body>
     <!-- Top Options Bar -->
-    <section
-        class="top-options container-fluid d-flex justify-content-center align-items-center gap-3 bg-white fw-bold">
-        <select id="cmbPerfil" class="form-select form-select-sm w-25">
+    <section class="top-options container-fluid d-flex justify-content-center align-items-center gap-3 bg-white fw-bold">
+        <select id="cmbPerfil" class="cmbPerfil form-select form-select-sm w-25">
             <option value="">Selecione...</option>
             <option value="subsas">Servidor GERVIS / SUBSAS</option>
             <option value="disefi">Servidor DISEFI / CPSM</option>
@@ -44,8 +43,9 @@
         </div>
     </section>
 
-    <section class="new mx-5rem mt-2 d-flex flex-column">
-        <div class="breadcrumbs-bar d-flex justify-content-start align-items-center gap-2">
+    <!-- Top Title Bar -->
+    <section class="mx-5rem mt-2 d-flex flex-column">
+        <div class="breadcrumbs d-flex justify-content-start align-items-center gap-2">
             <a href="#">Home</a>
             <i class="fa fa-angle-right fa-1x"></i>
             <a href="../../">Assistência Social</a>
@@ -53,10 +53,10 @@
             <span>Gestão do PAEFI</span>
         </div>
         <div class="page-title">Recepção</div>
-        <div class="profile-name" id="currentUserName">Loading...</div>
-        <div class="profile-details">
-            <span class="profile-department" id="currentUserDepartment">Department</span>
-            <span class="profile-role" id="currentUserRole">Role</span>
+        <div class="user-name" id="currentUserName">Loading...</div>
+        <div class="d-flex justify-content-between align-items-center">
+            <span class="user-scope" id="currentUserDepartment">Department</span>
+            <span class="user-role" id="currentUserRole">Role</span>
         </div>
     </section>
 
