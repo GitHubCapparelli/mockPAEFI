@@ -495,15 +495,17 @@ table td {
     color: white;
     background-color: rgb(0, 96, 174);
     height: 80px;
-    font-size: smaller;
+    font-size: small;
 }
-
 .top-navbar div a {
     color: white;
-    font-size: smaller;
+    font-size: small;
     text-decoration: none;
 }
 .top-navbar div a:hover {
     color: white;
     text-decoration: underline;
+}
+.top-navbar span {
+    cursor: pointer;
 }
