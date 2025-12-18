@@ -43,8 +43,8 @@ body {
 }
 
 .profile-photo img {
-    width: 30px;
-    height: 30px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
     object-fit: cover;
 }
@@ -52,7 +52,7 @@ body {
 .profile-info {
     display: flex;
     flex-direction: column;
-    /*gap: 0.5rem;*/
+    gap: 0;
     flex-grow: 1;
     min-width: 0; /* Allow text truncation */
 }
@@ -69,7 +69,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /*gap: 1rem;*/
+    gap: 0.5rem;
     font-size: 0.9rem;
 }
 
