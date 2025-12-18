@@ -5,7 +5,7 @@
 
 /* ===== CSS Variables ===== */
 :root {
-    --primary-color: #0d6efd;
+    --primary-color: rgb(0, 96, 174);
     --secondary-color: #6c757d;
     --success-color: #198754;
     --danger-color: #dc3545;
@@ -465,10 +465,10 @@ table td {
 /* ===== Top Nav Bar ===== */
 .top-navbar {
     color: white;
-    background-color: rgb(0, 96, 174);
+    background-color: var(--primary-color);
     height: 80px;
     font-size: 0.85rem;
-    padding: 0 3rem;
+    padding: 0 5rem;
 }
 .top-navbar div a {
     color: white;
@@ -496,7 +496,7 @@ table td {
 }
 
 .page-title {
-    color:rgb(0, 96, 174);
+    color: var(--primary-color);
     font-size: 2rem;
     font-weight: bolder;
 }
