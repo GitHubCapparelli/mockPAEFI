@@ -35,6 +35,7 @@ body {
 
 /* ===== User Profile Header ===== */
 .current-user {
+    margin: 1rem;
     padding: 1rem;
     background-color: lightblue;
     height: 50px;
