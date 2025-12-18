@@ -81,9 +81,7 @@ body {
 
 /* ===== Action Section ===== */
 .action-section {
-    background-color: var(--header-bg);
     padding: 1.25rem 0;
-    box-shadow: var(--shadow-sm);
     margin-bottom: 1.5rem;
 }
 
@@ -101,9 +99,7 @@ body {
 
 /* ===== Filter Section ===== */
 .filter-section {
-    background-color: var(--header-bg);
     padding: 1.5rem 0;
-    box-shadow: var(--shadow-sm);
     margin-bottom: 1.5rem;
 }
 
@@ -144,9 +140,7 @@ body {
 
 /* ===== Data Section ===== */
 .data-section {
-    background-color: var(--header-bg);
     padding: 1.5rem 0;
-    box-shadow: var(--shadow-sm);
     margin-bottom: 1.5rem;
 }
 
