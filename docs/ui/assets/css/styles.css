@@ -495,7 +495,7 @@ table td {
     color: white;
     background-color: rgb(0, 96, 174);
     height: 80px;
-    font-size: .75rem;
+    font-size: .8rem;
 }
 .top-navbar div a {
     color: white;
@@ -507,4 +507,17 @@ table td {
 }
 .top-navbar div span {
     cursor: pointer;
+}
+
+/* ===== Breadcrumbs Bar ===== */
+.breadcrumbs-bar {
+    font-size: .8rem;
+}
+.breadcrumbs-bar a {
+    color: black;
+    text-decoration: none;
+}
+.breadcrumbs-bar a:hover {
+    color: black;
+    text-decoration: underline;
 }
