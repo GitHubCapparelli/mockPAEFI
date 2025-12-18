@@ -1,4 +1,5 @@
 const divGerirPAEFI = $('#divGerirPAEFI');
+const lblMessage    = $('#lblMessage');
 
 $(document).ready(() => {
     $('#cmbPerfil').on('change', AoSelecionarPerfil).trigger('change');
@@ -11,8 +12,8 @@ function AoSelecionarPerfil() {
 
     divGerirPAEFI.toggle(show);
     if (show) {
-        alert(`Carregar usuário com perfil ${val} e armazenar em local-storage`);
+        lblMessage.text(`Carregar usuário com perfil "${val}" e armazenar em local-storage`);
     } else {
-        alert('Limpar cache etc.');
+        lblMessage.text('Limpar cache etc.');
     }
 }
