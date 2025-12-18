@@ -53,7 +53,8 @@ body {
     flex-direction: column;
     gap: 0;
     flex-grow: 1;
-    min-width: 0; /* Allow text truncation */
+    min-width: 0;
+    /* Allow text truncation */
 }
 
 .profile-name {
@@ -307,13 +308,33 @@ table td {
             margin-right: 1rem;
         }
 
-        table td:nth-child(1)::before { content: "ID: "; }
-        table td:nth-child(2)::before { content: "Name: "; }
-        table td:nth-child(3)::before { content: "Email: "; }
-        table td:nth-child(4)::before { content: "Role: "; }
-        table td:nth-child(5)::before { content: "Department: "; }
-        table td:nth-child(6)::before { content: "Status: "; }
-        table td:nth-child(7)::before { content: "Actions: "; }
+        table td:nth-child(1)::before {
+            content: "ID: ";
+        }
+
+        table td:nth-child(2)::before {
+            content: "Name: ";
+        }
+
+        table td:nth-child(3)::before {
+            content: "Email: ";
+        }
+
+        table td:nth-child(4)::before {
+            content: "Role: ";
+        }
+
+        table td:nth-child(5)::before {
+            content: "Department: ";
+        }
+
+        table td:nth-child(6)::before {
+            content: "Status: ";
+        }
+
+        table td:nth-child(7)::before {
+            content: "Actions: ";
+        }
 
         .action-buttons {
             justify-content: flex-end;
@@ -427,6 +448,7 @@ table td {
 
 /* ===== Print Styles ===== */
 @media print {
+
     .user-profile-header,
     .action-section,
     .filter-section,
@@ -457,6 +479,7 @@ table td {
     outline: none !important;
     cursor: pointer;
 }
+
 #cmbPerfil:focus {
     border-color: transparent;
     box-shadow: none;
@@ -468,16 +491,22 @@ table td {
     background-color: var(--primary-color);
     height: 80px;
     font-size: 0.85rem;
-    padding: 0 10rem;
 }
+
+.top-navbar div {
+    margin: 0 10rem;
+}
+
 .top-navbar div a {
     color: white;
     text-decoration: none;
 }
+
 .top-navbar div a:hover {
     color: white;
     text-decoration: underline;
 }
+
 .top-navbar div span {
     cursor: pointer;
 }
@@ -486,10 +515,12 @@ table td {
 .breadcrumbs-bar {
     font-size: .8rem;
 }
+
 .breadcrumbs-bar a {
     color: black;
     text-decoration: none;
 }
+
 .breadcrumbs-bar a:hover {
     color: black;
     text-decoration: underline;
