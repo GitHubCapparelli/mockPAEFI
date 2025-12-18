@@ -74,27 +74,29 @@
     </section>
 
     <!-- Filters -->
-    <section class="filter-items mx-5rem mt-4 d-flex justify-content-start align-items-center gap-2">
-        <div class="filter-item">
-            <label for="filterStatus">Status</label>
-            <select class="form-select" id="filterStatus">
-                <option value="">All Statuses</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-                <option value="pending">Pending</option>
-            </select>
+    <section class="filters-bar mx-5rem mt-4 d-flex justify-content-start align-items-center gap-2">
+        <div class="filter-options d-flex justify-content-start align-items-center gap-2">
+            <div class="filter-item">
+                <label for="filterStatus">Status</label>
+                <select class="form-select" id="filterStatus">
+                    <option value="">All Statuses</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                    <option value="pending">Pending</option>
+                </select>
+            </div>
+            <div class="filter-item">
+                <label for="filterRole">User Role</label>
+                <select class="form-select" id="filterRole">
+                    <option value="">All Roles</option>
+                    <option value="admin">Admin</option>
+                    <option value="manager">Manager</option>
+                    <option value="employee">Employee</option>
+                    <option value="contractor">Contractor</option>
+                </select>
+            </div>
         </div>
-        <div class="filter-item">
-            <label for="filterRole">User Role</label>
-            <select class="form-select" id="filterRole">
-                <option value="">All Roles</option>
-                <option value="admin">Admin</option>
-                <option value="manager">Manager</option>
-                <option value="employee">Employee</option>
-                <option value="contractor">Contractor</option>
-            </select>
-        </div>
-        <div class="d-flex justify-content-start align-items-end gap-2">
+        <div class="filter-buttons d-flex justify-content-start align-items-end gap-2">
             <button class="btn btn-primary" id="btnApplyFilter">
                 <i class="fas fa-filter"></i> Apply Filter
             </button>

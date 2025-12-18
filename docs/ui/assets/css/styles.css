@@ -140,17 +140,6 @@ body {
     min-height: 38px;
 }
 
-.filter-item:last-child {
-    flex-direction: row;
-    align-items: end;
-    gap: 0.5rem;
-}
-
-.filter-item:last-child .btn {
-    white-space: nowrap;
-    align-items: end;
-}
-
 /* ===== Data Section ===== */
 .table-responsive {
     overflow-x: auto;
