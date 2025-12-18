@@ -43,11 +43,11 @@
             <i class="fa fa-angle-right fa-1x"></i>
             <span>Gestão do PAEFI</span>
         </div>
-        <div class="page-title">Recepção</div>
-        <div class="user-name" id="currentUserName">Loading...</div>
+        <span class="page-title">Recepção</span>
+        <span id="txtCurrentUserName" class="user-name">Loading...</span>
         <div class="d-flex justify-content-between align-items-center">
-            <span class="user-scope" id="currentUserDepartment">Department</span>
-            <span class="user-role" id="currentUserRole">Role</span>
+            <span id="txtCurrentUserScope" class="user-scope">Department</span>
+            <span id="txtCurrentUserRole"  class="user-role">Role</span>
         </div>
     </section>
 
@@ -241,10 +241,11 @@
     <script src="/mockPAEFI/ui/assets/js/jquery-3.4.1.min.js"></script>
     <!-- Bootstrap JS -->
     <script src="/mockPAEFI/ui/assets/js/bootstrap.bundle.min.js"></script>
-    <!-- Service Layer -->
-    <script src="/mockPAEFI/services/dal/usuariosServidores.js"></script>
-    <!-- Main App -->
-    <script src="/mockPAEFI/ui/assets/js/app.js"></script>
+    <!-- PoC -->
+    <script src="/mockPAEFI/services/apiMockUsers.js"></script>
+    <script src="/mockPAEFI/ui/assets/js/poc.js"></script>
+    <!-- PoC -->
+    <script src="/mockPAEFI/ui/assets/js/paefi.js"></script>
 </body>
 
 </html>

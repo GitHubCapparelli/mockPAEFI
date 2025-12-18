@@ -28,7 +28,7 @@ var UserService = (function() {
      */
     function loadUsers() {
         return $.ajax({
-            url: '/mockPAEFI/data/usuariosServidores.json',
+            url: '/mockPAEFI/data/mock/users.json',
             method: 'GET',
             dataType: 'json',
             success: function(data) {
