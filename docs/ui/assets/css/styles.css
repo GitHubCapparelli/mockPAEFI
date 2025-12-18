@@ -42,7 +42,7 @@ body {
     gap: 1.5rem;
 }
 
-.profile-photo img {
+.profile-photo {
     width: 30px;
     height: 30px;
     border-radius: 50%;
