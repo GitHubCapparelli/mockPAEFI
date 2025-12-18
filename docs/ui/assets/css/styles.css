@@ -148,6 +148,7 @@ body {
 
 .filter-item:last-child .btn {
     white-space: nowrap;
+    align-items: end;
 }
 
 /* ===== Data Section ===== */
