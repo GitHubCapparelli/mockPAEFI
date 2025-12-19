@@ -1,0 +1,64 @@
+{
+    "unidades": [
+        {
+            "id": "91185997-fc12-4326-ae3c-26094ca25477",
+            "hierarquiaID": "",
+            "sigla": "SUBSAS",
+            "nome": "Subsecretaria de Assistência Social",
+            "funcao": "Governanca",
+            "IbgeId": "",
+            "criadoEm": "2025-12-01T00:00:00Z",
+            "criadoPor": "",
+            "alteradoEm": "",
+            "alteradoPor": "",
+            "excluidoEm": "",
+            "excluidoPor": "",
+            "exclusaoFisica": false
+        },
+        {
+            "id": "72edb629-9965-4fc7-bb84-48c8c6ba67c6",
+            "hierarquiaID": "91185997-fc12-4326-ae3c-26094ca25477",
+            "sigla": "CPSM",
+            "nome": "Coordenação de Proteção Social Especial de Média Complexidade",
+            "funcao": "Coordenacao",
+            "IbgeId": "",
+            "criadoEm": "2025-12-01T00:00:00Z",
+            "criadoPor": "",
+            "alteradoEm": "",
+            "alteradoPor": "",
+            "excluidoEm": "",
+            "excluidoPor": "",
+            "exclusaoFisica": false
+        },
+        {
+            "id": "7848d1a0-5b18-485f-86d0-dbf0cd1874df",
+            "hierarquiaID": "72edb629-9965-4fc7-bb84-48c8c6ba67c6",
+            "sigla": "DISEFI",
+            "nome": "Diretoria de Serviços Especializados a Famílias e Indivíduos",
+            "funcao": "Diretoria",
+            "IbgeId": "",
+            "criadoEm": "2025-12-01T00:00:00Z",
+            "criadoPor": "",
+            "alteradoEm": "",
+            "alteradoPor": "",
+            "excluidoEm": "",
+            "excluidoPor": "",
+            "exclusaoFisica": false
+        },
+        {
+            "id": "358fe016-a6df-41be-9f4a-ebcaee484aee",
+            "hierarquiaID": "7848d1a0-5b18-485f-86d0-dbf0cd1874df",
+            "sigla": "CREAS BRAZLANDIA",
+            "nome": "",
+            "funcao": "AssistenciaSocial",
+            "IbgeId": "53001002909",
+            "criadoEm": "2025-12-01T00:00:00Z",
+            "criadoPor": "",
+            "alteradoEm": "",
+            "alteradoPor": "",
+            "excluidoEm": "",
+            "excluidoPor": "",
+            "exclusaoFisica": false
+        }        
+    ]
+}

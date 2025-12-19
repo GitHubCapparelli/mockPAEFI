@@ -1,0 +1,23 @@
+{
+    "$schema"    : "http://json-schema.org/draft-07/schema#",
+    "title"      : "Unidade",
+    "type"       : "object",
+    "required"   : ["id","sigla","funcao","criadoEm","exclusaoFisica"],
+    "properties" : {
+        "id"              : { "type": "string","format": "uuid" },
+        "hierarquiaID"    : { "type": ["string","null"], "format": "uuid" },
+        "sigla"           : { "type": "string" },
+        "nome"            : { "type": "string" },
+        "funcao"          : { "type": "string", 
+                              "enum": ["Governanca","Coordenacao","Diretoria","AssistenciaSocial"]
+                            },
+        "ibgeId"          : { "type": ["string","null"] },
+        "criadoEm"        : { "type": "string","format": "date-time" },
+        "criadoPor"       : { "type": "string","format": "uuid" },
+        "alteradoEm"      : { "type": "string","format": "date-time" },
+        "alteradoPor"     : { "type": "string","format": "uuid" },
+        "excluidoEm"      : { "type": "string","format": "date-time" },
+        "excluidoPor"     : { "type": "string","format": "uuid" },
+        "exclusaoFisica"  : { "type": "boolean" }
+    }
+}

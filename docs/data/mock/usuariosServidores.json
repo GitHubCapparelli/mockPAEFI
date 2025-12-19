@@ -1,0 +1,22 @@
+{
+    "usuariosServidores": [
+        {
+            "id": "58a74744-5ddd-449a-85f6-686cc8d109c5",
+            "unidadeID": "91185997-fc12-4326-ae3c-26094ca25477",
+            "nome": "CARLOS EDUARDO DE CARVALHO CAPPARELLI",
+            "funcao": "Assessor",
+            "cargo": "NaoInformado",
+            "especialidade": "NaoInformado",
+            "login": "carlos.capparelli",
+            "matricula": "02859769",
+            "cpf": "41143590600",
+            "criadoEm": "2025-12-01T00:00:00Z",
+            "criadoPor": "",
+            "alteradoEm": "",
+            "alteradoPor": "",
+            "excluidoEm": "",
+            "excluidoPor": "",
+            "exclusaoFisica": false
+        }
+    ]
+}

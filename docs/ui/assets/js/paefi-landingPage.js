@@ -1,9 +1,4 @@
-function getFromStorage(key) {
-    const value = localStorage.getItem(key);
-    return value ? JSON.parse(value) : null;
-}
-
-////
+import { AppEngine } from '../../core/engine/appEngine.js';
 
 const txtCurrentUserScope = $('#txtCurrentUserScope');
 const txtCurrentUserRole  = $('#txtCurrentUserRole');
@@ -11,11 +6,14 @@ const txtCurrentUserName  = $('#txtCurrentUserName');
 const lblMessage          = $('#lblMessage');
 
 function exibirUsuario() {
-    const usuario = getFromStorage('currentUser');
-    if (usuario) {
-        txtCurrentUserName.text(usuario.nome);
-        txtCurrentUserRole.text(usuario.papel);
-        txtCurrentUserScope.text(usuario.unidade);
+    if (AppEngine.init()) {
+        const user = AppEngine.GetCurrentUser();
+        txtCurrentUserName.text(user.nome);
+        txtCurrentUserRole.text(user.role);
+        txtCurrentUserScope.text(user.unidade);
+    } else {
+        console.warn('Usuário não localizado. Redirecionando...');
+        window.location.href = '/mockPAEFI/';
     }
 }
 

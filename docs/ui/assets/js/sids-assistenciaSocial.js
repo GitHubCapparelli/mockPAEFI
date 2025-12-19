@@ -1,28 +1,17 @@
-function saveToStorage(key, obj) {
-    localStorage.setItem(key, JSON.stringify(obj));
-}
-
-/////
+import { authService } from '../../services/authService.js';
 
 const divGerirPAEFI = $('#divGerirPAEFI');
 const lblMessage    = $('#lblMessage');
 
 function selecionarPerfil() {
-    const val  = $(this).val();
-    const show = (val !== 'outro') && (val !== '');
+    const value = $(this).val();
+    const user  = AuthService.EmulateLogin(value);
 
     if (show) {
-        lblMessage.text(`Carregar usuário com perfil "${val}" e armazenar em local-storage`);
-        //
-        const currentUser = {
-            papel: 'Assessor',
-            nome: 'Carlos Eduardo de Carvalho Capparelli',
-            unidade: 'GERVIS'
-        };
-        saveToStorage('currentUser', currentUser);
+        lblMessage.text(`Usuário: ${user.nome}`);
 
     } else if (lblMessage.text().trim()) {
-        lblMessage.text('Limpar cache etc.');
+        lblMessage.text();
     }
     divGerirPAEFI.toggle(show);
 }
