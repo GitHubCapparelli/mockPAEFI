@@ -16,11 +16,14 @@ function getRoleFor(siglaUnidade) {
   if (!siglaUnidade) return Papel.OUTRO;
 
   const unidade = siglaUnidade.toUpperCase();
-  if (unidade === 'DISEFI') { 
+  if (unidade === 'DISEFI' || unidade === 'CPSM') { 
     return Papel.DISEFI;
 
+  } else if (unidade === 'GERVIS' || unidade === 'SUBSAS') { 
+    return Papel.SUBSAS; 
+
   } else if (unidade.startsWith('CREAS')) { 
-    return Papel.GESTOR; 
+    return Papel.OUTRO; 
   } 
   return Papel.OUTRO; 
 }
