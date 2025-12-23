@@ -1,6 +1,7 @@
-import { Session }        from '../storage.js';
-import unidades           from '../../data/mock/unidades.json'           assert { type: 'json' };
-import usuariosServidores from '../../data/mock/usuariosServidores.json' assert { type: 'json' };
+import { Session } from '../storage.js';
+ 
+const fetchUnidades   = async () => (await fetch('/mockPAEFI/data/mock/unidades.json')).json();
+const fetchServidores = async () => (await fetch('/mockPAEFI/data/mock/usuariosServidores.json')).json();
 
 export const Papel = Object.freeze({
   GESTOR         : 'gestor',
@@ -27,9 +28,6 @@ function getRoleFor(siglaUnidade) {
   } 
   return Papel.OUTRO; 
 }
- 
-const fetchUnidades   = async () => (await fetch('/mockPAEFI/data/mock/unidades.json')).json();
-const fetchServidores = async () => (await fetch('/mockPAEFI/data/mock/usuariosServidores.json')).json();
 
 const getFakeUser  = async(perfil) => {
   const unidades   = await fetchUnidades();
