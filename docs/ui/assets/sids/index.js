@@ -8,10 +8,10 @@ function selecionarPerfil() {
     const user  = AuthService.EmulateLogin(value);
 
     if (user) {
-        lblMessage.text(`Usuário: ${user.nome}`);
+        lblMessage.text(`Usuário: ${user.nome} | ${value}`);
 
     } else if (lblMessage.text().trim()) {
-        lblMessage.text();
+        lblMessage.text(`Usuário: [vazio] | ${value}`);
     }
     divGerirPAEFI.toggle(user);
 }
