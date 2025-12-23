@@ -1,4 +1,4 @@
-import { authService } from '../../../services/auth/login.js';
+import { AuthService } from '../../../services/auth/login.js';
 
 const divGerirPAEFI = $('#divGerirPAEFI');
 const lblMessage    = $('#lblMessage');
