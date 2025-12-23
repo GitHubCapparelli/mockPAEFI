@@ -21372,7 +21372,9 @@ img.thumbnail {
  */
 @font-face {
     font-family: 'FontAwesome';
-    src: url('../fonts/fontawesome-webfont.woff2?5s98bsfC1vZwrp12JgTLCw') format('woff2'), url('../fonts/fontawesome-webfont.woff?yN3x5eW_NoK8e+vzDzlBSA') format('woff');
+    src: url('../shared/fonts/fa-regular-400.woff2') format('woff2'), 
+         url('../shared/fonts/fa-solid-900.woff2') format('woff2'), 
+         url('../shared/fonts/fa-brands-400.woff2') format('woff2');
     font-weight: normal;
     font-style: normal
 }
