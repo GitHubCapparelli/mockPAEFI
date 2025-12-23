@@ -16,7 +16,7 @@ const fetchServidores = async () => {
     const unit = unidades.find(u => u.id === s.unidadeID);
     return {
       ...s,
-      unidade: unit ? unit.sigla : 'Unidade não localizada'
+      unidade: unit ? unit.sigla : 'Não localizada'
     }
   });
 };
@@ -32,7 +32,6 @@ export const Papel = Object.freeze({
 });
 
 const servidorCom = async(papel) => {
-  console.log(papel);
   const data = await fetchServidores();
   switch (papel) {
     case Papel.SUBSAS: return data.find(s => s.unidade === 'GERVIS' || s.unidade === 'SUBSAS');
@@ -63,8 +62,6 @@ export const AuthService = {
       return null;
     }
     const user = await getFakeUser(perfil);
-    console.log(user)    
-
     if (user) {
       Session.Set('currentUser', user);
     }
