@@ -18,6 +18,8 @@ function mapPerfil(value) {
 async function selecionarPerfil() {
     const value = $(this).val();
     const papel = mapPerfil(value);
+    console.log(papel);
+
     const user  = await AuthService.EmulateLogin(papel);
 
     lblMessage.text(user ? `Usuário: ${user.login} | ${user.unidade}`

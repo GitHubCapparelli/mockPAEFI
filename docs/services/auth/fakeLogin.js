@@ -23,6 +23,7 @@ export const Papel = Object.freeze({
 });
 
 const servidorCom = async(papel) => {
+  console.log(papel);
   const data = await fetchServidores();
   switch (papel) {
     case Papel.SUBSAS: return data.find(u => u.sigla === 'GERVIS' || u.sigla === 'SUBSAS');
@@ -55,6 +56,8 @@ export const AuthService = {
       return null;
     }
     const user = await getFakeUser(perfil);
+    console.log(user)    
+
     if (user) {
       Session.Set('currentUser', user);
     }
