@@ -13,7 +13,7 @@ function selecionarPerfil() {
     } else if (lblMessage.text().trim()) {
         lblMessage.text();
     }
-    divGerirPAEFI.toggle(show);
+    divGerirPAEFI.toggle(user);
 }
 
 $(document).ready(() => {
