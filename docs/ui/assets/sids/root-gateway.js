@@ -20,10 +20,14 @@ async function selecionarPerfil() {
     const papel = mapPerfil(value);
     const user  = await AuthService.EmulateLogin(papel);
 
-    lblMessage.text(user ? `Usuário: ${user.login} | ${user.unidade}`
-                         : `Usuário: Não localizado`);
-    divGerirPAEFI.toggle(user);
-    console.log(user);
+    if (user) {
+      lblMessage.text(`Usuário: ${user.login} | ${user.unidade}`);
+      divGerirPAEFI.show();
+      console.log(user);
+    } else {
+      lblMessage.text('');
+      divGerirPAEFI.hide();
+    }
 }
 
 $(document).ready(() => {
