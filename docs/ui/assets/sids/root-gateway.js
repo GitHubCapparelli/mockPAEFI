@@ -1,17 +1,17 @@
-import { AuthService } from '../../../services/auth/fakeLogin.js';
+import { Papel, AuthService } from '../../../services/auth/fakeLogin.js';
 
 const divGerirPAEFI = $('#divGerirPAEFI');
 const lblMessage    = $('#lblMessage');
 
 function mapPerfil(value) {
-  switch (value?.toLowerCase()) {
-    case 'gestor':        return AuthService.Papel.GESTOR;
-    case 'equipe':        return AuthService.Papel.EQUIPE;
-    case 'especialista':  return AuthService.Papel.ESPECIALISTA;
-    case 'agentesocial':  return AuthService.Papel.AGENTE_SOCIAL;
-    case 'disefi':        return AuthService.Papel.DISEFI;
-    case 'subsas':        return AuthService.Papel.SUBSAS;
-    default:              return AuthService.Papel.OUTRO;
+  switch (value) {
+    case 'gestor':        return Papel.GESTOR;
+    case 'equipe':        return Papel.EQUIPE;
+    case 'especialista':  return Papel.ESPECIALISTA;
+    case 'agenteSocial':  return Papel.AGENTE_SOCIAL;
+    case 'disefi':        return Papel.DISEFI;
+    case 'subsas':        return Papel.SUBSAS;
+    default:              return Papel.OUTRO;
   }
 }
 
