@@ -1,3 +1,5 @@
+import { SessionStore } from '../storage.js';
+
 export const PerfisSIDS = Object.freeze({
   GESTOR         : 'gestor',
   EQUIPE         : 'equipe',
@@ -94,16 +96,12 @@ export const AuthService = {
     const user        = buildFakeUser(perfilSelecionado);
     const permissions = RolePermissionsMap[role] || [];
 
-    sessionStore.set('currentUser', {
-      ...user,
-      permissions
-    });
-
+    Session.Set('currentUser', {...user, permissions });
     return user;
   },
 
   GetCurrentUser() {
-    return sessionStore.get('currentUser');
+    return Session.Get('currentUser');
   },
 
   hasPermission(permission) {
@@ -112,7 +110,7 @@ export const AuthService = {
   },
 
   logout() {
-    sessionStore.clear();
+    Session.Clear();
   }
 };
 

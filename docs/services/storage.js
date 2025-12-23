@@ -1,37 +1,37 @@
-export const LocalStore = {
-    set(key, value) {
+export const Local = {
+    Set(key, value) {
         localStorage.setItem(key, JSON.stringify(value));
     },
 
-    get(key) {
+    Get(key) {
         const raw = localStorage.getItem(key);
         return raw ? JSON.parse(raw) : null;
     },
 
-    remove(key) {
+    Remove(key) {
         localStorage.removeItem(key);
     },
 
-    clear() {
+    Clear() {
         localStorage.clear();
     }
 };
 
-export const SessionStore = {
-    set(key, value) {
+export const Session = {
+    Set(key, value) {
         sessionStorage.setItem(key, JSON.stringify(value));
     },
 
-    get(key) {
+    Get(key) {
         const raw = sessionStorage.getItem(key);
         return raw ? JSON.parse(raw) : null;
     },
 
-    remove(key) {
+    Remove(key) {
         sessionStorage.removeItem(key);
     },
 
-    clear() {
+    Clear() {
         sessionStorage.clear();
     }
 };
