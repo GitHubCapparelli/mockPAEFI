@@ -1,4 +1,4 @@
-import { SessionStore } from '../storage.js';
+import { Session } from '../storage.js';
 
 export const PerfisSIDS = Object.freeze({
   GESTOR         : 'gestor',
