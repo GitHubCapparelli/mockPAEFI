@@ -27,18 +27,23 @@ function getRoleFor(siglaUnidade) {
   } 
   return Papel.OUTRO; 
 }
+ 
+const fetchUnidades   = async () => (await fetch('/mockPAEFI/data/mock/unidades.json')).json();
+const fetchServidores = async () => (await fetch('/mockPAEFI/data/mock/usuariosServidores.json')).json();
 
-function getFakeUser(perfil) {
-  const user = usuariosServidores[0];
-  const unit = unidades.find(u => u.id === user.unidadeID);
+const getFakeUser  = async(perfil) => {
+  const unidades   = await fetchUnidades();
+  const servidores = await fetchServidores();
 
-  let result = {
+  const user = servidores()[0];
+  const unit = unidades().find(u => u.id === user.unidadeID);
+
+  return {
     nome    : user.nome,
     unidade : unit ? unit.sigla : 'Unidade não localizada',
     perfil  : getRoleFor(unit ? unit.sigla : null),
     login   : user.login
   };
-  return result;
 }
 
 export const AuthService = {
