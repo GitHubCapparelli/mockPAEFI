@@ -8,7 +8,7 @@ function selecionarPerfil() {
     const user  = AuthService.EmulateLogin(value);
 
     if (user) {
-        lblMessage.text(`Usuário: ${user.nome} | ${value}`);
+        lblMessage.text(`Usuário: ${user.login} | ${user.unidade}`);
 
     } else if (lblMessage.text().trim()) {
         lblMessage.text(`Usuário: [vazio] | ${value}`);
