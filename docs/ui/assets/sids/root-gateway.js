@@ -3,9 +3,9 @@ import { AuthService } from '../../../services/auth/fakeLogin.js';
 const divGerirPAEFI = $('#divGerirPAEFI');
 const lblMessage    = $('#lblMessage');
 
-function selecionarPerfil() {
+async function selecionarPerfil() {
     const value = $(this).val();
-    const user  = AuthService.EmulateLogin(value);
+    const user  = await AuthService.EmulateLogin(value);
 
     if (user) {
         lblMessage.text(`Usuário: ${user.login} | ${user.unidade}`);

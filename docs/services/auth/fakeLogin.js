@@ -54,8 +54,8 @@ const getFakeUser  = async(perfil) => {
 }
 
 export const AuthService = {
-  EmulateLogin(perfil) {
-    const user = getFakeUser(perfil);
+  async EmulateLogin(perfil) {
+    const user = await getFakeUser(perfil);
     if (user.perfil == Papel.OUTRO) {
       Session.Clear();
     } else {
