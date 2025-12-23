@@ -28,13 +28,13 @@ function getRoleFor(siglaUnidade) {
  
 const fetchUnidades = async () => {
   const response = await fetch('/mockPAEFI/data/mock/unidades.json');
-  const result   = response.json();
+  const result   = await response.json();
   return Array.isArray(result) ? result : result.unidades; 
 };
  
 const fetchServidores = async () => {
   const response = await fetch('/mockPAEFI/data/mock/usuariosServidores.json');
-  const result   = response.json();
+  const result   = await response.json();
   return Array.isArray(result) ? result : result.usuariosServidores; 
 };
 
