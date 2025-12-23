@@ -33,8 +33,8 @@ const getFakeUser  = async(perfil) => {
   const unidades   = await fetchUnidades();
   const servidores = await fetchServidores();
 
-  const user = servidores()[0];
-  const unit = unidades().find(u => u.id === user.unidadeID);
+  const user = servidores[0];
+  const unit = unidades.find(u => u.id === user.unidadeID);
 
   return {
     nome    : user.nome,
