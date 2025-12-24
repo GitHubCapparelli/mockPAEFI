@@ -33,8 +33,12 @@ body {
     line-height: 1.6;
 }
 
+.mx-4rem {
+    margin-block: 0;
+    margin-inline: 4rem;
+}
+
 .mx-5rem {
-    /*margin: 0 5rem;*/
     margin-block: 0;
     margin-inline: 5rem;
 }
@@ -57,7 +61,7 @@ body {
     color: white;
     background-color: var(--primary-color);
     height: 80px;
-    font-size: 0.85rem;
+    font-size: 13px;
 }
 
 .top-navbar div a {
