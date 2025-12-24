@@ -5,8 +5,8 @@ const divPaefi       = $('#divSids-paefi');
 const divPaefiGestao = $('#divPaefi-supervisao');
 const divPaefiAdmin  = $('#divPaefi-admin');
 
-function mapPerfil(value) {
-  switch (value) {
+function mapear(perfil) {
+  switch (perfil) {
     case 'creas' :  return Orgao.AGENTE_SOCIAL;
     case 'disefi':  return Orgao.DISEFI;
     case 'subsas':  return Orgao.SUBSAS;
@@ -14,24 +14,31 @@ function mapPerfil(value) {
   }
 }
 
+function hideAll() {
+  divPaefi.hide();
+  divPaefiGestao.hide();
+  divParfiAdmin.hide();
+  lblMessage.text('');
+}
+
 async function selecionarPerfil() {
-    const value = $(this).val();
-    const orgao = mapPerfil(value);
-    const user  = await AuthService.EmulateLogin(orgao);
+    const perfil = $(this).val();
+    const orgao  = mapear(perfil);
+    const user   = await AuthService.EmulateLogin(orgao);
 
+    hideAll();
     if (user) {
-      lblMessage.text(`Usuário: ${user.login} | ${user.unidade}`);
       divPaefi.show();
-      console.log(user);
 
-      if (orgao === Orgao.SUBSAS) {
-        alert('Oi SUBSAS');
+      if (orgao === Orgao.DISEFI || orgao === Orgao.SUBSAS) {
+        divPaefiGestao.show();
+
+        if (orgao === Orgao.SUBSAS) {
+          divPaefiAdmin.show();
+        }
       }
-
-    } else {
-      lblMessage.text('');
-      divPaefi.hide();
-    }
+      lblMessage.text(`Usuário: ${user.login} | ${user.unidade}`);
+    } 
 }
 
 $(document).ready(() => {
