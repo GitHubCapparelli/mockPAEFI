@@ -9,7 +9,7 @@ const lblMensagem = $('#lblMensagem');
 function exibirServidor() {
     txtNome.text(user.nome);
     txtLogin.text(user.login);
-    txtUnidade.text(user.unidade);
+    txtUnidade.text(user.hierarquia);
 }
 
 $(document).ready(() => {

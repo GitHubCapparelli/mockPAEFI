@@ -48,7 +48,6 @@ const fetchMappedServidores = async () => {
   return servidores.map(s => {
     const unit = unidades.find(u => u.id === s.unidadeID);
     const role = mapPerfil(unit);
-    alert(unit.sigla);
     return {
       ...s,
       unidade    : unit ? unit : 'Não localizada',
