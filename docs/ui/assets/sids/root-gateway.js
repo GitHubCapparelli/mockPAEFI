@@ -1,6 +1,7 @@
 import { Orgao, AuthService } from '../../../services/auth/fakeLogin.js';
 
 const lblMessage     = $('#lblMessage');
+const divPaefi       = $('#divSids-paefi');
 const divPaefiGestao = $('#divPaefi-supervisao');
 const divPaefiAdmin  = $('#divPaefi-admin');
 
@@ -20,7 +21,7 @@ async function selecionarPerfil() {
 
     if (user) {
       lblMessage.text(`Usuário: ${user.login} | ${user.unidade}`);
-      divGerirPAEFI.show();
+      divPaefi.show();
       console.log(user);
 
       if (orgao === Orgao.SUBSAS) {
@@ -29,11 +30,11 @@ async function selecionarPerfil() {
 
     } else {
       lblMessage.text('');
-      divGerirPAEFI.hide();
+      divPaefi.hide();
     }
 }
 
 $(document).ready(() => {
-    divGerirPAEFI.toggle(); // oculta o módulo ao carregar a página
+    divPaefi.toggle(); // oculta o módulo ao carregar a página
     $('#cmbPerfil').on('change', selecionarPerfil);
 });

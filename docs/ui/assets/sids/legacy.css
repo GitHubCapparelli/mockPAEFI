@@ -467,12 +467,6 @@ div.feedback-message-warning {
     font-weight: 700;
 }
 
-
-.zoom-home {
-    max-zoom: 100%;
-
-}
-
 .phone .PesquisaUsuarioTooltip,
 .tablet .PesquisaUsuarioTooltip {
     display: none;
@@ -674,8 +668,6 @@ div.feedback-message-warning {
     width: 100% !important;
     text-align: left !important;
 }
-
-.app-menu-content {}
 
 .phone .app-menu-content {
     background: #0061ae;
