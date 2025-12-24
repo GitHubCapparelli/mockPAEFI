@@ -7,7 +7,7 @@ const divPaefiAdmin  = $('#divPaefi-admin');
 
 function mapear(perfil) {
   switch (perfil) {
-    case 'creas' :  return Orgao.AGENTE_SOCIAL;
+    case 'creas' :  return Orgao.CREAS;
     case 'disefi':  return Orgao.DISEFI;
     case 'subsas':  return Orgao.SUBSAS;
     default:        return Orgao.OUTRO;
