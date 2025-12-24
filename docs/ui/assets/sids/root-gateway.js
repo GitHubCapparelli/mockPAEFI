@@ -1,4 +1,5 @@
-import { Orgao, AuthService } from '../../../services/auth/fakeLogin.js';
+import { Session, CurrentUserKey } from '../../../services/storage.js';
+import { Perfil, AuthService }      from '../../../services/auth/fakeLogin.js';
 
 const lblMessage  = $('#lblMessage');
 const divPaefi    = $('#divSids-paefi');
@@ -7,10 +8,10 @@ const divAdmin    = $('#divPaefi-admin');
 
 function mapear(perfil) {
   switch (perfil) {
-    case 'creas' :  return Orgao.CREAS;
-    case 'disefi':  return Orgao.DISEFI;
-    case 'subsas':  return Orgao.SUBSAS;
-    default:        return Orgao.OUTRO;
+    case 'creas' :  return Perfil.CREAS;
+    case 'disefi':  return Perfil.DISEFI;
+    case 'subsas':  return Perfil.SUBSAS;
+    default:        return Perfil.OUTRO;
   }
 }
 
@@ -22,25 +23,35 @@ function hideAll() {
 }
 
 async function selecionarPerfil() {
-    const perfil = $(this).val();
-    const orgao  = mapear(perfil);
-    const user   = await AuthService.EmulateLogin(orgao);
+  const value   = $(this).val();
+  const pernfil = mapear(value);
+  const user    = await AuthService.EmulateLogin(perfil);
+  showIf(user);
+}
 
+function showIf(user) {
+  if (!user || user.perfil === Perfil.OUTRO) {
     hideAll();
-    if (user) {
-      divPaefi.show();
+    return;
+  } 
 
-      if (orgao === Orgao.DISEFI || orgao === Orgao.SUBSAS) {
-        divGestao.show();
+  divPaefi.show();
+  lblMessage.text(`Usuário: ${user.login}`);
 
-        if (orgao === Orgao.SUBSAS) {
-          divAdmin.show();
-        }
-      }
-      lblMessage.text(`Usuário: ${user.login}`);
-    } 
+  if (user.perfil === Perfil.DISEFI || user.perfil === Perfil.SUBSAS) {
+    divGestao.show();
+
+    if (user.perfil === Perfil.SUBSAS) {
+      divAdmin.show();
+    }
+  }
 }
 
 $(document).ready(() => {
-    $('#cmbPerfil').on('change', selecionarPerfil).trigger('change');
+    $('#cmbPerfil').on('change', selecionarPerfil);
+
+    const current = Session.Get(CurrentUserKey);
+    if (!current) {
+      $('#cmbPerfil').trigger('change');
+    }
 });

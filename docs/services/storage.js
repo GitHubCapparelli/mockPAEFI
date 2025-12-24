@@ -1,3 +1,5 @@
+export const CurrentUserKey = 'currentUser';
+
 export const Local = {
     Set(key, value) {
         localStorage.setItem(key, JSON.stringify(value));
