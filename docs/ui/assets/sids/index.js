@@ -38,7 +38,6 @@ function showIf(user) {
   } 
 
   divPaefi.show();
-  lblMessage.text(`Usuário: ${user.nome}`);
   txtLogin.text(user.login);
 
   if (user.perfil === Perfil.DISEFI || user.perfil === Perfil.SUBSAS) {
