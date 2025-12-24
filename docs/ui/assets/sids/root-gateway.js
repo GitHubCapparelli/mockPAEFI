@@ -42,6 +42,5 @@ async function selecionarPerfil() {
 }
 
 $(document).ready(() => {
-    divPaefi.toggle(); // oculta o módulo ao carregar a página
-    $('#cmbPerfil').on('change', selecionarPerfil);
+    $('#cmbPerfil').on('change', selecionarPerfil).trigger('change');
 });
