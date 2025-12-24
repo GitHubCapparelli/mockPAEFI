@@ -49,7 +49,12 @@ function showIf(user) {
   }
 }
 
+function initCmbPerfil() {
+
+}
+
 $(document).ready(() => {
+    initCmbPerfil();
     $('#cmbPerfil').on('change', selecionarPerfil);
     divPaefi.hide();
 

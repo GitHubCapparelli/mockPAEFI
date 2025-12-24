@@ -1,0 +1,23 @@
+{
+  "$schema"   : "http://json-schema.org/draft-07/schema#",
+  "title"     : "UsuarioServidor",
+  "type"      : "object",
+  "required"  : ["id", "unidadeID", "nome", "login", "criadoEm", "exclusaoFisica"],
+  "properties": {
+    "id"             : { "type": "string", "format": "uuid" },
+    "unidadeID"      : { "type": "string", "format": "uuid" },
+    "nome"           : { "type": "string" },
+    "funcao"         : { "type": "string" },
+    "cargo"          : { "type": "string" },
+    "especialidade"  : { "type": "string" },
+    "login"          : { "type": "string" },
+
+    "criadoEm"       : { "type": "string", "format": "date-time" },
+    "criadoPor"      : { "type": ["string","null"], "format": "uuid" },
+    "alteradoEm"     : { "type": ["string","null"], "format": "date-time" },
+    "alteradoPor"    : { "type": ["string","null"], "format": "uuid" },
+    "excluidoEm"     : { "type": ["string","null"], "format": "date-time" },
+    "excluidoPor"    : { "type": ["string","null"], "format": "uuid" },
+    "exclusaoFisica" : { "type": "boolean" }
+  }
+}

@@ -1,4 +1,6 @@
 import { Session, CurrentUserKey } from '../../services/storage.js';
+import { UsuarioServidorGateway } from '../gateway/usuarioServidor.js';
+
 const user = Session.Get(CurrentUserKey);
 
 const txtNome     = $('#txtUser-nome');
@@ -15,8 +17,19 @@ function exibirServidor() {
 $(document).ready(() => {
     if (user) {
         exibirServidor();
+        UsuarioServidorGateway.init();
+
+//        $('#btnFilter').on('click', () => {
+//            UsuarioServidorGateway.applyFilter({
+//            unidadeID: $('#filterUnidade').val(),
+//            search: $('#filterSearch').val()
+//            });
+//        });
+
     } else {
         console.warn('Usuário não localizado. Redirecionando...');
         window.location.href = '/mockPAEFI/';
     }
 });
+
+
