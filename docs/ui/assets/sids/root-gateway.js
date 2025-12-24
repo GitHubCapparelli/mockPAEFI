@@ -1,8 +1,7 @@
 import { Orgao, AuthService } from '../../../services/auth/fakeLogin.js';
 
 const lblMessage     = $('#lblMessage');
-const divGerirPAEFI  = $('#divGerirPAEFI');
-const divPaefiGestao = $('#divPaefi-gestao');
+const divPaefiGestao = $('#divPaefi-supervisao');
 const divPaefiAdmin  = $('#divPaefi-admin');
 
 function mapPerfil(value) {
