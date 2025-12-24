@@ -1,9 +1,9 @@
 import { Orgao, AuthService } from '../../../services/auth/fakeLogin.js';
 
-const lblMessage     = $('#lblMessage');
-const divPaefi       = $('#divSids-paefi');
-const divPaefiGestao = $('#divPaefi-supervisao');
-const divPaefiAdmin  = $('#divPaefi-admin');
+const lblMessage  = $('#lblMessage');
+const divPaefi    = $('#divSids-paefi');
+const divGestao   = $('#divPaefi-supervisao');
+const divAdmin    = $('#divPaefi-admin');
 
 function mapear(perfil) {
   switch (perfil) {
@@ -16,8 +16,8 @@ function mapear(perfil) {
 
 function hideAll() {
   divPaefi.hide();
-  divPaefiGestao.hide();
-  divParfiAdmin.hide();
+  divGestao.hide();
+  divAdmin.hide();
   lblMessage.text('');
 }
 
@@ -31,10 +31,10 @@ async function selecionarPerfil() {
       divPaefi.show();
 
       if (orgao === Orgao.DISEFI || orgao === Orgao.SUBSAS) {
-        divPaefiGestao.show();
+        divGestao.show();
 
         if (orgao === Orgao.SUBSAS) {
-          divPaefiAdmin.show();
+          divAdmin.show();
         }
       }
       lblMessage.text(`Usuário: ${user.login} | ${user.unidade}`);
