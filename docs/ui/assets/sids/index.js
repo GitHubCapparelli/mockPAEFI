@@ -52,6 +52,8 @@ function showIf(user) {
 
 $(document).ready(() => {
     $('#cmbPerfil').on('change', selecionarPerfil);
+    divPaefi.hide();
+
     const user = Session.Get(CurrentUserKey);
     showIf(user);
 });
