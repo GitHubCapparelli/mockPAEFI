@@ -24,7 +24,7 @@ function mapPerfil(unidade) {
   return Perfil.OUTRO;
 }
 
-const buildUnidadeHierarchy = (unit, unidadesById) => {
+const buildUnidadeHierarchy = (unit, unidades) => {
   const siglas = [];
 
   let current = unit;
@@ -32,7 +32,7 @@ const buildUnidadeHierarchy = (unit, unidadesById) => {
     siglas.unshift(current.sigla);
 
     if (!current.hierarquiaID) break;
-    current = unidadesById.get(current.hierarquiaID);
+    current = unidades.get(current.hierarquiaID);
   }
 
   return siglas.join('/');
@@ -41,6 +41,7 @@ const buildUnidadeHierarchy = (unit, unidadesById) => {
 const fetchMappedServidores = async () => {
   const unidades     = await fetchUnidades();
   const unidadesById = new Map(unidades.map(u => [u.id, u])); // for fast lookup
+  
   const response     = await fetch('/mockPAEFI/data/mock/usuariosServidores.json');
   const result       = await response.json();
   const servidores   = Array.isArray(result) ? result : result.usuariosServidores; 
