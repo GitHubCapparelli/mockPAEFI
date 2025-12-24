@@ -1,29 +1,33 @@
-import { Papel, AuthService } from '../../../services/auth/fakeLogin.js';
+import { Orgao, AuthService } from '../../../services/auth/fakeLogin.js';
 
-const divGerirPAEFI = $('#divGerirPAEFI');
-const lblMessage    = $('#lblMessage');
+const lblMessage     = $('#lblMessage');
+const divGerirPAEFI  = $('#divGerirPAEFI');
+const divPaefiGestao = $('#divPaefi-gestao');
+const divPaefiAdmin  = $('#divPaefi-admin');
 
 function mapPerfil(value) {
   switch (value) {
-    case 'gestor':        return Papel.GESTOR;
-    case 'equipe':        return Papel.EQUIPE;
-    case 'especialista':  return Papel.ESPECIALISTA;
-    case 'agenteSocial':  return Papel.AGENTE_SOCIAL;
-    case 'disefi':        return Papel.DISEFI;
-    case 'subsas':        return Papel.SUBSAS;
-    default:              return Papel.OUTRO;
+    case 'creas' :  return Orgao.AGENTE_SOCIAL;
+    case 'disefi':  return Orgao.DISEFI;
+    case 'subsas':  return Orgao.SUBSAS;
+    default:        return Orgao.OUTRO;
   }
 }
 
 async function selecionarPerfil() {
     const value = $(this).val();
-    const papel = mapPerfil(value);
-    const user  = await AuthService.EmulateLogin(papel);
+    const orgao = mapPerfil(value);
+    const user  = await AuthService.EmulateLogin(orgao);
 
     if (user) {
       lblMessage.text(`Usuário: ${user.login} | ${user.unidade}`);
       divGerirPAEFI.show();
       console.log(user);
+
+      if (orgao === Orgao.SUBSAS) {
+        alert('Oi SUBSAS');
+      }
+
     } else {
       lblMessage.text('');
       divGerirPAEFI.hide();

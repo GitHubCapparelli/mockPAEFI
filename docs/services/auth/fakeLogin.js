@@ -21,47 +21,41 @@ const fetchServidores = async () => {
   });
 };
 
-export const Papel = Object.freeze({
-  GESTOR         : 'gestor',
-  EQUIPE         : 'equipe',
-  ESPECIALISTA   : 'especialista',
-  AGENTE_SOCIAL  : 'agenteSocial',
-  DISEFI         : 'disefi',
-  SUBSAS         : 'subsas',
-  OUTRO          : 'outro'
+export const Orgao = Object.freeze({
+  CREAS   : 'creas',
+  DISEFI  : 'disefi',
+  SUBSAS  : 'subsas',
+  OUTRO   : 'outro'
 });
 
-const servidorCom = async(papel) => {
+const servidorCom = async(orgao) => {
   const data = await fetchServidores();
-  switch (papel) {
-    case Papel.SUBSAS: return data.find(s => s.unidade === 'GERVIS' || s.unidade === 'SUBSAS');
-    case Papel.DISEFI: return data.find(s => s.unidade === 'DISEFI' || s.unidade === 'CPSM');
+  switch (orgao) {
+    case Orgao.CREAS: return data.find(s => s.unidade.startsWith('CREAS'));
+    case Orgao.SUBSAS: return data.find(s => s.unidade === 'GERVIS' || s.unidade === 'SUBSAS');
+    case Orgao.DISEFI: return data.find(s => s.unidade === 'DISEFI' || s.unidade === 'CPSM');
     default: return null;
   }
-  // TODO:
-  // implementar os demais casos (gestor, equipe, especialista e agenteSocial),
-  // depois de incluir outros servidores fakes
 };
 
-const getFakeUser = async(papel) => {
-  const servidor  = await servidorCom(papel);
+const getFakeUser = async(orgao) => {
+  const servidor  = await servidorCom(orgao);
   if (!servidor) return null;
 
   return {
     nome    : servidor.nome,
     unidade : servidor.unidade,
-    login   : servidor.login,
-    perfil  : papel
+    login   : servidor.login
   };
 }
 
 export const AuthService = {
-  async EmulateLogin(perfil) {
-    if (perfil === Papel.OUTRO) {
+  async EmulateLogin(orgao) {
+    if (orgao === Orgao.OUTRO) {
       Session.Clear();    
       return null;
     }
-    const user = await getFakeUser(perfil);
+    const user = await getFakeUser(orgao);
     if (user) {
       Session.Set('currentUser', user);
     }
