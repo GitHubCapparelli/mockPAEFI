@@ -46,7 +46,7 @@ const fetchMappedServidores = async () => {
   const servidores   = Array.isArray(result) ? result : result.usuariosServidores; 
 
   return servidores.map(s => {
-    const unit = unidadesById.find(u => u.id === s.unidadeID);
+    const unit = unidades.find(u => u.id === s.unidadeID);
     const role = mapPerfil(unit);
     alert(unit.sigla);
     return {
