@@ -1,13 +1,15 @@
 import { Session, CurrentUserKey } from '../../services/storage.js';
 const user = Session.Get(CurrentUserKey);
 
-const txtServidorNome    = $('#txtServidor-nome');
-const txtServidorUnidade = $('#txtServidor-unidade');
-const lblMensagem         = $('#lblMensagem');
+const txtNome     = $('#txtUser-nome');
+const txtLogin    = $('#txtUserlogin');
+const txtUnidade  = $('#txtUser-unidade');
+const lblMensagem = $('#lblMensagem');
 
 function exibirServidor() {
-    txtServidorNome.text(user.nome);
-    txtServidorUnidade.text(user.unidade);
+    txtNome.text(user.nome);
+    txtLogin.text(user.login);
+    txtUnidade.text(user.unidade);
 }
 
 $(document).ready(() => {

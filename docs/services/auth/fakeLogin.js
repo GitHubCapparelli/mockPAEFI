@@ -23,19 +23,34 @@ function mapPerfil(unidade) {
   } 
   return Perfil.OUTRO;
 }
- 
+
+const buildUnidadeHierarchy = (unit, unidadesById) => {
+  const siglas = [];
+
+  let current = unit;
+  while (current) {
+    siglas.unshift(current.sigla);
+
+    if (!current.hierarquiaID) break;
+    current = unidadesById.get(current.hierarquiaID);
+  }
+
+  return siglas.join('/');
+};
+
 const fetchMappedServidores = async () => {
-  const unidades   = await fetchUnidades();
-  const response   = await fetch('/mockPAEFI/data/mock/usuariosServidores.json');
-  const result     = await response.json();
-  const servidores = Array.isArray(result) ? result : result.usuariosServidores; 
+  const unidades     = await fetchUnidades();
+  const unidadesById = new Map(unidades.map(u => [u.id, u])); // for fast lookup
+  const response     = await fetch('/mockPAEFI/data/mock/usuariosServidores.json');
+  const result       = await response.json();
+  const servidores   = Array.isArray(result) ? result : result.usuariosServidores; 
 
   return servidores.map(s => {
-    const unit = unidades.find(u => u.id === s.unidadeID);
+    const unit = unidadesById.get(u => u.id === s.unidadeID);
     const role = mapPerfil(unit);
     return {
       ...s,
-      unidade : unit ? unit.sigla : 'Não localizada',
+      unidade : unit ? buildUnidadeHierarchy(unit, unidadesById) : 'Não localizada',
       perfil  : role
     }
   });
