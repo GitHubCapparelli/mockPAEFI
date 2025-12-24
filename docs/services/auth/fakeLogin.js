@@ -48,10 +48,12 @@ const fetchMappedServidores = async () => {
   return servidores.map(s => {
     const unit = unidadesById.get(u => u.id === s.unidadeID);
     const role = mapPerfil(unit);
+    alert(unit.sigla);
     return {
       ...s,
-      unidade : unit ? buildUnidadeHierarchy(unit, unidadesById) : 'Não localizada',
-      perfil  : role
+      unidade    : unit ? unit : 'Não localizada',
+      hierarquia : unit ? buildUnidadeHierarchy(unit, unidadesById) : 'Não localizada',
+      perfil     : role
     }
   });
 };
