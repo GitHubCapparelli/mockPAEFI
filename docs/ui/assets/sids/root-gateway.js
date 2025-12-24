@@ -23,9 +23,9 @@ function hideAll() {
 }
 
 async function selecionarPerfil() {
-  const value   = $(this).val();
-  const pernfil = mapear(value);
-  const user    = await AuthService.EmulateLogin(perfil);
+  const value  = $(this).val();
+  const perfil = mapear(value);
+  const user   = await AuthService.EmulateLogin(perfil);
   showIf(user);
 }
 
