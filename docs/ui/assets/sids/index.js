@@ -5,6 +5,7 @@ const lblMessage  = $('#lblMessage');
 const divPaefi    = $('#divSids-paefi');
 const divGestao   = $('#divPaefi-supervisao');
 const divAdmin    = $('#divPaefi-admin');
+const txtLogin    = $('#txtUser-login');
 
 function mapear(perfil) {
   switch (perfil) {
@@ -20,6 +21,7 @@ function hideAll() {
   divGestao.hide();
   divAdmin.hide();
   lblMessage.text('');
+  txtLogin.text('');
 }
 
 async function selecionarPerfil() {
@@ -36,7 +38,8 @@ function showIf(user) {
   } 
 
   divPaefi.show();
-  lblMessage.text(`Usuário: ${user.login}`);
+  lblMessage.text(`Usuário: ${user.nome}`);
+  txtLogin.text(user.login);
 
   if (user.perfil === Perfil.DISEFI || user.perfil === Perfil.SUBSAS) {
     divGestao.show();
