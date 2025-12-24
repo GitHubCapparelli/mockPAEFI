@@ -37,7 +37,7 @@ async function selecionarPerfil() {
           divAdmin.show();
         }
       }
-      lblMessage.text(`Usuário: ${user.login} | ${user.unidade}`);
+      lblMessage.text(`Usuário: ${user.login}`);
     } 
 }
 
