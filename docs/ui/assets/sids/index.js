@@ -52,9 +52,5 @@ function showIf(user) {
 
 $(document).ready(() => {
     $('#cmbPerfil').on('change', selecionarPerfil);
-
-    const current = Session.Get(CurrentUserKey);
-    if (!current) {
-      $('#cmbPerfil').trigger('change');
-    }
+    this.showIf(Session.Get(CurrentUserKey));
 });
