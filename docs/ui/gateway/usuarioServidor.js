@@ -1,264 +1,158 @@
-/* UsuarioServidor Gateway */
-(function ($) {
-    'use strict';
+import { UsuarioServidorAPI } from '../../services/api/usuarioServidorAPI.js';
 
-    // Application state
-    var state = {
-        currentPage: 1,
-        pageSize: 10,
-        filters: {
-            unidadeID: '',
-            search: ''
-        },
-        addModal: null,
-        editModal: null
-    };
+const state = {
+  page: 1,
+  pageSize: 10,
+  filters: {},
+  lastResult: null,
+  editModal: null,
+  addModal: null
+};
 
-    // Initialization
-    function init() {
-        state.addModal  = new bootstrap.Modal(document.getElementById('addModal'));
-        state.editModal = new bootstrap.Modal(document.getElementById('editModal'));
+function init() {
+  state.editModal = new bootstrap.Modal('#editModal');
+  state.addModal  = new bootstrap.Modal('#addModal');
 
-        UsuarioServidorService.init()
-            .done(function () {
-                loadUsuarios();
-                setupEventHandlers();
-            })
-            .fail(function () {
-                showError('Falha ao inicializar usuários servidores');
-            });
-    }
+  bindEvents();
+  load();
+}
 
-    // Data loading
-    function loadUsuarios() {
-        var result = UsuarioServidorService.getPaginated(
-            state.currentPage,
-            state.pageSize,
-            state.filters
-        );
-        renderTable(result.data);
-        renderPagination(result);
-    }
+async function load() {
+  const result = await UsuarioServidorAPI.search({
+    page: state.page,
+    pageSize: state.pageSize,
+    filters: state.filters
+  });
 
-    // Rendering
-    function renderTable(usuarios) {
-        var tbody = $('#tbodyServidores');
-        tbody.empty();
+  state.lastResult = result;
 
-        if (!usuarios.length) {
-            tbody.append(
-                '<tr><td colspan="6" class="text-center">Nenhum registro encontrado</td></tr>'
-            );
-            return;
-        }
+  renderTable(result.data);
+  renderPagination(result);
+}
 
-        usuarios.forEach(function (u) {
-            var row = $('<tr>').append(
-                $('<td>').text(u.nome),
-                $('<td>').text(u.login),
-                $('<td>').text(u.funcao),
-                $('<td>').text(u.cargo),
-                $('<td>').text(u.especialidade || '-'),
-                $('<td>').append(renderActions(u.id))
-            );
-            tbody.append(row);
-        });
-    }
+/* ---------- Rendering ---------- */
+function renderTable(usuarios) {
+  const tbody = $('#rowsServidores').empty();
 
-    function renderActions(id) {
-        return $('<div>').addClass('btn-group btn-group-sm').append(
-            $('<button>')
-                .addClass('btn btn-outline-primary')
-                .attr('title', 'Editar')
-                .data('id', id)
-                .on('click', handleEdit)
-                .append($('<i>').addClass('fas fa-edit')),
-            $('<button>')
-                .addClass('btn btn-outline-danger')
-                .attr('title', 'Excluir')
-                .data('id', id)
-                .on('click', handleDelete)
-                .append($('<i>').addClass('fas fa-trash'))
-        );
-    }
+  if (!usuarios.length) {
+    tbody.append('<tr><td colspan="6">Nenhum registro</td></tr>');
+    return;
+  }
 
-    // Pagination
-    function renderPagination(result) {
-        $('#txtPaginationInfo').text(
-            'Página ' + result.page + ' de ' + result.pages +
-            ' — ' + result.total + ' registros'
-        );
+  usuarios.forEach(u => {
+    tbody.append(`
+      <tr>
+        <td>${u.nome}</td>
+        <td>${u.login}</td>
+        <td>${u.funcao}</td>
+        <td>${u.cargo}</td>
+        <td>${u.especialidade}</td>
+        <td>
+          <button class="btn btn-sm btn-primary js-edit" data-id="${u.id}">
+            Editar
+          </button>
+          <button class="btn btn-sm btn-danger js-delete" data-id="${u.id}">
+            Excluir
+          </button>
+        </td>
+      </tr>
+    `);
+  });
+}
 
-        var pagination = $('#ulPaginationControls');
-        pagination.empty();
+function renderPagination(p) {
+  const ul = $('#ulNavControls').empty();
 
-        pagination.append(createNavButton('Anterior', result.page === 1, function () {
-            state.currentPage--;
-            loadUsuarios();
-        }));
+  for (let i = 1; i <= p.totalPages; i++) {
+    ul.append(`
+      <li class="page-item ${i === p.page ? 'active' : ''}">
+        <a class="page-link js-page" data-page="${i}">${i}</a>
+      </li>
+    `);
+  }
+}
 
-        for (var i = 1; i <= result.pages; i++) {
-            pagination.append(createPageButton(i, result.page));
-        }
+/* ---------- Events ---------- */
+function bindEvents() {
+  $('#btnAddNew').on('click', () => {
+    $('#addForm')[0].reset();
+    state.addModal.show();
+  });
 
-        pagination.append(createNavButton('Próxima', result.page === result.pages, function () {
-            state.currentPage++;
-            loadUsuarios();
-        }));
-    }
+  $('#btnSaveNew').on('click', saveNew);
+  $('#btnSaveEdit').on('click', saveEdit);
 
-    function createPageButton(page, current) {
-        return $('<li>')
-            .addClass('page-item' + (page === current ? ' active' : ''))
-            .append(
-                $('<a>')
-                    .addClass('page-link')
-                    .attr('href', '#')
-                    .text(page)
-                    .on('click', function (e) {
-                        e.preventDefault();
-                        state.currentPage = page;
-                        loadUsuarios();
-                    })
-            );
-    }
+  $('#dataTableBody')
+    .on('click', '.js-edit', openEdit)
+    .on('click', '.js-delete', remove);
 
-    function createNavButton(label, disabled, action) {
-        return $('<li>')
-            .addClass('page-item' + (disabled ? ' disabled' : ''))
-            .append(
-                $('<a>')
-                    .addClass('page-link')
-                    .attr('href', '#')
-                    .text(label)
-                    .on('click', function (e) {
-                        e.preventDefault();
-                        if (!disabled) action();
-                    })
-            );
-    }
+  $('#paginationControls')
+    .on('click', '.js-page', e => {
+      state.page = Number($(e.target).data('page'));
+      load();
+    });
+}
 
-    // =====================================================
-    // Event handlers
-    // =====================================================
-    function setupEventHandlers() {
-        $('#btnApplyFilter').on('click', handleApplyFilter);
-        $('#btnClearFilter').on('click', handleClearFilter);
+/* ---------- Actions ---------- */
+async function openEdit(e) {
+  const id = $(e.currentTarget).data('id');
+  const u = await UsuarioServidorAPI.getById(id);
 
-        $('#btnRefresh').on('click', handleRefresh);
-        $('#btnAddNew').on('click', handleAddNew);
+  $('#editId').val(u.id);
+  $('#editNome').val(u.nome);
+  $('#editLogin').val(u.login);
+  $('#editFuncao').val(u.funcao);
+  $('#editCargo').val(u.cargo);
+  $('#editEspecialidade').val(u.especialidade);
 
-        $('#btnSaveNew').on('click', handleSaveNew);
-        $('#btnSaveEdit').on('click', handleSaveEdit);
-    }
+  state.editModal.show();
+}
 
-    function handleApplyFilter() {
-        state.filters.unidadeID = $('#filterUnidade').val();
-        state.filters.search   = $('#filterSearch').val();
-        state.currentPage = 1;
-        loadUsuarios();
-    }
+async function saveNew() {
+  const dto = CreateUsuarioServidorDTO({
+    unidadeID: $('#addUnidadeID').val(),
+    nome: $('#addNome').val(),
+    login: $('#addLogin').val(),
+    funcao: $('#addFuncao').val(),
+    cargo: $('#addCargo').val(),
+    especialidade: $('#addEspecialidade').val()
+  });
 
-    function handleClearFilter() {
-        $('#filterUnidade').val('');
-        $('#filterSearch').val('');
+  await UsuarioServidorAPI.create(dto);
+  state.addModal.hide();
+  load();
+}
 
-        state.filters = { unidadeID: '', search: '' };
-        state.currentPage = 1;
-        loadUsuarios();
-    }
+async function saveEdit() {
+  const id = $('#editId').val();
 
-    function handleRefresh() {
-        UsuarioServidorService.init().done(function () {
-            loadUsuarios();
-            showSuccess('Dados atualizados');
-        });
-    }
+  await UsuarioServidorAPI.update(id, {
+    nome: $('#editNome').val(),
+    login: $('#editLogin').val(),
+    funcao: $('#editFuncao').val(),
+    cargo: $('#editCargo').val(),
+    especialidade: $('#editEspecialidade').val()
+  });
 
-    // CRUD actions
-    function handleAddNew() {
-        $('#addForm')[0].reset();
-        state.addModal.show();
-    }
+  state.editModal.hide();
+  load();
+}
 
-    function handleEdit(e) {
-        var id = $(e.currentTarget).data('id');
-        var u = UsuarioServidorService.getById(id);
+async function remove(e) {
+  const id = $(e.currentTarget).data('id');
+  if (!confirm('Confirma exclusão lógica?')) return;
 
-        if (!u) return;
+  await UsuarioServidorAPI.softDelete(id);
+  load();
+}
 
-        $('#editId').val(u.id);
-        $('#editNome').val(u.nome);
-        $('#editLogin').val(u.login);
-        $('#editFuncao').val(u.funcao);
-        $('#editCargo').val(u.cargo);
-        $('#editEspecialidade').val(u.especialidade);
-
-        state.editModal.show();
-    }
-
-    function handleSaveNew() {
-        var dto = {
-            unidadeID     : $('#addUnidade').val(),
-            nome          : $('#addNome').val(),
-            login         : $('#addLogin').val(),
-            funcao        : $('#addFuncao').val(),
-            cargo         : $('#addCargo').val(),
-            especialidade : $('#addEspecialidade').val()
-        };
-
-        UsuarioServidorService.add(CreateUsuarioServidorDTO(dto));
-        state.addModal.hide();
-
-        state.currentPage = 1;
-        loadUsuarios();
-        showSuccess('Usuário criado com sucesso');
-    }
-
-    function handleSaveEdit() {
-        var id = $('#editId').val();
-
-        UsuarioServidorService.update(id, {
-            nome          : $('#editNome').val(),
-            login         : $('#editLogin').val(),
-            funcao        : $('#editFuncao').val(),
-            cargo         : $('#editCargo').val(),
-            especialidade : $('#editEspecialidade').val()
-        });
-
-        state.editModal.hide();
-        loadUsuarios();
-        showSuccess('Usuário atualizado com sucesso');
-    }
-
-    function handleDelete(e) {
-        var id = $(e.currentTarget).data('id');
-        var u = UsuarioServidorService.getById(id);
-
-        if (!u) return;
-
-        if (confirm('Deseja excluir ' + u.nome + '?')) {
-            UsuarioServidorService.remove(id);
-
-            if (state.currentPage > 1 &&
-                UsuarioServidorService.getPaginated(
-                    state.currentPage,
-                    state.pageSize,
-                    state.filters
-                ).data.length === 0) {
-                state.currentPage--;
-            }
-            loadUsuarios();
-            showSuccess('Usuário excluído');
-        }
-    }
-
-    // Messaging helpers
-    function showSuccess(msg) {
-        alert(msg);
-    }
-
-    function showError(msg) {
-        alert('Erro: ' + msg);
-    }
-})(jQuery);
+/* ---------- Public ---------- */
+export const UsuarioServidorGateway = {
+  init,
+  applyFilter(filters) {
+    state.filters = filters;
+    state.page = 1;
+    load();
+  },
+  refresh: load
+};
