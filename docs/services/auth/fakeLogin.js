@@ -36,7 +36,7 @@ const fetchMappedServidores = async () => {
     const unit = unidades.find(u => u.id === servidor.unidadeID);
     return {
       ...servidor,
-      unidade     : unit ? unit : 'Não localizada',
+      unidade     : unit ? unit.sigla : 'Não localizada',
       hierarquia  : unit ? buildUnidadeHierarchy(unit, unidadesById) : 'Não localizada',
       podeAcessar : escopo.includes(servidor.unidade) || unit.sigla.startsWith('CREAS')
     }
