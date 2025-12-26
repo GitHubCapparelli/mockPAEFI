@@ -19,7 +19,7 @@ $(document).ready(async () => {
         exibirServidor();
         await UsuarioServidorGateway.init();
     } else {
-        console.warn('Usuário não localizado. Redirecionando...');
+        lblMensagem.text('Usuário não localizado. Redirecionando...');
         window.location.href = '/mockPAEFI/';
     }
 });
