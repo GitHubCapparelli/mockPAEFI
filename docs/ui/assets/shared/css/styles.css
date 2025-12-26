@@ -97,7 +97,7 @@ body {
 
 .txtServidor-nome,
 .txtServidor-unidade {
-    font-size: 0.9rem;
+    font-size: 0.7rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -105,8 +105,8 @@ body {
     line-height: 1.3;
 }
 
-.txtServidor-unidade {
-    font-size: 0.7rem;
+.txtServidor-nome {
+    font-size: 0.9rem;
     font-weight: 500;
 }
 

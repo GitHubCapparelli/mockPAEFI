@@ -19,6 +19,8 @@ const buildUnidadeHierarchy = (unit, unidades) => {
     if (!current.hierarquiaID) break;
     current = unidades.get(current.hierarquiaID);
   }
+  siglas.unshift('SEEDS');
+  siglas.unshift('SEDES');
 
   return siglas.join(' / ');
 };
