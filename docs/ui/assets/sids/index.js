@@ -19,31 +19,27 @@ async function selecionarPerfil() {
   const userID  = $(this).val();
   const user    = await AuthService.EmulateLogin(userID);
   showIf(user);
+  
+  console.log(user);
 }
 
 function showIf(user) {
-  if (!user || !user.podeAcessar) {
-    hideAll();
-    return;
-  } 
-  divPaefi.show();
-  txtLogin.text(user.login);
+  hideAll();
+  if (user && user.podeAcessar) {
+    divPaefi.show();
+    txtLogin.text(user.login);
 
-  if (user.podeAcessar) {
-    divGestao.show();
+    if (user.podeAcessar) {
+      divGestao.show();
 
-    if (user.unidade === 'SUBSAS') {
-      divAdmin.show();
+      if (user.unidade === 'SUBSAS') {
+        divAdmin.show();
+      }
     }
   }
 }
 
-function initCmbPerfil() {
-
-}
-
 $(document).ready(() => {
-    initCmbPerfil();
     $('#cmbPerfil').on('change', selecionarPerfil);
     divPaefi.hide();
 
