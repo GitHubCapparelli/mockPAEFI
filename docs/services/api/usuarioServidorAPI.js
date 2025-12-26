@@ -1,4 +1,4 @@
-import { InMemory } from '../storage.js';
+import { InMemory }                 from '../storage.js';
 import { CreateUsuarioServidorDTO } from '../../data/factory/usuarioServidorDTO.js';
 
 const ENTITY    = 'usuariosServidores';
@@ -9,23 +9,23 @@ export const UsuarioServidorAPI = (function () {
 
     async function init() {
         const data = loadInitialData();
-        InMemory.InitStore({[ENTITY]: data});
+        InMemory.InitStore({ [ENTITY]: data });
 
         return true;
     }
 
     async function loadInitialData() {
-        try {
-          const response = await fetch(DATA_PATH);
-          const json     = await response.json();
-          const users    = json.users ?? json ?? [];  
-          const result   = users.map(u => CreateUsuarioServidorDTO(u));
-          return result;
-        
-        } catch (err) {
-          console.error('Error loading initial usuariosServidores:', err);
-          return [];
-        }
+      try {
+        const response = await fetch(DATA_PATH);
+        const json     = await response.json();
+        const users    = json.users ?? json ?? [];
+
+        return users.map(u => CreateUsuarioServidorDTO(u));
+      
+      } catch (err) {
+        console.error('Error loading initial usuariosServidores:', err);
+        return [];
+      }
     }
 
     async function getAll() {
