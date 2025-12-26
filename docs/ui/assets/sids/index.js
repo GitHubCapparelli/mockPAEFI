@@ -22,7 +22,7 @@ async function selecionarPerfil() {
 }
 
 function showIf(user) {
-  if (!user) {
+  if (!user || !user.podeAcessar) {
     hideAll();
     return;
   } 
