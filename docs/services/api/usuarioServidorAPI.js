@@ -1,16 +1,31 @@
 import { InMemory } from '../storage.js';
 import { CreateUsuarioServidorDTO } from '../../data/factory/usuarioServidorDTO.js';
 
-const ENTITY = 'usuariosServidores';
+const ENTITY    = 'usuariosServidores';
+const DATA_PATH = '/mockPAEFI/data/mock/usuariosServidores.json';
 
 export const UsuarioServidorAPI = (function () {
     'use strict';
 
-    async function init(initialData) {
-        InMemory.InitStore({
-            [ENTITY]: initialData ?? []
-        });
+    async function init() {
+        const data = loadInitialData();
+        InMemory.InitStore({[ENTITY]: data});
+
         return true;
+    }
+
+    async function loadInitialData() {
+        try {
+          const response = await fetch(DATA_PATH);
+          const json     = await response.json();
+          const users    = json.users ?? json ?? [];  
+          const result   = users.map(u => CreateUsuarioServidorDTO(u));
+          return result;
+        
+        } catch (err) {
+          console.error('Error loading initial usuariosServidores:', err);
+          return [];
+        }
     }
 
     async function getAll() {

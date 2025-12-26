@@ -13,8 +13,7 @@ async function init() {
   state.editModal = new bootstrap.Modal('#editModal');
   state.addModal  = new bootstrap.Modal('#addModal');
 
-  await UsuarioServidorAPI.init([]); // or seed data here
-
+  await UsuarioServidorAPI.init();
   bindEvents();
   load();
 }
