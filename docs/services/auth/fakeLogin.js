@@ -38,7 +38,7 @@ const fetchMappedServidores = async () => {
       ...servidor,
       unidade     : unit ? unit.sigla : 'Não localizada',
       hierarquia  : unit ? buildUnidadeHierarchy(unit, unidadesById) : 'Não localizada',
-      podeAcessar : escopo.includes(servidor.unidade) || unit.sigla.startsWith('CREAS')
+      podeAcessar : unit && (escopo.includes(unit.sigla) || unit.sigla.startsWith('CREAS'))
     }
   });
 };
