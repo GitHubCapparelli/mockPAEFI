@@ -6,22 +6,24 @@ const ENTITY = 'usuariosServidores';
 export const UsuarioServidorAPI = (function () {
     'use strict';
 
-    function init(initialData) {
+    async function init(initialData) {
         InMemory.InitStore({
             [ENTITY]: initialData ?? []
         });
+        return true;
     }
 
-    function getAll() {
+    async function getAll() {
         return InMemory.GetAll(ENTITY);
     }
 
-    function getById(id) {
-        return getAll().find(u => u.id === id) || null;
+    async function getById(id) {
+        const data = await getAll();
+        return data.find(u => u.id === id) || null;
     }
 
-    function getPaginated({ page = 1, pageSize = 10, filters = {} }) {
-        let data = getAll();
+    async function search({ page = 1, pageSize = 10, filters = {} }) {
+        let data = await getAll();
 
         if (filters.unidadeID) {
             data = data.filter(u => u.unidadeID === filters.unidadeID);
@@ -53,16 +55,51 @@ export const UsuarioServidorAPI = (function () {
         };
     }
 
-    function create(rawData) {
+    async function getPaginated({ page = 1, pageSize = 10, filters = {} }) {
+        let data = await getAll();
+
+        if (filters.unidadeID) {
+            data = data.filter(u => u.unidadeID === filters.unidadeID);
+        }
+
+        if (filters.search) {
+            const s = filters.search.toLowerCase();
+            data = data.filter(u =>
+                u.nome.toLowerCase().includes(s) ||
+                u.login.toLowerCase().includes(s)
+            );
+        }
+
+        const totalRecords = data.length;
+        const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
+        const currentPage = Math.min(Math.max(page, 1), totalPages);
+
+        const start = (currentPage - 1) * pageSize;
+        const end = start + pageSize;
+
+        return {
+            data: data.slice(start, end),
+            pagination: {
+                page: currentPage,
+                pageSize,
+                totalRecords,
+                totalPages
+            }
+        };
+    }
+
+    async function create(rawData) {
         const dto = CreateUsuarioServidorDTO(rawData);
-        const data = getAll();
+        const data = await getAll();
+
         data.push(dto);
         InMemory.SetAll(ENTITY, data);
+
         return dto;
     }
 
-    function update(id, rawData) {
-        const data = getAll();
+    async function update(id, rawData) {
+        const data = await getAll();
         const idx = data.findIndex(u => u.id === id);
         if (idx === -1) return null;
 
@@ -76,8 +113,23 @@ export const UsuarioServidorAPI = (function () {
         return data[idx];
     }
 
-    function remove(id) {
-        const data = getAll();
+    async function softDelete(id) {
+        const data = await getAll();
+        const idx = data.findIndex(u => u.id === id);
+        if (idx === -1) return null;
+
+        data[idx] = {
+            ...data[idx],
+            excluidoEm: new Date().toISOString(),
+            exclusaoFisica: false
+        };
+
+        InMemory.SetAll(ENTITY, data);
+        return data[idx];
+    }
+
+    async function remove(id) {
+        const data = await getAll();
         const idx = data.findIndex(u => u.id === id);
         if (idx === -1) return null;
 
@@ -91,8 +143,10 @@ export const UsuarioServidorAPI = (function () {
         getAll,
         getById,
         getPaginated,
+        search,        
         create,
         update,
-        remove
+        remove,
+        softDelete     
     };
 })();

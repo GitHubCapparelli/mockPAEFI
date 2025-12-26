@@ -14,10 +14,10 @@ function exibirServidor() {
     txtUnidade.text(user.hierarquia);
 }
 
-$(document).ready(() => {
+$(document).ready(async () => {
     if (user) {
         exibirServidor();
-        UsuarioServidorGateway.init();
+        await UsuarioServidorGateway.init();
     } else {
         console.warn('Usuário não localizado. Redirecionando...');
         window.location.href = '/mockPAEFI/';

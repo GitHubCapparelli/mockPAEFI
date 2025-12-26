@@ -109,7 +109,7 @@ async function openEdit(e) {
 }
 
 async function saveNew() {
-  const dto = CreateUsuarioServidorDTO({
+  await UsuarioServidorAPI.create({
     unidadeID: $('#addUnidadeID').val(),
     nome: $('#addNome').val(),
     login: $('#addLogin').val(),
@@ -118,10 +118,10 @@ async function saveNew() {
     especialidade: $('#addEspecialidade').val()
   });
 
-  await UsuarioServidorAPI.create(dto);
   state.addModal.hide();
   load();
 }
+
 
 async function saveEdit() {
   const id = $('#editId').val();
