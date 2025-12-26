@@ -9,13 +9,16 @@ const state = {
   addModal: null
 };
 
-function init() {
+async function init() {
   state.editModal = new bootstrap.Modal('#editModal');
   state.addModal  = new bootstrap.Modal('#addModal');
+
+  await UsuarioServidorAPI.init([]); // or seed data here
 
   bindEvents();
   load();
 }
+
 
 async function load() {
   const result = await UsuarioServidorAPI.search({
@@ -27,7 +30,7 @@ async function load() {
   state.lastResult = result;
 
   renderTable(result.data);
-  renderPagination(result);
+  renderPagination(result.pagination);
 }
 
 /* ---------- Rendering ---------- */
@@ -82,11 +85,11 @@ function bindEvents() {
   $('#btnSaveNew').on('click', saveNew);
   $('#btnSaveEdit').on('click', saveEdit);
 
-  $('#dataTableBody')
+  $('#rowsServidores')
     .on('click', '.js-edit', openEdit)
     .on('click', '.js-delete', remove);
 
-  $('#paginationControls')
+  $('#ulNavControls')
     .on('click', '.js-page', e => {
       state.page = Number($(e.target).data('page'));
       load();
