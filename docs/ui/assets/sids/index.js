@@ -1,5 +1,5 @@
 import { Session, CurrentUserKey } from '../../../services/storage.js';
-import { Perfil, AuthService }     from '../../../services/auth/fakeLogin.js';
+import { AuthService }             from '../../../services/auth/fakeLogin.js';
 
 const lblMessage  = $('#lblMessage');
 const divPaefi    = $('#divSids-paefi');
