@@ -29,10 +29,10 @@ function showIf(user) {
   divPaefi.show();
   txtLogin.text(user.login);
 
-  if (user.perfil === Perfil.DISEFI || user.perfil === Perfil.SUBSAS) {
+  if (user.podeAcessar) {
     divGestao.show();
 
-    if (user.perfil === Perfil.SUBSAS) {
+    if (user.unidade === 'SUBSAS') {
       divAdmin.show();
     }
   }
