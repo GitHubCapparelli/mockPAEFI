@@ -25,14 +25,17 @@ async function selecionarPerfil() {
 
 function showIf(user) {
   hideAll();
-  if (user && user.podeAcessar) {
-    divPaefi.show();
+  if (user) {
     txtLogin.text(user.login);
 
     if (user.podeAcessar) {
-      divGestao.show();
+      divPaefi.show();
 
-      if (user.unidade === 'SUBSAS') {
+      if (user.podeMonitorar) {
+        divGestao.show();
+      }
+
+      if (user.podeCadastrar) {
         divAdmin.show();
       }
     }

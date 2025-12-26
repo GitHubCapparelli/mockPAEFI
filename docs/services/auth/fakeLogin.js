@@ -24,21 +24,27 @@ const buildUnidadeHierarchy = (unit, unidades) => {
 };
 
 const fetchMappedServidores = async () => {
-  const escopo       = 'SUBSAS,CPSM,DISEFI,GERVIS';
+  const acesso       = 'SUBSAS,CPSM,DISEFI,GERVIS';
   const unidades     = await fetchUnidades();
-  const unidadesById = new Map(unidades.map(u => [u.id, u])); // for fast lookup
+  const unidadesById = new Map(unidades.map(u => [u.id, u])); 
   
   const response     = await fetch(servodoresPATH);
   const result       = await response.json();
   const servidores   = Array.isArray(result) ? result : result.usuariosServidores; 
 
   return servidores.map(servidor => {
-    const unit = unidades.find(u => u.id === servidor.unidadeID);
+    const unit           = unidades.find(u => u.id === servidor.unidadeID);
+    const podeAcessar    = unit && (acesso.includes(unit.sigla) || unit.sigla.startsWith('CREAS'));
+    const podeMonitorar  = unit && (acesso.includes(unit.sigla) || servidor.funcao === 'Gerente');
+    const podeCadastrar  = unit && (unit.sigla === 'SUBSAS' || unit.sigla === 'GERVIS')
+
     return {
       ...servidor,
-      unidade     : unit ? unit.sigla : 'Não localizada',
-      hierarquia  : unit ? buildUnidadeHierarchy(unit, unidadesById) : 'Não localizada',
-      podeAcessar : unit && (escopo.includes(unit.sigla) || unit.sigla.startsWith('CREAS'))
+      unidade       : unit ? unit.sigla : 'Não localizada',
+      hierarquia    : unit ? buildUnidadeHierarchy(unit, unidadesById) : 'Não localizada',
+      podeAcessar   : podeAcessar,
+      podeMonitorar : podeMonitorar,
+      podeCadastrar : podeCadastrar
     }
   });
 };
@@ -55,9 +61,5 @@ export const AuthService = {
     }
     return user;
   }
-//  ,
-//  GetCurrentUser() {
-//    return Session.Get(CurrentUserKey);
-//  }
 };
 
