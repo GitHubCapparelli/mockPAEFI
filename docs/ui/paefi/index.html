@@ -53,22 +53,33 @@
     <section class="filters-bar mx-5rem my-5 d-flex justify-content-between align-items-end gap-3">
         <div class="filter-options d-flex align-items-center gap-3 flex-grow-1 flex-nowrap">
             <div class="filter-item">
-                <label for="filterStatus">Status</label>
-                <select class="form-select" id="filterStatus">
-                    <option value="">All Statuses</option>
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                    <option value="pending">Pending</option>
+                <label for="filterFuncao">Função</label>
+                <select class="form-select" id="filterFuncao" required>
+                    <option value="">Todas</option>
+                    <option value="NaoInformado">Não informada</option>
+                    <option value="acessor">Assessor</option>
+                    <option value="diretor">Diretor</option>
+                    <option value="gerente">Gerente</option>
                 </select>
             </div>
             <div class="filter-item">
-                <label for="filterRole">User Role</label>
-                <select class="form-select" id="filterRole">
-                    <option value="">All Roles</option>
-                    <option value="admin">Admin</option>
-                    <option value="manager">Manager</option>
-                    <option value="employee">Employee</option>
-                    <option value="contractor">Contractor</option>
+                <label for="filterCargo">Cargo</label>
+                <select class="form-select" id="filterCargo" required>
+                    <option value="">Todos</option>
+                    <option value="NaoInformado">Não informado</option>
+                    <option value="especialista">Especialista</option>
+                    <option value="tecnico">Técnico</option>
+                </select>
+            </div>
+            <div class="filter-item">
+                <label for="filterEspecialidade">Especialidade</label>
+                <select class="form-select" id="filterEspecialidade" required>
+                    <option value="">Todas</option>
+                    <option value="NaoInformado">Não informada</option>
+                    <option value="psicologo">Psicologo</option>
+                    <option value="assistenteSocial">Assistente Social</option>
+                    <option value="agenteSocial">Agente Social</option>
+                    <option value="agenteAdministrativo">Agente Administrativo</option>
                 </select>
             </div>
         </div>
@@ -86,7 +97,7 @@
     <section class="action-buttons mx-5rem my-5 d-flex justify-content-between align-items-center gap-3">
         <div class="action-buttons-left d-flex align-items-center gap-3 flex-grow-1 flex-nowrap">
             <button class="btn btn-primary" id="btnAddNew">
-                <i class="fas fa-plus"></i> Add New
+                <i class="fas fa-plus"></i> Incluir Servidor
             </button>
         </div>
         <div class="action-buttons-right d-flex justify-content-end align-items-end gap-3">
@@ -160,7 +171,7 @@
                                 <option value="NaoInformado">Não informado</option>
                                 <option value="acessor">Assessor</option>
                                 <option value="diretor">Diretor</option>
-                                <option value="gerent">Gerente</option>
+                                <option value="gerente">Gerente</option>
                             </select>
                         </div>
                         <div class="mb-3">
@@ -215,7 +226,7 @@
                                 <option value="NaoInformado">Não informado</option>
                                 <option value="acessor">Assessor</option>
                                 <option value="diretor">Diretor</option>
-                                <option value="gerent">Gerente</option>
+                                <option value="gerente">Gerente</option>
                             </select>
                         </div>
                         <div class="mb-3">

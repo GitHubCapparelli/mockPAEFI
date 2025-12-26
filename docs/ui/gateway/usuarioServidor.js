@@ -25,7 +25,9 @@ const editLoginID          = '#editLogin';
 const editFuncaoID         = '#editFuncao';
 const editCargoID          = '#editCargo';
 const editEspecialidadeID  = '#editEspecialidade';
+
 const confirmDeleteMSG     = 'Confirma exclusão lógica ?';
+const naoInformado         = 'NaoInformado';
 
 const state = {
   page: 1,
@@ -73,9 +75,9 @@ function renderTable(list) {
       <tr>
         <td>${u.nome}</td>
         <td>${u.login}</td>
-        <td>${u.funcao}</td>
-        <td>${u.cargo}</td>
-        <td>${u.especialidade}</td>
+        <td>${u.funcao === naoInformado ? '' : u.funcao}</td>
+        <td>${u.cargo === naoInformado ? '' : u.cargo}</td>
+        <td>${u.especialidade === naoInformado ? '' : u.especialidade}</td>
         <td>
           <button class="btn btn-sm btn-primary js-edit" data-id="${u.id}" title="Editar">
             <i class="fas fa-edit"></i>
@@ -100,7 +102,7 @@ function renderPagination(result) {
 
     var prevLi = $('<li>').addClass('page-item' + (result.currentPage === 1 ? ' disabled' : ''));
     prevLi.append(
-        $('<a>').addClass('page-link').attr('href', '#').text('Previous')
+        $('<a>').addClass('page-link').attr('href', '#').text('Anterior')
             .on('click', function(e) {
                 e.preventDefault();
                 if (result.currentPage > 1) {
@@ -140,7 +142,7 @@ function renderPagination(result) {
 
     var nextLi = $('<li>').addClass('page-item' + (result.currentPage === result.totalPages ? ' disabled' : ''));
     nextLi.append(
-        $('<a>').addClass('page-link').attr('href', '#').text('Next')
+        $('<a>').addClass('page-link').attr('href', '#').text('Próxima')
             .on('click', function(e) {
                 e.preventDefault();
                 if (result.currentPage < result.totalPages) {
