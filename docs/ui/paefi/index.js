@@ -4,7 +4,7 @@ import { UsuarioServidorGateway } from '../gateway/usuarioServidor.js';
 const user = Session.Get(CurrentUserKey);
 
 const txtNome     = $('#txtUser-nome');
-const txtLogin    = $('#txtUserlogin');
+const txtLogin    = $('#txtUser-login');
 const txtUnidade  = $('#txtUser-unidade');
 const lblMensagem = $('#lblMensagem');
 
