@@ -8,24 +8,36 @@ export const UsuarioServidorAPI = (function () {
     'use strict';
 
     async function init() {
-        const data = loadInitialData();
+        const data = await loadInitialData();   
         InMemory.InitStore({ [ENTITY]: data });
-
         return true;
     }
 
     async function loadInitialData() {
-      try {
-        const response = await fetch(DATA_PATH);
-        const json     = await response.json();
-        const users    = json.users ?? json ?? [];
+        try {
+            let users      = [];
+            const response = await fetch(DATA_PATH);
+            const json     = await response.json();
 
-        return users.map(u => CreateUsuarioServidorDTO(u));
-      
-      } catch (err) {
-        console.error('Error loading initial usuariosServidores:', err);
-        return [];
-      }
+            if (Array.isArray(json)) {
+                users = json;
+            } 
+            else if (Array.isArray(json.users)) {
+                users = json.users;
+            }
+            else if (Array.isArray(json.usuariosServidores)) {
+                users = json.usuariosServidores;
+            } 
+            else {
+                console.warn('Unexpected usuariosServidores JSON shape:', json);
+                users = [];
+            }
+            return users.map(u => CreateUsuarioServidorDTO(u));
+
+        } catch (err) {
+            console.error('Error loading initial usuariosServidores:', err);
+            return [];
+        }
     }
 
     async function getAll() {
