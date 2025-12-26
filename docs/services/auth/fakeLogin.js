@@ -20,7 +20,7 @@ const buildUnidadeHierarchy = (unit, unidades) => {
     current = unidades.get(current.hierarquiaID);
   }
 
-  return siglas.join('/');
+  return siglas.join(' / ');
 };
 
 const fetchMappedServidores = async () => {
