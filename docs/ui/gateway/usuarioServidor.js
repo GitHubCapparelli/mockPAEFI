@@ -31,7 +31,7 @@ const naoInformado         = 'NaoInformado';
 
 const state = {
   page: 1,
-  pageSize: 10,
+  pageSize: 4,
   filters: {},
   lastResult: null,
   editModal: null,

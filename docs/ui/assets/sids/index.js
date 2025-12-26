@@ -1,20 +1,11 @@
 import { Session, CurrentUserKey } from '../../../services/storage.js';
-import { Perfil, AuthService }      from '../../../services/auth/fakeLogin.js';
+import { Perfil, AuthService }     from '../../../services/auth/fakeLogin.js';
 
 const lblMessage  = $('#lblMessage');
 const divPaefi    = $('#divSids-paefi');
 const divGestao   = $('#divPaefi-supervisao');
 const divAdmin    = $('#divPaefi-admin');
 const txtLogin    = $('#txtUser-login');
-
-function mapear(perfil) {
-  switch (perfil) {
-    case 'creas' :  return Perfil.CREAS;
-    case 'disefi':  return Perfil.DISEFI;
-    case 'subsas':  return Perfil.SUBSAS;
-    default:        return Perfil.OUTRO;
-  }
-}
 
 function hideAll() {
   divPaefi.hide();
@@ -25,18 +16,16 @@ function hideAll() {
 }
 
 async function selecionarPerfil() {
-  const value  = $(this).val();
-  const perfil = mapear(value);
-  const user   = await AuthService.EmulateLogin(perfil);
+  const userID  = $(this).val();
+  const user    = await AuthService.EmulateLogin(userID);
   showIf(user);
 }
 
 function showIf(user) {
-  if (!user || user.perfil === Perfil.OUTRO) {
+  if (!user) {
     hideAll();
     return;
   } 
-
   divPaefi.show();
   txtLogin.text(user.login);
 

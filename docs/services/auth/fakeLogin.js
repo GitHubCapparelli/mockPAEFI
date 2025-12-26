@@ -1,28 +1,13 @@
 import { Session, CurrentUserKey } from '../storage.js';
 
+const unidadesPATH    = '/mockPAEFI/data/mock/unidades.json';
+const servodoresPATH  = '/mockPAEFI/data/mock/usuariosServidores.json';
+
 const fetchUnidades = async () => {
-  const response = await fetch('/mockPAEFI/data/mock/unidades.json');
+  const response = await fetch(unidadesPATH);
   const result   = await response.json();
   return Array.isArray(result) ? result : result.unidades; 
 };
-
-export const Perfil = Object.freeze({
-  CREAS   : 'creas',
-  DISEFI  : 'disefi',
-  SUBSAS  : 'subsas',
-  OUTRO   : 'outro'
-});
-
-function mapPerfil(unidade) {
-  if(unidade.sigla.startsWith('CREAS')) {
-    return Perfil.CREAS;
-  } else if (unidade.sigla === 'DISEFI' || unidade.sigla === 'CPSM') {
-    return Perfil.DISEFI;
-  } else if (unidade.sigla === 'GERVIS' || unidade.sigla === 'SUBSAS') {
-    return Perfil.SUBSAS;
-  } 
-  return Perfil.OUTRO;
-}
 
 const buildUnidadeHierarchy = (unit, unidades) => {
   const siglas = [];
@@ -39,40 +24,40 @@ const buildUnidadeHierarchy = (unit, unidades) => {
 };
 
 const fetchMappedServidores = async () => {
+  const escopo       = 'SUBSAS,CPSM,DISEFI,GERVIS';
   const unidades     = await fetchUnidades();
   const unidadesById = new Map(unidades.map(u => [u.id, u])); // for fast lookup
   
-  const response     = await fetch('/mockPAEFI/data/mock/usuariosServidores.json');
+  const response     = await fetch(servodoresPATH);
   const result       = await response.json();
   const servidores   = Array.isArray(result) ? result : result.usuariosServidores; 
 
-  return servidores.map(s => {
-    const unit = unidades.find(u => u.id === s.unidadeID);
-    const role = mapPerfil(unit);
+  return servidores.map(servidor => {
+    const unit = unidades.find(u => u.id === servidor.unidadeID);
     return {
-      ...s,
-      unidade    : unit ? unit : 'Não localizada',
-      hierarquia : unit ? buildUnidadeHierarchy(unit, unidadesById) : 'Não localizada',
-      perfil     : role
+      ...servidor,
+      unidade     : unit ? unit : 'Não localizada',
+      hierarquia  : unit ? buildUnidadeHierarchy(unit, unidadesById) : 'Não localizada',
+      podeAcessar : escopo.contains(servidor.unidade) || unit.sigla.startsWith('CREAS')
     }
   });
 };
 
 export const AuthService = {
-  async EmulateLogin(perfil) {
+  async EmulateLogin(userID) {
     Session.Clear();    
 
     const list = await fetchMappedServidores();
-    const user = list.find(s => s.perfil === perfil);
+    const user = list.find(s => s.id === userID);
 
-    if (user && user.perfil !== Perfil.OUTRO) {
+    if (user && user.podeAcessar) {
       Session.Set(CurrentUserKey, user);
     }
     return user;
-  },
-
-  GetCurrentUser() {
-    return Session.Get(CurrentUserKey);
   }
+//  ,
+//  GetCurrentUser() {
+//    return Session.Get(CurrentUserKey);
+//  }
 };
 
