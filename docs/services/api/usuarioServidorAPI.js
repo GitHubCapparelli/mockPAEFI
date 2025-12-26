@@ -1,91 +1,98 @@
+import { InMemory } from '../storage.js';
 import { CreateUsuarioServidorDTO } from '../../data/factory/usuarioServidorDTO.js';
 
-export const UsuarioServidorService = (function () {
-  'use strict';
+const ENTITY = 'usuariosServidores';
 
-  let store = [];
+export const UsuarioServidorAPI = (function () {
+    'use strict';
 
-  function init() {
-    return $.ajax({
-      url: '/mockPAEFI/data/mock/usuariosServidores.json',
-      dataType: 'json'
-    }).then(data => {
-      store = (data.usuariosServidores || []).map(CreateUsuarioServidorDTO);
-    });
-  }
-
-  function getAll(filters = {}) {
-    let result = [...store];
-
-    if (filters.unidadeID) {
-      result = result.filter(u => u.unidadeID === filters.unidadeID);
+    function init(initialData) {
+        InMemory.InitStore({
+            [ENTITY]: initialData ?? []
+        });
     }
 
-    if (filters.search) {
-      const s = filters.search.toLowerCase();
-      result = result.filter(u =>
-        u.nome.toLowerCase().includes(s) ||
-        u.login.toLowerCase().includes(s)
-      );
+    function getAll() {
+        return InMemory.GetAll(ENTITY);
     }
 
-    return result;
-  }
+    function getById(id) {
+        return getAll().find(u => u.id === id) || null;
+    }
 
-  function getPaginated(page, pageSize, filters) {
-    const data = getAll(filters);
-    const total = data.length;
-    const pages = Math.ceil(total / pageSize) || 1;
+    function getPaginated({ page = 1, pageSize = 10, filters = {} }) {
+        let data = getAll();
 
-    page = Math.min(Math.max(page, 1), pages);
+        if (filters.unidadeID) {
+            data = data.filter(u => u.unidadeID === filters.unidadeID);
+        }
 
-    const start = (page - 1) * pageSize;
-    const end = start + pageSize;
+        if (filters.search) {
+            const s = filters.search.toLowerCase();
+            data = data.filter(u =>
+                u.nome.toLowerCase().includes(s) ||
+                u.login.toLowerCase().includes(s)
+            );
+        }
+
+        const totalRecords = data.length;
+        const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
+        const currentPage = Math.min(Math.max(page, 1), totalPages);
+
+        const start = (currentPage - 1) * pageSize;
+        const end = start + pageSize;
+
+        return {
+            data: data.slice(start, end),
+            pagination: {
+                page: currentPage,
+                pageSize,
+                totalRecords,
+                totalPages
+            }
+        };
+    }
+
+    function create(rawData) {
+        const dto = CreateUsuarioServidorDTO(rawData);
+        const data = getAll();
+        data.push(dto);
+        InMemory.SetAll(ENTITY, data);
+        return dto;
+    }
+
+    function update(id, rawData) {
+        const data = getAll();
+        const idx = data.findIndex(u => u.id === id);
+        if (idx === -1) return null;
+
+        data[idx] = {
+            ...data[idx],
+            ...rawData,
+            alteradoEm: new Date().toISOString()
+        };
+
+        InMemory.SetAll(ENTITY, data);
+        return data[idx];
+    }
+
+    function remove(id) {
+        const data = getAll();
+        const idx = data.findIndex(u => u.id === id);
+        if (idx === -1) return null;
+
+        const removed = data.splice(idx, 1)[0];
+        InMemory.SetAll(ENTITY, data);
+        return removed;
+    }
 
     return {
-      data: data.slice(start, end),
-      total,
-      pages,
-      page,
-      pageSize
+        init,
+        getAll,
+        getById,
+        getPaginated,
+        create,
+        update,
+        remove
     };
-  }
-
-  function getById(id) {
-    return store.find(u => u.id === id);
-  }
-
-  function add(dto) {
-    store.push(dto);
-    return dto;
-  }
-
-  function update(id, payload) {
-    const idx = store.findIndex(u => u.id === id);
-    if (idx < 0) return null;
-
-    store[idx] = {
-      ...store[idx],
-      ...payload,
-      alteradoEm: new Date().toISOString()
-    };
-    return store[idx];
-  }
-
-  function remove(id) {
-    const idx = store.findIndex(u => u.id === id);
-    if (idx < 0) return null;
-
-    return store.splice(idx, 1)[0];
-  }
-
-  return {
-    init,
-    getAll,
-    getPaginated,
-    getById,
-    add,
-    update,
-    remove
-  };
 })();

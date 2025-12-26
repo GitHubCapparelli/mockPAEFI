@@ -1,7 +1,3 @@
-/**
- * User Service - API Layer
- * Handles all data operations for user management
- */
 var UserService = (function() {
     'use strict';
 
