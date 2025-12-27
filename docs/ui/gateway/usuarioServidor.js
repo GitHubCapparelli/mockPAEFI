@@ -11,7 +11,7 @@ const popAddID             = '#addModal';
 const popUpdateID          = '#editModal';
 
 const applyFilterBtnID     = '#btnApplyFilter';
-const cleanFilterBtnID     = '#btnCleanFilter';
+const clearFilterBtnID     = '#btnClearFilter';
 const filterEspecialID     = '#filterEspecialidade';
 const filterCargoID        = '#filterCargo';
 const filterFuncaoID       = '#filterFuncao';
@@ -236,7 +236,7 @@ function bindEvents() {
     });
 
   $(applyFilterBtnID).on('click', applyFilters);
-  $(cleanFilterBtnID).on('click', clearFilters);
+  $(clearFilterBtnID).on('click', clearFilters);
 }
 
 /* ---------- Actions ---------- */
