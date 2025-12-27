@@ -1,9 +1,20 @@
-import { UsuarioServidorAPI } from '../../services/api/usuarioServidorAPI.js';
+import { FuncaoUsuario, 
+         CargoUsuario, 
+         Especialidade 
+       } from '../../objModel.js';
+import { UsuarioServidorAPI 
+       } from '../../services/api/usuarioServidorAPI.js';
 
-const popAddID             = '#addModal';
-const popUpdateID          = '#editModal';
 const filtersSECTION       = '#sectionFilters';
 const dataSECTION          = '#sectionData';
+const popAddID             = '#addModal';
+const popUpdateID          = '#editModal';
+
+const applyFilterBtnID     = '#btnApplyFilter';
+const cleanFilterBtnID     = '#btnCleanFilter';
+const filterEspecialID     = '#filterEspecialidade';
+const filterCargoID        = '#filterCargo';
+const filterFuncaoID       = '#filterFuncao';
 
 const dataItemsID          = '#rowsServidores';
 const navInfoID            = '#txtNavInfo';
@@ -45,7 +56,7 @@ async function init() {
   state.addModal  = new bootstrap.Modal(popAddID);
 
   renderFiltersSection(); 
-  
+
   await UsuarioServidorAPI.init();
   bindEvents();
   load();
@@ -97,8 +108,20 @@ function renderFiltersSection() {
       </button>
     </div>
   `);
+  populateSelectFromEnum($('#filterFuncao'), FuncaoUsuario, 'Todas');
+  populateSelectFromEnum($('#filterCargo'), CargoUsuario, 'Todos');
+  populateSelectFromEnum($('#filterEspecialidade'), Especialidade, 'Todas');  
 }
 
+function populateSelectFromEnum($select, enumType, allLabel) {
+  $select.empty();
+  $select.append(`<option value="">${allLabel}</option>`);
+
+  enumType.All.forEach(item => {
+    if (item.Key === 'NaoInformado') return; // optional UX decision
+    $select.append(`<option value="${item.Key}">${item.Value}</option>`);
+  });
+}
 
 function renderTable(list) {
   const tbody = $(dataItemsID).empty();
@@ -211,6 +234,9 @@ function bindEvents() {
       state.page = Number($(e.target).data('page'));
       load();
     });
+
+  $(applyFilterBtnID).on('click', applyFilters);
+  $(cleanFilterBtnID).on('click', clearFilters);
 }
 
 /* ---------- Actions ---------- */
@@ -263,6 +289,26 @@ async function remove(e) {
   if (!confirm(confirmDeleteMSG)) return;
 
   await UsuarioServidorAPI.softDelete(id);
+  load();
+}
+
+function applyFilters() {
+  state.filters = {
+    cargo         : $(filterCargoID).val() || null,
+    funcao        : $(filterFuncaoID).val() || null,
+    especialidade : $(filterEspecialID).val() || null
+  };
+  state.page = 1;
+  load();
+}
+
+function clearFilters() {
+  $(filterCargoID).val('');
+  $(filterFuncaoID).val('');
+  $(filterEspecialID).val('');
+
+  state.filters = {};
+  state.page = 1;
   load();
 }
 
