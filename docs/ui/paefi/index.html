@@ -50,47 +50,8 @@
     </section>
 
     <!-- Filters -->
-    <section class="filters-bar mx-5rem my-5 d-flex justify-content-between align-items-end gap-3">
-        <div class="filter-options d-flex align-items-center gap-3 flex-grow-1 flex-nowrap">
-            <div class="filter-item">
-                <label for="filterFuncao">Função</label>
-                <select class="form-select" id="filterFuncao" required>
-                    <option value="">Todas</option>
-                    <option value="NaoInformado">Não informada</option>
-                    <option value="acessor">Assessor</option>
-                    <option value="diretor">Diretor</option>
-                    <option value="gerente">Gerente</option>
-                </select>
-            </div>
-            <div class="filter-item">
-                <label for="filterCargo">Cargo</label>
-                <select class="form-select" id="filterCargo" required>
-                    <option value="">Todos</option>
-                    <option value="NaoInformado">Não informado</option>
-                    <option value="especialista">Especialista</option>
-                    <option value="tecnico">Técnico</option>
-                </select>
-            </div>
-            <div class="filter-item">
-                <label for="filterEspecialidade">Especialidade</label>
-                <select class="form-select" id="filterEspecialidade" required>
-                    <option value="">Todas</option>
-                    <option value="NaoInformado">Não informada</option>
-                    <option value="psicologo">Psicologo</option>
-                    <option value="assistenteSocial">Assistente Social</option>
-                    <option value="agenteSocial">Agente Social</option>
-                    <option value="agenteAdministrativo">Agente Administrativo</option>
-                </select>
-            </div>
-        </div>
-        <div class="filter-buttons d-flex justify-content-end align-items-end gap-3">
-            <button class="btn btn-primary" id="btnApplyFilter">
-                <i class="fas fa-filter"></i> Filtrar
-            </button>
-            <button class="btn btn-outline-secondary" id="btnClearFilter">
-                <i class="fas fa-times"></i> Limpar
-            </button>
-        </div>
+    <section id="sectionFilters" class="filters-bar mx-5rem my-5 d-flex justify-content-between align-items-end gap-3">
+        <span class="text-muted">Carregando...</span>
     </section>
 
     <!-- Action Buttons -->
@@ -111,7 +72,7 @@
     </section>
     
     <!-- Data Table Section (servidores) -->
-    <section class="mx-5rem my-5 data-section">
+    <section id="sectionData" class="mx-5rem my-5 data-section">
         <div class="table-responsive">
             <table class="table table-striped table-hover">
                 <thead>

@@ -2,6 +2,8 @@ import { UsuarioServidorAPI } from '../../services/api/usuarioServidorAPI.js';
 
 const popAddID             = '#addModal';
 const popUpdateID          = '#editModal';
+const filtersSECTION       = '#sectionFilters';
+const dataSECTION          = '#sectionData';
 
 const dataItemsID          = '#rowsServidores';
 const navInfoID            = '#txtNavInfo';
@@ -42,6 +44,8 @@ async function init() {
   state.editModal = new bootstrap.Modal(popUpdateID);
   state.addModal  = new bootstrap.Modal(popAddID);
 
+  renderFiltersSection(); 
+  
   await UsuarioServidorAPI.init();
   bindEvents();
   load();
@@ -62,6 +66,40 @@ async function load() {
 }
 
 /* ---------- Rendering ---------- */
+function renderFiltersSection() {
+  const $section = $(filtersSECTION);
+  $section.empty();
+
+  $section.append(`
+    <div class="filter-options d-flex align-items-center gap-3 flex-grow-1 flex-nowrap">
+      <div class="filter-item">
+        <label for="filterFuncao">Função</label>
+        <select class="form-select" id="filterFuncao"></select>
+      </div>
+
+      <div class="filter-item">
+        <label for="filterCargo">Cargo</label>
+        <select class="form-select" id="filterCargo"></select>
+      </div>
+
+      <div class="filter-item">
+        <label for="filterEspecialidade">Especialidade</label>
+        <select class="form-select" id="filterEspecialidade"></select>
+      </div>
+    </div>
+
+    <div class="filter-buttons d-flex justify-content-end align-items-end gap-3">
+      <button class="btn btn-primary" id="btnApplyFilter">
+        <i class="fas fa-filter"></i> Filtrar
+      </button>
+      <button class="btn btn-outline-secondary" id="btnClearFilter">
+        <i class="fas fa-times"></i> Limpar
+      </button>
+    </div>
+  `);
+}
+
+
 function renderTable(list) {
   const tbody = $(dataItemsID).empty();
 

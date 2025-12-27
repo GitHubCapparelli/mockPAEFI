@@ -1,0 +1,145 @@
+export class FuncaoUnidade {
+    static All = [];
+
+    static FromKey(key)        { return FuncaoUnidade.All.find(x => x.Key === key) ?? null; }
+    static FromValue(value)    { return FuncaoUnidade.All.find(x => x.Value === value) ?? null; }
+    static ValueFromKey(key)   { return FuncaoUnidade.FromKey(key)?.Value ?? null; }
+    static KeyFromValue(value) { return FuncaoUnidade.FromValue(value)?.Key ?? null; }
+
+    static NaoInformada        = new FuncaoUnidade('NaoInformada','Não Informada');
+    static Direcao             = new FuncaoUnidade('Direcao','Direcao');
+    static Coordenacao         = new FuncaoUnidade('Coordenacao','Coordenacao');
+    static Gestao              = new FuncaoUnidade('Gestao','Gestao');
+    static Governanca          = new FuncaoUnidade('Governanca','Governanca');
+    static AssistenciaSocial   = new FuncaoUnidade('AssistenciaSocial','AssistenciaSocial');
+    static Outra               = new FuncaoUnidade('Outra','Outra');
+
+    constructor(key, value) {
+        this.Key = key;
+        this.Value = value;
+
+        if (!FuncaoUnidade.All.some(x => x.Key === key)) {
+            FuncaoUnidade.All.push(this);
+        }
+        Object.freeze(this);
+    }
+ 
+    toJSON() { return this.Key; }
+}
+Object.freeze(FuncaoUnidade.All);
+
+
+export class FuncaoUsuario {
+    static All = [];
+
+    static FromKey(key)        { return FuncaoUsuario.All.find(x => x.Key === key) ?? null; }
+    static FromValue(value)    { return FuncaoUsuario.All.find(x => x.Value === value) ?? null; }
+    static ValueFromKey(key)   { return FuncaoUsuario.FromKey(key)?.Value ?? null; }
+    static KeyFromValue(value) { return FuncaoUsuario.FromValue(value)?.Key ?? null; }
+
+    static NaoInformada        = new FuncaoUsuario('NaoInformada','Não Informada');
+    static Assessor            = new FuncaoUsuario('Assessor','Assessor');
+    static AssessorEspecial    = new FuncaoUsuario('AssessorEspecial','Assessor Especial');
+    static AssessorTecnico     = new FuncaoUsuario('AssessorTecnico','Assessor Técnico');
+    static Chefe               = new FuncaoUsuario('Chefe','Chefe');
+    static ChefeGabinete       = new FuncaoUsuario('ChefeGabinete','Chefe de Gabinete');
+    static Coordenador         = new FuncaoUsuario('Coordenador','Coordenador');
+    static Diretor             = new FuncaoUsuario('Diretor','Diretor');
+    static Gerente             = new FuncaoUsuario('Gerente','Gerente');
+    static Ouvidor             = new FuncaoUsuario('Ouvidor','Ouvidor');
+    static SecretarioAdjunto   = new FuncaoUsuario('SecretarioAdjunto','Secretário Adjunto');
+    static SecretarioEstado    = new FuncaoUsuario('SecretarioEstado','Secretário de Estado');
+    static SecretarioExecutivo = new FuncaoUsuario('SecretarioExecutivo','Secretário Executivo');
+    static SubSecretario       = new FuncaoUsuario('SubSecretario','Sub-Secretário');
+    static Outra               = new FuncaoUsuario('Outra','Outra');
+
+    constructor(key, value) {
+        this.Key = key;
+        this.Value = value;
+
+        if (!FuncaoUsuario.All.some(x => x.Key === key)) {
+            FuncaoUsuario.All.push(this);
+        }
+        Object.freeze(this);
+    }
+ 
+    toJSON() { return this.Key; }
+}
+Object.freeze(FuncaoUsuario.All);
+
+
+export class CargoUsuario {
+    static All = [];
+
+    static FromKey(key)        { return CargoUsuario.All.find(x => x.Key === key) ?? null; }
+    static FromValue(value)    { return CargoUsuario.All.find(x => x.Value === value) ?? null; }
+    static ValueFromKey(key)   { return CargoUsuario.FromKey(key)?.Value ?? null; }
+    static KeyFromValue(value) { return CargoUsuario.FromValue(value)?.Key ?? null; }
+
+    static NaoInformado               = new CargoUsuario('NaoInformado','Não Informado');
+    static AnalistaPlanejamento       = new CargoUsuario('AnalistaPlanejamento','Analista de Planejamento');
+    static AnalistaPoliticasPublicas  = new CargoUsuario('AnalistaPoliticasPublicas','Analista de Políticas Públicas');
+    static GestorPoliticasPublicas    = new CargoUsuario('GestorPoliticasPublicas','Gestor de Políticas Públicas');
+    static AuxiliarAdministrativo     = new CargoUsuario('AuxiliarAdministrativo','Auxiliar Administrativo');
+    static AuxiliarAssistenciaSocial  = new CargoUsuario('AuxiliarAssistenciaSocial','Auxiliar de Assistência Social');
+    static Especialista               = new CargoUsuario('Especialista','Especialista');
+    static Tecnico                    = new CargoUsuario('Tecnico','Técnico');
+    static Outro                      = new CargoUsuario('Outro','Outro');
+
+    constructor(key, value) {
+        this.Key = key;
+        this.Value = value;
+
+        if (!CargoUsuario.All.some(x => x.Key === key)) {
+            CargoUsuario.All.push(this);
+        }
+        Object.freeze(this);
+    }
+ 
+    toJSON() { return this.Key; }
+}
+Object.freeze(CargoUsuario.All);
+
+
+export class Especialidade {
+    static All = [];
+
+    static FromKey(key)        { return Especialidade.All.find(x => x.Key === key) ?? null; }
+    static FromValue(value)    { return Especialidade.All.find(x => x.Value === value) ?? null; }
+    static ValueFromKey(key)   { return Especialidade.FromKey(key)?.Value ?? null; }
+    static KeyFromValue(value) { return Especialidade.FromValue(value)?.Key ?? null; }
+
+    static NaoInformada           = new Especialidade('NaoInformada','Não Informada');
+    static Administrador          = new Especialidade('Administrador','Administrador');
+    static AgenteAdministrativo   = new Especialidade('AgenteAdministrativo','Agente Administrativo');
+    static AgenteSocial           = new Especialidade('AgenteSocial','Agente Social');
+    static AssistenteSocial       = new Especialidade('AssistenteSocial','Assistente Social');
+    static ComunicadorSocial      = new Especialidade('ComunicadorSocial','Comunicador Social');
+    static Contador               = new Especialidade('Contador','Contador');
+    static CuidadorSocial         = new Especialidade('CuidadorSocial','Cuidador Social');
+    static DireitoLegislativo     = new Especialidade('DireitoLegislativo','Direito Legislativo');
+    static EducadorSocial         = new Especialidade('EducadorSocial','Educador Social');
+    static Marceneiro             = new Especialidade('Marceneiro','Marceneiro');
+    static Motorista              = new Especialidade('Motorista','Motorista');
+    static Nutricionista          = new Especialidade('Nutricionista','Nutricionista');
+    static OperadorGrafico        = new Especialidade('OperadorGrafico','Operador Gráfico');
+    static Pedagogo               = new Especialidade('Pedagogo','Pedagogo');
+    static Planejamento           = new Especialidade('Planejamento','Planejamento');
+    static Psicologo              = new Especialidade('Psicologo','Psicologo');
+    static TecnicoEducacaoFisica  = new Especialidade('TecnicoEducacaoFisica','Técnico em Educação Física');
+    static TecnicoEducacional     = new Especialidade('TecnicoEducacional','Técnico Educacional');
+    static Outra                  = new Especialidade('Outra','Outra');
+
+    constructor(key, value) {
+        this.Key = key;
+        this.Value = value;
+
+        if (!Especialidade.All.some(x => x.Key === key)) {
+            Especialidade.All.push(this);
+        }
+        Object.freeze(this);
+    }
+ 
+    toJSON() { return this.Key; }
+}
+Object.freeze(Especialidade.All);
