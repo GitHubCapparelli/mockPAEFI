@@ -49,39 +49,6 @@ export const UsuarioServidorAPI = (function () {
         return data.find(u => u.id === id) || null;
     }
 
-    async function search({ page = 1, pageSize = 10, filters = {} }) {
-        let data = await getAll();
-
-        if (filters.unidadeID) {
-            data = data.filter(u => u.unidadeID === filters.unidadeID);
-        }
-
-        if (filters.search) {
-            const s = filters.search.toLowerCase();
-            data = data.filter(u =>
-                u.nome.toLowerCase().includes(s) ||
-                u.login.toLowerCase().includes(s)
-            );
-        }
-
-        const totalRecords = data.length;
-        const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
-        const currentPage = Math.min(Math.max(page, 1), totalPages);
-
-        const start = (currentPage - 1) * pageSize;
-        const end = start + pageSize;
-
-        return {
-            data: data.slice(start, end),
-            pagination: {
-                page: currentPage,
-                pageSize,
-                totalRecords,
-                totalPages
-            }
-        };
-    }
-
     async function getPaginated({ page = 1, pageSize = 10, filters = {} }) {
         let data = await getAll();
 
@@ -89,11 +56,23 @@ export const UsuarioServidorAPI = (function () {
             data = data.filter(u => u.unidadeID === filters.unidadeID);
         }
 
+        if (filters.funcao) {
+            data = data.filter(u => u.funcao === filters.funcao);
+        }
+
+        if (filters.cargo) {
+            data = data.filter(u => u.cargo === filters.cargo);
+        }
+
+        if (filters.especialidade) {
+            data = data.filter(u => u.especialidade === filters.especialidade);
+        }
+
         if (filters.search) {
             const s = filters.search.toLowerCase();
             data = data.filter(u =>
-                u.nome.toLowerCase().includes(s) ||
-                u.login.toLowerCase().includes(s)
+            u.nome.toLowerCase().includes(s) ||
+            u.login.toLowerCase().includes(s)
             );
         }
 
@@ -107,10 +86,10 @@ export const UsuarioServidorAPI = (function () {
         return {
             data: data.slice(start, end),
             pagination: {
-                page: currentPage,
-                pageSize,
-                totalRecords,
-                totalPages
+            page: currentPage,
+            pageSize,
+            totalRecords,
+            totalPages
             }
         };
     }
@@ -170,7 +149,6 @@ export const UsuarioServidorAPI = (function () {
         getAll,
         getById,
         getPaginated,
-        search,        
         create,
         update,
         remove,
