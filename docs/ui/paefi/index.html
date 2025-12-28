@@ -65,9 +65,6 @@
             <button class="btn btn-secondary" id="btnExport">
                 <i class="fas fa-download"></i> Exportar
             </button>
-            <button class="btn btn-info" id="btnRefresh">
-                <i class="fas fa-sync-alt"></i> Refresh
-            </button>
         </div>
     </section>
     
@@ -76,118 +73,8 @@
         <span class="text-muted">Carregando...</span>
     </section>
 
-    <!-- Edit Modal -->
-    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editModalLabel">Editando dados do Servidor</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="editForm">
-                        <input type="hidden" id="editUserId">
-                        <div class="mb-3">
-                            <label for="editNome" class="form-label">Nome</label>
-                            <input type="text" class="form-control" id="editNome" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editLogin" class="form-label">Login</label>
-                            <input type="text" class="form-control" id="editLogin" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editFuncao" class="form-label">Função</label>
-                            <select class="form-select" id="editFuncao" required>
-                                <option value="NaoInformado">Não informado</option>
-                                <option value="acessor">Assessor</option>
-                                <option value="diretor">Diretor</option>
-                                <option value="gerente">Gerente</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editCargo" class="form-label">Cargo</label>
-                            <select class="form-select" id="editCargo" required>
-                                <option value="NaoInformado">Não informado</option>
-                                <option value="especialista">Especialista</option>
-                                <option value="tecnico">Técnico</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="editEspecialidade" class="form-label">Especialidade</label>
-                            <select class="form-select" id="editEspecialidade" required>
-                                <option value="NaoInformado">Não informada</option>
-                                <option value="psicologo">Psicologo</option>
-                                <option value="assistenteSocial">Assistente Social</option>
-                                <option value="agenteSocial">Agente Social</option>
-                                <option value="agenteAdministrativo">Agente Administrativo</option>
-                            </select>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="btnSaveEdit">Salvar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add New Modal -->
-    <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="addModalLabel">Incluindo Servidor</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="addForm">
-                        <div class="mb-3">
-                            <label for="addNome" class="form-label">Nome</label>
-                            <input type="text" class="form-control" id="addNome" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="addLogin" class="form-label">Login</label>
-                            <input type="text" class="form-control" id="addLogin" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="addFuncao" class="form-label">Função</label>
-                            <select class="form-select" id="addFuncao" required>
-                                <option value="NaoInformado">Não informado</option>
-                                <option value="acessor">Assessor</option>
-                                <option value="diretor">Diretor</option>
-                                <option value="gerente">Gerente</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="addCargo" class="form-label">Cargo</label>
-                            <select class="form-select" id="addCargo" required>
-                                <option value="NaoInformado">Não informado</option>
-                                <option value="especialista">Especialista</option>
-                                <option value="tecnico">Técnico</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="addEspecialidade" class="form-label">Especialidade</label>
-                            <select class="form-select" id="addEspecialidade" required>
-                                <option value="NaoInformado">Não informada</option>
-                                <option value="psicologo">Psicologo</option>
-                                <option value="assistenteSocial">Assistente Social</option>
-                                <option value="agenteSocial">Agente Social</option>
-                                <option value="agenteAdministrativo">Agente Administrativo</option>
-                            </select>
-                        </div>
-
-
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="btnSaveNew">Incluir</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- Modals Section -->
+    <section id="sectionModals"></section>
 
     <script src="/mockPAEFI/ui/assets/shared/js/jquery-3.4.1.min.js"></script>
     <script src="/mockPAEFI/ui/assets/shared/js/bootstrap.bundle.min.js"></script>

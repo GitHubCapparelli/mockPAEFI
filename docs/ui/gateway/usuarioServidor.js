@@ -7,8 +7,9 @@ import { UsuarioServidorAPI
 
 const filtersSECTION       = '#sectionFilters';
 const dataSECTION          = '#sectionData';
-const popAddID             = '#addModal';
-const popUpdateID          = '#editModal';
+const modalsSECTION        = '#sectionModals';
+const divAddModalID        = '#addModal';
+const divEditModalID       = '#editModal';
 
 const applyFilterBtnID     = '#btnApplyFilter';
 const clearFilterBtnID     = '#btnClearFilter';
@@ -52,8 +53,8 @@ const state = {
 };
 
 async function init() {
-  state.editModal = new bootstrap.Modal(popUpdateID);
-  state.addModal  = new bootstrap.Modal(popAddID);
+  renderEditModalSkeleton();
+  state.editModal = new bootstrap.Modal(divEditModalID);
 
   renderFiltersSection(); 
   renderDataSection();
@@ -176,70 +177,73 @@ function renderTable(list) {
   });
 }
 
-/* TODO: refactor into a baseRenderer.js shared file  */
-function renderPagination_old(result) {
-    $(navInfoID).text(
-        'Mostrando ' + result.startRecord + ' - ' + result.endRecord + 
-        ' de ' + result.totalRecords + ' registros'
-    );
+function renderEditModalSkeleton() {
+  const host = $(modalsSECTION);
+  host.empty();
 
-    var pagination = $(navControlsID);
-    pagination.empty();
+  host.append(`
+    <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
 
-    var prevLi = $('<li>').addClass('page-item' + (result.currentPage === 1 ? ' disabled' : ''));
-    prevLi.append(
-        $('<a>').addClass('page-link').attr('href', '#').text('Anterior')
-            .on('click', function(e) {
-                e.preventDefault();
-                if (result.currentPage > 1) {
-                    state.currentPage--;
-                    loadUsers();
-                }
-            })
-    );
-    pagination.append(prevLi);
+          <div class="modal-header">
+            <h5 class="modal-title">Editar Servidor</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
 
-    var startPage = Math.max(1, result.currentPage - 2);
-    var endPage   = Math.min(result.totalPages, result.currentPage + 2);
+          <div class="modal-body">
+            <form id="editForm">
 
-    if (startPage > 1) {
-        pagination.append(createPageButton(1, result.currentPage));
-        if (startPage > 2) {
-            pagination.append(
-                $('<li>').addClass('page-item disabled')
-                    .append($('<a>').addClass('page-link').text('...'))
-            );
-        }
-    }
+              <input type="hidden" id="editId" />
 
-    for (var i = startPage; i <= endPage; i++) {
-        pagination.append(createPageButton(i, result.currentPage));
-    }
+              <div class="row g-3">
 
-    if (endPage < result.totalPages) {
-        if (endPage < result.totalPages - 1) {
-            pagination.append(
-                $('<li>').addClass('page-item disabled')
-                    .append($('<a>').addClass('page-link').text('...'))
-            );
-        }
-        pagination.append(createPageButton(result.totalPages, result.currentPage));
-    }
+                <div class="col-md-6">
+                  <label class="form-label">Nome</label>
+                  <input type="text" class="form-control" id="editNome" required />
+                </div>
 
-    var nextLi = $('<li>').addClass('page-item' + (result.currentPage === result.totalPages ? ' disabled' : ''));
-    nextLi.append(
-        $('<a>').addClass('page-link').attr('href', '#').text('Próxima')
-            .on('click', function(e) {
-                e.preventDefault();
-                if (result.currentPage < result.totalPages) {
-                    state.currentPage++;
-                    loadUsers();
-                }
-            })
-    );
-    pagination.append(nextLi);
+                <div class="col-md-6">
+                  <label class="form-label">Login</label>
+                  <input type="text" class="form-control" id="editLogin" required />
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">Função</label>
+                  <select class="form-select" id="editFuncao"></select>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">Cargo</label>
+                  <select class="form-select" id="editCargo"></select>
+                </div>
+
+                <div class="col-md-12">
+                  <label class="form-label">Especialidade</label>
+                  <select class="form-select" id="editEspecialidade"></select>
+                </div>
+
+              </div>
+            </form>
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button class="btn btn-primary" id="btnSaveEdit" disabled>
+              Salvar
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  `);
 }
 
+
+/* TODO: refactor into a baseRenderer.js shared file  */
 function renderPagination(p) {
   const start = (p.page - 1) * p.pageSize + 1;
   const end   = Math.min(start + p.pageSize - 1, p.totalRecords);
@@ -327,6 +331,22 @@ function bindEvents() {
 }
 
 /* ---------- Actions ---------- */
+async function openEdit(e) {
+  const id = $(e.currentTarget).data('id');
+  const u = await UsuarioServidorAPI.getById(id);
+
+  if (!u) return;
+
+  $(editIdID).val(u.id);
+  $(editNomeID).val(u.nome);
+  $(editLoginID).val(u.login);
+
+  // selects will be populated later
+  // for now, leave them empty
+
+  state.editModal.show();
+}
+
 async function openEdit(e) {
   const id = $(e.currentTarget).data('id');
   const u = await UsuarioServidorAPI.getById(id);
