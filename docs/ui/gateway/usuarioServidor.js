@@ -347,7 +347,7 @@ async function openEdit(e) {
   state.editModal.show();
 }
 
-async function openEdit(e) {
+async function openEdit_OLD(e) {
   const id = $(e.currentTarget).data('id');
   const u = await UsuarioServidorAPI.getById(id);
 
