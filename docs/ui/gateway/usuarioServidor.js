@@ -44,7 +44,7 @@ const naoInformado         = 'NaoInformado';
 
 const state = {
   page: 1,
-  pageSize: 4,
+  pageSize: 10,
   filters: {},
   lastResult: null,
   editModal: null,
@@ -115,7 +115,7 @@ function renderFiltersSection() {
 }
 
 function renderDataSection() {
-  $('#sectionData').html(`
+  $(dataSECTION).html(`
     <div class="table-responsive">
       <table class="table table-striped table-hover">
         <thead>

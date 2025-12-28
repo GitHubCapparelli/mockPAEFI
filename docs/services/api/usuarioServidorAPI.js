@@ -32,16 +32,25 @@ export const UsuarioServidorAPI = (function () {
                 console.warn('Unexpected usuariosServidores JSON shape:', json);
                 users = [];
             }
-            return users.map(u => CreateUsuarioServidorDTO(u));
-
+            const result = users.map(u => CreateUsuarioServidorDTO(u));
+            return result;
         } catch (err) {
             console.error('Error loading initial usuariosServidores:', err);
             return [];
         }
     }
 
-    async function getAll() {
-        return InMemory.GetAll(ENTITY);
+    async function getAll({ orderBy = 'nome', order = 'asc' } = {}) {
+        var result = InMemory.GetAll(ENTITY);
+        
+        if (orderBy === 'nome') {
+            result.sort((a, b) =>
+            order === 'asc'
+                ? a.nome.localeCompare(b.nome, 'pt-BR', { sensitivity: 'base' })
+                : b.nome.localeCompare(a.nome, 'pt-BR', { sensitivity: 'base' })
+            );
+        }
+        return result;
     }
 
     async function getById(id) {
@@ -70,18 +79,18 @@ export const UsuarioServidorAPI = (function () {
 
         if (filters.search) {
             const s = filters.search.toLowerCase();
-            data = data.filter(u =>
+            data    = data.filter(u =>
             u.nome.toLowerCase().includes(s) ||
             u.login.toLowerCase().includes(s)
             );
         }
 
         const totalRecords = data.length;
-        const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
-        const currentPage = Math.min(Math.max(page, 1), totalPages);
+        const totalPages   = Math.max(1, Math.ceil(totalRecords / pageSize));
+        const currentPage  = Math.min(Math.max(page, 1), totalPages);
 
         const start = (currentPage - 1) * pageSize;
-        const end = start + pageSize;
+        const end   = start + pageSize;
 
         return {
             data: data.slice(start, end),
