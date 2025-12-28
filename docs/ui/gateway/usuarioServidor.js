@@ -56,6 +56,7 @@ async function init() {
   state.addModal  = new bootstrap.Modal(popAddID);
 
   renderFiltersSection(); 
+  renderDataSection();
 
   await UsuarioServidorAPI.init();
   bindEvents();
@@ -73,7 +74,7 @@ async function load() {
   state.lastResult = result;
 
   renderTable(result.data);
-  renderPagination(result);
+  renderPagination(result.pagination);
 }
 
 /* ---------- Rendering ---------- */
@@ -113,14 +114,37 @@ function renderFiltersSection() {
   populateSelectFromEnum($('#filterEspecialidade'), Especialidade, 'Todas');  
 }
 
-function populateSelectFromEnum($select, enumType, allLabel) {
-  $select.empty();
-  $select.append(`<option value="">${allLabel}</option>`);
+function renderDataSection() {
+  $('#sectionData').html(`
+    <div class="table-responsive">
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Login</th>
+            <th>Função</th>
+            <th>Cargo</th>
+            <th>Especialidade</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody id="rowsServidores">
+          <tr>
+            <td colspan="6" class="text-center text-muted">Carregando...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-  enumType.All.forEach(item => {
-    if (item.Key === 'NaoInformado') return; // optional UX decision
-    $select.append(`<option value="${item.Key}">${item.Value}</option>`);
-  });
+    <div class="pagination-section d-flex justify-content-between align-items-center">
+      <div class="pagination-info">
+        <span id="txtNavInfo"></span>
+      </div>
+      <nav>
+        <ul id="ulNavControls" class="pagination mb-0"></ul>
+      </nav>
+    </div>
+  `);
 }
 
 function renderTable(list) {
@@ -152,7 +176,8 @@ function renderTable(list) {
   });
 }
 
-function renderPagination(result) {
+/* TODO: refactor into a baseRenderer.js shared file  */
+function renderPagination_old(result) {
     $(navInfoID).text(
         'Mostrando ' + result.startRecord + ' - ' + result.endRecord + 
         ' de ' + result.totalRecords + ' registros'
@@ -215,8 +240,76 @@ function renderPagination(result) {
     pagination.append(nextLi);
 }
 
+function renderPagination(p) {
+  const start = (p.page - 1) * p.pageSize + 1;
+  const end   = Math.min(start + p.pageSize - 1, p.totalRecords);
+
+  $(navInfoID).text(
+    `Mostrando ${start} - ${end} de ${p.totalRecords} registros`
+  );
+
+  renderPaginationControls(p);
+}
+
+function renderPaginationControls(p) {
+  const $ul = $(navControlsID);
+  $ul.empty();
+
+  const prevDisabled = p.page === 1 ? 'disabled' : '';
+  const nextDisabled = p.page === p.totalPages ? 'disabled' : '';
+
+  $ul.append(`
+    <li class="page-item ${prevDisabled}">
+      <a class="page-link" href="#" data-page="${p.page - 1}">Anterior</a>
+    </li>
+  `);
+
+  for (let i = 1; i <= p.totalPages; i++) {
+    const active = i === p.page ? 'active' : '';
+    $ul.append(`
+      <li class="page-item ${active}">
+        <a class="page-link" href="#" data-page="${i}">${i}</a>
+      </li>
+    `);
+  }
+
+  $ul.append(`
+    <li class="page-item ${nextDisabled}">
+      <a class="page-link" href="#" data-page="${p.page + 1}">Próxima</a>
+    </li>
+  `);
+}
+
+
+function populateSelectFromEnum($select, enumType, allLabel) {
+  $select.empty();
+  $select.append(`<option value="">${allLabel}</option>`);
+
+  enumType.All.forEach(item => {
+    if (item.Key === 'NaoInformado') return; // optional UX decision
+    $select.append(`<option value="${item.Key}">${item.Value}</option>`);
+  });
+}
+
 /* ---------- Events ---------- */
 function bindEvents() {
+  $(applyFilterBtnID).on('click', applyFilters);
+  $(clearFilterBtnID).on('click', clearFilters);
+
+  $(navControlsID).on('click', 'a.page-link', function (e) {
+    e.preventDefault();
+
+    const page = Number($(this).data('page'));
+    if (!page || page === state.page) return;
+
+    state.page = page;
+    load();
+  });  
+
+  $(dataItemsID)
+    .on('click', '.js-edit', openEdit)
+    .on('click', '.js-delete', remove);
+
   $(btnAddNewID).on('click', () => {
     $(addFormID)[0].reset();
     state.addModal.show();
@@ -225,18 +318,12 @@ function bindEvents() {
   $(btnSaveNewID).on('click', saveNew);
   $(btnSaveEditID).on('click', saveEdit);
 
-  $(dataItemsID)
-    .on('click', '.js-edit', openEdit)
-    .on('click', '.js-delete', remove);
+//  $(navControlsID)
+//    .on('click', '.js-page', e => {
+//      state.page = Number($(e.target).data('page'));
+//      load();
+//    });
 
-  $(navControlsID)
-    .on('click', '.js-page', e => {
-      state.page = Number($(e.target).data('page'));
-      load();
-    });
-
-  $(applyFilterBtnID).on('click', applyFilters);
-  $(clearFilterBtnID).on('click', clearFilters);
 }
 
 /* ---------- Actions ---------- */
@@ -267,7 +354,6 @@ async function saveNew() {
   state.addModal.hide();
   load();
 }
-
 
 async function saveEdit() {
   const id = $(editIdID).val();
