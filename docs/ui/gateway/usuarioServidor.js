@@ -2,7 +2,7 @@ import { FuncaoUsuario, CargoUsuario, Especialidade } from '../../objModel.js';
 import { UsuarioServidorAPI }                         from '../../services/api/usuarioServidorAPI.js';
 
 const filtersSectionID     = '#sectionFilters';
-const dataSectionID        = '#sectionData';
+const sectionDataID        = '#sectionData';
 const modalsSectionID      = '#sectionModals';
 const divivModalAddIDID    = '#divModalAdd';
 const sectionModalEditID   = '#sectionModalEdit';
