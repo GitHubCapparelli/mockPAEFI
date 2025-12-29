@@ -82,8 +82,8 @@ function renderFilters() {
   $section.empty();
 
   $section.append(`
-    <div class="w-100 p-2 simple-border d-flex flex-column flex-wrap gap-3">
-      <div class="filter-options w-100 d-flex gap-3 flex-nowrap">
+    <div class="w-100 simple-border d-flex flex-column flex-wrap gap-3">
+      <div class="filter-options w-100 p-2 d-flex gap-3 flex-nowrap">
         <div class="filter-item">
           <label for="cmbFilterFuncao">Função</label>
           <select class="form-select" id="cmbFilterFuncao"></select>
@@ -100,7 +100,7 @@ function renderFilters() {
         </div>
       </div>
 
-      <div class="filter-buttons w-100 d-flex gap-3">
+      <div class="filter-buttons w-100 p-2 d-flex gap-3">
         <button class="btn btn-primary" id="btnApplyFilter">
           <i class="fas fa-filter"></i> Filtrar
         </button>
