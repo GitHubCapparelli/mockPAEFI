@@ -1,4 +1,4 @@
-import { Session, CurrentUserKey } from '../storage.js';
+import { Session, CurrentUserKey, CurrentUnidadeKey } from '../storage.js';
 
 const unidadesPATH    = '/mockPAEFI/data/mock/unidades.json';
 const servodoresPATH  = '/mockPAEFI/data/mock/usuariosServidores.json';
@@ -60,6 +60,7 @@ export const AuthService = {
 
     if (user && user.podeAcessar) {
       Session.Set(CurrentUserKey, user);
+      Session.Set(CurrentUnidadeKey, user.unidadeID);
     }
     return user;
   }

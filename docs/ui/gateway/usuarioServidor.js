@@ -1,5 +1,6 @@
 import { FuncaoUsuario, CargoUsuario, Especialidade } from '../../objModel.js';
-import { UsuarioServidorAPI }                         from '../../services/api/usuarioServidorAPI.js';
+import { UsuariosServidoresAPI }                      from '../../services/api/usuariosServidoresAPI.js';
+import { UnidadesAPI }                                from '../../services/api/unidadesAPI.js';
 
 const sectionFiltersID     = '#sectionFilters';
 const sectionDataID        = '#sectionData';
@@ -46,26 +47,30 @@ const state = {
   lastResult: null,
   editModal: null,
   addModal: null,
-  currentUserID: null
+  currentUserID: null,
+  currentUnidadeID: null
 };
 
 async function init(currentUserID) {
   state.currentUserID = currentUserID;
 
+  renderModalAdd();
   renderModalEdit();
-  state.editModal = new bootstrap.Modal(divModalEditID);
-
-  renderFilters(); 
+  renderFilters();
   renderData();
 
-  await UsuarioServidorAPI.init();
+  state.addModal = new bootstrap.Modal(divModalAddID);
+  state.editModal = new bootstrap.Modal(divModalEditID);
+
+  await UsuariosServidoresAPI.init();
+
   bindEvents();
   load();
 }
 
 
 async function load() {
-  const result = await UsuarioServidorAPI.getPaginated({
+  const result = await UsuariosServidoresAPI.getPaginated({
     page: state.page,
     pageSize: state.pageSize,
     filters: state.filters
@@ -180,6 +185,71 @@ function renderTable(list) {
   });
 }
 
+function renderModalAdd() {
+  const host = $(sectionModelsID);
+
+  host.append(`
+    <div class="modal fade" id="divModalAdd" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <h5 class="modal-title">Novo Usuário Servidor</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <div class="modal-body">
+            <form id="addForm">
+              <input type="hidden" id="hiddenAddUnidadeId" />
+
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">Nome</label>
+                  <input type="text" class="form-control" id="txtAddNome" required />
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">Login</label>
+                  <input type="text" class="form-control" id="txtAddLogin" required />
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">Função</label>
+                  <select class="form-select" id="cmbAddFuncao"></select>
+                </div>
+
+                <div class="col-md-6">
+                  <label class="form-label">Cargo</label>
+                  <select class="form-select" id="cmbAddCargo"></select>
+                </div>
+
+                <div class="col-md-12">
+                  <label class="form-label">Especialidade</label>
+                  <select class="form-select" id="cmbAddEspecialidade"></select>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn btn-secondary" data-bs-dismiss="modal">
+              Cancelar
+            </button>
+            <button class="btn btn-primary" id="btnAddSave" disabled>
+              Salvar
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  `);
+
+  populateSelectFromEnum(cmbAddFuncaoID, FuncaoUsuario, false);
+  populateSelectFromEnum(cmbAddCargoID, CargoUsuario, false);
+  populateSelectFromEnum(cmbAddEspecialID, Especialidade, false);
+}
+
 function renderModalEdit() {
   const host = $(sectionModelsID);
   host.empty();
@@ -248,7 +318,6 @@ function renderModalEdit() {
   populateSelectFromEnum(cmbEditFuncaoID, FuncaoUsuario, false);
   populateSelectFromEnum(cmbEditEspecialID, Especialidade, false);
 }
-
 
 /* TODO: refactor into a baseRenderer.js shared file  */
 function renderPagination(p) {
@@ -339,7 +408,7 @@ function bindEvents() {
 async function openEdit(e) {
   try {
     const id = $(e.currentTarget).data('id');
-    const u = await UsuarioServidorAPI.getById(id);
+    const u = await UsuariosServidoresAPI.getById(id);
 
     if (!u) return;
 
@@ -360,13 +429,14 @@ async function openEdit(e) {
 }
 
 async function saveNew() {
-  await UsuarioServidorAPI.create({
-    unidadeID     : $(addUnidadeID).val(),
-    nome          : $(addNomeID).val(),
-    login         : $(addLoginID).val(),
-    funcao        : $(addFuncaoID).val(),
-    cargo         : $(addCargoID).val(),
-    especialidade : $(addEspecialidadeID).val()
+  await UsuariosServidoresAPI.create(state.currentUserID, {
+    unidadeID      : $(hiddenAddUnidadeID).val(),
+    nome           : $(txtAddNomeID).val(),
+    login          : $(txtAddLoginID).val(),
+    funcao         : $(cmbAddFuncaoID).val(),
+    cargo          : $(cmbAddCargoID).val(),
+    especialidade  : $(cmbAddEspecialID).val(),
+    criadoPor      : state.currentUserID
   });
 
   state.addModal.hide();
@@ -376,13 +446,12 @@ async function saveNew() {
 async function saveEdit() {
   const id = $(hiddenEditID).val();
 
-  await UsuarioServidorAPI.update(id, {
+  await UsuariosServidoresAPI.update(id, state.currentUserID, {
     nome          : $(txtEditNomeID).val(),
     login         : $(txtEditLoginID).val(),
     funcao        : $(cmbEditFuncaoID).val(),
     cargo         : $(cmbEditCargoID).val(),
-    especialidade : $(cmbEditEspecialID).val(),
-    alteradoPor   : state.currentUserID
+    especialidade : $(cmbEditEspecialID).val()
   });
 
   state.editModal.hide();
@@ -393,7 +462,7 @@ async function remove(e) {
   const id = $(e.currentTarget).data('id');
   if (!confirm(confirmDeleteMSG)) return;
 
-  await UsuarioServidorAPI.softDelete(id);
+  await UsuariosServidoresAPI.softDelete(id, state.currentUserID);
   load();
 }
 

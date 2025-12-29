@@ -1,4 +1,5 @@
-export const CurrentUserKey = 'currentUser';
+export const CurrentUserKey    = 'currentUser';
+export const CurrentUnidadeKey = 'currentUnidade';
 
 /* ---------- Persistent Adapters ---------- */
 export const Local = {

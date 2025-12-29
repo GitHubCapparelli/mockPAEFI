@@ -1,7 +1,8 @@
-import { Session, CurrentUserKey } from '../../services/storage.js';
+import { Session, CurrentUnidadeKey, CurrentUserKey } from '../../services/storage.js';
 import { UsuarioServidorGateway } from '../gateway/usuarioServidor.js';
 
 const user        = Session.Get(CurrentUserKey);
+const unidade     = Session.Get(CurrentUnidadeKey);
 
 const txtNome     = $('#txtUser-nome');
 const txtLogin    = $('#txtUser-login');
