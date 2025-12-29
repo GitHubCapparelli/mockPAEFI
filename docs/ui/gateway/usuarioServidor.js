@@ -40,7 +40,7 @@ const confirmDeleteMSG     = 'Confirma exclusão lógica ?';
 
 const state = {
   page: 1,
-  pageSize: 10,
+  pageSize: 5,
   filters: {},
   lastResult: null,
   editModal: null,
@@ -50,7 +50,6 @@ const state = {
 
 async function init(currentUserID) {
   state.currentUserID = currentUserID;
-  alert(currentUserID);
 
   renderModalEdit();
   state.editModal = new bootstrap.Modal(divModalEditID);
