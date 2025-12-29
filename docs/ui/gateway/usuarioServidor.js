@@ -36,7 +36,6 @@ const cmbEditEspecialID    = '#cmbEditEspecialidade';
 const btnEditSaveID        = '#btnEditSave';
 
 const confirmDeleteMSG     = 'Confirma exclusão lógica ?';
-const naoInformado         = 'NaoInformado';
 
 const state = {
   page: 1,
@@ -160,9 +159,9 @@ function renderTable(list) {
       <tr>
         <td title="${u.nome}">${u.nome}</td>
         <td>${u.login}</td>
-        <td>${u.funcao === naoInformada ? '' : u.funcao}</td>
-        <td>${u.cargo === naoInformado ? '' : u.cargo}</td>
-        <td>${u.especialidade === naoInformada ? '' : u.especialidade}</td>
+        <td>${u.funcao === 'NaoInformada' ? '' : u.funcao}</td>
+        <td>${u.cargo === 'NaoInformado' ? '' : u.cargo}</td>
+        <td>${u.especialidade === 'NaoInformada' ? '' : u.especialidade}</td>
         <td>
           <button class="btn btn-sm btn-primary js-edit" data-id="${u.id}" title="Editar">
             <i class="fas fa-edit"></i>
