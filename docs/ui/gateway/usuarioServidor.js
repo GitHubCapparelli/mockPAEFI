@@ -370,7 +370,7 @@ async function saveNew() {
 }
 
 async function saveEdit() {
-  const id = Number($(hiddenEditID).val());
+  const id = $(hiddenEditID).val();
 
   await UsuarioServidorAPI.update(id, {
     nome          : $(txtEditNomeID).val(),

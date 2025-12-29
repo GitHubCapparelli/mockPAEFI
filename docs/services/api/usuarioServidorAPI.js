@@ -1,156 +1,132 @@
-import { InMemory }                 from '../storage.js';
+import { InMemory } from '../storage.js';
 import { CreateUsuarioServidorDTO } from '../../data/factory/usuarioServidorDTO.js';
 
-const ENTITY    = 'usuariosServidores';
+const ENTITY = 'usuariosServidores';
 const DATA_PATH = '/mockPAEFI/data/mock/usuariosServidores.json';
 
 export const UsuarioServidorAPI = (function () {
     'use strict';
 
     async function init() {
-        const data = await loadInitialData();   
+        const data = await loadInitialData();
         InMemory.InitStore({ [ENTITY]: data });
         return true;
     }
 
     async function loadInitialData() {
         try {
-            let users      = [];
             const response = await fetch(DATA_PATH);
-            const json     = await response.json();
+            const json = await response.json();
 
-            if (Array.isArray(json)) {
-                users = json;
-            } 
-            else if (Array.isArray(json.users)) {
-                users = json.users;
-            }
-            else if (Array.isArray(json.usuariosServidores)) {
-                users = json.usuariosServidores;
-            } 
-            else {
-                console.warn('Unexpected usuariosServidores JSON shape:', json);
-                users = [];
-            }
-            const result = users.map(u => CreateUsuarioServidorDTO(u));
-            return result;
+            let users = [];
+            if (Array.isArray(json)) users = json;
+            else if (Array.isArray(json.users)) users = json.users;
+            else if (Array.isArray(json.usuariosServidores)) users = json.usuariosServidores;
+
+            return users.map(u => CreateUsuarioServidorDTO(u));
         } catch (err) {
-            console.error('Error loading initial usuariosServidores:', err);
+            console.error('Error loading usuariosServidores:', err);
             return [];
         }
     }
 
     async function getAll({ orderBy = 'nome', order = 'asc' } = {}) {
-        var result = InMemory.GetAll(ENTITY);
-        
+        const source = InMemory.GetAll(ENTITY);
+        const result = [...source]; // CRITICAL: clone
+
         if (orderBy === 'nome') {
             result.sort((a, b) =>
-            order === 'asc'
-                ? a.nome.localeCompare(b.nome, 'pt-BR', { sensitivity: 'base' })
-                : b.nome.localeCompare(a.nome, 'pt-BR', { sensitivity: 'base' })
+                order === 'asc'
+                    ? a.nome.localeCompare(b.nome, 'pt-BR', { sensitivity: 'base' })
+                    : b.nome.localeCompare(a.nome, 'pt-BR', { sensitivity: 'base' })
             );
         }
+
         return result;
     }
 
     async function getById(id) {
-        const data = await getAll();
-        return data.find(u => u.id === id) || null;
+        const data = InMemory.GetAll(ENTITY);
+        return data.find(u => u.id === id) ?? null;
     }
 
     async function getPaginated({ page = 1, pageSize = 10, filters = {} }) {
         let data = await getAll();
 
-        if (filters.unidadeID) {
-            data = data.filter(u => u.unidadeID === filters.unidadeID);
-        }
-
-        if (filters.funcao) {
-            data = data.filter(u => u.funcao === filters.funcao);
-        }
-
-        if (filters.cargo) {
-            data = data.filter(u => u.cargo === filters.cargo);
-        }
-
-        if (filters.especialidade) {
-            data = data.filter(u => u.especialidade === filters.especialidade);
-        }
+        if (filters.unidadeID) data = data.filter(u => u.unidadeID === filters.unidadeID);
+        if (filters.funcao) data = data.filter(u => u.funcao === filters.funcao);
+        if (filters.cargo) data = data.filter(u => u.cargo === filters.cargo);
+        if (filters.especialidade) data = data.filter(u => u.especialidade === filters.especialidade);
 
         if (filters.search) {
             const s = filters.search.toLowerCase();
-            data    = data.filter(u =>
-            u.nome.toLowerCase().includes(s) ||
-            u.login.toLowerCase().includes(s)
+            data = data.filter(u =>
+                u.nome.toLowerCase().includes(s) ||
+                u.login.toLowerCase().includes(s)
             );
         }
 
         const totalRecords = data.length;
-        const totalPages   = Math.max(1, Math.ceil(totalRecords / pageSize));
-        const currentPage  = Math.min(Math.max(page, 1), totalPages);
+        const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
+        const currentPage = Math.min(Math.max(page, 1), totalPages);
 
         const start = (currentPage - 1) * pageSize;
-        const end   = start + pageSize;
+        const end = start + pageSize;
 
         return {
             data: data.slice(start, end),
-            pagination: {
-            page: currentPage,
-            pageSize,
-            totalRecords,
-            totalPages
-            }
+            pagination: { page: currentPage, pageSize, totalRecords, totalPages }
         };
     }
 
     async function create(rawData) {
         const dto = CreateUsuarioServidorDTO(rawData);
-        const data = await getAll();
+        const data = InMemory.GetAll(ENTITY);
 
-        data.push(dto);
-        InMemory.SetAll(ENTITY, data);
-
+        InMemory.SetAll(ENTITY, [...data, dto]);
         return dto;
     }
 
     async function update(id, rawData) {
-        const data = await getAll();
+        const data = InMemory.GetAll(ENTITY);
         const idx = data.findIndex(u => u.id === id);
         if (idx === -1) return null;
 
-        data[idx] = {
+        const updated = {
             ...data[idx],
             ...rawData,
             alteradoEm: new Date().toISOString()
         };
 
-        InMemory.SetAll(ENTITY, data);
-        return data[idx];
+        const next = [...data];
+        next[idx] = updated;
+
+        InMemory.SetAll(ENTITY, next);
+        return updated;
     }
 
     async function softDelete(id) {
-        const data = await getAll();
+        const data = InMemory.GetAll(ENTITY);
         const idx = data.findIndex(u => u.id === id);
         if (idx === -1) return null;
 
-        data[idx] = {
-            ...data[idx],
+        const next = [...data];
+        next[idx] = {
+            ...next[idx],
             excluidoEm: new Date().toISOString(),
             exclusaoFisica: false
         };
 
-        InMemory.SetAll(ENTITY, data);
-        return data[idx];
+        InMemory.SetAll(ENTITY, next);
+        return next[idx];
     }
 
     async function remove(id) {
-        const data = await getAll();
-        const idx = data.findIndex(u => u.id === id);
-        if (idx === -1) return null;
+        const data = InMemory.GetAll(ENTITY);
+        const next = data.filter(u => u.id !== id);
 
-        const removed = data.splice(idx, 1)[0];
-        InMemory.SetAll(ENTITY, data);
-        return removed;
+        InMemory.SetAll(ENTITY, next);
+        return true;
     }
 
     return {
@@ -160,7 +136,7 @@ export const UsuarioServidorAPI = (function () {
         getPaginated,
         create,
         update,
-        remove,
-        softDelete     
+        softDelete,
+        remove
     };
 })();
