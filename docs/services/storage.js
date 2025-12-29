@@ -42,7 +42,7 @@ export const InMemory = {
     },
 
     GetAll(entity) {
-        return store[entity] ?? [];
+        return structuredClone(store[entity] ?? []);
     },
 
     SetAll(entity, data) {

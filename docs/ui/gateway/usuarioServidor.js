@@ -192,7 +192,7 @@ function renderModalEdit() {
 
           <div class="modal-body">
             <form id="editForm">
-              <input type="hidden" id="editId" />
+              <input type="hidden" id="hiddenEditId" />
               <div class="row g-3">
                 <div class="col-md-6">
                   <label class="form-label">Nome</label>
@@ -329,13 +329,6 @@ function bindEvents() {
 
   $(btnAddSaveID).on('click', saveNew);
   $(btnEditSaveID).on('click', saveEdit);
-
-//  $(navControlsID)
-//    .on('click', '.js-page', e => {
-//      state.page = Number($(e.target).data('page'));
-//      load();
-//    });
-
 }
 
 /* ---------- Actions ---------- */
