@@ -8,9 +8,9 @@ const sectionModalEditID   = '#sectionModalEdit';
 
 const btnApplyFilterID     = '#btnApplyFilter';
 const btnClearFilterID     = '#btnClearFilter';
-const cmbFilterEspecialID  = '#cmbcmbFilterEspecialIDade';
 const cmbFilterCargoID     = '#cmbFilterCargo';
 const cmbFilterFuncaoID    = '#cmbFilterFuncao';
+const cmbFilterEspecialID  = '#cmbFilterEspecialidade';
 
 const dataItemsID          = '#dataRows';
 const navInfoID            = '#navInfo';
@@ -18,22 +18,22 @@ const navControlsID        = '#navControls';
 
 const btnAddNewID          = '#btnAddNew';
 const addFormID            = '#addForm';
-const btnSaveNewID         = '#btnSaveNew';
-const btnSaveEditID        = '#btnSaveEdit';
 
-const addUnidadeID         = '#addUnidadeID';
-const addNomeID            = '#editNome';
-const addLoginID           = '#addLogin';
-const addFuncaoID          = '#addFuncao';
-const addCargoID           = '#addCargo';
-const addEspecialidadeID   = '#addEspecialidade';
+const hiddenAddUnidadeID   = '#hiddenAddUnidadeId';
+const txtAddNomeID         = '#txtAddNome';
+const txtAddLoginID        = '#txtAddLogin';
+const cmbAddFuncaoID       = '#cmbAddFuncao';
+const cmbAddCargoID        = '#cmbAddCargo';
+const cmbAddEspecialID     = '#cmbAddEspecialidade';
+const btnAddSaveID         = '#btnAddSave';
 
-const editIdID             = '#editId';
-const editNomeID           = '#editNome';
-const editLoginID          = '#editLogin';
-const editFuncaoID         = '#editFuncao';
-const editCargoID          = '#editCargo';
-const editEspecialidadeID  = '#editEspecialidade';
+const hiddenEditID         = '#hiddenEditId';
+const txtEditNomeID        = '#txtEditNome';
+const txtEditLoginID       = '#txtEditLogin';
+const cmbEditCargoID       = '#cmbEditCargo';
+const cmbEditFuncaoID      = '#cmbEditFuncao';
+const cmbEditEspecialID    = '#cmbEditEspecialidade';
+const btnEditSaveID        = '#btnEditSave';
 
 const confirmDeleteMSG     = 'Confirma exclusão lógica ?';
 const naoInformado         = 'NaoInformado';
@@ -105,9 +105,9 @@ function renderFilters() {
       </button>
     </div>
   `);
-  populateSelectFromEnum($('#cmbFilterFuncao'), FuncaoUsuario, 'Todas');
-  populateSelectFromEnum($('#cmbFilterCargo'), CargoUsuario, 'Todos');
-  populateSelectFromEnum($('#cmbcmbFilterEspecialIDade'), Especialidade, 'Todas');  
+  populateSelectFromEnum(cmbFilterFuncaoID, FuncaoUsuario, 'Todas');
+  populateSelectFromEnum(cmbFilterCargoID, CargoUsuario, 'Todos');
+  populateSelectFromEnum(cmbFilterEspecialID, Especialidade, 'Todas');  
 }
 
 function renderData() {
@@ -182,7 +182,7 @@ function renderModalEdit() {
         <div class="modal-content">
 
           <div class="modal-header">
-            <h5 class="modal-title">Editar Servidor</h5>
+            <h5 class="modal-title">Editando Usuário Servidor</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
 
@@ -195,27 +195,27 @@ function renderModalEdit() {
 
                 <div class="col-md-6">
                   <label class="form-label">Nome</label>
-                  <input type="text" class="form-control" id="editNome" required />
+                  <input type="text" class="form-control" id="txtEditNome" required />
                 </div>
 
                 <div class="col-md-6">
                   <label class="form-label">Login</label>
-                  <input type="text" class="form-control" id="editLogin" required />
+                  <input type="text" class="form-control" id="txtEditLogin" required />
                 </div>
 
                 <div class="col-md-6">
                   <label class="form-label">Função</label>
-                  <select class="form-select" id="editFuncao"></select>
+                  <select class="form-select" id="cmbEditFuncao"></select>
                 </div>
 
                 <div class="col-md-6">
                   <label class="form-label">Cargo</label>
-                  <select class="form-select" id="editCargo"></select>
+                  <select class="form-select" id="cmbEditCargo"></select>
                 </div>
 
                 <div class="col-md-12">
                   <label class="form-label">Especialidade</label>
-                  <select class="form-select" id="editEspecialidade"></select>
+                  <select class="form-select" id="cmbEditEspecialidade"></select>
                 </div>
 
               </div>
@@ -226,7 +226,7 @@ function renderModalEdit() {
             <button class="btn btn-secondary" data-bs-dismiss="modal">
               Cancelar
             </button>
-            <button class="btn btn-primary" id="btnSaveEdit" disabled>
+            <button class="btn btn-primary" id="btnEditSave" disabled>
               Salvar
             </button>
           </div>
@@ -235,6 +235,9 @@ function renderModalEdit() {
       </div>
     </div>
   `);
+  populateSelectFromEnum(cmbEditCargoID, CargoUsuario, 'Selecione o cargo');
+  populateSelectFromEnum(cmbEditFuncaoID, FuncaoUsuario, 'Selecione a função');
+  populateSelectFromEnum(cmbEditEspecialID, Especialidade, 'Selecione a especialidade');
 }
 
 
@@ -279,8 +282,23 @@ function renderPaginationControls(p) {
   `);
 }
 
+function populateSelectFromEnum(selectId, enumType, includeEmpty = true, emptyLabel = 'Selecione...', excludeKeys = []) {
+  const $select = $(selectId);
+  $select.empty();
 
-function populateSelectFromEnum($select, enumType, allLabel) {
+  if (includeEmpty) {
+    $select.append(`<option value="">${emptyLabel}</option>`);
+  }
+
+  enumType.All.forEach(item => {
+    if (excludeKeys.includes(item.Key)) return;
+
+    $select.append(`<option value="${item.Key}">${item.Value}</option>`);
+  });
+}
+
+
+function old_populateSelectFromEnum($select, enumType, allLabel) {
   $select.empty();
   $select.append(`<option value="">${allLabel}</option>`);
 
@@ -289,6 +307,8 @@ function populateSelectFromEnum($select, enumType, allLabel) {
     $select.append(`<option value="${item.Key}">${item.Value}</option>`);
   });
 }
+
+
 
 /* ---------- Events ---------- */
 function bindEvents() {
@@ -314,8 +334,8 @@ function bindEvents() {
     state.addModal.show();
   });
 
-  $(btnSaveNewID).on('click', saveNew);
-  $(btnSaveEditID).on('click', saveEdit);
+  $(btnAddSaveID).on('click', saveNew);
+  $(btnEditSaveID).on('click', saveEdit);
 
 //  $(navControlsID)
 //    .on('click', '.js-page', e => {
@@ -332,26 +352,14 @@ async function openEdit(e) {
 
   if (!u) return;
 
-  $(editIdID).val(u.id);
-  $(editNomeID).val(u.nome);
-  $(editLoginID).val(u.login);
+  $(hiddenEditID).val(u.id);
+  $(txtEditNomeID).val(u.nome);
+  $(txtEditLoginID).val(u.login);
+  $(cmbEditFuncaoID).val(u.funcao ?? '');
+  $(cmbEditCargoID).val(u.cargo ?? '');
+  $(cmbEditEspecialID).val(u.especialidade ?? '');
 
-  // selects will be populated later
-  // for now, leave them empty
-
-  state.editModal.show();
-}
-
-async function openEdit_OLD(e) {
-  const id = $(e.currentTarget).data('id');
-  const u = await UsuarioServidorAPI.getById(id);
-
-  $(editIdID).val(u.id);
-  $(editNomeID).val(u.nome);
-  $(editLoginID).val(u.login);
-  $(editFuncaoID).val(u.funcao);
-  $(editCargoID).val(u.cargo);
-  $(editEspecialidadeID).val(u.especialidade);
+  $(btnEditSaveID).prop('disabled', false);
 
   state.editModal.show();
 }
@@ -371,14 +379,14 @@ async function saveNew() {
 }
 
 async function saveEdit() {
-  const id = $(editIdID).val();
+  const id = $(hiddenEditID).val();
 
   await UsuarioServidorAPI.update(id, {
-    nome          : $(editNomeID).val(),
-    login         : $(editLoginID).val(),
-    funcao        : $(editFuncaoID).val(),
-    cargo         : $(editCargoID).val(),
-    especialidade : $(editEspecialidadeID).val()
+    nome          : $(txtEditNomeID).val(),
+    login         : $(txtEditLoginID).val(),
+    funcao        : $(cmbEditFuncaoID).val(),
+    cargo         : $(cmbEditCargoID).val(),
+    especialidade : $(cmbEditEspecialID).val()
   });
 
   state.editModal.hide();
