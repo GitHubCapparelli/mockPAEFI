@@ -3,6 +3,7 @@ import { UsuarioServidorAPI }                         from '../../services/api/u
 
 const sectionFiltersID     = '#sectionFilters';
 const sectionDataID        = '#sectionData';
+const sectionModelsID      = '#sectionModals';
 
 const btnApplyFilterID     = '#btnApplyFilter';
 const btnClearFilterID     = '#btnClearFilter';
@@ -43,13 +44,13 @@ const state = {
   filters: {},
   lastResult: null,
   editModal: null,
-  addModal: null
+  addModal: null,
+  currentUserID: null
 };
 
-let currentUserID = '';
-
 async function init(currentUserID) {
-  this.currentUserID = currentUserID;
+  state.currentUserID = currentUserID;
+  alert(currentUserID);
 
   renderModalEdit();
   state.editModal = new bootstrap.Modal(divModalEditID);
@@ -94,8 +95,8 @@ function renderFilters() {
       </div>
 
       <div class="filter-item">
-        <label for="cmbcmbFilterEspecialIDade">Especialidade</label>
-        <select class="form-select" id="cmbcmbFilterEspecialIDade"></select>
+        <label for="cmbFilterEspecialidade">Especialidade</label>
+        <select class="form-select" id="cmbFilterEspecialidade"></select>
       </div>
     </div>
 
@@ -176,11 +177,11 @@ function renderTable(list) {
 }
 
 function renderModalEdit() {
-  const host = $(divModalEditID);
+  const host = $(sectionModelsID);
   host.empty();
 
   host.append(`
-    <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="divModalEdit" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
 
@@ -191,11 +192,8 @@ function renderModalEdit() {
 
           <div class="modal-body">
             <form id="editForm">
-
               <input type="hidden" id="editId" />
-
               <div class="row g-3">
-
                 <div class="col-md-6">
                   <label class="form-label">Nome</label>
                   <input type="text" class="form-control" id="txtEditNome" required />
@@ -383,7 +381,7 @@ async function saveEdit() {
     funcao        : $(cmbEditFuncaoID).val(),
     cargo         : $(cmbEditCargoID).val(),
     especialidade : $(cmbEditEspecialID).val(),
-    alteradoPor   : currentUserID
+    alteradoPor   : state.currentUserID
   });
 
   state.editModal.hide();
