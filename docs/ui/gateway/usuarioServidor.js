@@ -173,7 +173,7 @@ function renderTable(list) {
 }
 
 function renderModalEdit() {
-  const host = $(modalsSectionID);
+  const host = $(sectionModalEditID);
   host.empty();
 
   host.append(`
