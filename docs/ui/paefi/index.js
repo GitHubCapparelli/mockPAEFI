@@ -17,7 +17,8 @@ function exibirServidor() {
 $(document).ready(async () => {
     if (user) {
         exibirServidor();
-        await UsuarioServidorGateway.init();
+        await UsuarioServidorGateway.init(user.id);
+        console.log(user.id + ' ---');
     } else {
         lblMensagem.text('Usuário não localizado. Redirecionando...');
         window.location.href = '/mockPAEFI/';
