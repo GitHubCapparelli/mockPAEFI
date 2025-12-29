@@ -36,6 +36,7 @@ const cmbEditFuncaoID      = '#cmbEditFuncao';
 const cmbEditEspecialID    = '#cmbEditEspecialidade';
 const btnEditSaveID        = '#btnEditSave';
 
+const dataTitle            = "Usuários Servidores";
 const confirmDeleteMSG     = 'Confirma exclusão lógica ?';
 
 const state = {
@@ -82,7 +83,7 @@ function renderFilters() {
   $section.empty();
 
   $section.append(`
-    <div class="w-100 simple-border d-flex flex-column flex-wrap gap-3">
+    <div class="w-100 simple-border d-flex flex-column flex-wrap gap-1">
       <div class="filter-options w-100 p-2 d-flex gap-3 flex-nowrap">
         <div class="filter-item">
           <label for="cmbFilterFuncao">Função</label>
@@ -117,6 +118,7 @@ function renderFilters() {
 
 function renderData() {
   $(sectionDataID).html(`
+    <h3>${dataTitle}</h3>
     <div class="table-responsive">
       <table class="table table-striped table-hover">
         <thead>
