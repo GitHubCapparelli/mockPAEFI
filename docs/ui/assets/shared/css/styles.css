@@ -206,6 +206,17 @@ table td {
     filter: invert(1);
 }
 
+
+.simple-border {
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+
+
+
+
+
 /* ===== Responsive Design ===== */
 
 /* Mobile (default - up to 767px) */
