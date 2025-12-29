@@ -5,7 +5,7 @@ const filtersSectionID     = '#sectionFilters';
 const dataSectionID        = '#sectionData';
 const modalsSectionID      = '#sectionModals';
 const divivModalAddIDID    = '#divModalAdd';
-const divModalEditID       = '#divModalEdit';
+const sectionModalEditID   = '#sectionModalEdit';
 
 const btnApplyFilterID     = '#btnApplyFilter';
 const btnClearFilterID     = '#btnClearFilter';
@@ -50,7 +50,7 @@ const state = {
 
 async function init() {
   renderEditModalSkeleton();
-  state.editModal = new bootstrap.Modal(divModalEditID);
+  state.editModal = new bootstrap.Modal(sectionModalEditID);
 
   renderfiltersSectionID(); 
   rendersectionDataID();
