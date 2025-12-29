@@ -159,9 +159,10 @@ function renderTable(list) {
       <tr>
         <td title="${u.nome}">${u.nome}</td>
         <td>${u.login}</td>
-        <td>${u.funcao === 'NaoInformada' ? '' : u.funcao}</td>
-        <td>${u.cargo === 'NaoInformado' ? '' : u.cargo}</td>
-        <td>${u.especialidade === 'NaoInformada' ? '' : u.especialidade}</td>
+
+        <td>${u.funcao === FuncaoUsuario.NaoInformada.Key        ? '' : FuncaoUsuario.ValueFromKey(u.funcao)}</td>
+        <td>${u.cargo === CargoUsuario.NaoInformado.Key          ? '' : CargoUsuario.ValueFromKey(u.cargo)}</td>
+        <td>${u.especialidade === Especialidade.NaoInformada.Key ? '' : Especialidade.ValueFromKey(u.especialidade)}</td>
         <td>
           <button class="btn btn-sm btn-primary js-edit" data-id="${u.id}" title="Editar">
             <i class="fas fa-edit"></i>
@@ -235,9 +236,13 @@ function renderModalEdit() {
       </div>
     </div>
   `);
-  populateSelectFromEnum(cmbEditCargoID, CargoUsuario, 'Selecione o cargo');
-  populateSelectFromEnum(cmbEditFuncaoID, FuncaoUsuario, 'Selecione a função');
-  populateSelectFromEnum(cmbEditEspecialID, Especialidade, 'Selecione a especialidade');
+//  populateSelectFromEnum(cmbEditCargoID, CargoUsuario, 'Selecione o cargo');
+//  populateSelectFromEnum(cmbEditFuncaoID, FuncaoUsuario, 'Selecione a função');
+//  populateSelectFromEnum(cmbEditEspecialID, Especialidade, 'Selecione a especialidade');
+
+  populateSelectFromEnum(cmbEditCargoID, CargoUsuario, false);
+  populateSelectFromEnum(cmbEditFuncaoID, FuncaoUsuario, false);
+  populateSelectFromEnum(cmbEditEspecialID, Especialidade, false);
 }
 
 
@@ -372,7 +377,7 @@ async function saveNew() {
 }
 
 async function saveEdit() {
-  const id = $(hiddenEditID).val();
+  const id = Number($(hiddenEditID).val());
 
   await UsuarioServidorAPI.update(id, {
     nome          : $(txtEditNomeID).val(),
