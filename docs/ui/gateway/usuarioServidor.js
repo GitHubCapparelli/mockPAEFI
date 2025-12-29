@@ -82,30 +82,32 @@ function renderFilters() {
   $section.empty();
 
   $section.append(`
-    <div class="filter-options d-flex align-items-center gap-3 flex-grow-1 flex-nowrap">
-      <div class="filter-item">
-        <label for="cmbFilterFuncao">Função</label>
-        <select class="form-select" id="cmbFilterFuncao"></select>
+    <div class="w-100 d-flex flex-column flex-wrap">
+      <div class="filter-options w-100 d-flex gap-3 flex-nowrap">
+        <div class="filter-item">
+          <label for="cmbFilterFuncao">Função</label>
+          <select class="form-select" id="cmbFilterFuncao"></select>
+        </div>
+
+        <div class="filter-item">
+          <label for="cmbFilterCargo">Cargo</label>
+          <select class="form-select" id="cmbFilterCargo"></select>
+        </div>
+
+        <div class="filter-item">
+          <label for="cmbFilterEspecialidade">Especialidade</label>
+          <select class="form-select" id="cmbFilterEspecialidade"></select>
+        </div>
       </div>
 
-      <div class="filter-item">
-        <label for="cmbFilterCargo">Cargo</label>
-        <select class="form-select" id="cmbFilterCargo"></select>
+      <div class="filter-buttons w-100 d-flex gap-3">
+        <button class="btn btn-primary" id="btnApplyFilter">
+          <i class="fas fa-filter"></i> Filtrar
+        </button>
+        <button class="btn btn-outline-secondary" id="btnClearFilter">
+          <i class="fas fa-times"></i> Limpar
+        </button>
       </div>
-
-      <div class="filter-item">
-        <label for="cmbFilterEspecialidade">Especialidade</label>
-        <select class="form-select" id="cmbFilterEspecialidade"></select>
-      </div>
-    </div>
-
-    <div class="filter-buttons d-flex justify-content-end align-items-end gap-3">
-      <button class="btn btn-primary" id="btnApplyFilter">
-        <i class="fas fa-filter"></i> Filtrar
-      </button>
-      <button class="btn btn-outline-secondary" id="btnClearFilter">
-        <i class="fas fa-times"></i> Limpar
-      </button>
     </div>
   `);
   populateSelectFromEnum(cmbFilterFuncaoID, FuncaoUsuario, 'Todas');
