@@ -402,15 +402,29 @@ table td {
     table {
         font-size: 1rem;
     }
-
-    table th,
-    table td {
-        padding: 0.75rem 1rem;
-    }
-
+    
     /* Hover effects for desktop */
     table tbody tr:hover {
         background-color: rgba(0, 0, 0, 0.02);
+    }
+    
+    table th,
+    table td {
+        padding: 0.75rem 1rem;
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+
+    /* Allow first column to truncate gracefully */
+    .table td:first-child {
+        max-width: 320px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Action buttons always inline */
+    .table td:last-child {
+        text-align: center;
     }
 
     .btn:hover {

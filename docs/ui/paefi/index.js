@@ -1,7 +1,7 @@
 import { Session, CurrentUserKey } from '../../services/storage.js';
 import { UsuarioServidorGateway } from '../gateway/usuarioServidor.js';
 
-const user = Session.Get(CurrentUserKey);
+const user        = Session.Get(CurrentUserKey);
 
 const txtNome     = $('#txtUser-nome');
 const txtLogin    = $('#txtUser-login');

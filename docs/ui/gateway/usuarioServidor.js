@@ -3,8 +3,6 @@ import { UsuarioServidorAPI }                         from '../../services/api/u
 
 const sectionFiltersID     = '#sectionFilters';
 const sectionDataID        = '#sectionData';
-const divivModalAddIDID    = '#divModalAdd';
-const sectionModalEditID   = '#sectionModalEdit';
 
 const btnApplyFilterID     = '#btnApplyFilter';
 const btnClearFilterID     = '#btnClearFilter';
@@ -19,6 +17,7 @@ const navControlsID        = '#navControls';
 const btnAddNewID          = '#btnAddNew';
 const addFormID            = '#addForm';
 
+const divModalAddID        = '#divModalAdd';
 const hiddenAddUnidadeID   = '#hiddenAddUnidadeId';
 const txtAddNomeID         = '#txtAddNome';
 const txtAddLoginID        = '#txtAddLogin';
@@ -27,6 +26,7 @@ const cmbAddCargoID        = '#cmbAddCargo';
 const cmbAddEspecialID     = '#cmbAddEspecialidade';
 const btnAddSaveID         = '#btnAddSave';
 
+const divModalEditID       = '#divModalEdit';
 const hiddenEditID         = '#hiddenEditId';
 const txtEditNomeID        = '#txtEditNome';
 const txtEditLoginID       = '#txtEditLogin';
@@ -47,9 +47,13 @@ const state = {
   addModal: null
 };
 
-async function init() {
+let currentUserID = '';
+
+async function init(currentUserID) {
+  this.currentUserID = currentUserID;
+
   renderModalEdit();
-  state.editModal = new bootstrap.Modal(sectionModalEditID);
+  state.editModal = new bootstrap.Modal(divModalEditID);
 
   renderFilters(); 
   renderData();
@@ -154,11 +158,11 @@ function renderTable(list) {
   list.forEach(u => {
     tbody.append(`
       <tr>
-        <td>${u.nome}</td>
+        <td title="${u.nome}">${u.nome}</td>
         <td>${u.login}</td>
-        <td>${u.funcao === naoInformado ? '' : u.funcao}</td>
+        <td>${u.funcao === naoInformada ? '' : u.funcao}</td>
         <td>${u.cargo === naoInformado ? '' : u.cargo}</td>
-        <td>${u.especialidade === naoInformado ? '' : u.especialidade}</td>
+        <td>${u.especialidade === naoInformada ? '' : u.especialidade}</td>
         <td>
           <button class="btn btn-sm btn-primary js-edit" data-id="${u.id}" title="Editar">
             <i class="fas fa-edit"></i>
@@ -298,18 +302,6 @@ function populateSelectFromEnum(selectId, enumType, includeEmpty = true, emptyLa
 }
 
 
-function old_populateSelectFromEnum($select, enumType, allLabel) {
-  $select.empty();
-  $select.append(`<option value="">${allLabel}</option>`);
-
-  enumType.All.forEach(item => {
-    if (item.Key === 'NaoInformado') return; // optional UX decision
-    $select.append(`<option value="${item.Key}">${item.Value}</option>`);
-  });
-}
-
-
-
 /* ---------- Events ---------- */
 function bindEvents() {
   $(btnApplyFilterID).on('click', applyFilters);
@@ -347,21 +339,26 @@ function bindEvents() {
 
 /* ---------- Actions ---------- */
 async function openEdit(e) {
-  const id = $(e.currentTarget).data('id');
-  const u = await UsuarioServidorAPI.getById(id);
+  try {
+    const id = $(e.currentTarget).data('id');
+    const u = await UsuarioServidorAPI.getById(id);
 
-  if (!u) return;
+    if (!u) return;
 
-  $(hiddenEditID).val(u.id);
-  $(txtEditNomeID).val(u.nome);
-  $(txtEditLoginID).val(u.login);
-  $(cmbEditFuncaoID).val(u.funcao ?? '');
-  $(cmbEditCargoID).val(u.cargo ?? '');
-  $(cmbEditEspecialID).val(u.especialidade ?? '');
+    $(hiddenEditID).val(u.id);
+    $(txtEditNomeID).val(u.nome);
+    $(txtEditLoginID).val(u.login);
+    $(cmbEditFuncaoID).val(u.funcao ?? '');
+    $(cmbEditCargoID).val(u.cargo ?? '');
+    $(cmbEditEspecialID).val(u.especialidade ?? '');
 
-  $(btnEditSaveID).prop('disabled', false);
+    $(btnEditSaveID).prop('disabled', false);
 
-  state.editModal.show();
+    state.editModal.show();
+  } catch (err) {
+    console.error('Erro ao abrir modal de edição:', err);
+    alert('Erro ao abrir edição.');
+  }
 }
 
 async function saveNew() {
@@ -386,7 +383,8 @@ async function saveEdit() {
     login         : $(txtEditLoginID).val(),
     funcao        : $(cmbEditFuncaoID).val(),
     cargo         : $(cmbEditCargoID).val(),
-    especialidade : $(cmbEditEspecialID).val()
+    especialidade : $(cmbEditEspecialID).val(),
+    alteradoPor   : currentUserID
   });
 
   state.editModal.hide();
