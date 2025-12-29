@@ -1,25 +1,21 @@
-import { FuncaoUsuario, 
-         CargoUsuario, 
-         Especialidade 
-       } from '../../objModel.js';
-import { UsuarioServidorAPI 
-       } from '../../services/api/usuarioServidorAPI.js';
+import { FuncaoUsuario, CargoUsuario, Especialidade } from '../../objModel.js';
+import { UsuarioServidorAPI }                         from '../../services/api/usuarioServidorAPI.js';
 
-const filtersSECTION       = '#sectionFilters';
-const dataSECTION          = '#sectionData';
-const modalsSECTION        = '#sectionModals';
-const divAddModalID        = '#addModal';
-const divEditModalID       = '#editModal';
+const filtersSectionID     = '#sectionFilters';
+const dataSectionID        = '#sectionData';
+const modalsSectionID      = '#sectionModals';
+const divivModalAddIDID    = '#divModalAdd';
+const divModalEditID       = '#divModalEdit';
 
-const applyFilterBtnID     = '#btnApplyFilter';
-const clearFilterBtnID     = '#btnClearFilter';
-const filterEspecialID     = '#filterEspecialidade';
-const filterCargoID        = '#filterCargo';
-const filterFuncaoID       = '#filterFuncao';
+const btnApplyFilterID     = '#btnApplyFilter';
+const btnClearFilterID     = '#btnClearFilter';
+const cmbFilterEspecialID  = '#cmbcmbFilterEspecialIDade';
+const cmbFilterCargoID     = '#cmbFilterCargo';
+const cmbFilterFuncaoID    = '#cmbFilterFuncao';
 
-const dataItemsID          = '#rowsServidores';
-const navInfoID            = '#txtNavInfo';
-const navControlsID        = '#ulNavControls';
+const dataItemsID          = '#dataRows';
+const navInfoID            = '#navInfo';
+const navControlsID        = '#navControls';
 
 const btnAddNewID          = '#btnAddNew';
 const addFormID            = '#addForm';
@@ -54,10 +50,10 @@ const state = {
 
 async function init() {
   renderEditModalSkeleton();
-  state.editModal = new bootstrap.Modal(divEditModalID);
+  state.editModal = new bootstrap.Modal(divModalEditID);
 
-  renderFiltersSection(); 
-  renderDataSection();
+  renderfiltersSectionID(); 
+  rendersectionDataID();
 
   await UsuarioServidorAPI.init();
   bindEvents();
@@ -79,25 +75,25 @@ async function load() {
 }
 
 /* ---------- Rendering ---------- */
-function renderFiltersSection() {
-  const $section = $(filtersSECTION);
+function renderfiltersSectionID() {
+  const $section = $(filtersSectionID);
   $section.empty();
 
   $section.append(`
     <div class="filter-options d-flex align-items-center gap-3 flex-grow-1 flex-nowrap">
       <div class="filter-item">
-        <label for="filterFuncao">Função</label>
-        <select class="form-select" id="filterFuncao"></select>
+        <label for="cmbFilterFuncao">Função</label>
+        <select class="form-select" id="cmbFilterFuncao"></select>
       </div>
 
       <div class="filter-item">
-        <label for="filterCargo">Cargo</label>
-        <select class="form-select" id="filterCargo"></select>
+        <label for="cmbFilterCargo">Cargo</label>
+        <select class="form-select" id="cmbFilterCargo"></select>
       </div>
 
       <div class="filter-item">
-        <label for="filterEspecialidade">Especialidade</label>
-        <select class="form-select" id="filterEspecialidade"></select>
+        <label for="cmbcmbFilterEspecialIDade">Especialidade</label>
+        <select class="form-select" id="cmbcmbFilterEspecialIDade"></select>
       </div>
     </div>
 
@@ -110,13 +106,13 @@ function renderFiltersSection() {
       </button>
     </div>
   `);
-  populateSelectFromEnum($('#filterFuncao'), FuncaoUsuario, 'Todas');
-  populateSelectFromEnum($('#filterCargo'), CargoUsuario, 'Todos');
-  populateSelectFromEnum($('#filterEspecialidade'), Especialidade, 'Todas');  
+  populateSelectFromEnum($('#cmbFilterFuncao'), FuncaoUsuario, 'Todas');
+  populateSelectFromEnum($('#cmbFilterCargo'), CargoUsuario, 'Todos');
+  populateSelectFromEnum($('#cmbcmbFilterEspecialIDade'), Especialidade, 'Todas');  
 }
 
-function renderDataSection() {
-  $(dataSECTION).html(`
+function rendersectionDataID() {
+  $(sectionDataID).html(`
     <div class="table-responsive">
       <table class="table table-striped table-hover">
         <thead>
@@ -129,7 +125,7 @@ function renderDataSection() {
             <th>Ações</th>
           </tr>
         </thead>
-        <tbody id="rowsServidores">
+        <tbody id="dataRows">
           <tr>
             <td colspan="6" class="text-center text-muted">Carregando...</td>
           </tr>
@@ -139,10 +135,10 @@ function renderDataSection() {
 
     <div class="pagination-section d-flex justify-content-between align-items-center">
       <div class="pagination-info">
-        <span id="txtNavInfo"></span>
+        <span id="navInfo"></span>
       </div>
       <nav>
-        <ul id="ulNavControls" class="pagination mb-0"></ul>
+        <ul id="navControls" class="pagination mb-0"></ul>
       </nav>
     </div>
   `);
@@ -178,7 +174,7 @@ function renderTable(list) {
 }
 
 function renderEditModalSkeleton() {
-  const host = $(modalsSECTION);
+  const host = $(modalsSectionID);
   host.empty();
 
   host.append(`
@@ -297,8 +293,8 @@ function populateSelectFromEnum($select, enumType, allLabel) {
 
 /* ---------- Events ---------- */
 function bindEvents() {
-  $(applyFilterBtnID).on('click', applyFilters);
-  $(clearFilterBtnID).on('click', clearFilters);
+  $(btnApplyFilterID).on('click', applyFilters);
+  $(btnClearFilterID).on('click', clearFilters);
 
   $(navControlsID).on('click', 'a.page-link', function (e) {
     e.preventDefault();
@@ -400,18 +396,18 @@ async function remove(e) {
 
 function applyFilters() {
   state.filters = {
-    cargo         : $(filterCargoID).val() || null,
-    funcao        : $(filterFuncaoID).val() || null,
-    especialidade : $(filterEspecialID).val() || null
+    cargo         : $(cmbFilterCargoID).val() || null,
+    funcao        : $(cmbFilterFuncaoID).val() || null,
+    especialidade : $(cmbFilterEspecialID).val() || null
   };
   state.page = 1;
   load();
 }
 
 function clearFilters() {
-  $(filterCargoID).val('');
-  $(filterFuncaoID).val('');
-  $(filterEspecialID).val('');
+  $(cmbFilterCargoID).val('');
+  $(cmbFilterFuncaoID).val('');
+  $(cmbFilterEspecialID).val('');
 
   state.filters = {};
   state.page = 1;
