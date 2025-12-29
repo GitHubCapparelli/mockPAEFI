@@ -1,9 +1,8 @@
 import { FuncaoUsuario, CargoUsuario, Especialidade } from '../../objModel.js';
 import { UsuarioServidorAPI }                         from '../../services/api/usuarioServidorAPI.js';
 
-const filtersSectionID     = '#sectionFilters';
+const sectionFiltersID     = '#sectionFilters';
 const sectionDataID        = '#sectionData';
-const modalsSectionID      = '#sectionModals';
 const divivModalAddIDID    = '#divModalAdd';
 const sectionModalEditID   = '#sectionModalEdit';
 
@@ -49,11 +48,11 @@ const state = {
 };
 
 async function init() {
-  renderEditModalSkeleton();
+  renderModalEdit();
   state.editModal = new bootstrap.Modal(sectionModalEditID);
 
-  renderfiltersSectionID(); 
-  rendersectionDataID();
+  renderFilters(); 
+  renderData();
 
   await UsuarioServidorAPI.init();
   bindEvents();
@@ -75,8 +74,8 @@ async function load() {
 }
 
 /* ---------- Rendering ---------- */
-function renderfiltersSectionID() {
-  const $section = $(filtersSectionID);
+function renderFilters() {
+  const $section = $(sectionFiltersID);
   $section.empty();
 
   $section.append(`
@@ -111,7 +110,7 @@ function renderfiltersSectionID() {
   populateSelectFromEnum($('#cmbcmbFilterEspecialIDade'), Especialidade, 'Todas');  
 }
 
-function rendersectionDataID() {
+function renderData() {
   $(sectionDataID).html(`
     <div class="table-responsive">
       <table class="table table-striped table-hover">
@@ -173,7 +172,7 @@ function renderTable(list) {
   });
 }
 
-function renderEditModalSkeleton() {
+function renderModalEdit() {
   const host = $(modalsSectionID);
   host.empty();
 
