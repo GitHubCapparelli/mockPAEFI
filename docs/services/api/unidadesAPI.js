@@ -23,7 +23,7 @@ export const UnidadesAPI = (function () {
             else if (Array.isArray(json.list)) list = json.list;
             else if (Array.isArray(json.unidades)) list = json.unidades;
 
-            return users.map(u => CreateUnidadeDTO(u));
+            return list.map(u => CreateUnidadeDTO(u));
         } catch (err) {
             console.error('Error loading usuariosServidores:', err);
             return [];

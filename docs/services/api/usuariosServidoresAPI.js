@@ -72,14 +72,21 @@ export const UsuariosServidoresAPI = (function () {
     }
 
     async function create(incluidoPor, rawData) {
-        const dto = CreateUsuarioServidorDTO(rawData);
+        const dto = CreateUsuarioServidorDTO({
+            ...rawData,
+            criadoPor: incluidoPor
+        });
+
         const data = InMemory.GetAll(ENTITY);
 
-        // ???
+        if (data.some(u => u.login === dto.login)) {
+            throw new Error('Login já existente');
+        }
 
         InMemory.SetAll(ENTITY, [...data, dto]);
         return dto;
     }
+
 
     async function update(id, alteradoPor, rawData) {
         const data = InMemory.GetAll(ENTITY);
@@ -119,13 +126,16 @@ export const UsuariosServidoresAPI = (function () {
 
     async function remove(id, excluidoPor) {
         const data = InMemory.GetAll(ENTITY);
-        const next = data.filter(u => u.id !== id);
 
-        // ???
+        const exists = data.some(u => u.id === id);
+        if (!exists) return false;
+
+        const next = data.filter(u => u.id !== id);
 
         InMemory.SetAll(ENTITY, next);
         return true;
     }
+
 
     return {
         init,

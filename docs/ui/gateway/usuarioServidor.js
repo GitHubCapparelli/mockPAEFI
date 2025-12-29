@@ -54,6 +54,9 @@ const state = {
 async function init(currentUserID) {
   state.currentUserID = currentUserID;
 
+  await UnidadesAPI.init();
+  await UsuariosServidoresAPI.init();
+
   renderModalAdd();
   renderModalEdit();
   renderFilters();
@@ -61,8 +64,6 @@ async function init(currentUserID) {
 
   state.addModal = new bootstrap.Modal(divModalAddID);
   state.editModal = new bootstrap.Modal(divModalEditID);
-
-  await UsuariosServidoresAPI.init();
 
   bindEvents();
   load();
@@ -252,8 +253,6 @@ function renderModalAdd() {
 
 function renderModalEdit() {
   const host = $(sectionModelsID);
-  host.empty();
-
   host.append(`
     <div class="modal fade" id="divModalEdit" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -395,14 +394,26 @@ function bindEvents() {
     .on('click', '.js-edit', openEdit)
     .on('click', '.js-delete', remove);
 
-  $(btnAddNewID).on('click', () => {
+  $(btnAddNewID).on('click', async () => {
     $(addFormID)[0].reset();
+
+    if (!state.currentUnidadeID) {
+      const unidades = await UnidadesAPI.getAll();
+      state.currentUnidadeID = unidades[0]?.id ?? null;
+    }
+
+    $(hiddenAddUnidadeID).val(state.currentUnidadeID);
+    $(btnAddSaveID).prop('disabled', true);
+
     state.addModal.show();
   });
 
   $(btnAddSaveID).on('click', saveNew);
   $(btnEditSaveID).on('click', saveEdit);
+
+  $(addFormID).on('input change', validateAddForm);
 }
+
 
 /* ---------- Actions ---------- */
 async function openEdit(e) {
@@ -484,6 +495,13 @@ function clearFilters() {
   state.filters = {};
   state.page = 1;
   load();
+}
+
+function validateAddForm() {
+  const valid = $(txtAddNomeID).val().trim().length > 0 &&
+                $(txtAddLoginID).val().trim().length > 0;
+
+  $(btnAddSaveID).prop('disabled', !valid);
 }
 
 /* ---------- Public ---------- */
