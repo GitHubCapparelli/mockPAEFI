@@ -82,8 +82,6 @@ async function init(user) {
 
   bindEvents();
   await load();
-
-  $(lblMensagemID).empty();
 }
 
 
@@ -98,6 +96,8 @@ async function load() {
 
   renderTable(result.data);
   renderPagination(result.pagination);
+
+  $(lblMensagemID).empty();
 }
 
 async function renderLayout() {
@@ -469,11 +469,8 @@ async function populateUnidadesSelect(selectId, selectedId = null) {
   $cmb.append(`<option value="">Selecione...</option>`);
 
   unidades.forEach(u => {
-    $cmb.append(`
-      <option value="${u.id}" ${u.id === selectedId ? 'selected' : ''}>
-        ${u.sigla} — ${u.nome}
-      </option>
-    `);
+    const unidade = u.nome ? ${u.sigla} — ${u.nome} : u.sigla;
+    $cmb.append(`<option value="${u.id}" ${u.id === selectedId ? 'selected' : ''}>${unidade}</option>`);
   });
 }
 
