@@ -145,24 +145,6 @@ function renderTitleBar(pageTitle) {
   `);
 }
 
-function renderActions() {
-  const $section = $(sectionActionsID);
-  $section.empty();
-  $section.addClass('action-buttons mx-5rem mt-3 d-flex justify-content-between align-items-center gap-3');
-  $section.append(`
-    <div class="action-buttons-left d-flex align-items-center gap-3 flex-grow-1 flex-nowrap">
-        <button class="btn btn-primary" id="btnAddNew">
-            <i class="fas fa-plus"></i> Incluir
-        </button>
-        <button class="btn btn-secondary" id="btnExport">
-            <i class="fas fa-download"></i> Exportar
-        </button>
-    </div>
-    <div class="action-buttons-right d-flex justify-content-end align-items-end gap-3">
-    </div>
-  `);
-}
-
 function renderFilters(caption) {
   const $section = $(sectionFiltersID);
   $section.empty();
@@ -205,7 +187,7 @@ function renderFilters(caption) {
 function renderData() {
   const $section = $(sectionDataID);
   $section.empty();
-  $section.addClass('mx-5rem mt-3 data-section');
+  $section.addClass('mx-5rem mt-1 data-section');
   $section.append(`
     <div class="mx-2 action-buttons d-flex justify-content-between align-items-center gap-3">
       <div class="action-buttons-left d-flex align-items-center gap-3 flex-grow-1 flex-nowrap">
