@@ -69,10 +69,16 @@ export const UnidadesAPI = (function () {
     }
 
     async function create(incluidoPor, rawData) {
-        const dto = CreateUnidadeDTO(rawData);
+        const dto = CreateUnidadeDTO({
+            ...rawData,
+            criadoPor: incluidoPor
+        });
+
         const data = InMemory.GetAll(ENTITY);
 
-        // ???
+        if (data.some(u => u.sigla === dto.sigla)) {
+            throw new Error('Sigla já existente');
+        }
 
         InMemory.SetAll(ENTITY, [...data, dto]);
         return dto;
@@ -116,9 +122,11 @@ export const UnidadesAPI = (function () {
 
     async function remove(id, excluidoPor) {
         const data = InMemory.GetAll(ENTITY);
-        const next = data.filter(u => u.id !== id);
 
-        // ???
+        const exists = data.some(u => u.id === id);
+        if (!exists) return false;
+
+        const next = data.filter(u => u.id !== id);
 
         InMemory.SetAll(ENTITY, next);
         return true;

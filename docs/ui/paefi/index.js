@@ -1,7 +1,7 @@
 import { Session, CurrentUnidadeKey, CurrentUserKey } from '../../services/storage.js';
-import { UsuarioServidorGateway } from '../gateway/usuarioServidor.js';
+import { UsuarioServidorGateway }                     from '../gateway/usuarioServidor.js';
 
-const user        = Session.Get(CurrentUserKey);
+const user = Session.Get(CurrentUserKey);
 
 $(document).ready(async () => {
     if (user) {

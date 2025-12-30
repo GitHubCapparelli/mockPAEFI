@@ -2,9 +2,9 @@ import { FuncaoUsuario, CargoUsuario, Especialidade } from '../../objModel.js';
 import { UsuariosServidoresAPI }                      from '../../services/api/usuariosServidoresAPI.js';
 import { UnidadesAPI }                                from '../../services/api/unidadesAPI.js';
 
-const sectionTopMsgsID     = 'sectionTopMsgs';
-const sectionSidsTopID     = 'sectionSidsTop';
-const sectionTitleBarID    = 'sectionTitleBar'
+const sectionTopMsgsID     = '#sectionTopMsgs';
+const sectionSidsTopID     = '#sectionSidsTop';
+const sectionTitleBarID    = '#sectionTitleBar'
 const sectionFiltersID     = '#sectionFilters';
 const sectionActionsID     = '#sectionActions';
 const sectionDataID        = '#sectionData';
