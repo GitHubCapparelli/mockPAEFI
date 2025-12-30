@@ -59,6 +59,15 @@ const state = {
   currentUser: null
 };
 
+const columns = [
+  { key: 'nome',          label: 'Nome' },
+  { key: 'login',         label: 'Login' },
+  { key: 'funcao',        label: 'Função' },
+  { key: 'cargo',         label: 'Cargo' },
+  { key: 'especialidade', label: 'Especialidade' },
+  { key: '__actions',     label: 'Ações' }
+];
+
 async function init(user) {
   state.currentUser = user;
 
@@ -77,6 +86,7 @@ async function init(user) {
   
   bindEvents();
   await load();
+  $(lblMensagemID).text('');
 }
 
 
@@ -107,7 +117,7 @@ function renderTopMessagesBar() {
   $section.empty();
   $section.addClass('top-options container-fluid d-flex justify-content-between align-items-center gap-3 bg-white fw-bold');
   $section.append(`
-    <span id="lblMensagem"></span>
+    <span id="lblMensagem">Carregando...</span>
     <a href="#" title="Documentação"><i class="fa fa-question"></i></a>
   `);
 }
@@ -153,7 +163,7 @@ function renderFilters(caption) {
   $section.empty();
   $section.addClass('filters-bar mx-5rem mt-3 d-flex flex-column');
   $section.append(`
-    <h3 class="w-100 mt-2">${caption}</h3>
+    <h3 class="w-100 mt-2 ms-2">${caption}</h3>
     <div class="w-100 d-flex flex-column flex-wrap gap-1">
       <div class="filter-options w-100 p-2 d-flex gap-3 flex-nowrap">
         <div class="filter-item">
@@ -182,17 +192,21 @@ function renderFilters(caption) {
       </div>
     </div>
   `);
-  populateSelectFromEnum(cmbFilterFuncaoID, FuncaoUsuario);
-  populateSelectFromEnum(cmbFilterCargoID, CargoUsuario);
-  populateSelectFromEnum(cmbFilterEspecialID, Especialidade);  
+  populateSelectFromEnum(cmbFilterFuncaoID, FuncaoUsuario, true, 'Todas');
+  populateSelectFromEnum(cmbFilterCargoID, CargoUsuario, true, 'Todos');
+  populateSelectFromEnum(cmbFilterEspecialID, Especialidade, true, 'Todas');  
 }
 
 function renderData() {
   const $section = $(sectionDataID);
   $section.empty();
-  $section.addClass('mx-5rem mt-2 data-section');
+  $section.addClass('mx-5rem data-section');
+
+  const thead   = columns.map(c => `<th>${c.label}</th>`).join('');
+  const colSpan = columns.length;
+
   $section.append(`
-    <div class="mx-2 action-buttons d-flex justify-content-between align-items-center gap-3">
+    <div class="mt-2 mx-2 action-buttons d-flex justify-content-between align-items-center gap-3">
       <div class="action-buttons-left d-flex align-items-center gap-3 flex-grow-1 flex-nowrap">
           <button class="btn btn-primary" id="btnAddNew">
               <i class="fas fa-plus"></i> Incluir
@@ -208,18 +222,11 @@ function renderData() {
     <div class="mt-3 table-responsive">
       <table class="table table-striped table-hover">
         <thead>
-          <tr>
-            <th>Nome</th>
-            <th>Login</th>
-            <th>Função</th>
-            <th>Cargo</th>
-            <th>Especialidade</th>
-            <th>Ações</th>
-          </tr>
+          <tr>${thead}</tr>
         </thead>
         <tbody id="dataRows">
           <tr>
-            <td colspan="6" class="text-center text-muted">Carregando...</td>
+            <td colspan="${colSpan}" class="text-center text-muted">Carregando...</td>
           </tr>
         </tbody>
       </table>
@@ -284,6 +291,11 @@ function renderModalAdd() {
               <input type="hidden" id="hiddenAddUnidadeId" />
 
               <div class="row g-3">
+                <div class="col-md-12">
+                  <label class="form-label">Unidade</label>
+                  <select class="form-select" id="cmbAddUnidade"></select>
+                </div>
+
                 <div class="col-md-6">
                   <label class="form-label">Nome</label>
                   <input type="text" class="form-control" id="txtAddNome" required />

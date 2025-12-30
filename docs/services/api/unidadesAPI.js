@@ -23,7 +23,7 @@ export const UnidadesAPI = (function () {
             else if (Array.isArray(json.list)) list = json.list;
             else if (Array.isArray(json.unidades)) list = json.unidades;
 
-            return list.map(u => CreateUnidadeDTO(u));
+            return list;
         } catch (err) {
             console.error('Error loading usuariosServidores:', err);
             return [];
@@ -68,14 +68,9 @@ export const UnidadesAPI = (function () {
         };
     }
 
-    async function create(incluidoPor, rawData) {
-        const dto = CreateUnidadeDTO({
-            ...rawData,
-            criadoPor: incluidoPor
-        });
-
+    async function create(rawData) {
         const data = InMemory.GetAll(ENTITY);
-
+        const dto  = CreateUnidadeDTO(rawData);
         if (data.some(u => u.sigla === dto.sigla)) {
             throw new Error('Sigla já existente');
         }
@@ -84,26 +79,24 @@ export const UnidadesAPI = (function () {
         return dto;
     }
 
-    async function update(id, alteradoPor, rawData) {
+    async function update(id, rawData) {
         const data = InMemory.GetAll(ENTITY);
         const idx = data.findIndex(u => u.id === id);
         if (idx === -1) return null;
 
         const updated = {
             ...data[idx],
-            ...rawData,
-            alteradoPor: alteradoPor,
-            alteradoEm: new Date().toISOString()
+            ...rawData
         };
 
         const next = [...data];
-        next[idx] = updated;
+        next[idx]  = updated;
 
         InMemory.SetAll(ENTITY, next);
         return updated;
     }
 
-    async function softDelete(id, excluidoPor) {
+    async function softDelete(id, rawData) {
         const data = InMemory.GetAll(ENTITY);
         const idx = data.findIndex(u => u.id === id);
         if (idx === -1) return null;
@@ -111,25 +104,11 @@ export const UnidadesAPI = (function () {
         const next = [...data];
         next[idx] = {
             ...next[idx],
-            excluidoPor: excluidoPor,
-            excluidoEm: new Date().toISOString(),
-            exclusaoFisica: false
+            ...rawData
         };
 
         InMemory.SetAll(ENTITY, next);
         return next[idx];
-    }
-
-    async function remove(id, excluidoPor) {
-        const data = InMemory.GetAll(ENTITY);
-
-        const exists = data.some(u => u.id === id);
-        if (!exists) return false;
-
-        const next = data.filter(u => u.id !== id);
-
-        InMemory.SetAll(ENTITY, next);
-        return true;
     }
 
     return {
@@ -139,7 +118,6 @@ export const UnidadesAPI = (function () {
         getPaginated,
         create,
         update,
-        softDelete,
-        remove
+        softDelete
     };
 })();
