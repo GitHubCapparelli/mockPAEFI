@@ -23,6 +23,7 @@ const navControlsID        = '#navControls';
 const btnAddNewID          = '#btnAddNew';
 const addFormID            = '#addForm';
 
+const divModalAddID        = "#divModalAdd";
 const txtAddNomeID         = '#txtAddNome';
 const txtAddLoginID        = '#txtAddLogin';
 const cmbAddUnidadeID      = '#cmbAddUnidade';
@@ -31,6 +32,7 @@ const cmbAddCargoID        = '#cmbAddCargo';
 const cmbAddEspecialID     = '#cmbAddEspecialidade';
 const btnAddSaveID         = '#btnAddSave';
 
+const divModalEditID       = "#divModalEdit";
 const hiddenEditID         = '#hiddenEditId';
 const txtEditNomeID        = '#txtEditNome';
 const txtEditLoginID       = '#txtEditLogin';
@@ -336,7 +338,7 @@ async function renderModalAdd() {
   populateSelectFromEnum(cmbAddEspecialID, Especialidade, false);
   
   await populateUnidadesSelect(cmbAddUnidadeID);
-  state.addModal  = new bootstrap.Modal($(divModalAddID)); 
+  state.addModal  = new bootstrap.Modal(divModalAddID); 
 }
 
 function renderModalEdit() {
@@ -400,7 +402,7 @@ function renderModalEdit() {
   populateSelectFromEnum(cmbEditCargoID, CargoUsuario, false);
   populateSelectFromEnum(cmbEditFuncaoID, FuncaoUsuario, false);
   populateSelectFromEnum(cmbEditEspecialID, Especialidade, false);
-  state.editModal = new bootstrap.Modal(${divModalEditID});
+  state.editModal = new bootstrap.Modal(divModalEditID);
 }
 
 function renderPagination(p) {
