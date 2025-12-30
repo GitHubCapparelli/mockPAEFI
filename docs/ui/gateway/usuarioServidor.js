@@ -93,9 +93,9 @@ async function renderLayout() {
   renderTopMessagesBar();
   renderSidsTopBar();
   renderTitleBar('Admin');
-  renderActions();
-  renderFilters();
-  renderData(dataCaption);
+  //renderActions();
+  renderFilters(dataCaption);
+  renderData();
 }
 
 /* ---------- Rendering ---------- */
@@ -163,11 +163,12 @@ function renderActions() {
   `);
 }
 
-function renderFilters() {
+function renderFilters(caption) {
   const $section = $(sectionFiltersID);
   $section.empty();
   $section.addClass('filters-bar mx-5rem mt-3 d-flex justify-content-between align-items-end gap-3');
   $section.append(`
+    <h3>${caption}</h3>
     <div class="w-100 simple-border d-flex flex-column flex-wrap gap-1">
       <div class="filter-options w-100 p-2 d-flex gap-3 flex-nowrap">
         <div class="filter-item">
@@ -201,12 +202,23 @@ function renderFilters() {
   populateSelectFromEnum(cmbFilterEspecialID, Especialidade);  
 }
 
-function renderData(caption) {
+function renderData() {
   const $section = $(sectionDataID);
   $section.empty();
   $section.addClass('mx-5rem data-section');
   $section.append(`
-    <h3>${caption}</h3>
+    <div class="action-buttons mx-5rem mt-3 d-flex justify-content-between align-items-center gap-3">
+      <div class="action-buttons-left d-flex align-items-center gap-3 flex-grow-1 flex-nowrap">
+          <button class="btn btn-primary" id="btnAddNew">
+              <i class="fas fa-plus"></i> Incluir
+          </button>
+      </div>
+      <div class="action-buttons-right d-flex justify-content-end align-items-end gap-3">
+          <button class="btn btn-secondary" id="btnExport">
+              <i class="fas fa-download"></i> Exportar
+          </button>
+      </div>
+    </div>
     <div class="table-responsive">
       <table class="table table-striped table-hover">
         <thead>

@@ -23,7 +23,7 @@ export const UsuariosServidoresAPI = (function () {
             else if (Array.isArray(json.list)) list = json.list;
             else if (Array.isArray(json.usuariosServidores)) list = json.usuariosServidores;
 
-            return list; //.map(u => CreateUsuarioServidorDTO(u));
+            return list; 
         } catch (err) {
             console.error('Error loading usuariosServidores:', err);
             return [];
