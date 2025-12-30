@@ -187,7 +187,7 @@ function renderFilters(caption) {
 function renderData() {
   const $section = $(sectionDataID);
   $section.empty();
-  $section.addClass('mx-5rem mt-1 data-section');
+  $section.addClass('mx-5rem mt-2 data-section');
   $section.append(`
     <div class="mx-2 action-buttons d-flex justify-content-between align-items-center gap-3">
       <div class="action-buttons-left d-flex align-items-center gap-3 flex-grow-1 flex-nowrap">
