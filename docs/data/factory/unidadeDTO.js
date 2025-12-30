@@ -1,5 +1,4 @@
-import { createBaseDTO } from './baseDTO.js';
-
+import { CreateBaseDTO } from './baseDTO.js';
 export function CreateUnidadeDTO(data) {
   return CreateBaseDTO({
     hierarquiaID : data.hierarquiaID ?? null,
