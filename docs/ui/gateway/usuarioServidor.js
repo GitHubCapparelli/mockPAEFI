@@ -56,6 +56,7 @@ const state = {
   lastResult: null,
   editModal: null,
   addModal: null,
+  unidades: null,
   currentUser: null
 };
 
@@ -70,6 +71,7 @@ const columns = [
 
 async function init(user) {
   state.currentUser = user;
+  state.unidades    = await UnidadesAPI.getAll();
 
   await Promise.all([
     UnidadesAPI.init(),
@@ -270,7 +272,7 @@ function renderTable(list) {
   });
 }
 
-async function renderModalAdd() {
+function renderModalAdd() {
   const host = $(sectionModelsID);
 
   host.append(`
@@ -337,7 +339,7 @@ async function renderModalAdd() {
   populateSelectFromEnum(cmbAddCargoID, CargoUsuario, false);
   populateSelectFromEnum(cmbAddEspecialID, Especialidade, false);
   
-  await populateUnidadesSelect(cmbAddUnidadeID);
+  populateUnidadesSelect(cmbAddUnidadeID);
   state.addModal  = new bootstrap.Modal(divModalAddID); 
 }
 
@@ -460,14 +462,12 @@ function populateSelectFromEnum(selectId, enumType, includeEmpty = true, emptyLa
   });
 }
 
-async function populateUnidadesSelect(selectId, selectedId = null) {
+function populateUnidadesSelect(selectId, selectedId = null) {
   const $cmb = $(selectId);
   $cmb.empty();
-
-  const unidades = await UnidadesAPI.getAll();
   $cmb.append(`<option value="">Selecione...</option>`);
 
-  unidades.forEach(u => {
+  state.unidades.forEach(u => {
     const unidade = u.nome ? `${u.sigla} - ${u.nome}` : u.sigla;
     $cmb.append(`<option value="${u.id}" ${u.id === selectedId ? 'selected' : ''}>${unidade}</option>`);
   });
