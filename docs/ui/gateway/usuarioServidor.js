@@ -71,6 +71,10 @@ async function init(user) {
   renderModalAdd();
   renderModalEdit();
 
+  // stripped out previously... broke the code
+  state.addModal  = new bootstrap.Modal(divModalAddID); 
+  state.editModal = new bootstrap.Modal(divModalEditID);
+  
   bindEvents();
   await load();
 }
@@ -93,7 +97,6 @@ async function renderLayout() {
   renderTopMessagesBar();
   renderSidsTopBar();
   renderTitleBar('Admin');
-  //renderActions();
   renderFilters(dataCaption);
   renderData();
 }
@@ -151,7 +154,7 @@ function renderFilters(caption) {
   $section.addClass('filters-bar mx-5rem mt-3 d-flex flex-column');
   $section.append(`
     <h3 class="w-100 mt-2">${caption}</h3>
-    <div class="w-100 simple-border d-flex flex-column flex-wrap gap-1">
+    <div class="w-100 d-flex flex-column flex-wrap gap-1">
       <div class="filter-options w-100 p-2 d-flex gap-3 flex-nowrap">
         <div class="filter-item">
           <label for="cmbFilterFuncao">Função</label>
@@ -169,7 +172,7 @@ function renderFilters(caption) {
         </div>
       </div>
 
-      <div class="filter-buttons w-100 p-2 d-flex gap-3">
+      <div class="filter-buttons w-100 p-2 d-flex justify-content-between gap-3">
         <button class="btn btn-primary" id="btnApplyFilter">
           <i class="fas fa-filter"></i> Filtrar
         </button>
