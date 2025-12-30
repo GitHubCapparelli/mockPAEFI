@@ -6,7 +6,7 @@ const sectionTopMsgsID     = 'sectionTopMsgs';
 const sectionSidsTopID     = 'sectionSidsTop';
 const sectionTitleBarID    = 'sectionTitleBar'
 const sectionFiltersID     = '#sectionFilters';
-const sectionActionsID   = '#sectionActions';
+const sectionActionsID     = '#sectionActions';
 const sectionDataID        = '#sectionData';
 const sectionModelsID      = '#sectionModals';
 
@@ -94,7 +94,7 @@ async function load() {
 
 /* ---------- Rendering ---------- */
 function renderTopMessagesBar() {
-  const $section = $(sectionSidsTopID);
+  const $section = $(sectionTopMsgsID);
   $section.empty();
   $section.addClass('top-options container-fluid d-flex justify-content-between align-items-center gap-3 bg-white fw-bold');
   $section.append(`
