@@ -83,7 +83,7 @@ async function init(user) {
   bindEvents();
   await load();
 
-  $(lblMensagemID).text();
+  $(lblMensagemID).empty();
 }
 
 
@@ -498,15 +498,7 @@ function bindEvents() {
 
   $(btnAddNewID).on('click', async () => {
     $(addFormID)[0].reset();
-
-    if (!state.currentUnidadeID) {
-      const unidades = await UnidadesAPI.getAll();
-      state.currentUnidadeID = unidades[0]?.id ?? null;
-    }
-
-    $(hiddenAddUnidadeID).val(state.currentUnidadeID);
     $(btnAddSaveID).prop('disabled', true);
-
     state.addModal.show();
   });
 
