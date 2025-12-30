@@ -286,11 +286,6 @@ async function renderModalAdd() {
           <div class="modal-body">
             <form id="addForm">
               <div class="row g-3">
-                <div class="col-md-12">
-                  <label class="form-label">Unidade</label>
-                  <select class="form-select" id="cmbAddUnidade"></select>
-                </div>
-
                 <div class="col-md-6">
                   <label class="form-label">Nome</label>
                   <input type="text" class="form-control" id="txtAddNome" required />
@@ -299,6 +294,11 @@ async function renderModalAdd() {
                 <div class="col-md-6">
                   <label class="form-label">Login</label>
                   <input type="text" class="form-control" id="txtAddLogin" required />
+                </div>
+
+                <div class="col-md-12">
+                  <label class="form-label">Unidade</label>
+                  <select class="form-select" id="cmbAddUnidade"></select>
                 </div>
 
                 <div class="col-md-6">
@@ -508,8 +508,6 @@ function bindEvents() {
   $(addFormID).on('input change', validateAddForm);
 }
 
-
-/* ---------- Actions ---------- */
 async function openEdit(e) {
   try {
     const id = $(e.currentTarget).data('id');
