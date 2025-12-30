@@ -44,6 +44,11 @@ const btnEditSaveID        = '#btnEditSave';
 const dataTitle            = "Usuários Servidores";
 const confirmDeleteMSG     = 'Confirma exclusão lógica ?';
 
+const txtNomeID            = $('#txtUser-nome');
+const txtLoginID           = $('#txtUser-login');
+const txtUnidadeID         = $('#txtUser-unidade');
+const lblMensagemID        = $('#lblMensagem');
+
 const state = {
   page: 1,
   pageSize: 5,
@@ -51,19 +56,17 @@ const state = {
   lastResult: null,
   editModal: null,
   addModal: null,
-  currentUserID: null,
-  currentUnidadeID: null
+  currentUser: null
 };
 
-async function init(currentUserID) {
-  state.currentUserID = currentUserID;
-
+async function init(user) {
+  state.currentUser = user;
   await UnidadesAPI.init();
   await UsuariosServidoresAPI.init();
 
   renderTopMessagesBar();
   renderSidsTopBar();
-  renderTitleBar();
+  renderTitleBar('Admin');
   renderActions()
   renderFilters();
   renderData();
@@ -116,11 +119,11 @@ function renderSidsTopBar() {
         <span>Transferência de Renda</span>
         <span>Tutorial</span>
     </div>
-    <span id="txtUser-login" class="mx-4rem">Carregando....</span>
+    <span id="txtUser-login" class="mx-4rem">${state.currentUser.login}</span>
   `);
 }
 
-function renderTitleBar() {
+function renderTitleBar(pageTitle) {
   const $section = $(sectionTitleBarID);
   $section.empty();
   $section.addClass('mx-4rem mt-2 d-flex flex-column');
@@ -133,9 +136,9 @@ function renderTitleBar() {
         <span>Gestão do PAEFI</span>
         <i class="fa fa-angle-right fa-1x"></i>
     </div>
-    <span id="txtEntity-nome" class="page-title">Admin</span>
-    <span id="txtUser-nome" class="mt-1 txtServidor-nome">Carregando...</span>
-    <span id="txtUser-unidade" class="txtServidor-unidade">Carregando...</span>
+    <span class="page-title">${pageTitle}</span>
+    <span id="txtUser-nome" class="mt-1 txtServidor-nome">${state.currentUser.nome}</span>
+    <span id="txtUser-unidade" class="txtServidor-unidade">${state.currentUser.hierarquia}</span>
   `);
 }
 
