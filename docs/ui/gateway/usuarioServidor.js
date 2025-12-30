@@ -166,7 +166,7 @@ function renderActions() {
 function renderFilters(caption) {
   const $section = $(sectionFiltersID);
   $section.empty();
-  $section.addClass('filters-bar mx-5rem mt-3 d-flex justify-content-between align-items-end gap-3');
+  $section.addClass('filters-bar mx-5rem mt-3 d-flex flex-column justify-content-between align-items-end gap-3');
   $section.append(`
     <h3>${caption}</h3>
     <div class="w-100 simple-border d-flex flex-column flex-wrap gap-1">
@@ -205,9 +205,9 @@ function renderFilters(caption) {
 function renderData() {
   const $section = $(sectionDataID);
   $section.empty();
-  $section.addClass('mx-5rem data-section');
+  $section.addClass('mx-5rem mt-3 data-section');
   $section.append(`
-    <div class="action-buttons mx-5rem mt-3 d-flex justify-content-between align-items-center gap-3">
+    <div class="action-buttons d-flex justify-content-between align-items-center gap-3">
       <div class="action-buttons-left d-flex align-items-center gap-3 flex-grow-1 flex-nowrap">
           <button class="btn btn-primary" id="btnAddNew">
               <i class="fas fa-plus"></i> Incluir
@@ -219,7 +219,8 @@ function renderData() {
           </button>
       </div>
     </div>
-    <div class="table-responsive">
+
+    <div class="mt-3 table-responsive">
       <table class="table table-striped table-hover">
         <thead>
           <tr>
