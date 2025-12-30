@@ -71,17 +71,17 @@ const columns = [
 
 async function init(user) {
   state.currentUser = user;
-  state.unidades    = await UnidadesAPI.getAll();
 
   await Promise.all([
     UnidadesAPI.init(),
     UsuariosServidoresAPI.init()
   ]);
+
+  state.unidades    = await UnidadesAPI.getAll();
   await renderLayout();
 
   renderModalAdd();
   renderModalEdit();
-
   bindEvents();
   await load();
 }
