@@ -77,12 +77,13 @@ async function init(user) {
     UsuariosServidoresAPI.init()
   ]);
 
-  state.unidades    = await UnidadesAPI.getAll();
+  state.unidades = await UnidadesAPI.getAll();
   await renderLayout();
 
   renderModalAdd();
   renderModalEdit();
   bindEvents();
+
   await load();
 }
 
@@ -334,12 +335,9 @@ function renderModalAdd() {
       </div>
     </div>
   `);
-
   populateSelectFromEnum(cmbAddFuncaoID, FuncaoUsuario, false);
   populateSelectFromEnum(cmbAddCargoID, CargoUsuario, false);
   populateSelectFromEnum(cmbAddEspecialID, Especialidade, false);
-  
-  populateUnidadesSelect(cmbAddUnidadeID);
   state.addModal  = new bootstrap.Modal(divModalAddID); 
 }
 
@@ -462,12 +460,12 @@ function populateSelectFromEnum(selectId, enumType, includeEmpty = true, emptyLa
   });
 }
 
-function populateUnidadesSelect(selectId, selectedId = null) {
+function populateUnidadesSelect(selectId, list, selectedId = null) {
   const $cmb = $(selectId);
   $cmb.empty();
   $cmb.append(`<option value="">Selecione...</option>`);
 
-  state.unidades.forEach(u => {
+  list.forEach(u => {
     const unidade = u.nome ? `${u.sigla} - ${u.nome}` : u.sigla;
     $cmb.append(`<option value="${u.id}" ${u.id === selectedId ? 'selected' : ''}>${unidade}</option>`);
   });
@@ -492,23 +490,26 @@ function bindEvents() {
     .on('click', '.js-edit', openEdit)
     .on('click', '.js-delete', remove);
 
-  $(btnAddNewID).on('click', async () => {
-    $(addFormID)[0].reset();
-    $(btnAddSaveID).prop('disabled', true);
-    state.addModal.show();
-  });
-
+  $(btnAddNewID).on('click', openAdd);
   $(btnAddSaveID).on('click', saveNew);
   $(btnEditSaveID).on('click', saveEdit);
 
   $(addFormID).on('input change', validateAddForm);
 }
 
+async function openAdd(e) {
+    $(addFormID)[0].reset();
+    $(btnAddSaveID).prop('disabled', true);
+
+    populateUnidadesSelect(cmbAddUnidadeID, state.unidades);
+
+    state.addModal.show();
+}
+
 async function openEdit(e) {
   try {
     const id = $(e.currentTarget).data('id');
     const u = await UsuariosServidoresAPI.getById(id);
-
     if (!u) return;
 
     $(hiddenEditID).val(u.id);
