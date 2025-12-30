@@ -148,7 +148,7 @@ function renderTitleBar(pageTitle) {
 function renderActions() {
   const $section = $(sectionActionsID);
   $section.empty();
-  $section.addClass('action-buttons mx-5rem mt-5 d-flex justify-content-between align-items-center gap-3');
+  $section.addClass('action-buttons mx-5rem mt-3 d-flex justify-content-between align-items-center gap-3');
   $section.append(`
     <div class="action-buttons-left d-flex align-items-center gap-3 flex-grow-1 flex-nowrap">
         <button class="btn btn-primary" id="btnAddNew">
@@ -166,7 +166,7 @@ function renderActions() {
 function renderFilters() {
   const $section = $(sectionFiltersID);
   $section.empty();
-  $section.addClass('filters-bar mx-5rem mt-2 d-flex justify-content-between align-items-end gap-3');
+  $section.addClass('filters-bar mx-5rem mt-3 d-flex justify-content-between align-items-end gap-3');
   $section.append(`
     <div class="w-100 simple-border d-flex flex-column flex-wrap gap-1">
       <div class="filter-options w-100 p-2 d-flex gap-3 flex-nowrap">
