@@ -166,9 +166,9 @@ function renderActions() {
 function renderFilters(caption) {
   const $section = $(sectionFiltersID);
   $section.empty();
-  $section.addClass('filters-bar mx-5rem mt-3 d-flex flex-column justify-content-between gap-3');
+  $section.addClass('filters-bar mx-5rem mt-3 d-flex flex-column');
   $section.append(`
-    <h3 class="w-100 my-2">${caption}</h3>
+    <h3 class="w-100 mt-2">${caption}</h3>
     <div class="w-100 simple-border d-flex flex-column flex-wrap gap-1">
       <div class="filter-options w-100 p-2 d-flex gap-3 flex-nowrap">
         <div class="filter-item">
@@ -207,7 +207,7 @@ function renderData() {
   $section.empty();
   $section.addClass('mx-5rem mt-3 data-section');
   $section.append(`
-    <div class="mx-3 action-buttons d-flex justify-content-between align-items-center gap-3">
+    <div class="mx-2 action-buttons d-flex justify-content-between align-items-center gap-3">
       <div class="action-buttons-left d-flex align-items-center gap-3 flex-grow-1 flex-nowrap">
           <button class="btn btn-primary" id="btnAddNew">
               <i class="fas fa-plus"></i> Incluir
