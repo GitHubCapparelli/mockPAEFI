@@ -207,7 +207,7 @@ function renderData() {
   $section.empty();
   $section.addClass('mx-5rem mt-3 data-section');
   $section.append(`
-    <div class="action-buttons d-flex justify-content-between align-items-center gap-3">
+    <div class="mx-3 action-buttons d-flex justify-content-between align-items-center gap-3">
       <div class="action-buttons-left d-flex align-items-center gap-3 flex-grow-1 flex-nowrap">
           <button class="btn btn-primary" id="btnAddNew">
               <i class="fas fa-plus"></i> Incluir
