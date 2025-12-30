@@ -1,10 +1,12 @@
 import { CreateBaseDTO } from './baseDTO.js';
-export function CreateUnidadeDTO(data) {
+
+export function CreateUnidadeDTO(data, audit = {}) {
   return CreateBaseDTO({
     hierarquiaID : data.hierarquiaID ?? null,
     sigla        : data.sigla,
     nome         : data.nome,
     funcao       : data.funcao,
-    ibgeId       : data.ibgeId ?? null
+    ibgeId       : data.ibgeId ?? null,
+    ...audit
   });
 }

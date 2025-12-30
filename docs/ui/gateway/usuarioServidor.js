@@ -61,24 +61,18 @@ const state = {
 
 async function init(user) {
   state.currentUser = user;
-  await UnidadesAPI.init();
-  await UsuariosServidoresAPI.init();
 
-  renderTopMessagesBar();
-  renderSidsTopBar();
-  renderTitleBar('Admin');
-  renderActions()
-  renderFilters();
-  renderData();
+  await Promise.all([
+    UnidadesAPI.init(),
+    UsuariosServidoresAPI.init()
+  ]);
+  await renderLayout();
 
   renderModalAdd();
   renderModalEdit();
 
-  state.addModal = new bootstrap.Modal(divModalAddID);
-  state.editModal = new bootstrap.Modal(divModalEditID);
-
   bindEvents();
-  load();
+  await load();
 }
 
 
@@ -93,6 +87,15 @@ async function load() {
 
   renderTable(result.data);
   renderPagination(result.pagination);
+}
+
+async function renderLayout() {
+  renderTopMessagesBar();
+  renderSidsTopBar();
+  renderTitleBar('Admin');
+  renderActions();
+  renderFilters();
+  renderData();
 }
 
 /* ---------- Rendering ---------- */
@@ -519,14 +522,15 @@ async function openEdit(e) {
 }
 
 async function saveNew() {
-  await UsuariosServidoresAPI.create(state.currentUserID, {
+  await UsuariosServidoresAPI.create({
     unidadeID      : $(hiddenAddUnidadeID).val(),
     nome           : $(txtAddNomeID).val(),
     login          : $(txtAddLoginID).val(),
     funcao         : $(cmbAddFuncaoID).val(),
     cargo          : $(cmbAddCargoID).val(),
     especialidade  : $(cmbAddEspecialID).val(),
-    criadoPor      : state.currentUserID
+    criadoPor      : state.currentUser.id,
+    criadoEm       : new Date().toISOString()
   });
 
   state.addModal.hide();
@@ -536,12 +540,14 @@ async function saveNew() {
 async function saveEdit() {
   const id = $(hiddenEditID).val();
 
-  await UsuariosServidoresAPI.update(id, state.currentUserID, {
+  await UsuariosServidoresAPI.update(id, {
     nome          : $(txtEditNomeID).val(),
     login         : $(txtEditLoginID).val(),
     funcao        : $(cmbEditFuncaoID).val(),
     cargo         : $(cmbEditCargoID).val(),
-    especialidade : $(cmbEditEspecialID).val()
+    especialidade : $(cmbEditEspecialID).val(),
+    alteradoPor   : state.currentUser.id,
+    alteradoEm    : new Date().toISOString()
   });
 
   state.editModal.hide();
@@ -552,7 +558,10 @@ async function remove(e) {
   const id = $(e.currentTarget).data('id');
   if (!confirm(confirmDeleteMSG)) return;
 
-  await UsuariosServidoresAPI.softDelete(id, state.currentUserID);
+  await UsuariosServidoresAPI.softDelete(id, {
+    excluidoPor   : state.currentUser.id,
+    excluidoEm    : new Date().toISOString()
+  });
   load();
 }
 

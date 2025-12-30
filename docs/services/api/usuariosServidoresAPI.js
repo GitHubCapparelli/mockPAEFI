@@ -72,14 +72,9 @@ export const UsuariosServidoresAPI = (function () {
         };
     }
 
-    async function create(incluidoPor, rawData) {
-        const dto = CreateUsuarioServidorDTO({
-            ...rawData,
-            criadoPor: incluidoPor
-        });
-
+    async function create(rawData) {
         const data = InMemory.GetAll(ENTITY);
-
+        const dto  = CreateUsuarioServidorDTO(rawData);
         if (data.some(u => u.login === dto.login)) {
             throw new Error('Login já existente');
         }
@@ -88,16 +83,14 @@ export const UsuariosServidoresAPI = (function () {
         return dto;
     }
 
-    async function update(id, alteradoPor, rawData) {
+    async function update(id, rawData) {
         const data = InMemory.GetAll(ENTITY);
         const idx = data.findIndex(u => u.id === id);
         if (idx === -1) return null;
 
         const updated = {
             ...data[idx],
-            ...rawData,
-            alteradoPor : alteradoPor,
-            alteradoEm  : new Date().toISOString()
+            ...rawData
         };
 
         const next = [...data];
@@ -107,7 +100,7 @@ export const UsuariosServidoresAPI = (function () {
         return updated;
     }
 
-    async function softDelete(id, excluidoPor) {
+    async function softDelete(id, rawData) {
         const data = InMemory.GetAll(ENTITY);
         const idx = data.findIndex(u => u.id === id);
         if (idx === -1) return null;
@@ -115,27 +108,12 @@ export const UsuariosServidoresAPI = (function () {
         const next = [...data];
         next[idx] = {
             ...next[idx],
-            excluidoPor     : excluidoPor,
-            excluidoEm      : new Date().toISOString(),
-            exclusaoFisica  : false
+            ...rawData
         };
 
         InMemory.SetAll(ENTITY, next);
         return next[idx];
     }
-
-    async function remove(id, excluidoPor) {
-        const data = InMemory.GetAll(ENTITY);
-
-        const exists = data.some(u => u.id === id);
-        if (!exists) return false;
-
-        const next = data.filter(u => u.id !== id);
-
-        InMemory.SetAll(ENTITY, next);
-        return true;
-    }
-
 
     return {
         init,
@@ -144,7 +122,6 @@ export const UsuariosServidoresAPI = (function () {
         getPaginated,
         create,
         update,
-        softDelete,
-        remove
+        softDelete
     };
 })();
