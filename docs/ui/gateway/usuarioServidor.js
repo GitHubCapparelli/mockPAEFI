@@ -268,7 +268,7 @@ function renderTable(list) {
   });
 }
 
-function renderModalAdd() {
+async function renderModalAdd() {
   const host = $(sectionModelsID);
 
   host.append(`
