@@ -23,16 +23,14 @@ const navControlsID        = '#navControls';
 const btnAddNewID          = '#btnAddNew';
 const addFormID            = '#addForm';
 
-const divModalAddID        = '#divModalAdd';
-const hiddenAddUnidadeID   = '#hiddenAddUnidadeId';
 const txtAddNomeID         = '#txtAddNome';
 const txtAddLoginID        = '#txtAddLogin';
+const cmbAddUnidadeID      = '#cmbAddUnidade';
 const cmbAddFuncaoID       = '#cmbAddFuncao';
 const cmbAddCargoID        = '#cmbAddCargo';
 const cmbAddEspecialID     = '#cmbAddEspecialidade';
 const btnAddSaveID         = '#btnAddSave';
 
-const divModalEditID       = '#divModalEdit';
 const hiddenEditID         = '#hiddenEditId';
 const txtEditNomeID        = '#txtEditNome';
 const txtEditLoginID       = '#txtEditLogin';
@@ -80,13 +78,10 @@ async function init(user) {
   renderModalAdd();
   renderModalEdit();
 
-  // stripped out previously... broke the code
-  state.addModal  = new bootstrap.Modal(divModalAddID); 
-  state.editModal = new bootstrap.Modal(divModalEditID);
-  
   bindEvents();
   await load();
-  $(lblMensagemID).text('');
+
+  $(lblMensagemID).text();
 }
 
 
@@ -115,7 +110,7 @@ async function renderLayout() {
 function renderTopMessagesBar() {
   const $section = $(sectionTopMsgsID);
   $section.empty();
-  $section.addClass('top-options container-fluid d-flex justify-content-between align-items-center gap-3 bg-white fw-bold');
+  $section.addClass('top-options container-fluid d-flex justify-content-between align-items-center gap-3 bg-white');
   $section.append(`
     <span id="lblMensagem">Carregando...</span>
     <a href="#" title="Documentação"><i class="fa fa-question"></i></a>
@@ -288,8 +283,6 @@ function renderModalAdd() {
 
           <div class="modal-body">
             <form id="addForm">
-              <input type="hidden" id="hiddenAddUnidadeId" />
-
               <div class="row g-3">
                 <div class="col-md-12">
                   <label class="form-label">Unidade</label>
@@ -341,6 +334,9 @@ function renderModalAdd() {
   populateSelectFromEnum(cmbAddFuncaoID, FuncaoUsuario, false);
   populateSelectFromEnum(cmbAddCargoID, CargoUsuario, false);
   populateSelectFromEnum(cmbAddEspecialID, Especialidade, false);
+  
+  await populateUnidadesSelect(cmbAddUnidadeID);
+  state.addModal  = new bootstrap.Modal(divModalAddID); 
 }
 
 function renderModalEdit() {
@@ -404,6 +400,7 @@ function renderModalEdit() {
   populateSelectFromEnum(cmbEditCargoID, CargoUsuario, false);
   populateSelectFromEnum(cmbEditFuncaoID, FuncaoUsuario, false);
   populateSelectFromEnum(cmbEditEspecialID, Especialidade, false);
+  state.editModal = new bootstrap.Modal(divModalEditID);
 }
 
 /* TODO: refactor into a baseRenderer.js shared file  */
@@ -462,6 +459,22 @@ function populateSelectFromEnum(selectId, enumType, includeEmpty = true, emptyLa
   });
 }
 
+async function populateUnidadesSelect(selectId, selectedId = null) {
+  const $cmb = $(selectId);
+  $cmb.empty();
+
+  const unidades = await UnidadesAPI.getAll();
+
+  $cmb.append(`<option value="">Selecione...</option>`);
+
+  unidades.forEach(u => {
+    $cmb.append(`
+      <option value="${u.id}" ${u.id === selectedId ? 'selected' : ''}>
+        ${u.sigla} — ${u.nome}
+      </option>
+    `);
+  });
+}
 
 /* ---------- Events ---------- */
 function bindEvents() {
@@ -529,7 +542,7 @@ async function openEdit(e) {
 
 async function saveNew() {
   await UsuariosServidoresAPI.create({
-    unidadeID      : $(hiddenAddUnidadeID).val(),
+    unidadeID      : $(cmbAddUnidadeID).val(),
     nome           : $(txtAddNomeID).val(),
     login          : $(txtAddLoginID).val(),
     funcao         : $(cmbAddFuncaoID).val(),
