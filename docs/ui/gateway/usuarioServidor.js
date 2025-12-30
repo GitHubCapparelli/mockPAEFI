@@ -465,11 +465,10 @@ async function populateUnidadesSelect(selectId, selectedId = null) {
   $cmb.empty();
 
   const unidades = await UnidadesAPI.getAll();
-
   $cmb.append(`<option value="">Selecione...</option>`);
 
   unidades.forEach(u => {
-    const unidade = u.nome ? ${u.sigla} — ${u.nome} : u.sigla;
+    const unidade = u.nome ? `${u.sigla} - ${u.nome}` : u.sigla;
     $cmb.append(`<option value="${u.id}" ${u.id === selectedId ? 'selected' : ''}>${unidade}</option>`);
   });
 }
