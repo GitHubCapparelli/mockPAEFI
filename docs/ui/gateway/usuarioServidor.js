@@ -336,7 +336,7 @@ async function renderModalAdd() {
   populateSelectFromEnum(cmbAddEspecialID, Especialidade, false);
   
   await populateUnidadesSelect(cmbAddUnidadeID);
-  state.addModal  = new bootstrap.Modal(divModalAddID); 
+  state.addModal  = new bootstrap.Modal($(divModalAddID)); 
 }
 
 function renderModalEdit() {
@@ -400,10 +400,9 @@ function renderModalEdit() {
   populateSelectFromEnum(cmbEditCargoID, CargoUsuario, false);
   populateSelectFromEnum(cmbEditFuncaoID, FuncaoUsuario, false);
   populateSelectFromEnum(cmbEditEspecialID, Especialidade, false);
-  state.editModal = new bootstrap.Modal(divModalEditID);
+  state.editModal = new bootstrap.Modal(${divModalEditID});
 }
 
-/* TODO: refactor into a baseRenderer.js shared file  */
 function renderPagination(p) {
   const start = (p.page - 1) * p.pageSize + 1;
   const end   = Math.min(start + p.pageSize - 1, p.totalRecords);
