@@ -52,7 +52,8 @@ export const UsuariosServidoresAPI = (function () {
 
     async function getPaginated({ page = 1, pageSize = 10, filters = {} }) {
         let data = await getAll();
-
+        data = data.filter(u => !u.excluidoEm);
+        
         if (filters.unidadeID)     data = data.filter(u => u.unidadeID === filters.unidadeID);
         if (filters.funcao)        data = data.filter(u => u.funcao === filters.funcao);
         if (filters.cargo)         data = data.filter(u => u.cargo === filters.cargo);
@@ -86,7 +87,6 @@ export const UsuariosServidoresAPI = (function () {
         InMemory.SetAll(ENTITY, [...data, dto]);
         return dto;
     }
-
 
     async function update(id, alteradoPor, rawData) {
         const data = InMemory.GetAll(ENTITY);

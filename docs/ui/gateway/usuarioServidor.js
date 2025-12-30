@@ -2,7 +2,11 @@ import { FuncaoUsuario, CargoUsuario, Especialidade } from '../../objModel.js';
 import { UsuariosServidoresAPI }                      from '../../services/api/usuariosServidoresAPI.js';
 import { UnidadesAPI }                                from '../../services/api/unidadesAPI.js';
 
+const sectionTopMsgsID     = 'sectionTopMsgs';
+const sectionSidsTopID     = 'sectionSidsTop';
+const sectionTitleBarID    = 'sectionTitleBar'
 const sectionFiltersID     = '#sectionFilters';
+const sectionActionsID   = '#sectionActions';
 const sectionDataID        = '#sectionData';
 const sectionModelsID      = '#sectionModals';
 
@@ -57,10 +61,15 @@ async function init(currentUserID) {
   await UnidadesAPI.init();
   await UsuariosServidoresAPI.init();
 
-  renderModalAdd();
-  renderModalEdit();
+  renderTopMessagesBar();
+  renderSidsTopBar();
+  renderTitleBar();
+  renderActions()
   renderFilters();
   renderData();
+
+  renderModalAdd();
+  renderModalEdit();
 
   state.addModal = new bootstrap.Modal(divModalAddID);
   state.editModal = new bootstrap.Modal(divModalEditID);
@@ -84,10 +93,74 @@ async function load() {
 }
 
 /* ---------- Rendering ---------- */
+function renderTopMessagesBar() {
+  const $section = $(sectionSidsTopID);
+  $section.empty();
+  $section.addClass('top-options container-fluid d-flex justify-content-between align-items-center gap-3 bg-white fw-bold');
+  $section.append(`
+    <span id="lblMensagem"></span>
+    <a href="#" title="Documentação"><i class="fa fa-question"></i></a>
+  `);
+}
+
+function renderSidsTopBar() {
+  const $section = $(sectionSidsTopID);
+  $section.empty();
+  $section.addClass('top-navbar d-flex justify-content-between align-items-center');
+  $section.append(`
+    <div class="mx-4rem d-flex align-items-center flex-grow-1 flex-nowrap gap-4">
+        <span>Menu</span>
+        <span>Home</span>
+        <a href="../../">Assistência Social</a>
+        <span>Segurança Alimentar</span>
+        <span>Transferência de Renda</span>
+        <span>Tutorial</span>
+    </div>
+    <span id="txtUser-login" class="mx-4rem">Carregando....</span>
+  `);
+}
+
+function renderTitleBar() {
+  const $section = $(sectionTitleBarID);
+  $section.empty();
+  $section.addClass('mx-4rem mt-2 d-flex flex-column');
+  $section.append(`
+    <div class="breadcrumbs d-flex justify-content-start align-items-center gap-2">
+        <a href="#">Home</a>
+        <i class="fa fa-angle-right fa-1x"></i>
+        <a href="../../">Assistência Social </a>
+        <i class="fa fa-angle-right fa-1x"></i>
+        <span>Gestão do PAEFI</span>
+        <i class="fa fa-angle-right fa-1x"></i>
+    </div>
+    <span id="txtEntity-nome" class="page-title">Admin</span>
+    <span id="txtUser-nome" class="mt-1 txtServidor-nome">Carregando...</span>
+    <span id="txtUser-unidade" class="txtServidor-unidade">Carregando...</span>
+  `);
+}
+
+function renderActions() {
+  const $section = $(sectionActionsID);
+  $section.empty();
+  $section.addClass('action-buttons mx-5rem my-3 d-flex justify-content-between align-items-center gap-3');
+  $section.append(`
+    <div class="action-buttons-left d-flex align-items-center gap-3 flex-grow-1 flex-nowrap">
+        <button class="btn btn-primary" id="btnAddNew">
+            <i class="fas fa-plus"></i> Incluir
+        </button>
+        <button class="btn btn-secondary" id="btnExport">
+            <i class="fas fa-download"></i> Exportar
+        </button>
+    </div>
+    <div class="action-buttons-right d-flex justify-content-end align-items-end gap-3">
+    </div>
+  `);
+}
+
 function renderFilters() {
   const $section = $(sectionFiltersID);
   $section.empty();
-
+  $section.addClass('filters-bar mx-5rem my-5 d-flex justify-content-between align-items-end gap-3');
   $section.append(`
     <div class="w-100 simple-border d-flex flex-column flex-wrap gap-1">
       <div class="filter-options w-100 p-2 d-flex gap-3 flex-nowrap">
@@ -117,13 +190,16 @@ function renderFilters() {
       </div>
     </div>
   `);
-  populateSelectFromEnum(cmbFilterFuncaoID, FuncaoUsuario, 'Todas');
-  populateSelectFromEnum(cmbFilterCargoID, CargoUsuario, 'Todos');
-  populateSelectFromEnum(cmbFilterEspecialID, Especialidade, 'Todas');  
+  populateSelectFromEnum(cmbFilterFuncaoID, FuncaoUsuario);
+  populateSelectFromEnum(cmbFilterCargoID, CargoUsuario);
+  populateSelectFromEnum(cmbFilterEspecialID, Especialidade);  
 }
 
 function renderData() {
-  $(sectionDataID).html(`
+  const $section = $(sectionDataID);
+  $section.empty();
+  $section.addClass('mx-5rem my-1 data-section');
+  $section.append(`
     <h3>${dataTitle}</h3>
     <div class="table-responsive">
       <table class="table table-striped table-hover">
