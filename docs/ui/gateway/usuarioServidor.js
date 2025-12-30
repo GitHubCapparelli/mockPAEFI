@@ -65,7 +65,7 @@ const columns = [
   { key: 'login',         label: 'Login' },
   { key: 'funcao',        label: 'Função' },
   { key: 'cargo',         label: 'Cargo' },
-  { key: 'especialidade', label: 'Especialidade' },
+  { key: 'especialidade', label: 'Especialidadee' },
   { key: '__actions',     label: 'Ações' }
 ];
 
