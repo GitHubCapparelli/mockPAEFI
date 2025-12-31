@@ -51,7 +51,7 @@ async function init(user) {
 
   bindEvents();
 
-  $('#lblMensagem').text('');
+  $('#divMensagem').text('');
 }
 
 async function loadData() {
@@ -332,7 +332,7 @@ function populateSelectFromEnum(selectId, enumType, includeEmpty = true, emptyLa
 
 function populateUnidadesSelect(selectId, list, selectedId = null, emptyLabel = 'Selecione...') {
   if (!list || list.length === 0) {
-    $('#lblMensagem').text(`erro ao popular ${selectId}`);
+    $('#divMensagem').text(`erro ao popular ${selectId}`);
     return;
   }
   const $cmb = $(selectId);
