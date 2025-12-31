@@ -87,18 +87,18 @@ function appendHeaderContent() {
   );
 
   // --- Breadcrumbs & Title Section ---
-  const $header = $('<section>', { class: 'mx-5rem mt-2 d-flex flex-column' }).append(
-    $('<div class="ps-2">', { class: 'breadcrumbs d-flex justify-content-start align-items-center gap-2' }).append(
-      $('<a>', { href: '#', text: 'Home ' }),
+  const $header = $('<section>', { class: 'mx-5rem mt-2 ps-2 d-flex flex-column' }).append(
+    $('<div>', { class: 'breadcrumbs d-flex justify-content-start align-items-center gap-2' }).append(
+      $('<a>', { href: '#', text: 'Home' }),
       $('<i>', { class: 'fa fa-angle-right fa-1x' }),
-      $('<a>', { href: '../../', text: 'Assistência Social ' }),
+      $('<a>', { href: '../../', text: 'Assistência Social' }),
       $('<i>', { class: 'fa fa-angle-right fa-1x' }),
-      $('<span>', { text: 'Gestão do PAEFI ' }),
+      $('<span>', { text: 'Gestão do PAEFI' }),
       $('<i>', { class: 'fa fa-angle-right fa-1x' })
     ),
-    $('<span class="ps-2">', { class: 'page-title', text: pageTitle }),
-    $('<span class="ps-2">', { id: 'txtUser-nome', class: 'mt-1 txtServidor-nome', text: state.currentUser.nome }),
-    $('<span class="ps-2">', { id: 'txtUser-unidade', class: 'txtServidor-unidade', text: state.currentUser.hierarquia })
+    $('<span>', { class: 'page-title', text: pageTitle }),
+    $('<span>', { id: 'txtUser-nome', class: 'mt-1 txtServidor-nome', text: state.currentUser.nome }),
+    $('<span>', { id: 'txtUser-unidade', class: 'txtServidor-unidade', text: state.currentUser.hierarquia })
   );
   $('#page-header').append($topOptions, $navbar, $header);
 }
