@@ -68,13 +68,15 @@ const columns = [
   { key: 'especialidade', label: 'Especialidadee' },
   { key: '__actions',     label: 'Ações' }
 ];
+const thead   = columns.map(c => `<th>${c.label}</th>`).join('');
+const colSpan = columns.length;
 
 async function init(user) {
   state.currentUser = user;
+  renderPage();
 
-  const body = $('body');
+  $(lblMensagemID).text('');
 
-  render(body);
   //await Promise.all([
   //  UnidadesAPI.init(),
   //  UsuariosServidoresAPI.init()
@@ -115,12 +117,13 @@ async function renderLayout() {
 }
 
 /* ---------- Rendering ---------- */
-function render(parent) {
-  parent.append(`
-    <section class="top-options container-fluid d-flex justify-content-between align-items-center gap-3 bg-white">
-      <span id="lblMensagem">ok</span>
+function renderPage() {
+  $('body').append(`
+    <section class="mx-4rem top-options container-fluid d-flex justify-content-between align-items-center gap-3 bg-white">
+      <span id="lblMensagem">Carregando...</span>
       <a href="#" title="Documentação"><i class="fa fa-question"></i></a>
     </section>
+
     <section class="top-navbar d-flex justify-content-between align-items-center">
       <div class="mx-4rem d-flex align-items-center flex-grow-1 flex-nowrap gap-4">
           <span>Menu</span>
@@ -132,6 +135,7 @@ function render(parent) {
       </div>
       <span id="txtUser-login" class="mx-4rem">${state.currentUser.login}</span>
     </section>
+    
     <section class="mx-4rem mt-2 d-flex flex-column">
       <div class="breadcrumbs d-flex justify-content-start align-items-center gap-2">
           <a href="#">Home</a>
@@ -144,6 +148,77 @@ function render(parent) {
       <span class="page-title">${pageTitle}</span>
       <span id="txtUser-nome" class="mt-1 txtServidor-nome">${state.currentUser.nome}</span>
       <span id="txtUser-unidade" class="txtServidor-unidade">${state.currentUser.hierarquia}</span>
+    </section>
+    
+    <section class="filters-bar mx-5rem mt-3 d-flex flex-column">
+      <h3 class="w-100 mt-2 ms-2">${dataCaption}</h3>
+      <div class="w-100 d-flex flex-column flex-wrap gap-1">
+        <div class="filter-options w-100 p-2 d-flex gap-3 flex-nowrap">
+          <div class="filter-item">
+            <label for="cmbFilterFuncao">Função</label>
+            <select class="form-select" id="cmbFilterFuncao"></select>
+          </div>
+
+          <div class="filter-item">
+            <label for="cmbFilterCargo">Cargo</label>
+            <select class="form-select" id="cmbFilterCargo"></select>
+          </div>
+
+          <div class="filter-item">
+            <label for="cmbFilterEspecialidade">Especialidade</label>
+            <select class="form-select" id="cmbFilterEspecialidade"></select>
+          </div>
+        </div>
+
+        <div class="filter-buttons w-100 p-2 d-flex justify-content-between gap-3">
+          <button class="btn btn-primary" id="btnApplyFilter">
+            <i class="fas fa-filter"></i> Filtrar
+          </button>
+          <button class="btn btn-outline-secondary" id="btnClearFilter">
+            <i class="fas fa-times"></i> Limpar
+          </button>
+        </div>
+      </div>
+    </section>
+    
+    <section class="mx-5rem data-section">
+      <div class="mt-2 mx-2 action-buttons d-flex justify-content-between align-items-center gap-3">
+        <div class="action-buttons-left d-flex align-items-center gap-3 flex-grow-1 flex-nowrap">
+            <button class="btn btn-primary" id="btnAddNew">
+                <i class="fas fa-plus"></i> Incluir
+            </button>
+        </div>
+        <div class="action-buttons-right d-flex justify-content-end align-items-end gap-3">
+            <button class="btn btn-secondary" id="btnExport">
+                <i class="fas fa-download"></i> Exportar
+            </button>
+        </div>
+      </div>
+
+      <div class="mt-3 table-responsive">
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>${thead}</tr>
+          </thead>
+          <tbody id="dataRows">
+            <tr>
+              <td colspan="${colSpan}" class="text-center text-muted">Carregando...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination-section d-flex justify-content-between align-items-center">
+        <div class="pagination-info">
+          <span id="navInfo"></span>
+        </div>
+        <nav>
+          <ul id="navControls" class="pagination mb-0"></ul>
+        </nav>
+      </div>
+    </section>
+    
+    <section class="">
     </section>
   `);
 }
@@ -191,7 +266,6 @@ function renderTitleBar(pageTitle) {
     <span id="txtUser-unidade" class="txtServidor-unidade">${state.currentUser.hierarquia}</span>
   `);
 }
-
 function renderFilters(caption) {
   const $section = $(sectionFiltersID);
   $section.empty();
@@ -230,14 +304,10 @@ function renderFilters(caption) {
   populateSelectFromEnum(cmbFilterCargoID, CargoUsuario, true, 'Todos');
   populateSelectFromEnum(cmbFilterEspecialID, Especialidade, true, 'Todas');  
 }
-
 function renderData() {
   const $section = $(sectionDataID);
   $section.empty();
   $section.addClass('mx-5rem data-section');
-
-  const thead   = columns.map(c => `<th>${c.label}</th>`).join('');
-  const colSpan = columns.length;
 
   $section.append(`
     <div class="mt-2 mx-2 action-buttons d-flex justify-content-between align-items-center gap-3">
