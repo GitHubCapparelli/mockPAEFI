@@ -6,7 +6,6 @@ const sectionTopMsgsID     = '#sectionTopMsgs';
 const sectionSidsTopID     = '#sectionSidsTop';
 const sectionTitleBarID    = '#sectionTitleBar'
 const sectionFiltersID     = '#sectionFilters';
-const sectionActionsID     = '#sectionActions';
 const sectionDataID        = '#sectionData';
 const sectionModelsID      = '#sectionModals';
 
@@ -112,6 +111,15 @@ async function renderLayout() {
 }
 
 /* ---------- Rendering ---------- */
+function renderTopMessagesBar() {
+  body.append(`
+    <section class='top-options container-fluid d-flex justify-content-between align-items-center gap-3 bg-white'>
+      <span id="lblMensagem">ok</span>
+      <a href="#" title="Documentação"><i class="fa fa-question"></i></a>
+    </section
+  `);
+}
+
 function renderTopMessagesBar() {
   const $section = $(sectionTopMsgsID);
   $section.empty();
