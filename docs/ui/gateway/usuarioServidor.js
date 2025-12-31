@@ -45,12 +45,33 @@ async function init(user) {
   state.addModal  = new bootstrap.Modal('#divModalAdd');
   state.editModal = new bootstrap.Modal('#divModalEdit');
 
-  await loadData();
-  hydrateFilterSelects();
-  hydrateModalSelects();
+
+  //  await loadData();
+  await loadReferenceData();
+  await loadGridData();
 
   bindEvents();
 }
+
+async function loadReferenceData() {
+  state.unidades = await UnidadesAPI.getAll();
+
+  hydrateFilterSelects();
+  hydrateModalSelects();
+}
+
+async function loadGridData() {
+  const data = await UsuariosServidoresAPI.getPaginated({
+    page: state.page,
+    pageSize: state.pageSize,
+    filters: state.filters
+  });
+
+  state.lastData = data;
+  refreshTable(data.data);
+  refreshPagination(data.pagination);
+}
+
 
 async function loadData() {
   const data = await UsuariosServidoresAPI.getPaginated({
@@ -501,7 +522,7 @@ function validateNew() {
 }
 
 function validateEdit(id) {
-  if (!$('#cmbEditUnidade').val())       { return 'Unidade inválida.'; } 
+  //if (!$('#cmbEditUnidade').val())       { return 'Unidade inválida.'; } // for later, when we introduce a select in the Modal
   if (!$('#txtEditNome').val())          { return 'Nome inválido.'; } 
   if (!$('#txtEditLogin').val())         { return 'Login inválido.'; } 
   if (!$('#cmbEditFuncao').val())        { return 'Função inválida.'; } 
