@@ -33,10 +33,12 @@ const colSpan = columns.length;
 async function init(user) {
   state.currentUser = user;
 
-  await Promise.all([
+  const response = await Promise.all([
+    UnidadesAPI.getAll(), 
     UnidadesAPI.init(),
     UsuariosServidoresAPI.init()
   ]);
+  state.unidades = response;
 
   appendHeaderContent();
   appendMainContent();
@@ -45,51 +47,22 @@ async function init(user) {
   state.addModal  = new bootstrap.Modal('#divModalAdd');
   state.editModal = new bootstrap.Modal('#divModalEdit');
 
+  hydrateFilterSelects();
+  hydrateModalSelects();
 
-  //  await loadData();
-  await loadReferenceData();
-  await loadGridData();
-
+  await loadData();
   bindEvents();
 }
 
-async function loadReferenceData() {
-  state.unidades = await UnidadesAPI.getAll();
-
-  hydrateFilterSelects();
-  hydrateModalSelects();
-}
-
-async function loadGridData() {
-  const data = await UsuariosServidoresAPI.getPaginated({
-    page: state.page,
-    pageSize: state.pageSize,
-    filters: state.filters
-  });
-
-  state.lastData = data;
-  refreshTable(data.data);
-  refreshPagination(data.pagination);
-}
-
-
 async function loadData() {
-  const data = await UsuariosServidoresAPI.getPaginated({
-    page: state.page,
-    pageSize: state.pageSize,
-    filters: state.filters
+  const response = await UsuariosServidoresAPI.getPaginated({
+    page     : state.page,
+    pageSize : state.pageSize,
+    filters  : state.filters
   });
-  state.lastData = data;
-
-  await loadUnidades();
-  refreshTable(data.data);
-  refreshPagination(data.pagination);
-}
-
-async function loadUnidades() {
-  const unidades = await UnidadesAPI.getAll();
-  state.unidades = unidades;
-  alert(state.unidades.length + '...');
+  state.lastData = response;
+  refreshTable(response.data);
+  refreshPagination(response.pagination);
 }
 
 /* ---------- Rendering ---------- */
