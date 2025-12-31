@@ -40,6 +40,7 @@ const cmbEditFuncaoID      = '#cmbEditFuncao';
 const cmbEditEspecialID    = '#cmbEditEspecialidade';
 const btnEditSaveID        = '#btnEditSave';
 
+const pageTitle            = 'Admin';
 const dataCaption          = "Usuários Servidores";
 const confirmDeleteMSG     = 'Confirma exclusão lógica ?';
 
