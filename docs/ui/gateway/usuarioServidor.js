@@ -96,9 +96,9 @@ function appendHeaderContent() {
       $('<span>', { text: 'Gestão do PAEFI' }),
       $('<i>', { class: 'fa fa-angle-right fa-1x' })
     ),
-    $('<span>', { class: 'page-title', text: pageTitle }),
-    $('<span>', { id: 'txtUser-nome', class: 'mt-1 txtServidor-nome', text: state.currentUser.nome }),
-    $('<span>', { id: 'txtUser-unidade', class: 'txtServidor-unidade', text: state.currentUser.hierarquia })
+    $('<span class="ps-2">', { class: 'page-title', text: pageTitle }),
+    $('<span class="ps-2">', { id: 'txtUser-nome', class: 'mt-1 txtServidor-nome', text: state.currentUser.nome }),
+    $('<span class="ps-2">', { id: 'txtUser-unidade', class: 'txtServidor-unidade', text: state.currentUser.hierarquia })
   );
   $('#page-header').append($topOptions, $navbar, $header);
 }
