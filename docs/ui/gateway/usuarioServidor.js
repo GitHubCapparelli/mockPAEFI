@@ -107,6 +107,8 @@ async function load() {
 
   renderTable(data.data);
   renderPagination(data.pagination);
+  
+  populateUnidadesSelect(cmbAddUnidadeID, state.unidades);
 }
 
 /* ---------- Rendering ---------- */
@@ -451,8 +453,6 @@ function bindEvents() {
 async function onBtnAdd_clicked(e) {
     $(addFormID)[0].reset();
     $(btnAddSaveID).prop('disabled', true);
-
-    populateUnidadesSelect(cmbAddUnidadeID, state.unidades);
 
     state.addModal.show();
 }
