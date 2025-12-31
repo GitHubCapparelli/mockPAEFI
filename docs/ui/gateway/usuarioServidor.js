@@ -238,7 +238,7 @@ function appendModals() {
     { id: 'hiddenEditId', type: 'hidden' },
     { id: 'txtEditNome', label: 'Nome', type: 'text', required: true },
     { id: 'txtEditLogin', label: 'Login', type: 'text', required: true },
-    { id: 'txtEditUnidade', label: 'Unidade', type: 'text', required: true },
+    { id: 'cmbEditUnidade', label: 'Unidade', type: 'select', required: true },
     { id: 'cmbEditFuncao', label: 'Função', type: 'select' },
     { id: 'cmbEditCargo', label: 'Cargo', type: 'select' },
     { id: 'cmbEditEspecialidade', label: 'Especialidade', type: 'select', col: 'col-md-12' }
