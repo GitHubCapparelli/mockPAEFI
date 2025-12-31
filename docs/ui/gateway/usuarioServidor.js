@@ -34,11 +34,10 @@ async function init(user) {
   state.currentUser = user;
 
   const response = await Promise.all([
-    UnidadesAPI.getAll(), 
     UnidadesAPI.init(),
     UsuariosServidoresAPI.init()
   ]);
-  state.unidades = response;
+  state.unidades = await UnidadesAPI.getAll();
 
   appendHeaderContent();
   appendMainContent();
@@ -495,7 +494,7 @@ function validateNew() {
 }
 
 function validateEdit(id) {
-  //if (!$('#cmbEditUnidade').val())       { return 'Unidade inválida.'; } // for later, when we introduce a select in the Modal
+  if (!$('#cmbEditUnidade').val())       { return 'Unidade inválida.'; } 
   if (!$('#txtEditNome').val())          { return 'Nome inválido.'; } 
   if (!$('#txtEditLogin').val())         { return 'Login inválido.'; } 
   if (!$('#cmbEditFuncao').val())        { return 'Função inválida.'; } 
