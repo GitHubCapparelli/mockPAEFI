@@ -71,7 +71,9 @@ const columns = [
 async function init(user) {
   state.currentUser = user;
 
-  render();
+  const body = $('body');
+
+  render(body);
   //await Promise.all([
   //  UnidadesAPI.init(),
   //  UsuariosServidoresAPI.init()
@@ -112,8 +114,8 @@ async function renderLayout() {
 }
 
 /* ---------- Rendering ---------- */
-function render() {
-  body.append(`
+function render(parent) {
+  parent.append(`
     <section class="top-options container-fluid d-flex justify-content-between align-items-center gap-3 bg-white">
       <span id="lblMensagem">ok</span>
       <a href="#" title="Documentação"><i class="fa fa-question"></i></a>
