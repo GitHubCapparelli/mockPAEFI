@@ -51,7 +51,7 @@ async function init(user) {
   await loadData();
   bindEvents();
 
-  $('#lblMensagem').empty();
+  $('#lblMensagem').text('');
 }
 
 async function loadData() {
