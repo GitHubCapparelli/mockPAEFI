@@ -2,13 +2,6 @@ import { FuncaoUsuario, CargoUsuario, Especialidade } from '../../objModel.js';
 import { UsuariosServidoresAPI }                      from '../../services/api/usuariosServidoresAPI.js';
 import { UnidadesAPI }                                from '../../services/api/unidadesAPI.js';
 
-const sectionTopMsgsID     = '#sectionTopMsgs';
-const sectionSidsTopID     = '#sectionSidsTop';
-const sectionTitleBarID    = '#sectionTitleBar'
-const sectionFiltersID     = '#sectionFilters';
-const sectionDataID        = '#sectionData';
-const sectionModelsID      = '#sectionModals';
-
 const btnApplyFilterID     = '#btnApplyFilter';
 const btnClearFilterID     = '#btnClearFilter';
 const cmbFilterCargoID     = '#cmbFilterCargo';
@@ -44,10 +37,7 @@ const pageTitle            = 'Admin';
 const dataCaption          = "Usuários Servidores";
 const confirmDeleteMSG     = 'Confirma exclusão lógica ?';
 
-const txtNomeID            = $('#txtUser-nome');
-const txtLoginID           = $('#txtUser-login');
-const txtUnidadeID         = $('#txtUser-unidade');
-const lblMensagemID        = $('#lblMensagem');
+const divMensagemID        = $('#divMensagem');
 
 const state = {
   page: 1,
@@ -86,7 +76,7 @@ async function init(user) {
 
   state.addModal  = new bootstrap.Modal(divModalAddID); 
   state.editModal = new bootstrap.Modal(divModalEditID);
-  $(lblMensagemID).text('done');
+  $(divMensagemID).text('done');
 }
 
 async function loadData() {
@@ -99,7 +89,6 @@ async function loadData() {
   populateSelectFromEnum(cmbAddFuncaoID, FuncaoUsuario, false);
   populateSelectFromEnum(cmbAddCargoID, CargoUsuario, false);
   populateSelectFromEnum(cmbAddEspecialID, Especialidade, false);
-  populateUnidadesSelect(cmbAddUnidadeID, state.unidades);
 
   populateSelectFromEnum(cmbEditCargoID, CargoUsuario, false);
   populateSelectFromEnum(cmbEditFuncaoID, FuncaoUsuario, false);
@@ -118,18 +107,20 @@ async function load() {
 
   renderTable(data.data);
   renderPagination(data.pagination);
+  
+  populateUnidadesSelect(cmbAddUnidadeID, state.unidades);
 }
 
 /* ---------- Rendering ---------- */
 function renderPage() {
   $('body').append(`
-    <section class="mx-4rem top-options container-fluid d-flex justify-content-between align-items-center gap-3 bg-white">
-      <div id="lblMensagem">Carregando...</div>
+    <section class="mx-5rem top-options container-fluid d-flex justify-content-between align-items-center gap-3 bg-white">
+      <div id="divMensagem">Carregando...</div>
       <a href="#" title="Documentação"><i class="fa fa-question"></i></a>
     </section>
 
     <section class="top-navbar d-flex justify-content-between align-items-center">
-      <div class="mx-4rem d-flex align-items-center flex-grow-1 flex-nowrap gap-4">
+      <div class="mx-5rem d-flex align-items-center flex-grow-1 flex-nowrap gap-4">
           <span>Menu</span>
           <span>Home</span>
           <a href="../../">Assistência Social</a>
@@ -140,7 +131,7 @@ function renderPage() {
       <span id="txtUser-login" class="mx-4rem">${state.currentUser.login}</span>
     </section>
     
-    <section class="mx-4rem mt-2 d-flex flex-column">
+    <section class="mx-5rem mt-2 d-flex flex-column">
       <div class="breadcrumbs d-flex justify-content-start align-items-center gap-2">
           <a href="#">Home</a>
           <i class="fa fa-angle-right fa-1x"></i>
