@@ -65,7 +65,7 @@ async function loadData() {
   refreshTable(data.data);
   refreshPagination(data.pagination);
 
-  const unidades = await unidadesAPI.getAll();
+  const unidades = await UnidadesAPI.getAll();
   state.unidades = unidades;
   alert(state.unidades.length + '...');
   populateUnidadesSelect('#cmbAddUnidade', state.unidades);  
