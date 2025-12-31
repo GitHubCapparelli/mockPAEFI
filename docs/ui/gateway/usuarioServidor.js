@@ -48,14 +48,13 @@ async function init(user) {
   hydrateFilterSelects();
   hydrateModalSelects();
 
-  state.unidades = await UnidadesAPI.getAll();
-  await load();
+  await loadData();
   bindEvents();
 
   $('#lblMensagem').empty();
 }
 
-async function load() {
+async function loadData() {
   const data = await UsuariosServidoresAPI.getPaginated({
     page: state.page,
     pageSize: state.pageSize,
@@ -66,6 +65,8 @@ async function load() {
   refreshTable(data.data);
   refreshPagination(data.pagination);
 
+  const unidades = await unidadesAPI.getAll();
+  state.unidades = unidades;
   alert(state.unidades.length + '...');
   populateUnidadesSelect('#cmbAddUnidade', state.unidades);  
 }
@@ -458,7 +459,7 @@ async function onBtnSaveNew_clicked() {
     criadoEm       : new Date().toISOString()
   });
   state.addModal.hide();
-  load();
+  loadData();
 }
 
 async function onBtnUpdate_clicked() {
@@ -479,7 +480,7 @@ async function onBtnUpdate_clicked() {
     alteradoEm    : new Date().toISOString()
   });
   state.editModal.hide();
-  load();
+  loadData();
 }
 
 async function onBtnDelete_clicked(e) {
@@ -490,7 +491,7 @@ async function onBtnDelete_clicked(e) {
     excluidoPor   : state.currentUser.id,
     excluidoEm    : new Date().toISOString()
   });
-  load();
+  loadData();
 }
 
 async function onNavControl_clicked(e) {
@@ -500,7 +501,7 @@ async function onNavControl_clicked(e) {
     if (!page || page === state.page) return;
 
     state.page = page;
-    load();
+    loadData();
 }
 
 function onBtnApplyFilters_clicked() {
@@ -511,7 +512,7 @@ function onBtnApplyFilters_clicked() {
     especialidade : $('#cmbFilterEspecialidade').val() || null
   };
   state.page = 1;
-  load();
+  loadData();
 }
 
 function onBtnClearFilters_clicked() {
@@ -521,7 +522,7 @@ function onBtnClearFilters_clicked() {
 
   state.filters = {};
   state.page = 1;
-  load();
+  loadData();
 }
 
 function onModalAdd_inputChanged() {
@@ -557,7 +558,7 @@ export const UsuarioServidorGateway = {
   applyFilter(filters) {
     state.filters = filters;
     state.page = 1;
-    load();
+    loadData();
   },
-  refresh: load
+  refresh: loadData
 };
