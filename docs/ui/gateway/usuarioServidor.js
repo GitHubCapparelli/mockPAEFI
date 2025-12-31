@@ -34,12 +34,12 @@ async function init(user) {
   state.currentUser = user;
 
   const [response] = await Promise.all([
-    UnidadesAPI.getAll(),
+//    UnidadesAPI.getAll(),
     UnidadesAPI.init(),
     UsuariosServidoresAPI.init()
   ]);
-  state.unidades = response;
-  //state.unidades = await UnidadesAPI.getAll();
+  //state.unidades = response;
+  state.unidades = await UnidadesAPI.getAll();
 
   appendHeaderContent();
   appendMainContent();
