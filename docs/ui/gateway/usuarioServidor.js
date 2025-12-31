@@ -107,8 +107,6 @@ async function load() {
 
   renderTable(data.data);
   renderPagination(data.pagination);
-  
-  populateUnidadesSelect(cmbAddUnidadeID, state.unidades);
 }
 
 /* ---------- Rendering ---------- */
