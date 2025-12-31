@@ -19,6 +19,7 @@ const state = {
 
 const columns = [
   { key: 'nome',          label: 'Nome' },
+  { key: 'unidade',       label: 'Unidade' },
   { key: 'login',         label: 'Login' },
   { key: 'funcao',        label: 'Função' },
   { key: 'cargo',         label: 'Cargo' },
@@ -28,6 +29,7 @@ const columns = [
 const thead   = $('<tr>').append(columns.map(c => $('<th>').text(c.label)));
 const colSpan = columns.length;
 
+/* ---------- Loading ---------- */
 async function init(user) {
   state.currentUser = user;
 
@@ -61,8 +63,11 @@ async function load() {
   });
   state.lastData = data;
 
-  renderTable(data.data);
-  renderPagination(data.pagination);
+  refreshTable(data.data);
+  refreshPagination(data.pagination);
+
+  alert(state.unidades.length + '...');
+  populateUnidadesSelect('#cmbAddUnidade', state.unidades);  
 }
 
 /* ---------- Rendering ---------- */
@@ -114,6 +119,7 @@ function appendMainContent() {
     $('<h3>', { class: 'w-100 mt-2 ms-2', text: dataCaption }),
     $('<div>', { class: 'w-100 d-flex flex-column flex-wrap gap-1' }).append(
       $('<div>', { class: 'filter-options w-100 p-2 d-flex gap-3 flex-nowrap' }).append(
+        createFilterItem('txtUnidade', 'Unidade'),
         createFilterItem('cmbFilterFuncao', 'Função'),
         createFilterItem('cmbFilterCargo', 'Cargo'),
         createFilterItem('cmbFilterEspecialidade', 'Especialidade')
@@ -260,6 +266,7 @@ function appendModals() {
     { id: 'hiddenEditId', type: 'hidden' },
     { id: 'txtEditNome', label: 'Nome', type: 'text', required: true },
     { id: 'txtEditLogin', label: 'Login', type: 'text', required: true },
+    { id: 'txtEditUnidade', label: 'Unidade', type: 'text', required: true },
     { id: 'cmbEditFuncao', label: 'Função', type: 'select' },
     { id: 'cmbEditCargo', label: 'Cargo', type: 'select' },
     { id: 'cmbEditEspecialidade', label: 'Especialidade', type: 'select', col: 'col-md-12' }
@@ -286,7 +293,7 @@ function hydrateModalSelects() {
   populateSelectFromEnum('#cmbEditEspecialidade', Especialidade, false);
 }
 
-function renderTable(list) {
+function refreshTable(list) {
   const tbody = $('#dataRows').empty();
 
   if (!list.length) {
@@ -316,23 +323,19 @@ function renderTable(list) {
   });
 }
 
-function renderPagination(p) {
-  const start = (p.page - 1) * p.pageSize + 1;
-  const end   = Math.min(start + p.pageSize - 1, p.totalRecords);
+function refreshPagination(p) {
+  const start         = (p.page - 1) * p.pageSize + 1;
+  const end           = Math.min(start + p.pageSize - 1, p.totalRecords);
+  const prevDisabled  = p.page === 1 ? 'disabled' : '';
+  const nextDisabled  = p.page === p.totalPages ? 'disabled' : '';
 
-  $('#navInfo').text(
-    `Mostrando ${start} - ${end} de ${p.totalRecords} registros`
-  );
-
-  renderPaginationControls(p);
-}
-
-function renderPaginationControls(p) {
-  const $ul = $('#navControls');
+  const $navInfo  = $('#navInfo');
+  const $ul       = $('#navControls');
   $ul.empty();
 
-  const prevDisabled = p.page === 1 ? 'disabled' : '';
-  const nextDisabled = p.page === p.totalPages ? 'disabled' : '';
+  $navInfo.text(
+    `Mostrando ${start} - ${end} de ${p.totalRecords} registros`
+  );
 
   $ul.append(`
     <li class="page-item ${prevDisabled}">
@@ -401,12 +404,16 @@ function bindEvents() {
 }
 
 async function onBtnAdd_clicked(e) {
+  try {
     $('#addForm')[0].reset();
     $('#btnAddSave').prop('disabled', true);
 
-    populateUnidadesSelect('#cmbAddUnidade', state.unidades);  
-
     state.addModal.show();
+  } catch (err) {
+    const msg = 'Erro ao abrir Modal de Adição';
+    console.error(`${msg}: ${err}`);
+    alert(`${msg}. `);
+  }
 }
 
 async function onBtnEdit_clicked(e) {
@@ -418,6 +425,7 @@ async function onBtnEdit_clicked(e) {
     $('#hiddenEditId').val(u.id);
     $('#txtEditNome').val(u.nome);
     $('#txtEditLogin').val(u.login);
+    $('#txtEditUnidade').val(u.unidade);
     $('#cmbEditFuncao').val(u.funcao ?? '');
     $('#cmbEditCargo').val(u.cargo ?? '');
     $('#cmbEditEspecialidade').val(u.especialidade ?? '');
@@ -426,12 +434,19 @@ async function onBtnEdit_clicked(e) {
 
     state.editModal.show();
   } catch (err) {
-    console.error('Erro ao abrir modal de edição:', err);
-    alert('Erro ao abrir edição.');
+    const msg = 'Erro ao abrir Modal de Edição';
+    console.error(`${msg}: ${err}`);
+    alert(`${msg}. `);
   }
 }
 
 async function onBtnSaveNew_clicked() {
+  const msg = validateNew();
+  if (msg) {
+    alert(msg);
+    return;
+  }
+
   await UsuariosServidoresAPI.create({
     unidadeID      : $('#cmbAddUnidade').val(),
     nome           : $('#txtAddNome').val(),
@@ -442,24 +457,27 @@ async function onBtnSaveNew_clicked() {
     criadoPor      : state.currentUser.id,
     criadoEm       : new Date().toISOString()
   });
-
   state.addModal.hide();
   load();
 }
 
 async function onBtnUpdate_clicked() {
-  const id = $('#hiddenEditId').val();
-
+  const id  = $('#hiddenEditId').val();
+  const msg = validateEdit(id);
+  if (msg) {
+    alert(msg);
+    return;
+  }
   await UsuariosServidoresAPI.update(id, {
     nome          : $('#txtEditNome').val(),
     login         : $('#txtEditLogin').val(),
+    unidade       : $('#txtEditUnidade').val(),
     funcao        : $('#cmbEditFuncao').val(),
     cargo         : $('#cmbEditCargo').val(),
     especialidade : $('#cmbEditEspecialidade').val(),
     alteradoPor   : state.currentUser.id,
     alteradoEm    : new Date().toISOString()
   });
-
   state.editModal.hide();
   load();
 }
@@ -487,6 +505,7 @@ async function onNavControl_clicked(e) {
 
 function onBtnApplyFilters_clicked() {
   state.filters = {
+    unidade       : $('#txtFilterUnidade').val() || null,
     cargo         : $('#cmbFilterCargo').val() || null,
     funcao        : $('#cmbFilterFuncao').val() || null,
     especialidade : $('#cmbFilterEspecialidade').val() || null
@@ -510,6 +529,26 @@ function onModalAdd_inputChanged() {
                 $('#txtAddLogin').val().trim().length > 0;
 
   $('#btnAddSave').prop('disabled', !valid);
+}
+
+function validateNew() {
+  if (!$('#cmbAddUnidade').val())       { return 'Informe a unidade.'; } 
+  if (!$('#txtAddNome').val())          { return 'Informe o nome.'; } 
+  if (!$('#txtAddLogin').val())         { return 'Informe o login.'; } 
+  if (!$('#cmbAddFuncao').val())        { return 'Informe uma função.'; } 
+  if (!$('#cmbAddCargo').val())         { return 'Informe um cargo.'; } 
+  if (!$('#cmbAddEspecialidade').val()) { return 'Informe uma especialidade.'; } 
+  return '';
+}
+
+function validateEdit(id) {
+  if (!$('#cmbEditUnidade').val())       { return 'Unidade inválida.'; } 
+  if (!$('#txtEditNome').val())          { return 'Nome inválido.'; } 
+  if (!$('#txtEditLogin').val())         { return 'Login inválido.'; } 
+  if (!$('#cmbEditFuncao').val())        { return 'Função inválida.'; } 
+  if (!$('#cmbEditCargo').val())         { return 'Cargo inválido.'; } 
+  if (!$('#cmbEditEspecialidade').val()) { return 'Especialidade inválida.'; } 
+  return '';
 }
 
 /* ---------- Public ---------- */
