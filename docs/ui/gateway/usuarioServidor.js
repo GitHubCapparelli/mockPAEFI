@@ -53,11 +53,11 @@ const state = {
   page: 1,
   pageSize: 5,
   filters: {},
-  lastResult: null,
+  lastData: null,
   editModal: null,
   addModal: null,
-  unidades: null,
-  currentUser: null
+  currentUser: null,
+  unidades: null
 };
 
 const columns = [
@@ -73,54 +73,58 @@ const colSpan = columns.length;
 
 async function init(user) {
   state.currentUser = user;
+
+  await Promise.all([
+    UnidadesAPI.init(),
+    UsuariosServidoresAPI.init()
+  ]);
+
   renderPage();
+  renderModals();
+  bindEvents();
+  await loadData();
 
-  $(lblMensagemID).text('');
-
-  //await Promise.all([
-  //  UnidadesAPI.init(),
-  //  UsuariosServidoresAPI.init()
-  //]);
-
-  //state.unidades = await UnidadesAPI.getAll();
-  //await renderLayout();
-
-  //renderModalAdd();
-  //renderModalEdit();
-  //bindEvents();
-
-  //await load();
+  state.addModal  = new bootstrap.Modal(divModalAddID); 
+  state.editModal = new bootstrap.Modal(divModalEditID);
+  $(lblMensagemID).text('done');
 }
 
+async function loadData() {
+  state.unidades = await UnidadesAPI.getAll();
+
+  populateSelectFromEnum(cmbFilterFuncaoID, FuncaoUsuario, true, 'Todas');
+  populateSelectFromEnum(cmbFilterCargoID, CargoUsuario, true, 'Todos');
+  populateSelectFromEnum(cmbFilterEspecialID, Especialidade, true, 'Todas');
+
+  populateSelectFromEnum(cmbAddFuncaoID, FuncaoUsuario, false);
+  populateSelectFromEnum(cmbAddCargoID, CargoUsuario, false);
+  populateSelectFromEnum(cmbAddEspecialID, Especialidade, false);
+  populateUnidadesSelect(cmbAddUnidadeID, state.unidades);
+
+  populateSelectFromEnum(cmbEditCargoID, CargoUsuario, false);
+  populateSelectFromEnum(cmbEditFuncaoID, FuncaoUsuario, false);
+  populateSelectFromEnum(cmbEditEspecialID, Especialidade, false);
+
+  await load();
+}
 
 async function load() {
-  const result = await UsuariosServidoresAPI.getPaginated({
+  const data = await UsuariosServidoresAPI.getPaginated({
     page: state.page,
     pageSize: state.pageSize,
     filters: state.filters
   });
+  state.lastData = data;
 
-  state.lastResult = result;
-
-  renderTable(result.data);
-  renderPagination(result.pagination);
-
-  $(lblMensagemID).empty();
-}
-
-async function renderLayout() {
-  renderTopMessagesBar();
-  renderSidsTopBar();
-  renderTitleBar('Admin');
-  renderFilters(dataCaption);
-  renderData();
+  renderTable(data.data);
+  renderPagination(data.pagination);
 }
 
 /* ---------- Rendering ---------- */
 function renderPage() {
   $('body').append(`
     <section class="mx-4rem top-options container-fluid d-flex justify-content-between align-items-center gap-3 bg-white">
-      <span id="lblMensagem">Carregando...</span>
+      <div id="lblMensagem">Carregando...</div>
       <a href="#" title="Documentação"><i class="fa fa-question"></i></a>
     </section>
 
@@ -217,133 +221,127 @@ function renderPage() {
         </nav>
       </div>
     </section>
-    
-    <section class="">
+
+  `);
+}
+
+function renderModals() {
+  $('body').append(`
+    <section>
+      <div class="modal fade" id="divModalAdd" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+          <div class="modal-content">
+
+            <div class="modal-header">
+              <h5 class="modal-title">Novo Usuário Servidor</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+              <form id="addForm">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label">Nome</label>
+                    <input type="text" class="form-control" id="txtAddNome" required />
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label">Login</label>
+                    <input type="text" class="form-control" id="txtAddLogin" required />
+                  </div>
+
+                  <div class="col-md-12">
+                    <label class="form-label">Unidade</label>
+                    <select class="form-select" id="cmbAddUnidade"></select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label">Função</label>
+                    <select class="form-select" id="cmbAddFuncao"></select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label">Cargo</label>
+                    <select class="form-select" id="cmbAddCargo"></select>
+                  </div>
+
+                  <div class="col-md-12">
+                    <label class="form-label">Especialidade</label>
+                    <select class="form-select" id="cmbAddEspecialidade"></select>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <div class="modal-footer">
+              <button class="btn btn-secondary" data-bs-dismiss="modal">
+                Cancelar
+              </button>
+              <button class="btn btn-primary" id="btnAddSave" disabled>
+                Salvar
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+
+      <div class="modal fade" id="divModalEdit" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+          <div class="modal-content">
+
+            <div class="modal-header">
+              <h5 class="modal-title">Editando Usuário Servidor</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+              <form id="editForm">
+                <input type="hidden" id="hiddenEditId" />
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label">Nome</label>
+                    <input type="text" class="form-control" id="txtEditNome" required />
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label">Login</label>
+                    <input type="text" class="form-control" id="txtEditLogin" required />
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label">Função</label>
+                    <select class="form-select" id="cmbEditFuncao"></select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label">Cargo</label>
+                    <select class="form-select" id="cmbEditCargo"></select>
+                  </div>
+
+                  <div class="col-md-12">
+                    <label class="form-label">Especialidade</label>
+                    <select class="form-select" id="cmbEditEspecialidade"></select>
+                  </div>
+
+                </div>
+              </form>
+            </div>
+
+            <div class="modal-footer">
+              <button class="btn btn-secondary" data-bs-dismiss="modal">
+                Cancelar
+              </button>
+              <button class="btn btn-primary" id="btnEditSave" disabled>
+                Salvar
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
     </section>
-  `);
-}
-
-function renderTopMessagesBar() {
-  const $section = $(sectionTopMsgsID);
-  $section.empty();
-  $section.addClass('top-options container-fluid d-flex justify-content-between align-items-center gap-3 bg-white');
-  $section.append(`
-    <span id="lblMensagem">Carregando...</span>
-    <a href="#" title="Documentação"><i class="fa fa-question"></i></a>
-  `);
-}
-function renderSidsTopBar() {
-  const $section = $(sectionSidsTopID);
-  $section.empty();
-  $section.addClass('top-navbar d-flex justify-content-between align-items-center');
-  $section.append(`
-    <div class="mx-4rem d-flex align-items-center flex-grow-1 flex-nowrap gap-4">
-        <span>Menu</span>
-        <span>Home</span>
-        <a href="../../">Assistência Social</a>
-        <span>Segurança Alimentar</span>
-        <span>Transferência de Renda</span>
-        <span>Tutorial</span>
-    </div>
-    <span id="txtUser-login" class="mx-4rem">${state.currentUser.login}</span>
-  `);
-}
-function renderTitleBar(pageTitle) {
-  const $section = $(sectionTitleBarID);
-  $section.empty();
-  $section.addClass('mx-4rem mt-2 d-flex flex-column');
-  $section.append(`
-    <div class="breadcrumbs d-flex justify-content-start align-items-center gap-2">
-        <a href="#">Home</a>
-        <i class="fa fa-angle-right fa-1x"></i>
-        <a href="../../">Assistência Social </a>
-        <i class="fa fa-angle-right fa-1x"></i>
-        <span>Gestão do PAEFI</span>
-        <i class="fa fa-angle-right fa-1x"></i>
-    </div>
-    <span class="page-title">${pageTitle}</span>
-    <span id="txtUser-nome" class="mt-1 txtServidor-nome">${state.currentUser.nome}</span>
-    <span id="txtUser-unidade" class="txtServidor-unidade">${state.currentUser.hierarquia}</span>
-  `);
-}
-function renderFilters(caption) {
-  const $section = $(sectionFiltersID);
-  $section.empty();
-  $section.addClass('filters-bar mx-5rem mt-3 d-flex flex-column');
-  $section.append(`
-    <h3 class="w-100 mt-2 ms-2">${caption}</h3>
-    <div class="w-100 d-flex flex-column flex-wrap gap-1">
-      <div class="filter-options w-100 p-2 d-flex gap-3 flex-nowrap">
-        <div class="filter-item">
-          <label for="cmbFilterFuncao">Função</label>
-          <select class="form-select" id="cmbFilterFuncao"></select>
-        </div>
-
-        <div class="filter-item">
-          <label for="cmbFilterCargo">Cargo</label>
-          <select class="form-select" id="cmbFilterCargo"></select>
-        </div>
-
-        <div class="filter-item">
-          <label for="cmbFilterEspecialidade">Especialidade</label>
-          <select class="form-select" id="cmbFilterEspecialidade"></select>
-        </div>
-      </div>
-
-      <div class="filter-buttons w-100 p-2 d-flex justify-content-between gap-3">
-        <button class="btn btn-primary" id="btnApplyFilter">
-          <i class="fas fa-filter"></i> Filtrar
-        </button>
-        <button class="btn btn-outline-secondary" id="btnClearFilter">
-          <i class="fas fa-times"></i> Limpar
-        </button>
-      </div>
-    </div>
-  `);
-  populateSelectFromEnum(cmbFilterFuncaoID, FuncaoUsuario, true, 'Todas');
-  populateSelectFromEnum(cmbFilterCargoID, CargoUsuario, true, 'Todos');
-  populateSelectFromEnum(cmbFilterEspecialID, Especialidade, true, 'Todas');  
-}
-function renderData() {
-  const $section = $(sectionDataID);
-  $section.empty();
-  $section.addClass('mx-5rem data-section');
-
-  $section.append(`
-    <div class="mt-2 mx-2 action-buttons d-flex justify-content-between align-items-center gap-3">
-      <div class="action-buttons-left d-flex align-items-center gap-3 flex-grow-1 flex-nowrap">
-          <button class="btn btn-primary" id="btnAddNew">
-              <i class="fas fa-plus"></i> Incluir
-          </button>
-      </div>
-      <div class="action-buttons-right d-flex justify-content-end align-items-end gap-3">
-          <button class="btn btn-secondary" id="btnExport">
-              <i class="fas fa-download"></i> Exportar
-          </button>
-      </div>
-    </div>
-
-    <div class="mt-3 table-responsive">
-      <table class="table table-striped table-hover">
-        <thead>
-          <tr>${thead}</tr>
-        </thead>
-        <tbody id="dataRows">
-          <tr>
-            <td colspan="${colSpan}" class="text-center text-muted">Carregando...</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="pagination-section d-flex justify-content-between align-items-center">
-      <div class="pagination-info">
-        <span id="navInfo"></span>
-      </div>
-      <nav>
-        <ul id="navControls" class="pagination mb-0"></ul>
-      </nav>
-    </div>
   `);
 }
 
@@ -375,138 +373,6 @@ function renderTable(list) {
       </tr>
     `);
   });
-}
-
-function renderModalAdd() {
-  const host = $(sectionModelsID);
-
-  host.append(`
-    <div class="modal fade" id="divModalAdd" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-
-          <div class="modal-header">
-            <h5 class="modal-title">Novo Usuário Servidor</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-
-          <div class="modal-body">
-            <form id="addForm">
-              <div class="row g-3">
-                <div class="col-md-6">
-                  <label class="form-label">Nome</label>
-                  <input type="text" class="form-control" id="txtAddNome" required />
-                </div>
-
-                <div class="col-md-6">
-                  <label class="form-label">Login</label>
-                  <input type="text" class="form-control" id="txtAddLogin" required />
-                </div>
-
-                <div class="col-md-12">
-                  <label class="form-label">Unidade</label>
-                  <select class="form-select" id="cmbAddUnidade"></select>
-                </div>
-
-                <div class="col-md-6">
-                  <label class="form-label">Função</label>
-                  <select class="form-select" id="cmbAddFuncao"></select>
-                </div>
-
-                <div class="col-md-6">
-                  <label class="form-label">Cargo</label>
-                  <select class="form-select" id="cmbAddCargo"></select>
-                </div>
-
-                <div class="col-md-12">
-                  <label class="form-label">Especialidade</label>
-                  <select class="form-select" id="cmbAddEspecialidade"></select>
-                </div>
-              </div>
-            </form>
-          </div>
-
-          <div class="modal-footer">
-            <button class="btn btn-secondary" data-bs-dismiss="modal">
-              Cancelar
-            </button>
-            <button class="btn btn-primary" id="btnAddSave" disabled>
-              Salvar
-            </button>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  `);
-  populateSelectFromEnum(cmbAddFuncaoID, FuncaoUsuario, false);
-  populateSelectFromEnum(cmbAddCargoID, CargoUsuario, false);
-  populateSelectFromEnum(cmbAddEspecialID, Especialidade, false);
-  state.addModal  = new bootstrap.Modal(divModalAddID); 
-}
-
-function renderModalEdit() {
-  const host = $(sectionModelsID);
-  host.append(`
-    <div class="modal fade" id="divModalEdit" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-
-          <div class="modal-header">
-            <h5 class="modal-title">Editando Usuário Servidor</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-
-          <div class="modal-body">
-            <form id="editForm">
-              <input type="hidden" id="hiddenEditId" />
-              <div class="row g-3">
-                <div class="col-md-6">
-                  <label class="form-label">Nome</label>
-                  <input type="text" class="form-control" id="txtEditNome" required />
-                </div>
-
-                <div class="col-md-6">
-                  <label class="form-label">Login</label>
-                  <input type="text" class="form-control" id="txtEditLogin" required />
-                </div>
-
-                <div class="col-md-6">
-                  <label class="form-label">Função</label>
-                  <select class="form-select" id="cmbEditFuncao"></select>
-                </div>
-
-                <div class="col-md-6">
-                  <label class="form-label">Cargo</label>
-                  <select class="form-select" id="cmbEditCargo"></select>
-                </div>
-
-                <div class="col-md-12">
-                  <label class="form-label">Especialidade</label>
-                  <select class="form-select" id="cmbEditEspecialidade"></select>
-                </div>
-
-              </div>
-            </form>
-          </div>
-
-          <div class="modal-footer">
-            <button class="btn btn-secondary" data-bs-dismiss="modal">
-              Cancelar
-            </button>
-            <button class="btn btn-primary" id="btnEditSave" disabled>
-              Salvar
-            </button>
-          </div>
-
-        </div>
-      </div>
-    </div>
-  `);
-  populateSelectFromEnum(cmbEditCargoID, CargoUsuario, false);
-  populateSelectFromEnum(cmbEditFuncaoID, FuncaoUsuario, false);
-  populateSelectFromEnum(cmbEditEspecialID, Especialidade, false);
-  state.editModal = new bootstrap.Modal(divModalEditID);
 }
 
 function renderPagination(p) {
@@ -564,10 +430,10 @@ function populateSelectFromEnum(selectId, enumType, includeEmpty = true, emptyLa
   });
 }
 
-function populateUnidadesSelect(selectId, list, selectedId = null) {
+function populateUnidadesSelect(selectId, list, selectedId = null, emptyLabel = 'Selecione...') {
   const $cmb = $(selectId);
   $cmb.empty();
-  $cmb.append(`<option value="">Selecione...</option>`);
+  $cmb.append(`<option value="">${emptyLabel}</option>`);
 
   list.forEach(u => {
     const unidade = u.nome ? `${u.sigla} - ${u.nome}` : u.sigla;
@@ -577,31 +443,23 @@ function populateUnidadesSelect(selectId, list, selectedId = null) {
 
 /* ---------- Events ---------- */
 function bindEvents() {
-  $(btnApplyFilterID).on('click', applyFilters);
-  $(btnClearFilterID).on('click', clearFilters);
-
-  $(navControlsID).on('click', 'a.page-link', function (e) {
-    e.preventDefault();
-
-    const page = Number($(this).data('page'));
-    if (!page || page === state.page) return;
-
-    state.page = page;
-    load();
-  });  
+  $(btnApplyFilterID).on('click', onBtnApplyFilters_clicked);
+  $(btnClearFilterID).on('click', onBtnClearFilters_clicked);
 
   $(dataItemsID)
-    .on('click', '.js-edit', openEdit)
-    .on('click', '.js-delete', remove);
+    .on('click', '.js-edit', onBtnEdit_clicked)
+    .on('click', '.js-delete', onBtnDelete_clicked);
 
-  $(btnAddNewID).on('click', openAdd);
-  $(btnAddSaveID).on('click', saveNew);
-  $(btnEditSaveID).on('click', saveEdit);
+  $(navControlsID).on('click', 'a.page-link', onNavControl_clicked);  
 
-  $(addFormID).on('input change', validateAddForm);
+  $(btnAddNewID).on('click', onBtnAdd_clicked);
+  $(btnAddSaveID).on('click', onBtnSaveNew_clicked);
+  $(addFormID).on('input change', onModalAdd_inputChanged);
+
+  $(btnEditSaveID).on('click', onBtnUpdate_clicked);
 }
 
-async function openAdd(e) {
+async function onBtnAdd_clicked(e) {
     $(addFormID)[0].reset();
     $(btnAddSaveID).prop('disabled', true);
 
@@ -610,7 +468,7 @@ async function openAdd(e) {
     state.addModal.show();
 }
 
-async function openEdit(e) {
+async function onBtnEdit_clicked(e) {
   try {
     const id = $(e.currentTarget).data('id');
     const u = await UsuariosServidoresAPI.getById(id);
@@ -632,7 +490,7 @@ async function openEdit(e) {
   }
 }
 
-async function saveNew() {
+async function onBtnSaveNew_clicked() {
   await UsuariosServidoresAPI.create({
     unidadeID      : $(cmbAddUnidadeID).val(),
     nome           : $(txtAddNomeID).val(),
@@ -648,7 +506,7 @@ async function saveNew() {
   load();
 }
 
-async function saveEdit() {
+async function onBtnUpdate_clicked() {
   const id = $(hiddenEditID).val();
 
   await UsuariosServidoresAPI.update(id, {
@@ -665,7 +523,7 @@ async function saveEdit() {
   load();
 }
 
-async function remove(e) {
+async function onBtnDelete_clicked(e) {
   const id = $(e.currentTarget).data('id');
   if (!confirm(confirmDeleteMSG)) return;
 
@@ -676,7 +534,17 @@ async function remove(e) {
   load();
 }
 
-function applyFilters() {
+async function onNavControl_clicked(e) {
+    e.preventDefault();
+
+    const page = Number($(this).data('page'));
+    if (!page || page === state.page) return;
+
+    state.page = page;
+    load();
+}
+
+function onBtnApplyFilters_clicked() {
   state.filters = {
     cargo         : $(cmbFilterCargoID).val() || null,
     funcao        : $(cmbFilterFuncaoID).val() || null,
@@ -686,7 +554,7 @@ function applyFilters() {
   load();
 }
 
-function clearFilters() {
+function onBtnClearFilters_clicked() {
   $(cmbFilterCargoID).val('');
   $(cmbFilterFuncaoID).val('');
   $(cmbFilterEspecialID).val('');
@@ -696,7 +564,7 @@ function clearFilters() {
   load();
 }
 
-function validateAddForm() {
+function onModalAdd_inputChanged() {
   const valid = $(txtAddNomeID).val().trim().length > 0 &&
                 $(txtAddLoginID).val().trim().length > 0;
 
