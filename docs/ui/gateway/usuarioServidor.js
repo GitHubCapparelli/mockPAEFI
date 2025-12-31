@@ -250,10 +250,11 @@ function refreshTable(list) {
 
   list.forEach(u => {
     const unidade = state.unidades.find(un => un.id === u.unidadeID);
+    const sigla   = unidade ? unidade.sigla : 'ooops';
     tbody.append(`
       <tr>
         <td title="${u.nome}">${u.nome}</td>
-        <td>${unidade.sigla}</td>
+        <td>${sigla}</td>
         <td>${u.login}</td>
 
         <td>${u.funcao === FuncaoUsuario.NaoInformada.Key        ? '' : FuncaoUsuario.ValueFromKey(u.funcao)}</td>
