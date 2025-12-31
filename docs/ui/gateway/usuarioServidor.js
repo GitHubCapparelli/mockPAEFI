@@ -33,11 +33,12 @@ const colSpan = columns.length;
 async function init(user) {
   state.currentUser = user;
 
-  const response = await Promise.all([
+  const [response] = await Promise.all([
+    UnidadesAPI.getAll(),
     UnidadesAPI.init(),
     UsuariosServidoresAPI.init()
   ]);
-  state.unidades = await UnidadesAPI.getAll();
+  state.unidades = response.unidades;
 
   appendHeaderContent();
   appendMainContent();
@@ -222,7 +223,7 @@ function appendModals() {
 }
 
 function hydrateFilterSelects() {
-  populateUnidadesSelect('#cmbFilterUnidade', state.unidades);  
+  populateUnidadesSelect('#cmbFilterUnidade', state.unidades, u.unidadeID);  
 
   populateSelectFromEnum('#cmbFilterFuncao', FuncaoUsuario, true, 'Todas');
   populateSelectFromEnum('#cmbFilterCargo', CargoUsuario, true, 'Todos');
@@ -322,8 +323,8 @@ function populateSelectFromEnum(selectId, enumType, includeEmpty = true, emptyLa
 }
 
 function populateUnidadesSelect(selectId, list, selectedId = null, emptyLabel = 'Selecione...') {
-  if (!list || list.length === 0) {
-    $('#divMensagem').text(`erro ao popular ${selectId}`);
+   if (!Array.isArray(list)) {
+    $('#divMensagem').text(`[populateUnidadesSelect] Erro ao popular ${selectId}: lista vazia.`);
     return;
   }
   const $cmb = $(selectId);
