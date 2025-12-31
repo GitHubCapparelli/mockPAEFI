@@ -50,8 +50,6 @@ async function init(user) {
   hydrateModalSelects();
 
   bindEvents();
-
-  $('#divMensagem').text('');
 }
 
 async function loadData() {
@@ -77,7 +75,7 @@ async function loadUnidades() {
 function appendHeaderContent() {
   // --- Top Options Section ---
   const $topOptions = $('<section>', { class: 'mx-5rem top-options container-fluid d-flex justify-content-between align-items-center gap-3 bg-white' }).append(
-    $('<div>', { id: 'divMensagem', text: 'Carregando...' }),
+    $('<div>', { id: 'divMensagem' }),
     $('<a>', { href: '#', title: 'Documentação' }).append($('<i>', { class: 'fa fa-question' }))
   );
 
