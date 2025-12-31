@@ -87,7 +87,7 @@ function appendHeaderContent() {
   );
 
   // --- Breadcrumbs & Title Section ---
-  const $header = $('<section>', { class: 'mx-5rem me-2 mt-2 d-flex flex-column' }).append(
+  const $header = $('<section>', { class: 'mx-5rem ´ps-2 mt-2 d-flex flex-column' }).append(
     $('<div>', { class: 'breadcrumbs d-flex justify-content-start align-items-center gap-2' }).append(
       $('<a>', { href: '#', text: 'Home' }),
       $('<i>', { class: 'fa fa-angle-right fa-1x' }),
