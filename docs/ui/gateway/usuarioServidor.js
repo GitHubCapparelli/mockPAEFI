@@ -37,7 +37,12 @@ async function init(user) {
     UnidadesAPI.init(),
     UsuariosServidoresAPI.init()
   ]);
-  state.unidades = UnidadesAPI.getAll();
+  
+  try {
+    state.unidades = UnidadesAPI.getAll();
+  } catch (err) {
+    $('#divMensagem').text('' + err);
+  }
 
   appendHeaderContent();
   appendMainContent();
