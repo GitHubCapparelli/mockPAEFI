@@ -62,13 +62,15 @@ async function loadData() {
   });
   state.lastData = data;
 
+  await loadUnidades();
   refreshTable(data.data);
   refreshPagination(data.pagination);
+}
 
+async function loadUnidades() {
   const unidades = await UnidadesAPI.getAll();
   state.unidades = unidades;
   alert(state.unidades.length + '...');
-  populateUnidadesSelect('#cmbAddUnidade', state.unidades);  
 }
 
 /* ---------- Rendering ---------- */
@@ -120,7 +122,7 @@ function appendMainContent() {
     $('<h3>', { class: 'w-100 mt-2 ms-2', text: dataCaption }),
     $('<div>', { class: 'w-100 d-flex flex-column flex-wrap gap-1' }).append(
       $('<div>', { class: 'filter-options w-100 p-2 d-flex gap-3 flex-nowrap' }).append(
-        createFilterItem('txtUnidade', 'Unidade'),
+        createFilterItem('cmbFilterUnidade', 'Unidade'),
         createFilterItem('cmbFilterFuncao', 'Função'),
         createFilterItem('cmbFilterCargo', 'Cargo'),
         createFilterItem('cmbFilterEspecialidade', 'Especialidade')
@@ -162,39 +164,20 @@ function appendMainContent() {
 }
 
 function appendModals() {
-
   function createField(field) {
     const $col = $('<div>', { class: field.col || 'col-md-6' });
 
     if (field.label) {
-      $col.append(
-        $('<label>', {
-          for: field.id,
-          class: 'form-label',
-          text: field.label
-        })
-      );
+      $col.append($('<label>', { for: field.id, class: 'form-label', text: field.label }));
     }
 
-    const baseProps = {
-      id: field.id,
-      class: field.class || 'form-control',
-      required: !!field.required
-    };
+    const baseProps = { id: field.id, class: field.class || 'form-control', required: !!field.required };
 
     let $control;
-
     switch (field.type) {
-      case 'select':
-        $control = $('<select>', baseProps);
-        break;
-
-      case 'hidden':
-        $control = $('<input>', { ...baseProps, type: 'hidden' });
-        break;
-
-      default:
-        $control = $('<input>', { ...baseProps, type: field.type });
+      case 'select' : $control = $('<select>', baseProps); break;
+      case 'hidden' : $control = $('<input>', { ...baseProps, type: 'hidden' }); break;
+      default       : $control = $('<input>', { ...baseProps, type: field.type });
     }
 
     $col.append($control);
@@ -202,56 +185,25 @@ function appendModals() {
   }
 
   function createModal(id, title, formId, fields) {
-    const $modal = $('<div>', {
-      id,
-      class: 'modal fade',
-      tabindex: '-1',
-      'aria-hidden': 'true'
-    });
+    const $modal = $('<div>', { id, class: 'modal fade', tabindex: '-1', 'aria-hidden': 'true' });
 
     const $form = $('<form>', { id: formId });
-
-    const $body = $('<div>', { class: 'modal-body' }).append(
-      $('<div>', { class: 'row g-3' }).append(
-        fields.map(createField)
-      )
-    );
+    const $body = $('<div>', { class: 'modal-body' }).append($('<div>', { class: 'row g-3' }).append(fields.map(createField)));
 
     const $footer = $('<div>', { class: 'modal-footer' }).append(
-      $('<button>', {
-        type: 'button',
-        class: 'btn btn-secondary',
-        'data-bs-dismiss': 'modal',
-        text: 'Cancelar'
-      }),
-      $('<button>', {
-        type: 'button',
-        class: 'btn btn-primary',
-        id: formId === 'addForm' ? 'btnAddSave' : 'btnEditSave',
-        text: 'Salvar',
-        disabled: true
-      })
+      $('<button>', { type: 'button', class: 'btn btn-secondary', 'data-bs-dismiss': 'modal', text: 'Cancelar' }),
+      $('<button>', { type: 'button', class: 'btn btn-primary', id: formId === 'addForm' ? 'btnAddSave' : 'btnEditSave', text: 'Salvar', disabled: true })
     );
-
     $form.append($body);
 
     const $content = $('<div>', { class: 'modal-content' }).append(
       $('<div>', { class: 'modal-header' }).append(
         $('<h5>', { class: 'modal-title', text: title }),
-        $('<button>', {
-          type: 'button',
-          class: 'btn-close',
-          'data-bs-dismiss': 'modal'
-        })
-      ),
-      $form,
-      $footer
+        $('<button>', { type: 'button', class: 'btn-close', 'data-bs-dismiss': 'modal' })
+      ), $form, $footer
     );
 
-    return $modal.append(
-      $('<div>', { class: 'modal-dialog modal-lg modal-dialog-centered' })
-        .append($content)
-    );
+    return $modal.append($('<div>', { class: 'modal-dialog modal-lg modal-dialog-centered' }).append($content));
   }
 
   const addFields = [
@@ -279,6 +231,8 @@ function appendModals() {
 }
 
 function hydrateFilterSelects() {
+  populateUnidadesSelect('#cmbFilterUnidade', state.unidades);  
+
   populateSelectFromEnum('#cmbFilterFuncao', FuncaoUsuario, true, 'Todas');
   populateSelectFromEnum('#cmbFilterCargo', CargoUsuario, true, 'Todos');
   populateSelectFromEnum('#cmbFilterEspecialidade', Especialidade, true, 'Todas');
@@ -307,6 +261,7 @@ function refreshTable(list) {
       <tr>
         <td title="${u.nome}">${u.nome}</td>
         <td>${u.login}</td>
+        <td>${u.sigla}</td>
 
         <td>${u.funcao === FuncaoUsuario.NaoInformada.Key        ? '' : FuncaoUsuario.ValueFromKey(u.funcao)}</td>
         <td>${u.cargo === CargoUsuario.NaoInformado.Key          ? '' : CargoUsuario.ValueFromKey(u.cargo)}</td>
@@ -408,6 +363,8 @@ async function onBtnAdd_clicked(e) {
   try {
     $('#addForm')[0].reset();
     $('#btnAddSave').prop('disabled', true);
+
+    populateUnidadesSelect('#cmbAddUnidade', state.unidades);  
 
     state.addModal.show();
   } catch (err) {
