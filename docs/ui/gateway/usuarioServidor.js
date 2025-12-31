@@ -33,13 +33,11 @@ const colSpan = columns.length;
 async function init(user) {
   state.currentUser = user;
 
-  const [response] = await Promise.all([
-//    UnidadesAPI.getAll(),
+  await Promise.all([
     UnidadesAPI.init(),
     UsuariosServidoresAPI.init()
   ]);
-  //state.unidades = response;
-  state.unidades = await UnidadesAPI.getAll();
+  state.unidades = UnidadesAPI.getAll();
 
   appendHeaderContent();
   appendMainContent();
@@ -224,7 +222,7 @@ function appendModals() {
 }
 
 function hydrateFilterSelects() {
-  populateUnidadesSelect('#cmbFilterUnidade', state.unidades, true, 'Todas');  
+  populateUnidadesSelect('#cmbFilterUnidade', state.unidades, null, true, 'Todas');  
 
   populateSelectFromEnum('#cmbFilterFuncao', FuncaoUsuario, true, 'Todas');
   populateSelectFromEnum('#cmbFilterCargo', CargoUsuario, true, 'Todos');
@@ -381,7 +379,6 @@ async function onBtnEdit_clicked(e) {
     $('#hiddenEditId').val(u.id);
     $('#txtEditNome').val(u.nome);
     $('#txtEditLogin').val(u.login);
-    $('#cmbEditUnidade').val(u.unidade);
     $('#cmbEditFuncao').val(u.funcao ?? '');
     $('#cmbEditCargo').val(u.cargo ?? '');
     $('#cmbEditEspecialidade').val(u.especialidade ?? '');

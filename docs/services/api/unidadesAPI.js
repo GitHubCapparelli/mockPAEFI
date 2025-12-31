@@ -4,13 +4,23 @@ import { CreateUnidadeDTO } from '../../data/factory/unidadeDTO.js';
 const ENTITY    = 'unidades';
 const DATA_PATH = '/mockPAEFI/data/mock/unidades.json';
 
+let initialized = false;
+let initPromise = null;
+
 export const UnidadesAPI = (function () {
     'use strict';
 
     async function init() {
-        const data = await loadInitialData();
-        InMemory.InitStore({ [ENTITY]: data });
-        return true;
+        if (initialized) return;
+        if (initPromise) return initPromise;
+
+        initPromise = (async () => {
+            const data = await loadInitialData();
+            InMemory.InitStore({ [ENTITY]: data });
+            initialized = true;
+        })();
+
+        return initPromise;
     }
 
     async function loadInitialData() {
@@ -30,7 +40,8 @@ export const UnidadesAPI = (function () {
         }
     }
 
-    async function getAll({ orderBy = 'sigla', order = 'asc' } = {}) {
+    function getAll({ orderBy = 'sigla', order = 'asc' } = {}) {
+        ensureInitialized();
         const source = InMemory.GetAll(ENTITY);
         const result = [...source]; 
 
@@ -45,13 +56,15 @@ export const UnidadesAPI = (function () {
         return result;
     }
 
-    async function getById(id) {
+    function getById(id) {
+        ensureInitialized();
         const data = InMemory.GetAll(ENTITY);
         return data.find(u => u.id === id) ?? null;
     }
 
-    async function getPaginated({ page = 1, pageSize = 10, filters = {} }) {
-        let data = await getAll();
+    function getPaginated({ page = 1, pageSize = 10, filters = {} }) {
+        ensureInitialized();
+        let data = getAll();
 
         if (filters.funcao) data = data.filter(u => u.funcao === filters.funcao);
 
@@ -68,7 +81,8 @@ export const UnidadesAPI = (function () {
         };
     }
 
-    async function create(rawData) {
+    function create(rawData) {
+        ensureInitialized();
         const data = InMemory.GetAll(ENTITY);
         const dto  = CreateUnidadeDTO(rawData);
         if (data.some(u => u.sigla === dto.sigla)) {
@@ -79,7 +93,8 @@ export const UnidadesAPI = (function () {
         return dto;
     }
 
-    async function update(id, rawData) {
+    function update(id, rawData) {
+        ensureInitialized();
         const data = InMemory.GetAll(ENTITY);
         const idx = data.findIndex(u => u.id === id);
         if (idx === -1) return null;
@@ -96,7 +111,8 @@ export const UnidadesAPI = (function () {
         return updated;
     }
 
-    async function softDelete(id, rawData) {
+    function softDelete(id, rawData) {
+        ensureInitialized();
         const data = InMemory.GetAll(ENTITY);
         const idx = data.findIndex(u => u.id === id);
         if (idx === -1) return null;
@@ -109,6 +125,12 @@ export const UnidadesAPI = (function () {
 
         InMemory.SetAll(ENTITY, next);
         return next[idx];
+    }
+
+    function ensureInitialized() {
+        if (!initialized) {
+            throw new Error('UnidadesAPI used before init()');
+        }
     }
 
     return {
