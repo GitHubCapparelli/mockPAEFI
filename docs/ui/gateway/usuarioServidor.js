@@ -71,19 +71,20 @@ const columns = [
 async function init(user) {
   state.currentUser = user;
 
-  await Promise.all([
-    UnidadesAPI.init(),
-    UsuariosServidoresAPI.init()
-  ]);
+  render();
+  //await Promise.all([
+  //  UnidadesAPI.init(),
+  //  UsuariosServidoresAPI.init()
+  //]);
 
-  state.unidades = await UnidadesAPI.getAll();
-  await renderLayout();
+  //state.unidades = await UnidadesAPI.getAll();
+  //await renderLayout();
 
-  renderModalAdd();
-  renderModalEdit();
-  bindEvents();
+  //renderModalAdd();
+  //renderModalEdit();
+  //bindEvents();
 
-  await load();
+  //await load();
 }
 
 
@@ -111,12 +112,36 @@ async function renderLayout() {
 }
 
 /* ---------- Rendering ---------- */
-function renderTopMessagesBar() {
+function render() {
   body.append(`
-    <section class='top-options container-fluid d-flex justify-content-between align-items-center gap-3 bg-white'>
+    <section class="top-options container-fluid d-flex justify-content-between align-items-center gap-3 bg-white">
       <span id="lblMensagem">ok</span>
       <a href="#" title="Documentação"><i class="fa fa-question"></i></a>
-    </section
+    </section>
+    <section class="top-navbar d-flex justify-content-between align-items-center">
+      <div class="mx-4rem d-flex align-items-center flex-grow-1 flex-nowrap gap-4">
+          <span>Menu</span>
+          <span>Home</span>
+          <a href="../../">Assistência Social</a>
+          <span>Segurança Alimentar</span>
+          <span>Transferência de Renda</span>
+          <span>Tutorial</span>
+      </div>
+      <span id="txtUser-login" class="mx-4rem">${state.currentUser.login}</span>
+    </section>
+    <section class="mx-4rem mt-2 d-flex flex-column">
+      <div class="breadcrumbs d-flex justify-content-start align-items-center gap-2">
+          <a href="#">Home</a>
+          <i class="fa fa-angle-right fa-1x"></i>
+          <a href="../../">Assistência Social </a>
+          <i class="fa fa-angle-right fa-1x"></i>
+          <span>Gestão do PAEFI</span>
+          <i class="fa fa-angle-right fa-1x"></i>
+      </div>
+      <span class="page-title">${pageTitle}</span>
+      <span id="txtUser-nome" class="mt-1 txtServidor-nome">${state.currentUser.nome}</span>
+      <span id="txtUser-unidade" class="txtServidor-unidade">${state.currentUser.hierarquia}</span>
+    </section>
   `);
 }
 
@@ -129,7 +154,6 @@ function renderTopMessagesBar() {
     <a href="#" title="Documentação"><i class="fa fa-question"></i></a>
   `);
 }
-
 function renderSidsTopBar() {
   const $section = $(sectionSidsTopID);
   $section.empty();
@@ -146,7 +170,6 @@ function renderSidsTopBar() {
     <span id="txtUser-login" class="mx-4rem">${state.currentUser.login}</span>
   `);
 }
-
 function renderTitleBar(pageTitle) {
   const $section = $(sectionTitleBarID);
   $section.empty();
