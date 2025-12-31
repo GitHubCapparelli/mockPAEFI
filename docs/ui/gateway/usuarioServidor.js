@@ -331,18 +331,17 @@ function populateSelectFromEnum(selectId, enumType, includeEmpty = true, emptyLa
 }
 
 function populateUnidadesSelect(selectId, list, selectedId = null, emptyLabel = 'Selecione...') {
+  if (!list || list.length === 0) {
+    $('#lblMensagem').text(`erro ao popular ${selectId}`);
+    return;
+  }
   const $cmb = $(selectId);
   $cmb.empty();
   $cmb.append(`<option value="">${emptyLabel}</option>`);
-
-  if (list) {
-    list.forEach(u => {
-      const unidade = u.nome ? `${u.sigla} - ${u.nome}` : u.sigla;
-      $cmb.append(`<option value="${u.id}" ${u.id === selectedId ? 'selected' : ''}>${unidade}</option>`);
-    });
-  } else {
-    $('#lblMensagem').text(`erro ao popular ${selectId}`);
-  }
+  list.forEach(u => {
+    const unidade = u.nome ? `${u.sigla} - ${u.nome}` : u.sigla;
+    $cmb.append(`<option value="${u.id}" ${u.id === selectedId ? 'selected' : ''}>${unidade}</option>`);
+  });
 }
 
 /* ---------- Events ---------- */
