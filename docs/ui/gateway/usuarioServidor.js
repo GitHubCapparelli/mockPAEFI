@@ -45,10 +45,10 @@ async function init(user) {
   state.addModal  = new bootstrap.Modal('#divModalAdd');
   state.editModal = new bootstrap.Modal('#divModalEdit');
 
+  await loadData();
   hydrateFilterSelects();
   hydrateModalSelects();
 
-  await loadData();
   bindEvents();
 
   $('#lblMensagem').text('');
@@ -335,10 +335,14 @@ function populateUnidadesSelect(selectId, list, selectedId = null, emptyLabel = 
   $cmb.empty();
   $cmb.append(`<option value="">${emptyLabel}</option>`);
 
-  list.forEach(u => {
-    const unidade = u.nome ? `${u.sigla} - ${u.nome}` : u.sigla;
-    $cmb.append(`<option value="${u.id}" ${u.id === selectedId ? 'selected' : ''}>${unidade}</option>`);
-  });
+  if (list) {
+    list.forEach(u => {
+      const unidade = u.nome ? `${u.sigla} - ${u.nome}` : u.sigla;
+      $cmb.append(`<option value="${u.id}" ${u.id === selectedId ? 'selected' : ''}>${unidade}</option>`);
+    });
+  } else {
+    $('#lblMensagem').text(`erro ao popular ${selectId}`);
+  }
 }
 
 /* ---------- Events ---------- */
