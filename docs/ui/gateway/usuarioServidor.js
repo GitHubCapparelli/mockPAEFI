@@ -2,42 +2,9 @@ import { FuncaoUsuario, CargoUsuario, Especialidade } from '../../objModel.js';
 import { UsuariosServidoresAPI }                      from '../../services/api/usuariosServidoresAPI.js';
 import { UnidadesAPI }                                from '../../services/api/unidadesAPI.js';
 
-const btnApplyFilterID     = '#btnApplyFilter';
-const btnClearFilterID     = '#btnClearFilter';
-const cmbFilterCargoID     = '#cmbFilterCargo';
-const cmbFilterFuncaoID    = '#cmbFilterFuncao';
-const cmbFilterEspecialID  = '#cmbFilterEspecialidade';
-
-const dataItemsID          = '#dataRows';
-const navInfoID            = '#navInfo';
-const navControlsID        = '#navControls';
-
-const btnAddNewID          = '#btnAddNew';
-const addFormID            = '#addForm';
-
-const divModalAddID        = "#divModalAdd";
-const txtAddNomeID         = '#txtAddNome';
-const txtAddLoginID        = '#txtAddLogin';
-const cmbAddUnidadeID      = '#cmbAddUnidade';
-const cmbAddFuncaoID       = '#cmbAddFuncao';
-const cmbAddCargoID        = '#cmbAddCargo';
-const cmbAddEspecialID     = '#cmbAddEspecialidade';
-const btnAddSaveID         = '#btnAddSave';
-
-const divModalEditID       = "#divModalEdit";
-const hiddenEditID         = '#hiddenEditId';
-const txtEditNomeID        = '#txtEditNome';
-const txtEditLoginID       = '#txtEditLogin';
-const cmbEditCargoID       = '#cmbEditCargo';
-const cmbEditFuncaoID      = '#cmbEditFuncao';
-const cmbEditEspecialID    = '#cmbEditEspecialidade';
-const btnEditSaveID        = '#btnEditSave';
-
 const pageTitle            = 'Admin';
 const dataCaption          = "Usuários Servidores";
 const confirmDeleteMSG     = 'Confirma exclusão lógica ?';
-
-const divMensagemID        = $('#divMensagem');
 
 const state = {
   page: 1,
@@ -71,28 +38,29 @@ async function init(user) {
 
   renderPage();
   renderModals();
+  state.addModal  = new bootstrap.Modal('#divModalAdd'); 
+  state.editModal = new bootstrap.Modal('#divModalEdit');
+
   bindEvents();
   await loadData();
 
-  state.addModal  = new bootstrap.Modal(divModalAddID); 
-  state.editModal = new bootstrap.Modal(divModalEditID);
-  $(divMensagemID).text('done');
+  $('#divMensagem').text('done');
 }
 
 async function loadData() {
   state.unidades = await UnidadesAPI.getAll();
 
-  populateSelectFromEnum(cmbFilterFuncaoID, FuncaoUsuario, true, 'Todas');
-  populateSelectFromEnum(cmbFilterCargoID, CargoUsuario, true, 'Todos');
-  populateSelectFromEnum(cmbFilterEspecialID, Especialidade, true, 'Todas');
+  populateSelectFromEnum('cmbFilterFuncao', FuncaoUsuario, true, 'Todas');
+  populateSelectFromEnum('cmbFilterCargo', CargoUsuario, true, 'Todos');
+  populateSelectFromEnum('cmbFilterEspecial', Especialidade, true, 'Todas');
 
-  populateSelectFromEnum(cmbAddFuncaoID, FuncaoUsuario, false);
-  populateSelectFromEnum(cmbAddCargoID, CargoUsuario, false);
-  populateSelectFromEnum(cmbAddEspecialID, Especialidade, false);
+  populateSelectFromEnum('cmbAddFuncao', FuncaoUsuario, false);
+  populateSelectFromEnum('cmbAddCargo', CargoUsuario, false);
+  populateSelectFromEnum('cmbAddEspecial', Especialidade, false);
 
-  populateSelectFromEnum(cmbEditCargoID, CargoUsuario, false);
-  populateSelectFromEnum(cmbEditFuncaoID, FuncaoUsuario, false);
-  populateSelectFromEnum(cmbEditEspecialID, Especialidade, false);
+  populateSelectFromEnum('cmbEditCargo', CargoUsuario, false);
+  populateSelectFromEnum('cmbEditFuncao', FuncaoUsuario, false);
+  populateSelectFromEnum('cmbEditEspecial', Especialidade, false);
 
   await load();
 }
@@ -108,7 +76,7 @@ async function load() {
   renderTable(data.data);
   renderPagination(data.pagination);
   
-  populateUnidadesSelect(cmbAddUnidadeID, state.unidades);
+  populateUnidadesSelect('cmbAddUnidade', state.unidades);
 }
 
 /* ---------- Rendering ---------- */
@@ -337,7 +305,7 @@ function renderModals() {
 }
 
 function renderTable(list) {
-  const tbody = $(dataItemsID).empty();
+  const tbody = $('dataItems').empty();
 
   if (!list.length) {
     tbody.append('<tr><td colspan="6">Nenhum registro</td></tr>');
@@ -370,7 +338,7 @@ function renderPagination(p) {
   const start = (p.page - 1) * p.pageSize + 1;
   const end   = Math.min(start + p.pageSize - 1, p.totalRecords);
 
-  $(navInfoID).text(
+  $('navInfo').text(
     `Mostrando ${start} - ${end} de ${p.totalRecords} registros`
   );
 
@@ -378,7 +346,7 @@ function renderPagination(p) {
 }
 
 function renderPaginationControls(p) {
-  const $ul = $(navControlsID);
+  const $ul = $('navControls');
   $ul.empty();
 
   const prevDisabled = p.page === 1 ? 'disabled' : '';
@@ -434,25 +402,25 @@ function populateUnidadesSelect(selectId, list, selectedId = null, emptyLabel = 
 
 /* ---------- Events ---------- */
 function bindEvents() {
-  $(btnApplyFilterID).on('click', onBtnApplyFilters_clicked);
-  $(btnClearFilterID).on('click', onBtnClearFilters_clicked);
+  $('btnApplyFilter').on('click', onBtnApplyFilters_clicked);
+  $('btnClearFilter').on('click', onBtnClearFilters_clicked);
 
-  $(dataItemsID)
+  $('dataItems')
     .on('click', '.js-edit', onBtnEdit_clicked)
     .on('click', '.js-delete', onBtnDelete_clicked);
 
-  $(navControlsID).on('click', 'a.page-link', onNavControl_clicked);  
+  $('navControls').on('click', 'a.page-link', onNavControl_clicked);  
 
-  $(btnAddNewID).on('click', onBtnAdd_clicked);
-  $(btnAddSaveID).on('click', onBtnSaveNew_clicked);
-  $(addFormID).on('input change', onModalAdd_inputChanged);
+  $('btnAddNew').on('click', onBtnAdd_clicked);
+  $('btnAddSave').on('click', onBtnSaveNew_clicked);
+  $('addForm').on('input change', onModalAdd_inputChanged);
 
-  $(btnEditSaveID).on('click', onBtnUpdate_clicked);
+  $('btnEditSave').on('click', onBtnUpdate_clicked);
 }
 
 async function onBtnAdd_clicked(e) {
-    $(addFormID)[0].reset();
-    $(btnAddSaveID).prop('disabled', true);
+    $('addForm')[0].reset();
+    $('btnAddSave').prop('disabled', true);
 
     state.addModal.show();
 }
@@ -463,14 +431,14 @@ async function onBtnEdit_clicked(e) {
     const u = await UsuariosServidoresAPI.getById(id);
     if (!u) return;
 
-    $(hiddenEditID).val(u.id);
-    $(txtEditNomeID).val(u.nome);
-    $(txtEditLoginID).val(u.login);
-    $(cmbEditFuncaoID).val(u.funcao ?? '');
-    $(cmbEditCargoID).val(u.cargo ?? '');
-    $(cmbEditEspecialID).val(u.especialidade ?? '');
+    $('hiddenEdit').val(u.id);
+    $('txtEditNome').val(u.nome);
+    $('txtEditLogin').val(u.login);
+    $('cmbEditFuncao').val(u.funcao ?? '');
+    $('cmbEditCargo').val(u.cargo ?? '');
+    $('cmbEditEspecial').val(u.especialidade ?? '');
 
-    $(btnEditSaveID).prop('disabled', false);
+    $('btnEditSave').prop('disabled', false);
 
     state.editModal.show();
   } catch (err) {
@@ -481,12 +449,12 @@ async function onBtnEdit_clicked(e) {
 
 async function onBtnSaveNew_clicked() {
   await UsuariosServidoresAPI.create({
-    unidadeID      : $(cmbAddUnidadeID).val(),
-    nome           : $(txtAddNomeID).val(),
-    login          : $(txtAddLoginID).val(),
-    funcao         : $(cmbAddFuncaoID).val(),
-    cargo          : $(cmbAddCargoID).val(),
-    especialidade  : $(cmbAddEspecialID).val(),
+    unidadeID      : $('cmbAddUnidade').val(),
+    nome           : $('txtAddNome').val(),
+    login          : $('txtAddLogin').val(),
+    funcao         : $('cmbAddFuncao').val(),
+    cargo          : $('cmbAddCargo').val(),
+    especialidade  : $('cmbAddEspecial').val(),
     criadoPor      : state.currentUser.id,
     criadoEm       : new Date().toISOString()
   });
@@ -496,14 +464,14 @@ async function onBtnSaveNew_clicked() {
 }
 
 async function onBtnUpdate_clicked() {
-  const id = $(hiddenEditID).val();
+  const id = $('hiddenEdit').val();
 
   await UsuariosServidoresAPI.update(id, {
-    nome          : $(txtEditNomeID).val(),
-    login         : $(txtEditLoginID).val(),
-    funcao        : $(cmbEditFuncaoID).val(),
-    cargo         : $(cmbEditCargoID).val(),
-    especialidade : $(cmbEditEspecialID).val(),
+    nome          : $('txtEditNome').val(),
+    login         : $('txtEditLogin').val(),
+    funcao        : $('cmbEditFuncao').val(),
+    cargo         : $('cmbEditCargo').val(),
+    especialidade : $('cmbEditEspecial').val(),
     alteradoPor   : state.currentUser.id,
     alteradoEm    : new Date().toISOString()
   });
@@ -535,18 +503,18 @@ async function onNavControl_clicked(e) {
 
 function onBtnApplyFilters_clicked() {
   state.filters = {
-    cargo         : $(cmbFilterCargoID).val() || null,
-    funcao        : $(cmbFilterFuncaoID).val() || null,
-    especialidade : $(cmbFilterEspecialID).val() || null
+    cargo         : $('cmbFilterCargo').val() || null,
+    funcao        : $('cmbFilterFuncao').val() || null,
+    especialidade : $('cmbFilterEspecial').val() || null
   };
   state.page = 1;
   load();
 }
 
 function onBtnClearFilters_clicked() {
-  $(cmbFilterCargoID).val('');
-  $(cmbFilterFuncaoID).val('');
-  $(cmbFilterEspecialID).val('');
+  $('cmbFilterCargo').val('');
+  $('cmbFilterFuncao').val('');
+  $('cmbFilterEspecial').val('');
 
   state.filters = {};
   state.page = 1;
@@ -554,10 +522,10 @@ function onBtnClearFilters_clicked() {
 }
 
 function onModalAdd_inputChanged() {
-  const valid = $(txtAddNomeID).val().trim().length > 0 &&
-                $(txtAddLoginID).val().trim().length > 0;
+  const valid = $('txtAddNome').val().trim().length > 0 &&
+                $('txtAddLogin').val().trim().length > 0;
 
-  $(btnAddSaveID).prop('disabled', !valid);
+  $('btnAddSave').prop('disabled', !valid);
 }
 
 /* ---------- Public ---------- */
