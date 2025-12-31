@@ -36,6 +36,19 @@ async function init(user) {
     UsuariosServidoresAPI.init()
   ]);
 
+  appendHeaderContent();
+  appendMainContent();
+  appendModals();
+}
+
+async function init_old(user) {
+  state.currentUser = user;
+
+  await Promise.all([
+    UnidadesAPI.init(),
+    UsuariosServidoresAPI.init()
+  ]);
+
   renderPage();
   renderModals();
   state.addModal  = new bootstrap.Modal('#divModalAdd'); 
@@ -80,6 +93,167 @@ async function load() {
 }
 
 /* ---------- Rendering ---------- */
+function appendHeaderContent() {
+  // --- Top Options Section ---
+  const $topOptions = $('<section>', { class: 'mx-5rem top-options container-fluid d-flex justify-content-between align-items-center gap-3 bg-white' }).append(
+    $('<div>', { id: 'divMensagem', text: 'Carregando...' }),
+    $('<a>', { href: '#', title: 'Documentação' }).append($('<i>', { class: 'fa fa-question' }))
+  );
+
+  // --- SIDS Top Navbar ---
+  const $navbar = $('<section>', { class: 'top-navbar d-flex justify-content-between align-items-center' }).append(
+    $('<div>', { class: 'mx-5rem d-flex align-items-center flex-grow-1 flex-nowrap gap-4' }).append(
+      $('<span>', { text: 'Menu' }),
+      $('<span>', { text: 'Home' }),
+      $('<a>', { href: '../../', text: 'Assistência Social' }),
+      $('<span>', { text: 'Segurança Alimentar' }),
+      $('<span>', { text: 'Transferência de Renda' }),
+      $('<span>', { text: 'Tutorial' })
+    ),
+    $('<span>', { id: 'txtUser-login', class: 'mx-4rem', text: state.currentUser.login })
+  );
+
+  // --- Breadcrumbs & Title Section ---
+  const $header = $('<section>', { class: 'mx-5rem mt-2 d-flex flex-column' }).append(
+    $('<div>', { class: 'breadcrumbs d-flex justify-content-start align-items-center gap-2' }).append(
+      $('<a>', { href: '#', text: 'Home' }),
+      $('<i>', { class: 'fa fa-angle-right fa-1x' }),
+      $('<a>', { href: '../../', text: 'Assistência Social' }),
+      $('<i>', { class: 'fa fa-angle-right fa-1x' }),
+      $('<span>', { text: 'Gestão do PAEFI' }),
+      $('<i>', { class: 'fa fa-angle-right fa-1x' })
+    ),
+    $('<span>', { class: 'page-title', text: pageTitle }),
+    $('<span>', { id: 'txtUser-nome', class: 'mt-1 txtServidor-nome', text: state.currentUser.nome }),
+    $('<span>', { id: 'txtUser-unidade', class: 'txtServidor-unidade', text: state.currentUser.hierarquia })
+  );
+  $('page-header').append($topOptions, $navbar, $header);
+}
+
+function appendMainContent() {
+  // --- Filters Bar ---
+  const createFilterItem = (id, label) => $('<div>', { class: 'filter-item' }).append(
+    $('<label>', { for: id, text: label }),
+    $('<select>', { class: 'form-select', id: id })
+  );
+
+  const $filters = $('<section>', { class: 'filters-bar mx-5rem mt-3 d-flex flex-column' }).append(
+    $('<h3>', { class: 'w-100 mt-2 ms-2', text: dataCaption }),
+    $('<div>', { class: 'w-100 d-flex flex-column flex-wrap gap-1' }).append(
+      $('<div>', { class: 'filter-options w-100 p-2 d-flex gap-3 flex-nowrap' }).append(
+        createFilterItem('cmbFilterFuncao', 'Função'),
+        createFilterItem('cmbFilterCargo', 'Cargo'),
+        createFilterItem('cmbFilterEspecialidade', 'Especialidade')
+      ),
+      $('<div>', { class: 'filter-buttons w-100 p-2 d-flex justify-content-between gap-3' }).append(
+        $('<button>', { class: 'btn btn-primary', id: 'btnApplyFilter' }).append($('<i>', { class: 'fas fa-filter' }), ' Filtrar'),
+        $('<button>', { class: 'btn btn-outline-secondary', id: 'btnClearFilter' }).append($('<i>', { class: 'fas fa-times' }), ' Limpar')
+      )
+    )
+  );
+
+  // --- Data Section (Table & Pagination) ---
+  const $dataSection = $('<section>', { class: 'mx-5rem data-section' }).append(
+    // Action Buttons
+    $('<div>', { class: 'mt-2 mx-2 action-buttons d-flex justify-content-between align-items-center gap-3' }).append(
+      $('<div>', { class: 'action-buttons-left d-flex align-items-center gap-3 flex-grow-1 flex-nowrap' }).append(
+        $('<button>', { class: 'btn btn-primary', id: 'btnAddNew' }).append($('<i>', { class: 'fas fa-plus' }), ' Incluir')
+      ),
+      $('<div>', { class: 'action-buttons-right d-flex justify-content-end align-items-end gap-3' }).append(
+        $('<button>', { class: 'btn btn-secondary', id: 'btnExport' }).append($('<i>', { class: 'fas fa-download' }), ' Exportar')
+      )
+    ),
+    // Table
+    $('<div>', { class: 'mt-3 table-responsive' }).append(
+      $('<table>', { class: 'table table-striped table-hover' }).append(
+        $('<thead>').append(thead), // Assuming thead is already a DOM element or valid HTML string
+        $('<tbody>', { id: 'dataRows' }).append(
+          $('<tr>').append($('<td>', { colspan: colSpan, class: 'text-center text-muted', text: 'Carregando...' }))
+        )
+      )
+    ),
+    // Pagination
+    $('<div>', { class: 'pagination-section d-flex justify-content-between align-items-center' }).append(
+      $('<div>', { class: 'pagination-info' }).append($('<span>', { id: 'navInfo' })),
+      $('<nav>').append($('<ul>', { id: 'navControls', class: 'pagination mb-0' }))
+    )
+  );
+  $('page-main').append($filters, $dataSection);
+}
+
+function appendModals() {
+  const createModal = (id, title, formId, fields, isEdit = false) => {
+    const $modal = $('<div>', { id: id, class: 'modal fade', tabindex: '-1', 'aria-hidden': 'true' });
+    const $dialog = $('<div>', { class: 'modal-dialog modal-lg modal-dialog-centered' });
+    const $content = $('<div>', { class: 'modal-content' });
+
+    // Header
+    const $header = $('<div>', { class: 'modal-header' }).append(
+      $('<h5>', { class: 'modal-title', text: title }),
+      $('<button>', { type: 'button', class: 'btn-close', 'data-bs-dismiss': 'modal' })
+    );
+
+    // Body & Form
+    const $form = $('<form>', { id: formId });
+    const $row = $('<div>', { class: 'row g-3' });
+
+    if (isEdit) {
+      $form.append($('<input>', { type: 'hidden', id: 'hiddenEditId' }));
+    }
+
+    // Map through fields to create inputs/selects
+    fields.forEach(field => {
+      const $col = $('<div>', { class: field.col || 'col-md-6' });
+      $col.append($('<label>', { class: 'form-label', text: field.label }));
+      
+      const elementProps = { id: field.id, class: field.class, required: field.required };
+      const $input = field.type === 'select' ? $('<select>', elementProps) : $('<input>', { ...elementProps, type: 'text' });
+      
+      $col.append($input);
+      $row.append($col);
+    });
+
+    $form.append($row);
+    const $body = $('<div>', { class: 'modal-body' }).append($form);
+
+    // Footer
+    const $footer = $('<div>', { class: 'modal-footer' }).append(
+      $('<button>', { class: 'btn btn-secondary', 'data-bs-dismiss': 'modal', text: 'Cancelar' }),
+      $('<button>', { id: isEdit ? 'btnEditSave' : 'btnAddSave', class: 'btn btn-primary', text: 'Salvar', disabled: true })
+    );
+
+    return $modal.append($dialog.append($content.append($header, $body, $footer)));
+  };
+
+  const addFields = [
+    { label: 'Nome', id: 'txtAddNome', class: 'form-control', required: true },
+    { label: 'Login', id: 'txtAddLogin', class: 'form-control', required: true },
+    { label: 'Unidade', id: 'cmbAddUnidade', class: 'form-select', type: 'select', col: 'col-md-12' },
+    { label: 'Função', id: 'cmbAddFuncao', class: 'form-select', type: 'select' },
+    { label: 'Cargo', id: 'cmbAddCargo', class: 'form-select', type: 'select' },
+    { label: 'Especialidade', id: 'cmbAddEspecialidade', class: 'form-select', type: 'select', col: 'col-md-12' }
+  ];
+
+  const editFields = [
+    { label: 'Nome', id: 'txtEditNome', class: 'form-control', required: true },
+    { label: 'Login', id: 'txtEditLogin', class: 'form-control', required: true },
+    { label: 'Função', id: 'cmbEditFuncao', class: 'form-select', type: 'select' },
+    { label: 'Cargo', id: 'cmbEditCargo', class: 'form-select', type: 'select' },
+    { label: 'Especialidade', id: 'cmbEditEspecialidade', class: 'form-select', type: 'select', col: 'col-md-12' }
+  ];
+
+  // Inject into Body
+  //const $section = $('<section>');
+  //$section.append(createModal('divModalAdd', 'Novo Usuário Servidor', 'addForm', addFields));
+  //$section.append(createModal('divModalEdit', 'Editando Usuário Servidor', 'editForm', editFields, true));
+  
+  const $add  = createModal('divModalAdd', 'Novo Usuário Servidor', 'addForm', addFields);
+  const $edit = createModal('divModalEdit', 'Editando Usuário Servidor', 'editForm', editFields, true);
+
+  $('page-modals').append($add, $edit);
+}
+
+
 function renderPage() {
   $('body').append(`
     <section class="mx-5rem top-options container-fluid d-flex justify-content-between align-items-center gap-3 bg-white">
