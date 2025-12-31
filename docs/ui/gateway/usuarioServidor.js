@@ -377,7 +377,7 @@ async function onBtnEdit_clicked(e) {
     $('#hiddenEditId').val(u.id);
     $('#txtEditNome').val(u.nome);
     $('#txtEditLogin').val(u.login);
-    $('#txtEditUnidade').val(u.unidade);
+    $('#cmbEditUnidade').val(u.unidade);
     $('#cmbEditFuncao').val(u.funcao ?? '');
     $('#cmbEditCargo').val(u.cargo ?? '');
     $('#cmbEditEspecialidade').val(u.especialidade ?? '');
@@ -423,7 +423,7 @@ async function onBtnUpdate_clicked() {
   await UsuariosServidoresAPI.update(id, {
     nome          : $('#txtEditNome').val(),
     login         : $('#txtEditLogin').val(),
-    unidade       : $('#txtEditUnidade').val(),
+    hierarquiaID  : $('#cmbEditUnidade').val(),
     funcao        : $('#cmbEditFuncao').val(),
     cargo         : $('#cmbEditCargo').val(),
     especialidade : $('#cmbEditEspecialidade').val(),
