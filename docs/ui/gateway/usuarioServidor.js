@@ -89,11 +89,11 @@ function appendHeaderContent() {
   // --- Breadcrumbs & Title Section ---
   const $header = $('<section>', { class: 'mx-5rem mt-2 d-flex flex-column' }).append(
     $('<div class="ps-2">', { class: 'breadcrumbs d-flex justify-content-start align-items-center gap-2' }).append(
-      $('<a>', { href: '#', text: 'Home' }),
+      $('<a>', { href: '#', text: 'Home ' }),
       $('<i>', { class: 'fa fa-angle-right fa-1x' }),
-      $('<a>', { href: '../../', text: 'Assistência Social' }),
+      $('<a>', { href: '../../', text: 'Assistência Social ' }),
       $('<i>', { class: 'fa fa-angle-right fa-1x' }),
-      $('<span>', { text: 'Gestão do PAEFI' }),
+      $('<span>', { text: 'Gestão do PAEFI ' }),
       $('<i>', { class: 'fa fa-angle-right fa-1x' })
     ),
     $('<span class="ps-2">', { class: 'page-title', text: pageTitle }),
