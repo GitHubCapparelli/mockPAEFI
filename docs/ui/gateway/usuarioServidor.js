@@ -223,7 +223,7 @@ function appendModals() {
 }
 
 function hydrateFilterSelects() {
-  populateUnidadesSelect('#cmbFilterUnidade', state.unidades, u.unidadeID);  
+  populateUnidadesSelect('#cmbFilterUnidade', state.unidades);  
 
   populateSelectFromEnum('#cmbFilterFuncao', FuncaoUsuario, true, 'Todas');
   populateSelectFromEnum('#cmbFilterCargo', CargoUsuario, true, 'Todos');
