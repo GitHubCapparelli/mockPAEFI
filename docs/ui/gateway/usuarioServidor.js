@@ -222,7 +222,7 @@ function appendModals() {
 }
 
 function hydrateFilterSelects() {
-  populateUnidadesSelect('#cmbFilterUnidade', state.unidades);  
+  populateUnidadesSelect('#cmbFilterUnidade', state.unidades, true, 'Todas');  
 
   populateSelectFromEnum('#cmbFilterFuncao', FuncaoUsuario, true, 'Todas');
   populateSelectFromEnum('#cmbFilterCargo', CargoUsuario, true, 'Todos');
@@ -321,7 +321,7 @@ function populateSelectFromEnum(selectId, enumType, includeEmpty = true, emptyLa
   });
 }
 
-function populateUnidadesSelect(selectId, list, selectedId = null, emptyLabel = 'Selecione...') {
+function populateUnidadesSelect(selectId, list, selectedId = null, includeEmpty = true, emptyLabel = 'Selecione...') {
    if (!Array.isArray(list)) {
     $('#divMensagem').text(`[populateUnidadesSelect] Erro ao popular ${selectId}: lista vazia.`);
     return;
@@ -383,6 +383,8 @@ async function onBtnEdit_clicked(e) {
     $('#cmbEditEspecialidade').val(u.especialidade ?? '');
 
     $('#btnEditSave').prop('disabled', false);
+
+    populateUnidadesSelect('#cmbEditUnidade', state.unidades, u.unidadeID);  
 
     state.editModal.show();
   } catch (err) {
