@@ -38,7 +38,7 @@ async function init(user) {
     UnidadesAPI.init(),
     UsuariosServidoresAPI.init()
   ]);
-  state.unidades = response.unidades;
+  state.unidades = response[0];
 
   appendHeaderContent();
   appendMainContent();
