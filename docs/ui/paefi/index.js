@@ -7,7 +7,7 @@ $(document).ready(async () => {
     if (user) {
         await UsuarioServidorGateway.init(user);
     } else {
-        lblMensagem.text('Usuário não localizado. Redirecionando...');
+        alert('Usuário não localizado. Redirecionando...');
         window.location.href = '/mockPAEFI/';
     }
 });
