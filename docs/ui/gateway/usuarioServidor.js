@@ -244,16 +244,17 @@ function refreshTable(list) {
   const tbody = $('#dataRows').empty();
 
   if (!list.length) {
-    tbody.append('<tr><td colspan="6">Nenhum registro</td></tr>');
+    tbody.append(`<tr><td colspan="${columns.length}">Nenhum registro</td></tr>`);
     return;
   }
 
   list.forEach(u => {
+    const unidade = state.unidades.find(un => un.id === u.unidadeID);
     tbody.append(`
       <tr>
         <td title="${u.nome}">${u.nome}</td>
+        <td>${unidade.sigla}</td>
         <td>${u.login}</td>
-        <td>${u.sigla}</td>
 
         <td>${u.funcao === FuncaoUsuario.NaoInformada.Key        ? '' : FuncaoUsuario.ValueFromKey(u.funcao)}</td>
         <td>${u.cargo === CargoUsuario.NaoInformado.Key          ? '' : CargoUsuario.ValueFromKey(u.cargo)}</td>
