@@ -208,7 +208,6 @@ function appendModalsHTML() {
   ];
 
   const editFields = [
-    { id: 'hiddenEditId', type: 'hidden' },
     { id: 'cmbEditUnidade', label: 'Unidade', type: 'select', required: true }, //, col: 'col-md-12' },
     { id: 'txtEditNome', label: 'Nome', type: 'text', required: true },
     { id: 'txtEditLogin', label: 'Login', type: 'text', required: true },
@@ -216,7 +215,8 @@ function appendModalsHTML() {
     { id: 'txtEditCPF', label: 'CPF', type: 'text', required: true },
     { id: 'cmbEditFuncao', label: 'Função', type: 'select' },
     { id: 'cmbEditCargo', label: 'Cargo', type: 'select' },
-    { id: 'cmbEditEspecialidade', label: 'Especialidade', type: 'select' }
+    { id: 'cmbEditEspecialidade', label: 'Especialidade', type: 'select' },
+    { id: 'hiddenEditId', type: 'hidden' }
   ];
 
   $('#page-modals')
@@ -465,7 +465,7 @@ async function onNavControl_clicked(e) {
 
 function onBtnApplyFilters_clicked() {
   state.filters = {
-    unidade       : $('#txtFilterUnidade').val() || null,
+    unidadeID     : $('#cmbFilterUnidade').val() || null,
     cargo         : $('#cmbFilterCargo').val() || null,
     funcao        : $('#cmbFilterFuncao').val() || null,
     especialidade : $('#cmbFilterEspecialidade').val() || null
