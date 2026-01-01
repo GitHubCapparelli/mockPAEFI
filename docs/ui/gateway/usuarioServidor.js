@@ -113,9 +113,9 @@ function appendMainHTML() {
     $('<div>', { class: 'w-100 d-flex flex-column flex-wrap gap-1' }).append(
       $('<div>', { class: 'filter-options w-100 p-2 d-flex gap-3 flex-nowrap' }).append(
         createFilterItem('cmbFilterUnidade', 'Unidade'),
+        createFilterItem('cmbFilterEspecialidade', 'Especialidade'),
         createFilterItem('cmbFilterFuncao', 'Função'),
-        createFilterItem('cmbFilterCargo', 'Cargo'),
-        createFilterItem('cmbFilterEspecialidade', 'Especialidade')
+        createFilterItem('cmbFilterCargo', 'Cargo')
       ),
       $('<div>', { class: 'filter-buttons w-100 p-2 d-flex justify-content-between gap-3' }).append(
         $('<button>', { class: 'btn btn-primary', id: 'btnApplyFilter' }).append($('<i>', { class: 'fas fa-filter' }), ' Filtrar'),
@@ -257,9 +257,9 @@ function refreshTable(list) {
       <tr>
         <td title="${u.nome}">${u.nome}</td>
         <td>${sigla}</td>
+        <td>${u.especialidade === Especialidade.NaoInformada.Key ? '' : Especialidade.ValueFromKey(u.especialidade)}</td>
         <td>${u.funcao === FuncaoUsuario.NaoInformada.Key        ? '' : FuncaoUsuario.ValueFromKey(u.funcao)}</td>
         <td>${u.cargo === CargoUsuario.NaoInformado.Key          ? '' : CargoUsuario.ValueFromKey(u.cargo)}</td>
-        <td>${u.especialidade === Especialidade.NaoInformada.Key ? '' : Especialidade.ValueFromKey(u.especialidade)}</td>
         <td>
           <button class="btn btn-sm btn-primary js-edit" data-id="${u.id}" title="Editar">
             <i class="fas fa-edit"></i>
