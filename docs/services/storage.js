@@ -50,17 +50,3 @@ export const InMemory = {
     store[entity] = data;
   }
 };
-
-const InMemory_Old = {
-    InitStore(initialData) {
-        store = structuredClone(initialData);
-    },
-
-    GetAll(entity) {
-        return structuredClone(store[entity] ?? []);
-    },
-
-    SetAll(entity, data) {
-        store[entity] = structuredClone(data);
-    }
-};

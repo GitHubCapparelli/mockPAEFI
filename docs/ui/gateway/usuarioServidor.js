@@ -37,16 +37,16 @@ async function init(user) {
     UnidadesAPI.init(),
     UsuariosServidoresAPI.init()
   ]);
-  
+
   try {
     state.unidades = UnidadesAPI.getAll();
   } catch (err) {
     $('#divMensagem').text('' + err);
   }
 
-  appendHeaderContent();
-  appendMainContent();
-  appendModals();
+  appendHeaderHTML();
+  appendMainHTML();
+  appendModalsHTML();
 
   state.addModal  = new bootstrap.Modal('#divModalAdd');
   state.editModal = new bootstrap.Modal('#divModalEdit');
@@ -70,7 +70,7 @@ async function loadData() {
 }
 
 /* ---------- Rendering ---------- */
-function appendHeaderContent() {
+function appendHeaderHTML() {
   // --- Top Options Section ---
   const $topOptions = $('<section>', { class: 'mx-5rem top-options container-fluid d-flex justify-content-between align-items-center gap-3 bg-white' }).append(
     $('<div>', { id: 'divMensagem' }),
@@ -107,7 +107,7 @@ function appendHeaderContent() {
   $('#page-header').append($topOptions, $navbar, $header);
 }
 
-function appendMainContent() {
+function appendMainHTML() {
   // --- Filters Bar ---
   const createFilterItem = (id, label) => $('<div>', { class: 'filter-item' }).append(
     $('<label>', { for: id, text: label }),
@@ -159,7 +159,7 @@ function appendMainContent() {
   $('#page-main').append($filters, $dataSection);
 }
 
-function appendModals() {
+function appendModalsHTML() {
   function createField(field) {
     const $col = $('<div>', { class: field.col || 'col-md-6' });
 
@@ -203,22 +203,22 @@ function appendModals() {
   }
 
   const addFields = [
+    { id: 'cmbAddUnidade', label: 'Unidade', type: 'select', col: 'col-md-12' },
     { id: 'txtAddNome', label: 'Nome', type: 'text', required: true },
     { id: 'txtAddLogin', label: 'Login', type: 'text', required: true },
-    { id: 'cmbAddUnidade', label: 'Unidade', type: 'select', col: 'col-md-12' },
     { id: 'cmbAddFuncao', label: 'Função', type: 'select' },
     { id: 'cmbAddCargo', label: 'Cargo', type: 'select' },
-    { id: 'cmbAddEspecialidade', label: 'Especialidade', type: 'select', col: 'col-md-12' }
+    { id: 'cmbAddEspecialidade', label: 'Especialidade', type: 'select' }
   ];
 
   const editFields = [
     { id: 'hiddenEditId', type: 'hidden' },
+    { id: 'cmbEditUnidade', label: 'Unidade', type: 'select', required: true, col: 'col-md-12' },
     { id: 'txtEditNome', label: 'Nome', type: 'text', required: true },
     { id: 'txtEditLogin', label: 'Login', type: 'text', required: true },
-    { id: 'cmbEditUnidade', label: 'Unidade', type: 'select', required: true },
     { id: 'cmbEditFuncao', label: 'Função', type: 'select' },
     { id: 'cmbEditCargo', label: 'Cargo', type: 'select' },
-    { id: 'cmbEditEspecialidade', label: 'Especialidade', type: 'select', col: 'col-md-12' }
+    { id: 'cmbEditEspecialidade', label: 'Especialidade', type: 'select' }
   ];
 
   $('#page-modals')
