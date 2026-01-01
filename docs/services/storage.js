@@ -35,9 +35,23 @@ export const Session = {
 };
 
 /* ---------- Volatile Adapter (API PoC) ---------- */
-export let store = {};   
+const store = {};
 
 export const InMemory = {
+  InitStore(data) {
+    Object.assign(store, data);
+  },
+
+  GetAll(entity) {
+    return store[entity] ?? [];
+  },
+
+  SetAll(entity, data) {
+    store[entity] = data;
+  }
+};
+
+const InMemory_Old = {
     InitStore(initialData) {
         store = structuredClone(initialData);
     },
