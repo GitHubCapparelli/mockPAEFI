@@ -72,7 +72,6 @@ export function CreateCoreAPI({
     ensureInitialized();
 
     let data = applyFilters(GetAll(), filters);
-    data = data.filter(x => !x.excluidoEm);
 
     const totalRecords = data.length;
     const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
