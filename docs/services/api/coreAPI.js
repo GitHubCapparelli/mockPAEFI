@@ -72,7 +72,7 @@ export function CreateCoreAPI({
   function GetPaginated({ page = 1, pageSize = 10, filters = {} }) {
     ensureInitialized();
 
-    let data = applyFilters(getAll(), filters);
+    let data = applyFilters(GetAll(), filters);
 
     const totalRecords = data.length;
     const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
