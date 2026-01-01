@@ -6,7 +6,20 @@
  * which becomes the single source of truth for access control.
  *
  * UI must NOT rely on legacy flags (podeAcessar, etc.).
+ * 
+ * Every logged-in user has identity, context, domainScope.
+ * This mirrors enterprise IAM systems.
+ * 
+ * Using 
+ * const { context, domainScope } = Session.Get(CurrentUserKey);
+ * Answers questions like:
+ * Can I see this (Admin) module ?
+ * Can I edit this ?
+ * Which Unidades can I see ?
+ * Should I see this row (or column?) ?
+ * 
  */
+import { resolveDomainScope } from '../authz/domainScope.js';
 import { resolveAuthContext } from '../authz/index.js';
 import { Session, CurrentUserKey, CurrentUnidadeKey } from '../storage.js';
 
@@ -45,18 +58,11 @@ const fetchMappedServidores = async () => {
   const servidores   = Array.isArray(result) ? result : result.usuariosServidores; 
 
   return servidores.map(servidor => {
-    const unit           = unidades.find(u => u.id === servidor.unidadeID);
-    const podeAcessar    = unit && (acesso.includes(unit.sigla) || unit.sigla.startsWith('CREAS'));
-    const podeMonitorar  = unit && (acesso.includes(unit.sigla) || servidor.funcao === 'Gerente');
-    const podeCadastrar  = unit && (unit.sigla === 'SUBSAS' || unit.sigla === 'GERVIS')
-
+    const unit = unidades.find(u => u.id === servidor.unidadeID);
     return {
       ...servidor,
       unidade       : unit ? unit.sigla : 'Não localizada',
-      hierarquia    : unit ? buildUnidadeHierarchy(unit, unidadesById) : 'Não localizada',
-      podeAcessar   : podeAcessar,
-      podeMonitorar : podeMonitorar,
-      podeCadastrar : podeCadastrar
+      hierarquia    : unit ? buildUnidadeHierarchy(unit, unidadesById) : 'Não localizada'
     }
   });
 };
@@ -73,7 +79,8 @@ export const AuthService = {
       if (context) {
         const enrichedUser = {
           ...user,
-          context
+          context,
+          domainScope: resolveDomainScope(context)
         };
 
         Session.Set(CurrentUserKey, enrichedUser);
