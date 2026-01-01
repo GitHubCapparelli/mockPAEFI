@@ -62,13 +62,16 @@ export const AuthService = {
     if (user) {
       const context = resolveAuthContext(user);
       if (context) {
-        Session.Set(CurrentUserKey, {
+        const enrichedUser = {
           ...user,
           context
-        });
+        };
+
+        Session.Set(CurrentUserKey, enrichedUser);
+        return enrichedUser;
       }
     }
-    return user;
+    return null;
   }
 };
 
