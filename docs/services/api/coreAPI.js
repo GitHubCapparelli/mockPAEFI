@@ -64,7 +64,7 @@ export function CreateCoreAPI({
     return result;
   }
 
-  function getById(id) {
+  function GetById(id) {
     ensureInitialized();
     return InMemory.GetAll(entity).find(x => x.id === id) ?? null;
   }
