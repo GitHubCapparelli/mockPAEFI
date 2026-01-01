@@ -21,6 +21,7 @@ async function selecionarPerfil() {
   showIf(user);
   
   console.log(user);
+  console.log('AuthContext:', user?.context);
 }
 
 function showIf(user) {

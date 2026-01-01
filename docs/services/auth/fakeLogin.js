@@ -1,3 +1,4 @@
+import { resolveAuthContext } from '../authz/index.js';
 import { Session, CurrentUserKey, CurrentUnidadeKey } from '../storage.js';
 
 const unidadesPATH    = '/mockPAEFI/data/mock/unidades.json';
@@ -58,9 +59,14 @@ export const AuthService = {
     const list = await fetchMappedServidores();
     const user = list.find(s => s.id === userID);
 
-    if (user && user.podeAcessar) {
-      Session.Set(CurrentUserKey, user);
-      Session.Set(CurrentUnidadeKey, user.unidadeID);
+    if (user) {
+      const context = resolveAuthContext(user);
+      if (context) {
+        Session.Set(CurrentUserKey, {
+          ...user,
+          context
+        });
+      }
     }
     return user;
   }
