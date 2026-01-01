@@ -20,7 +20,6 @@ const state = {
 const columns = [
   { key: 'nome',          label: 'Nome' },
   { key: 'unidade',       label: 'Unidade' },
-  { key: 'login',         label: 'Login' },
   { key: 'funcao',        label: 'Função' },
   { key: 'cargo',         label: 'Cargo' },
   { key: 'especialidade', label: 'Especialidade' },
@@ -198,11 +197,11 @@ function appendModalsHTML() {
   }
 
   const addFields = [
-    { id: 'cmbAddUnidade', label: 'Unidade', type: 'select', col: 'col-md-12' },
+    { id: 'cmbAddUnidade', label: 'Unidade', type: 'select' }, //, col: 'col-md-12' },
     { id: 'txtAddNome', label: 'Nome', type: 'text', required: true },
     { id: 'txtAddLogin', label: 'Login', type: 'text', required: true },
-    { id: 'txtAddMatricula', label: 'Login', type: 'text', required: true },
-    { id: 'txtAddCPF', label: 'Login', type: 'text', required: true },
+    { id: 'txtAddMatricula', label: 'Matrícula', type: 'text', required: true },
+    { id: 'txtAddCPF', label: 'CPF', type: 'text', required: true },
     { id: 'cmbAddFuncao', label: 'Função', type: 'select' },
     { id: 'cmbAddCargo', label: 'Cargo', type: 'select' },
     { id: 'cmbAddEspecialidade', label: 'Especialidade', type: 'select' }
@@ -210,11 +209,11 @@ function appendModalsHTML() {
 
   const editFields = [
     { id: 'hiddenEditId', type: 'hidden' },
-    { id: 'cmbEditUnidade', label: 'Unidade', type: 'select', required: true, col: 'col-md-12' },
+    { id: 'cmbEditUnidade', label: 'Unidade', type: 'select', required: true }, //, col: 'col-md-12' },
     { id: 'txtEditNome', label: 'Nome', type: 'text', required: true },
     { id: 'txtEditLogin', label: 'Login', type: 'text', required: true },
-    { id: 'txtEditMatricula', label: 'Login', type: 'text', required: true },
-    { id: 'txtEditCPF', label: 'Login', type: 'text', required: true },
+    { id: 'txtEditMatricula', label: 'Matrícula', type: 'text', required: true },
+    { id: 'txtEditCPF', label: 'CPF', type: 'text', required: true },
     { id: 'cmbEditFuncao', label: 'Função', type: 'select' },
     { id: 'cmbEditCargo', label: 'Cargo', type: 'select' },
     { id: 'cmbEditEspecialidade', label: 'Especialidade', type: 'select' }
@@ -258,8 +257,6 @@ function refreshTable(list) {
       <tr>
         <td title="${u.nome}">${u.nome}</td>
         <td>${sigla}</td>
-        <td>${u.login}</td>
-
         <td>${u.funcao === FuncaoUsuario.NaoInformada.Key        ? '' : FuncaoUsuario.ValueFromKey(u.funcao)}</td>
         <td>${u.cargo === CargoUsuario.NaoInformado.Key          ? '' : CargoUsuario.ValueFromKey(u.cargo)}</td>
         <td>${u.especialidade === Especialidade.NaoInformada.Key ? '' : Especialidade.ValueFromKey(u.especialidade)}</td>
@@ -407,8 +404,8 @@ async function onBtnSaveNew_clicked() {
   }
 
   await UsuariosServidoresAPI.Create({
-    unidadeID      : $('#cmbAddUnidade').val(),
     nome           : $('#txtAddNome').val(),
+    unidadeID      : $('#cmbAddUnidade').val(),
     login          : $('#txtAddLogin').val(),
     matricula      : $('#txtAddMatricula').val(),
     cpf            : $('#txtAddCPF').val(),
@@ -431,10 +428,10 @@ async function onBtnUpdate_clicked() {
   }
   await UsuariosServidoresAPI.Update(id, {
     nome          : $('#txtEditNome').val(),
+    unidadeID     : $('#cmbEditUnidade').val(),
     login         : $('#txtEditLogin').val(),
     matricula     : $('#txtEditMatricula').val(),
     cpf           : $('#txtEditCPF').val(),
-    hierarquiaID  : $('#cmbEditUnidade').val(),
     funcao        : $('#cmbEditFuncao').val(),
     cargo         : $('#cmbEditCargo').val(),
     especialidade : $('#cmbEditEspecialidade').val(),
