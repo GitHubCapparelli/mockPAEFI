@@ -1,3 +1,4 @@
+import { resolveModuleVisibility } from '../../../services/authz/moduleVisibility.js';
 import { Session, CurrentUserKey } from '../../../services/storage.js';
 import { AuthService }             from '../../../services/auth/fakeLogin.js';
 
@@ -26,21 +27,14 @@ async function selecionarPerfil() {
 
 function showIf(user) {
   hideAll();
-  if (user) {
-    txtLogin.text(user.login);
+  if (!user || !user.context) return;
 
-    if (user.podeAcessar) {
-      divPaefi.show();
+  txtLogin.text(user.login);
 
-      if (user.podeMonitorar) {
-        divGestao.show();
-      }
-
-      if (user.podeCadastrar) {
-        divAdmin.show();
-      }
-    }
-  }
+  const visibility = resolveModuleVisibility(user.context);
+  if (visibility.atender) { divPaefi.show(); }
+  if (visibility.monitor) { divGestao.show(); }
+  if (visibility.admin)   { divAdmin.show(); }
 }
 
 $(document).ready(() => {

@@ -1,3 +1,12 @@
+/**
+ * AuthService
+ * ----------
+ * Resolves identity + authorization ONCE per session.
+ * The returned user object MUST contain `context`,
+ * which becomes the single source of truth for access control.
+ *
+ * UI must NOT rely on legacy flags (podeAcessar, etc.).
+ */
 import { resolveAuthContext } from '../authz/index.js';
 import { Session, CurrentUserKey, CurrentUnidadeKey } from '../storage.js';
 
