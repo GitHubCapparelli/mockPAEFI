@@ -34,15 +34,10 @@ async function init(user) {
   state.currentUser = user;
 
   await Promise.all([
-    UnidadesAPI.init(),
-    UsuariosServidoresAPI.init()
+    UnidadesAPI.Init(),
+    UsuariosServidoresAPI.Init()
   ]);
-
-  try {
-    state.unidades = UnidadesAPI.getAll();
-  } catch (err) {
-    $('#divMensagem').text('' + err);
-  }
+  state.unidades = UnidadesAPI.GetAll();
 
   appendHeaderHTML();
   appendMainHTML();
@@ -59,7 +54,7 @@ async function init(user) {
 }
 
 async function loadData() {
-  const response = await UsuariosServidoresAPI.getPaginated({
+  const response = await UsuariosServidoresAPI.GetPaginated({
     page     : state.page,
     pageSize : state.pageSize,
     filters  : state.filters
@@ -382,7 +377,7 @@ async function onBtnAdd_clicked(e) {
 async function onBtnEdit_clicked(e) {
   try {
     const id = $(e.currentTarget).data('id');
-    const u = await UsuariosServidoresAPI.getById(id);
+    const u = await UsuariosServidoresAPI.GetById(id);
     if (!u) return;
 
     $('#hiddenEditId').val(u.id);
@@ -411,7 +406,7 @@ async function onBtnSaveNew_clicked() {
     return;
   }
 
-  await UsuariosServidoresAPI.create({
+  await UsuariosServidoresAPI.Create({
     unidadeID      : $('#cmbAddUnidade').val(),
     nome           : $('#txtAddNome').val(),
     login          : $('#txtAddLogin').val(),
@@ -434,7 +429,7 @@ async function onBtnUpdate_clicked() {
     alert(msg);
     return;
   }
-  await UsuariosServidoresAPI.update(id, {
+  await UsuariosServidoresAPI.Update(id, {
     nome          : $('#txtEditNome').val(),
     login         : $('#txtEditLogin').val(),
     matricula     : $('#txtEditMatricula').val(),
@@ -454,7 +449,7 @@ async function onBtnDelete_clicked(e) {
   const id = $(e.currentTarget).data('id');
   if (!confirm(confirmDeleteMSG)) return;
 
-  await UsuariosServidoresAPI.softDelete(id, {
+  await UsuariosServidoresAPI.SoftDelete(id, {
     excluidoPor   : state.currentUser.id,
     excluidoEm    : new Date().toISOString()
   });
