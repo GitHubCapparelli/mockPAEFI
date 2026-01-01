@@ -1,5 +1,7 @@
 // authContext.js
 // Canonical authorization result object
+// This file defines what the rest of the system consumes.
+// UI components must not care about funcao, cargo, especialidade. They only see AuthContext
 
 import { PermissionLevel } from './permissionMatrix.js';
 

@@ -20,8 +20,6 @@ async function selecionarPerfil() {
   const userID  = $(this).val();
   const user    = await AuthService.EmulateLogin(userID);
   showIf(user);
-  
-  console.log(user);
   console.log('AuthContext:', user?.context);
 }
 

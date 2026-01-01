@@ -1,5 +1,6 @@
 // permissionMatrix.js
 // Defines the permission levels used across the platform
+// This file defines what levels exist, not who gets them.
 
 export const PermissionLevel = {
   NONE      : 'none',

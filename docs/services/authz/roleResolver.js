@@ -1,5 +1,6 @@
 // roleResolver.js
 // Translates user + unidade into role, scope, and permissions
+// This fully encodes the user hierarchy — explicitly, readably, auditable.
 
 import { PermissionLevel } from './permissionMatrix.js';
 import { createAuthContext } from './authContext.js';
