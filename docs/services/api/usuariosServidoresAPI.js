@@ -1,8 +1,7 @@
-//import { CreateBaseAPI }            from '/mockPAEFI/services/api/baseAPI.js';
-import { CreateBaseAPI }            from './baseAPI.js';
+import { CreateCoreAPI }            from './coreAPI.js';
 import { CreateUsuarioServidorDTO } from '../../data/factory/usuarioServidorDTO.js';
 
-export const UsuariosServidoresAPI = CreateBaseAPI({
+export const UsuariosServidoresAPI = CreateCoreAPI({
   entity         : 'usuariosServidores',
   dataPath       : '/mockPAEFI/data/mock/usuariosServidores.json',
   jsonRoot       : 'usuariosServidores',

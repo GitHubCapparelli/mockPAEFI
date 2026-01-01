@@ -1,7 +1,7 @@
-import { CreateBaseAPI }    from './baseAPI.js';
+import { CreateCoreAPI }    from './coreAPI.js';
 import { CreateUnidadeDTO } from '../../data/factory/unidadeDTO.js';
 
-export const UnidadesAPI = CreateBaseAPI({
+export const UnidadesAPI = CreateCoreAPI({
   entity         : 'unidades',
   dataPath       : '/mockPAEFI/data/mock/unidades.json',
   jsonRoot       : 'unidades',

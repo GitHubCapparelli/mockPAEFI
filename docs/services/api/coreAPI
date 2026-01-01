@@ -1,6 +1,6 @@
 import { InMemory } from '../storage.js';
 
-export function CreateBaseAPI({
+export function CreateCoreAPI({
   entity,
   dataPath,
   jsonRoot,
