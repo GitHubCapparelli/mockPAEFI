@@ -7,7 +7,7 @@ export const UsuariosServidoresAPI = CreateCoreAPI({
   jsonRoot       : 'usuariosServidores',
   defaultOrderBy : 'nome',
 
-  createDTO: CreateUnidadeServidorDTO,
+  createDTO: CreateUsuarioServidorDTO,
 
   validateCreate(dto, data) {
     if (data.some(u => u.cpf       === dto.cpf
