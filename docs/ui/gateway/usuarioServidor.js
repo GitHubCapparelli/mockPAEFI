@@ -202,9 +202,9 @@ function appendModalsHTML() {
     { id: 'txtAddLogin', label: 'Login', type: 'text', required: true },
     { id: 'txtAddMatricula', label: 'Matrícula', type: 'text', required: true },
     { id: 'txtAddCPF', label: 'CPF', type: 'text', required: true },
+    { id: 'cmbAddEspecialidade', label: 'Especialidade', type: 'select' },
     { id: 'cmbAddFuncao', label: 'Função', type: 'select' },
-    { id: 'cmbAddCargo', label: 'Cargo', type: 'select' },
-    { id: 'cmbAddEspecialidade', label: 'Especialidade', type: 'select' }
+    { id: 'cmbAddCargo', label: 'Cargo', type: 'select' }
   ];
 
   const editFields = [
@@ -213,9 +213,9 @@ function appendModalsHTML() {
     { id: 'txtEditLogin', label: 'Login', type: 'text', required: true },
     { id: 'txtEditMatricula', label: 'Matrícula', type: 'text', required: true },
     { id: 'txtEditCPF', label: 'CPF', type: 'text', required: true },
+    { id: 'cmbEditEspecialidade', label: 'Especialidade', type: 'select' },
     { id: 'cmbEditFuncao', label: 'Função', type: 'select' },
     { id: 'cmbEditCargo', label: 'Cargo', type: 'select' },
-    { id: 'cmbEditEspecialidade', label: 'Especialidade', type: 'select' },
     { id: 'hiddenEditId', type: 'hidden' }
   ];
 
