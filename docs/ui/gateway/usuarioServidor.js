@@ -475,9 +475,10 @@ function onBtnApplyFilters_clicked() {
 }
 
 function onBtnClearFilters_clicked() {
+  $('#cmbFilterUnidade').val('');
+  $('#cmbFilterEspecialidade').val('');
   $('#cmbFilterCargo').val('');
   $('#cmbFilterFuncao').val('');
-  $('#cmbFilterEspecialidade').val('');
 
   state.filters = {};
   state.page = 1;

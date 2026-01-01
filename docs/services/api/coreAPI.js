@@ -51,17 +51,16 @@ export function CreateCoreAPI({
   function GetAll({ orderBy = defaultOrderBy, order = 'asc' } = {}) {
     ensureInitialized();
 
-    const result = [...InMemory.GetAll(entity)];
+    const response = [...InMemory.GetAll(entity)];
 
     if (orderBy) {
-      result.sort((a, b) =>
+      response.sort((a, b) =>
         order === 'asc'
           ? String(a[orderBy]).localeCompare(String(b[orderBy]), 'pt-BR', { sensitivity: 'base' })
           : String(b[orderBy]).localeCompare(String(a[orderBy]), 'pt-BR', { sensitivity: 'base' })
       );
     }
-
-    return result;
+    return response;
   }
 
   function GetById(id) {
@@ -73,6 +72,7 @@ export function CreateCoreAPI({
     ensureInitialized();
 
     let data = applyFilters(GetAll(), filters);
+    data = data.filter(x => !x.excluidoEm);
 
     const totalRecords = data.length;
     const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
