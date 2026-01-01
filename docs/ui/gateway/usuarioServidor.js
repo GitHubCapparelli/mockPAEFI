@@ -20,9 +20,9 @@ const state = {
 const columns = [
   { key: 'nome',          label: 'Nome' },
   { key: 'unidade',       label: 'Unidade' },
+  { key: 'especialidade', label: 'Especialidade' },
   { key: 'funcao',        label: 'Função' },
   { key: 'cargo',         label: 'Cargo' },
-  { key: 'especialidade', label: 'Especialidade' },
   { key: '__actions',     label: 'Ações' }
 ];
 const thead   = $('<tr>').append(columns.map(c => $('<th>').text(c.label)));
