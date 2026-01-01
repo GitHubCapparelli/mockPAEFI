@@ -1,10 +1,13 @@
-import { FuncaoUsuario, CargoUsuario, Especialidade } from '../../objModel.js';
-import { UsuariosServidoresAPI }                      from '../../services/api/usuariosServidoresAPI.js';
-import { UnidadesAPI }                                from '../../services/api/unidadesAPI.js';
+import { Session, CurrentUserKey }                    from '../../../services/storage.js';
+import { FuncaoUsuario, CargoUsuario, Especialidade } from '../../../objModel.js';
+import { UsuariosServidoresAPI }                      from '../../../services/api/usuariosServidoresAPI.js';
+import { UnidadesAPI }                                from '../../../services/api/unidadesAPI.js';
 
-const pageTitle            = 'Admin';
-const dataCaption          = "Usuários Servidores";
-const confirmDeleteMSG     = 'Confirma exclusão lógica ?';
+const user              = Session.Get(CurrentUserKey);
+
+const pageTitle         = 'Admin';
+const dataCaption       = "Usuários Servidores";
+const confirmDeleteMSG  = 'Confirma exclusão lógica ?';
 
 const state = {
   page: 1,
@@ -522,3 +525,12 @@ export const UsuarioServidorGateway = {
   },
   refresh: loadData
 };
+
+$(document).ready(async () => {
+    if (user) {
+        await UsuarioServidorGateway.init(user);
+    } else {
+        alert('Usuário não localizado. Redirecionando...');
+        window.location.href = '/mockPAEFI/';
+    }
+});
