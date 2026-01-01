@@ -206,6 +206,8 @@ function appendModalsHTML() {
     { id: 'cmbAddUnidade', label: 'Unidade', type: 'select', col: 'col-md-12' },
     { id: 'txtAddNome', label: 'Nome', type: 'text', required: true },
     { id: 'txtAddLogin', label: 'Login', type: 'text', required: true },
+    { id: 'txtAddMatricula', label: 'Login', type: 'text', required: true },
+    { id: 'txtAddCPF', label: 'Login', type: 'text', required: true },
     { id: 'cmbAddFuncao', label: 'Função', type: 'select' },
     { id: 'cmbAddCargo', label: 'Cargo', type: 'select' },
     { id: 'cmbAddEspecialidade', label: 'Especialidade', type: 'select' }
@@ -216,6 +218,8 @@ function appendModalsHTML() {
     { id: 'cmbEditUnidade', label: 'Unidade', type: 'select', required: true, col: 'col-md-12' },
     { id: 'txtEditNome', label: 'Nome', type: 'text', required: true },
     { id: 'txtEditLogin', label: 'Login', type: 'text', required: true },
+    { id: 'txtEditMatricula', label: 'Login', type: 'text', required: true },
+    { id: 'txtEditCPF', label: 'Login', type: 'text', required: true },
     { id: 'cmbEditFuncao', label: 'Função', type: 'select' },
     { id: 'cmbEditCargo', label: 'Cargo', type: 'select' },
     { id: 'cmbEditEspecialidade', label: 'Especialidade', type: 'select' }
@@ -411,6 +415,8 @@ async function onBtnSaveNew_clicked() {
     unidadeID      : $('#cmbAddUnidade').val(),
     nome           : $('#txtAddNome').val(),
     login          : $('#txtAddLogin').val(),
+    matricula      : $('#txtAddMatricula').val(),
+    cpf            : $('#txtAddCPF').val(),
     funcao         : $('#cmbAddFuncao').val(),
     cargo          : $('#cmbAddCargo').val(),
     especialidade  : $('#cmbAddEspecialidade').val(),
@@ -431,6 +437,8 @@ async function onBtnUpdate_clicked() {
   await UsuariosServidoresAPI.update(id, {
     nome          : $('#txtEditNome').val(),
     login         : $('#txtEditLogin').val(),
+    matricula     : $('#txtEditMatricula').val(),
+    cpf           : $('#txtEditCPF').val(),
     hierarquiaID  : $('#cmbEditUnidade').val(),
     funcao        : $('#cmbEditFuncao').val(),
     cargo         : $('#cmbEditCargo').val(),
