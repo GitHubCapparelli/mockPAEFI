@@ -1,66 +1,89 @@
 // ui/paefi/shell/leftSidebar.js
 
-export const LeftSidebar = {
-  init
-};
+export const LeftSidebar = { init };
 
-function init(containerID) {
-  const $sidebar = $(`
-    <aside id="leftSidebar" class="left-sidebar">
-      <div class="accordion" id="leftSidebarAccordion">
+function init() {
+  ensureShell();
+  renderSidebar();
+  wireToggle();
+  syncHeights();
+  window.addEventListener('resize', syncHeights);
+}
 
-        <!-- Navigation -->
-        <div class="accordion-item">
-          <h2 class="accordion-header">
-            <button class="accordion-button" type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#ls-nav">
-              Navegação
-            </button>
-          </h2>
-          <div id="ls-nav" class="accordion-collapse collapse show">
-            <div class="accordion-body">
-              <ul class="sidebar-list">
-                <li class="text-muted">[em breve]</li>
-              </ul>
-            </div>
-          </div>
-        </div>
+/* ---------- Shell ---------- */
 
-        <!-- Preferences -->
-        <div class="accordion-item">
-          <h2 class="accordion-header">
-            <button class="accordion-button collapsed" type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#ls-prefs">
-              Preferências
-            </button>
-          </h2>
-          <div id="ls-prefs" class="accordion-collapse collapse">
-            <div class="accordion-body">
-              <span class="text-muted">[em breve]</span>
-            </div>
-          </div>
-        </div>
+function ensureShell() {
+  if ($('#app-shell').length) return;
 
-        <!-- Documentation -->
-        <div class="accordion-item">
-          <h2 class="accordion-header">
-            <button class="accordion-button collapsed" type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#ls-docs">
-              Documentação
-            </button>
-          </h2>
-          <div id="ls-docs" class="accordion-collapse collapse">
-            <div class="accordion-body">
-              <span class="text-muted">[em breve]</span>
-            </div>
-          </div>
-        </div>
+  const $shell = $('<div>', { id: 'app-shell' });
+  const $main  = $('<div>', { id: 'app-main' });
 
-      </div>
-    </aside>
-  `);
-  $(containerID).prepend($sidebar);
+  $('body').children().appendTo($main);
+  $('body').append($shell.append(buildSidebar(), $main));
+}
+
+/* ---------- Sidebar ---------- */
+
+function buildSidebar() {
+  const $sidebar = $('<aside>', { id: 'leftSidebar' });
+
+  const $header = $('<div>', { class: 'p-2 border-bottom d-flex justify-content-between align-items-center' }).append(
+    $('<span>', { text: 'PAEFI', class: 'fw-bold' }),
+    $('<button>', {
+      class: 'btn btn-sm btn-outline-secondary',
+      id: 'btnSidebarToggle',
+      title: 'Expandir / Recolher'
+    }).append($('<i>', { class: 'fas fa-bars' }))
+  );
+
+  const $body = $('<div>', { class: 'leftSidebar-body p-2' }).append(
+    $('<div>', { class: 'leftSidebar-top' }).append(
+      accordionSection('Navegação', true)
+    ),
+    $('<div>', { class: 'leftSidebar-bottom' }).append(
+      accordionSection('Preferências'),
+      accordionSection('Documentação')
+    )
+  );
+
+  return $sidebar.append($header, $body);
+}
+
+/* ---------- Accordion ---------- */
+
+function accordionSection(title, expanded = false) {
+  const id = `ls-${title.toLowerCase()}`;
+
+  return $('<div>', { class: 'accordion mb-2' }).append(
+    $('<div>', { class: 'accordion-item' }).append(
+      $('<h2>', { class: 'accordion-header' }).append(
+        $('<button>', {
+          class: `accordion-button ${expanded ? '' : 'collapsed'}`,
+          'data-bs-toggle': 'collapse',
+          'data-bs-target': `#${id}`,
+          type: 'button',
+          text: title
+        })
+      ),
+      $('<div>', {
+        id,
+        class: `accordion-collapse collapse ${expanded ? 'show' : ''}`
+      }).append(
+        $('<div>', { class: 'accordion-body text-muted', text: '[em breve]' })
+      )
+    )
+  );
+}
+
+/* ---------- Behavior ---------- */
+
+function wireToggle() {
+  $('#btnSidebarToggle').on('click', () => {
+    $('#leftSidebar').toggleClass('collapsed');
+  });
+}
+
+function syncHeights() {
+  const navbarHeight = $('#top-navbar').outerHeight() || 0;
+  $('#leftSidebar').css('height', `calc(100vh - ${navbarHeight}px)`);
 }

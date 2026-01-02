@@ -49,7 +49,7 @@ async function init(user) {
   state.addModal  = new bootstrap.Modal('#divModalAdd');
   state.editModal = new bootstrap.Modal('#divModalEdit');
 
-  LeftSidebar.init('#shell-left');
+  LeftSidebar.init();
 
   hydrateFilterSelects();
   hydrateModalSelects();
@@ -72,7 +72,7 @@ async function loadData() {
 /* ---------- Rendering ---------- */
 function appendHeaderHTML() {
   // --- SIDS Top Navbar ---
-  const $navbar = $('<section>', { class: 'top-navbar d-flex justify-content-between align-items-center' }).append(
+  const $navbar = $('<section>', { id: 'top-navbar', class: 'top-navbar d-flex justify-content-between align-items-center' }).append(
     $('<div>', { class: 'mx-5rem d-flex align-items-center flex-grow-1 flex-nowrap gap-4' }).append(
       $('<span>', { text: 'Menu' }),
       $('<span>', { text: 'Home' }),
@@ -98,7 +98,7 @@ function appendMainHTML() {
   
   $('#page-main').append($pageShell);
 
-  // --- Breadcrumbs & Title Section ---
+  // --- Title bar : breadcrumbs & page info ---
   const $titleBar = $('<section>', { class: 'mx-5rem mt-2 ps-2 d-flex flex-column' }).append(
     $('<div>', { class: 'breadcrumbs d-flex justify-content-start align-items-center gap-2' }).append(
       $('<a>', { href: '#', text: 'Home' }),

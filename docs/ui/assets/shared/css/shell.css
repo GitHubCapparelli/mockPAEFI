@@ -1,22 +1,64 @@
-.left-sidebar {
+/* ---------- Shell ---------- */
+
+#app-shell {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ---------- Sidebar ---------- */
+
+#leftSidebar {
   width: 260px;
-  min-height: 100vh;
+  flex-shrink: 0;
   background-color: #f8f9fa;
   border-right: 1px solid #dee2e6;
-  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  transition: width 0.2s ease;
 }
 
-.left-sidebar .accordion-button {
-  padding: 0.5rem 0.75rem;
-  font-size: 0.95rem;
+#leftSidebar.collapsed {
+  width: 64px;
 }
 
-.left-sidebar .accordion-body {
-  padding: 0.5rem 0.75rem;
+/* ---------- Sidebar content ---------- */
+
+.leftSidebar-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
-.sidebar-list {
-  list-style: none;
-  padding-left: 0;
-  margin: 0;
+.leftSidebar-top {
+  flex: 0 0 auto;
+}
+
+.leftSidebar-bottom {
+  margin-top: auto;
+}
+
+/* ---------- Navbar ---------- */
+
+#top-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  background-color: #fff;
+  border-bottom: 1px solid #dee2e6;
+}
+
+/* ---------- App main ---------- */
+
+#app-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#page-main {
+  flex: 1;
+  overflow-y: auto;
 }
