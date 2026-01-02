@@ -152,7 +152,9 @@ function appendMainHTML() {
   const $pageContent = $('<section>', { id: 'page-contents', class: 'd-flex flex-column' })
   .append($titleBar, $filters, $dataSection);
 
-  $('#page-main').append($pageContent);
+  const $pageShell = $('<section>', { id: 'page-shell', class: 'd-flex' }).append($pageContent);
+
+  $('#page-main').append($pageShell);
 }
 
 function appendModalsHTML() {
