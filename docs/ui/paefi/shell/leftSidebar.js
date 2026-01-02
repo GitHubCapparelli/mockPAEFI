@@ -11,7 +11,6 @@ function init() {
 }
 
 /* ---------- Shell ---------- */
-
 function ensureShell() {
   if ($('#app-shell').length) return;
 
@@ -23,8 +22,7 @@ function ensureShell() {
 }
 
 /* ---------- Sidebar ---------- */
-
-function buildSidebar() {
+function renderSidebar() {
   const $sidebar = $('<aside>', { id: 'leftSidebar' });
 
   const $header = $('<div>', { class: 'p-2 border-bottom d-flex justify-content-between align-items-center' }).append(
@@ -50,7 +48,6 @@ function buildSidebar() {
 }
 
 /* ---------- Accordion ---------- */
-
 function accordionSection(title, expanded = false) {
   const id = `ls-${title.toLowerCase()}`;
 
@@ -76,7 +73,6 @@ function accordionSection(title, expanded = false) {
 }
 
 /* ---------- Behavior ---------- */
-
 function wireToggle() {
   $('#btnSidebarToggle').on('click', () => {
     $('#leftSidebar').toggleClass('collapsed');
