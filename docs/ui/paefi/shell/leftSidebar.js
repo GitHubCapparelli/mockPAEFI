@@ -4,7 +4,7 @@ export const LeftSidebar = { init };
 
 function init() {
   ensureShell();
-  renderSidebar();
+  //renderSidebar();
   wireToggle();
   syncHeights();
   window.addEventListener('resize', syncHeights);
@@ -18,7 +18,7 @@ function ensureShell() {
   const $main  = $('<div>', { id: 'app-main' });
 
   $('body').children().appendTo($main);
-  $('body').append($shell.append(buildSidebar(), $main));
+  $('body').append($shell.append(renderSidebar(), $main));
 }
 
 /* ---------- Sidebar ---------- */
