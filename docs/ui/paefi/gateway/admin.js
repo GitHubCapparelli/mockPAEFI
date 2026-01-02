@@ -49,6 +49,8 @@ async function init(user) {
   state.addModal  = new bootstrap.Modal('#divModalAdd');
   state.editModal = new bootstrap.Modal('#divModalEdit');
 
+  LeftSidebar.init('#page-shell');
+
   hydrateFilterSelects();
   hydrateModalSelects();
 
@@ -529,7 +531,6 @@ export const UsuarioServidorGateway = {
 
 $(document).ready(async () => {
     if (user) {
-        //LeftSidebar.init();
         await UsuarioServidorGateway.init(user);
     } else {
         alert('Usuário não localizado. Redirecionando...');

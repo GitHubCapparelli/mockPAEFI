@@ -4,7 +4,7 @@ export const LeftSidebar = {
   init
 };
 
-function init({ container = 'body' } = {}) {
+function init(containerID) {
   const $sidebar = $(`
     <aside id="leftSidebar" class="left-sidebar">
       <div class="accordion" id="leftSidebarAccordion">
