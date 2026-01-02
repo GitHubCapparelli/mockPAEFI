@@ -49,7 +49,7 @@ async function init(user) {
   state.addModal  = new bootstrap.Modal('#divModalAdd');
   state.editModal = new bootstrap.Modal('#divModalEdit');
 
-  LeftSidebar.init('#left');
+  LeftSidebar.init('#shell-left');
 
   hydrateFilterSelects();
   hydrateModalSelects();
@@ -87,12 +87,15 @@ function appendHeaderHTML() {
 }
 
 function appendMainHTML() {
-  const $pageShell   = $('<section>', { id: 'page-shell', class: 'd-flex' });
-  const $pageContent = $('<section>', { id: 'page-contents', class: 'd-flex flex-column' });
+  const $top         = $('<div>', { id: 'shell-top', class: 'd-flex' });                // placeholder
+  const $right       = $('<div>', { id: 'shell-right', class: 'd-flex flex-column' });  // placeholder
+  const $bottom      = $('<div>', { id: 'shell-bottom', class: 'd-flex' });             // placeholder
+  const $left        = $('<div>', { id: 'shell-left', class: 'd-flex flex-column' });
+  const $pageContent = $('<div>', { id: 'page-contents', class: 'd-flex flex-column' });
   
-  const $left = $('<div>', { id: 'left', class: 'd-flex flex-column' });
+  const $pageShell   = $('<section>', { id: 'page-shell', class: 'd-flex' }).append(
+    $top, $right, $bottom, $left, $pageContent);
   
-  $pageShell.append($left, $pageContent);
   $('#page-main').append($pageShell);
 
   // --- Breadcrumbs & Title Section ---
