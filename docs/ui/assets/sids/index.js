@@ -1,6 +1,6 @@
-import { resolveModuleVisibility } from '../../../services/authz/moduleVisibility.js';
-import { Session, CurrentUserKey } from '../../../services/storage.js';
 import { AuthService }             from '../../../services/auth/fakeLogin.js';
+import { Session, CurrentUserKey } from '../../../services/storage.js';
+import { resolveModuleVisibility } from '../../../services/authz/moduleVisibility.js';
 
 const lblMessage  = $('#lblMessage');
 const divPaefi    = $('#divSids-paefi');
@@ -20,7 +20,8 @@ async function selecionarPerfil() {
   const userID  = $(this).val();
   const user    = await AuthService.EmulateLogin(userID);
   showIf(user);
-  console.log('AuthContext:', user?.context);
+  console.log('CurrentUser :', user);
+  console.log('AuthContext :', user?.context);
 }
 
 function showIf(user) {
