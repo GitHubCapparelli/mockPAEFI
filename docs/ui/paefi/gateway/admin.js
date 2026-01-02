@@ -70,6 +70,9 @@ async function loadData() {
 }
 
 /* ---------- Rendering ---------- */
+function structureLayout() {
+
+}
 function appendHeaderHTML() {
   // --- SIDS Top Navbar ---
   const $navbar = $('<section>', { id: 'top-navbar', class: 'top-navbar d-flex justify-content-between align-items-center' }).append(
@@ -87,17 +90,6 @@ function appendHeaderHTML() {
 }
 
 function appendMainHTML() {
-  const $top         = $('<div>', { id: 'shell-top', class: 'd-flex' });                // placeholder
-  const $right       = $('<div>', { id: 'shell-right', class: 'd-flex flex-column' });  // placeholder
-  const $bottom      = $('<div>', { id: 'shell-bottom', class: 'd-flex' });             // placeholder
-  const $left        = $('<div>', { id: 'shell-left', class: 'd-flex flex-column' });
-  const $pageContent = $('<div>', { id: 'page-contents', class: 'd-flex flex-column' });
-  
-  const $pageShell   = $('<section>', { id: 'page-shell', class: 'd-flex' }).append(
-    $top, $right, $bottom, $left, $pageContent);
-  
-  $('#page-main').append($pageShell);
-
   // --- Title bar : breadcrumbs & page info ---
   const $titleBar = $('<section>', { class: 'mx-5rem mt-2 ps-2 d-flex flex-column' }).append(
     $('<div>', { class: 'breadcrumbs d-flex justify-content-start align-items-center gap-2' }).append(
@@ -161,7 +153,7 @@ function appendMainHTML() {
       $('<nav>').append($('<ul>', { id: 'navControls', class: 'pagination mb-0' }))
     )
   );
-  $pageContent.append($titleBar, $filters, $dataSection);
+  $('#page-main').append($titleBar, $filters, $dataSection);
 }
 
 function appendModalsHTML() {

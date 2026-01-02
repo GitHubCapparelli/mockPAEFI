@@ -1,5 +1,4 @@
 /* ---------- Shell ---------- */
-
 #app-shell {
   display: flex;
   height: 100vh;
@@ -7,7 +6,6 @@
 }
 
 /* ---------- Sidebar ---------- */
-
 #leftSidebar {
   width: 260px;
   flex-shrink: 0;
@@ -23,7 +21,6 @@
 }
 
 /* ---------- Sidebar content ---------- */
-
 .leftSidebar-body {
   flex: 1;
   display: flex;
@@ -40,17 +37,16 @@
 }
 
 /* ---------- Navbar ---------- */
-
 #top-navbar {
   position: sticky;
   top: 0;
   z-index: 1030;
+  color: black;
   background-color: #fff;
   border-bottom: 1px solid #dee2e6;
 }
 
 /* ---------- App main ---------- */
-
 #app-main {
   flex: 1;
   display: flex;
