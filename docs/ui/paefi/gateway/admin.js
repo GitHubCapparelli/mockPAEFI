@@ -329,7 +329,7 @@ function populateSelectFromEnum(selectId, enumType, includeEmpty = true, emptyLa
 
 function populateUnidadesSelect(selectId, list, selectedId = null, includeEmpty = true, emptyLabel = 'Selecione...') {
    if (!Array.isArray(list)) {
-    $('#divMensagem').text(`[populateUnidadesSelect] Erro ao popular ${selectId}: lista vazia.`);
+    alert(`[populateUnidadesSelect] Erro ao popular ${selectId}: lista vazia.`);
     return;
   }
   const $cmb = $(selectId);
