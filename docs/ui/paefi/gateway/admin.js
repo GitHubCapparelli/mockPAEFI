@@ -67,8 +67,6 @@ async function loadData() {
 /* ---------- Rendering ---------- */
 function buildPage() {
   structureLayout();
-  
-  appendTopNavbar();
   appendPageContents();
   appendModals();
 
@@ -84,13 +82,11 @@ function structureLayout() {
   const $appHeader    = $('<div>', { id: 'app-header', class: 'app-header' });
   const $pageContents = $('<div>', { id: 'page-contents', class: 'd-flex flex-column' })
 
-  const $appShell     = $('<div>', { id: 'app-shell', class: 'd-flex' }).append(
-    $appHeader, $top, $right, $bottom, $left, $pageContents);
-
-  $('#app-shell').append($appShell);
+  appendTopNavbar($appHeader);
+  $('#app-shell').append($appHeader, $top, $right, $bottom, $left, $pageContents);
 }
 
-function appendTopNavbar() {
+function appendTopNavbar(container) {
   // --- SIDS Top Navbar ---
   const $topNavbar = $('<div>', { id: 'top-navbar', class: 'top-navbar d-flex justify-content-between align-items-center' }).append(
     $('<div>', { class: 'mx-5rem d-flex align-items-center flex-grow-1 flex-nowrap gap-4' }).append(
@@ -103,8 +99,7 @@ function appendTopNavbar() {
     ),
     $('<span>', { id: 'txtUser-login', class: 'mx-4rem', text: state.currentUser.login })
   );
-
-  $('app-header').append($topNavbar)
+  container.append($topNavbar)
 }
 
 function appendPageContents() {
