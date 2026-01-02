@@ -49,7 +49,7 @@ async function init(user) {
   state.addModal  = new bootstrap.Modal('#divModalAdd');
   state.editModal = new bootstrap.Modal('#divModalEdit');
 
-  //LeftSidebar.init('#page-shell');
+  LeftSidebar.init('#left');
 
   hydrateFilterSelects();
   hydrateModalSelects();
@@ -90,7 +90,7 @@ function appendMainHTML() {
   const $pageShell   = $('<section>', { id: 'page-shell', class: 'd-flex' });
   const $pageContent = $('<section>', { id: 'page-contents', class: 'd-flex flex-column' });
   
-  const $left = $('<div>', { id: 'left-sidebar', class: 'left-sidebar d-flex flex-column' });
+  const $left = $('<div>', { id: 'left', class: 'd-flex flex-column' });
   
   $pageShell.append($left, $pageContent);
   $('#page-main').append($pageShell);
