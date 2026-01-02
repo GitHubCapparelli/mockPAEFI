@@ -42,14 +42,9 @@ async function init(user) {
   ]);
   state.unidades = UnidadesAPI.GetAll();
 
-  appendHeaderHTML();
-  appendMainHTML();
-  appendModalsHTML();
-
+  buildPage();
   state.addModal  = new bootstrap.Modal('#divModalAdd');
   state.editModal = new bootstrap.Modal('#divModalEdit');
-
-  LeftSidebar.init();
 
   hydrateFilterSelects();
   hydrateModalSelects();
@@ -70,12 +65,34 @@ async function loadData() {
 }
 
 /* ---------- Rendering ---------- */
-function structureLayout() {
+function buildPage() {
+  structureLayout();
+  
+  appendTopNavbar();
+  appendPageContents();
+  appendModals();
 
+  LeftSidebar.init();
 }
-function appendHeaderHTML() {
+
+function structureLayout() {
+  const $top     = $('<div>', { id: 'shell-top', class: 'd-flex' });                // placeholder
+  const $right   = $('<div>', { id: 'shell-right', class: 'd-flex flex-column' });  // placeholder
+  const $bottom  = $('<div>', { id: 'shell-bottom', class: 'd-flex' });             // placeholder
+  const $left    = $('<div>', { id: 'shell-left', class: 'd-flex flex-column' });
+  
+  const $appHeader    = $('<div>', { id: 'app-header', class: 'app-header' });
+  const $pageContents = $('<div>', { id: 'page-contents', class: 'd-flex flex-column' })
+
+  const $appShell     = $('<div>', { id: 'app-shell', class: 'd-flex' }).append(
+    $appHeader, $top, $right, $bottom, $left, $pageContents);
+
+  $('#app-shell').append($appShell);
+}
+
+function appendTopNavbar() {
   // --- SIDS Top Navbar ---
-  const $navbar = $('<section>', { id: 'top-navbar', class: 'top-navbar d-flex justify-content-between align-items-center' }).append(
+  const $topNavbar = $('<div>', { id: 'top-navbar', class: 'top-navbar d-flex justify-content-between align-items-center' }).append(
     $('<div>', { class: 'mx-5rem d-flex align-items-center flex-grow-1 flex-nowrap gap-4' }).append(
       $('<span>', { text: 'Menu' }),
       $('<span>', { text: 'Home' }),
@@ -86,10 +103,11 @@ function appendHeaderHTML() {
     ),
     $('<span>', { id: 'txtUser-login', class: 'mx-4rem', text: state.currentUser.login })
   );
-  $('#page-header').append($navbar);
+
+  $('app-header').append($topNavbar)
 }
 
-function appendMainHTML() {
+function appendPageContents() {
   // --- Title bar : breadcrumbs & page info ---
   const $titleBar = $('<section>', { class: 'mx-5rem mt-2 ps-2 d-flex flex-column' }).append(
     $('<div>', { class: 'breadcrumbs d-flex justify-content-start align-items-center gap-2' }).append(
@@ -153,10 +171,11 @@ function appendMainHTML() {
       $('<nav>').append($('<ul>', { id: 'navControls', class: 'pagination mb-0' }))
     )
   );
-  $('#page-main').append($titleBar, $filters, $dataSection);
+
+  $('#page-contents').append($titleBar, $filters, $dataSection);
 }
 
-function appendModalsHTML() {
+function appendModals() {
   function createField(field) {
     const $col = $('<div>', { class: field.col || 'col-md-6' });
 

@@ -3,22 +3,11 @@
 export const LeftSidebar = { init };
 
 function init() {
-  ensureShell();
   renderSidebar();
   wireToggle();
   syncHeights();
+
   window.addEventListener('resize', syncHeights);
-}
-
-/* ---------- Shell ---------- */
-function ensureShell() {
-  if ($('#app-shell').length) return;
-
-  const $shell = $('<div>', { id: 'app-shell' });
-  const $main  = $('<div>', { id: 'app-main' });
-
-  $('body').children().appendTo($main);
-  $('body').append($shell.append(renderSidebar(), $main));
 }
 
 /* ---------- Sidebar ---------- */
@@ -43,8 +32,8 @@ function renderSidebar() {
       accordionSection('Documentação')
     )
   );
-
-  return $sidebar.append($header, $body);
+  $sidebar.append($header, $body);
+  $('#shell-left').append($sidebar);
 }
 
 /* ---------- Accordion ---------- */
