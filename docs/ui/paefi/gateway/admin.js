@@ -40,7 +40,7 @@ async function init(user) {
     UnidadesAPI.Init(),
     UsuariosServidoresAPI.Init()
   ]);
-  
+
   state.unidades = UnidadesAPI.GetAll();
   renderPage();
 
@@ -76,11 +76,11 @@ function appendStructure() {
   const $appHeader = $('<div>', { id: 'app-header', class: 'app-header' });
   appendNavbar($appHeader);
 
-  const $pageMain  = $('<div>', { id: 'page-main', class: 'd-flex' }).append(
-    $('<div>', { id: 'shell-top', class: 'd-flex' }),
-    $('<div>', { id: 'shell-right', class: 'd-flex flex-column' }),
-    $('<div>', { id: 'shell-bottom', class: 'd-flex' }),
-    $('<div>', { id: 'shell-left', class: 'd-flex flex-column' })
+  const $pageMain  = $('<div>', { id: 'page-main', class: 'page-main d-flex' }).append(
+    $('<div>', { id: 'shell-top', class: 'shell-top d-flex' }),
+    $('<div>', { id: 'shell-right', class: 'shell-right d-flex flex-column' }),
+    $('<div>', { id: 'shell-bottom', class: 'shell-bottom d-flex' }),
+    $('<div>', { id: 'shell-left', class: 'shell-left d-flex flex-column' })
   );
   appendContents($pageMain);
 
@@ -168,7 +168,7 @@ function appendContents(container) {
     )
   );
 
-  const $pageContents = $('<div>', { id: 'page-contents', class: 'd-flex flex-column' }).append(
+  const $pageContents = $('<div>', { id: 'page-contents', class: 'd-flex flex-column mb-3' }).append(
     $titleBar, $filters, $dataSection);
 
   container.append($pageContents);

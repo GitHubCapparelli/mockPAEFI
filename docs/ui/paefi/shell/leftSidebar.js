@@ -12,12 +12,12 @@ function init() {
 
 /* ---------- Sidebar ---------- */
 function renderSidebar() {
-  const $sidebar = $('<aside>', { id: 'leftSidebar' });
+  const $sidebar = $('<aside>', { id: 'leftSidebar', class: 'leftSidebar' });
 
   const $header = $('<div>', { class: 'p-2 border-bottom d-flex justify-content-between align-items-center' }).append(
     $('<span>', { text: 'PAEFI', class: 'fw-bold' }),
     $('<button>', {
-      class: 'btn btn-sm btn-outline-secondary',
+      class: 'btn btn-sm btn-outline-secondary btnSidebarToggle',
       id: 'btnSidebarToggle',
       title: 'Expandir / Recolher'
     }).append($('<i>', { class: 'fas fa-bars' }))

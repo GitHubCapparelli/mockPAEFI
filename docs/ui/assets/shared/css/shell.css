@@ -1,12 +1,12 @@
 /* ---------- Shell ---------- */
-#app-shell {
+.app-shell {
   display: flex;
   height: 100vh;
   overflow: hidden;
 }
 
 /* ---------- Sidebar ---------- */
-#leftSidebar {
+.leftSidebar {
   width: 260px;
   flex-shrink: 0;
   background-color: #f8f9fa;
@@ -16,7 +16,7 @@
   transition: width 0.2s ease;
 }
 
-#leftSidebar.collapsed {
+.leftSidebar.collapsed {
   width: 64px;
 }
 
@@ -36,23 +36,28 @@
   margin-top: auto;
 }
 
-/* ---------- Navbar ---------- */
-#top-navbar {
+/* ---------- Sticky ---------- */
+.top-navbar {
   position: sticky;
   top: 0;
   z-index: 1030;
-  border-bottom: 1px solid #dee2e6;
+}
+
+.shell-left {
+  position: sticky;
+  /*top: 0;*/
+  z-index: 1050;
 }
 
 /* ---------- App main ---------- */
-#app-main {
+.app-main {
   flex: 1;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
 
-#page-main {
+.page-main {
   flex: 1;
   overflow-y: auto;
 }
