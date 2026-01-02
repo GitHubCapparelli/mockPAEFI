@@ -15,7 +15,7 @@ function renderSidebar() {
   const $sidebar = $('<aside>', { id: 'leftSidebar', class: 'leftSidebar' });
 
   const $header = $('<div>', { class: 'p-2 border-bottom d-flex justify-content-between align-items-center' }).append(
-    $('<span>', { text: 'PAEFI', class: 'fw-bold' }),
+    $('<span>', { id: 'leftSidebar-title', text: 'PAEFI', class: 'fw-bold' }),
     $('<button>', {
       class: 'btn btn-sm btn-outline-secondary btnSidebarToggle',
       id: 'btnSidebarToggle',
@@ -23,9 +23,9 @@ function renderSidebar() {
     }).append($('<i>', { class: 'fas fa-bars' }))
   );
 
-  const $body = $('<div>', { class: 'leftSidebar-body p-2' }).append(
+  const $body = $('<div>', { id: 'leftSidebar-body', class: 'leftSidebar-body p-2' }).append(
     $('<div>', { class: 'leftSidebar-top' }).append(
-      accordionSection('Navegação', true)
+      accordionSection('Navegação')
     ),
     $('<div>', { class: 'leftSidebar-bottom' }).append(
       accordionSection('Preferências'),
@@ -65,6 +65,8 @@ function accordionSection(title, expanded = false) {
 function wireToggle() {
   $('#btnSidebarToggle').on('click', () => {
     $('#leftSidebar').toggleClass('collapsed');
+    $('#leftSidebar-body').toggleClass('visible');
+    $('#leftSidebar-title').toggleClass('visible');
   });
 }
 
