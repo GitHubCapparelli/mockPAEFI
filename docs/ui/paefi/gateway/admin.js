@@ -40,9 +40,10 @@ async function init(user) {
     UnidadesAPI.Init(),
     UsuariosServidoresAPI.Init()
   ]);
+  
   state.unidades = UnidadesAPI.GetAll();
+  renderPage();
 
-  buildPage();
   state.addModal  = new bootstrap.Modal('#divModalAdd');
   state.editModal = new bootstrap.Modal('#divModalEdit');
 
@@ -65,15 +66,13 @@ async function loadData() {
 }
 
 /* ---------- Rendering ---------- */
-function buildPage() {
-  structureLayout();
-  appendPageContents();
+function renderPage() {
+  appendStructure();
   appendModals();
-
   LeftSidebar.init();
 }
 
-function structureLayout() {
+function appendStructure() {
   const $appHeader = $('<div>', { id: 'app-header', class: 'app-header' });
   appendNavbar($appHeader);
 
