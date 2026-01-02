@@ -96,7 +96,7 @@ function appendHeaderHTML() {
     $('<span>', { id: 'txtUser-nome', class: 'mt-1 txtServidor-nome', text: state.currentUser.nome }),
     $('<span>', { id: 'txtUser-unidade', class: 'txtServidor-unidade', text: state.currentUser.hierarquia })
   );
-  $('#page-header').append($topOptions, $navbar, $header);
+  $('#page-header').append($navbar, $header);
 }
 
 function appendMainHTML() {
