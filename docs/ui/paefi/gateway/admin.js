@@ -81,9 +81,12 @@ function appendHeaderHTML() {
     ),
     $('<span>', { id: 'txtUser-login', class: 'mx-4rem', text: state.currentUser.login })
   );
+  $('#page-header').append($navbar);
+}
 
+function appendMainHTML() {
   // --- Breadcrumbs & Title Section ---
-  const $header = $('<section>', { class: 'mx-5rem mt-2 ps-2 d-flex flex-column' }).append(
+  const $titleBar = $('<section>', { class: 'mx-5rem mt-2 ps-2 d-flex flex-column' }).append(
     $('<div>', { class: 'breadcrumbs d-flex justify-content-start align-items-center gap-2' }).append(
       $('<a>', { href: '#', text: 'Home' }),
       $('<i>', { class: 'fa fa-angle-right fa-1x' }),
@@ -96,10 +99,7 @@ function appendHeaderHTML() {
     $('<span>', { id: 'txtUser-nome', class: 'mt-1 txtServidor-nome', text: state.currentUser.nome }),
     $('<span>', { id: 'txtUser-unidade', class: 'txtServidor-unidade', text: state.currentUser.hierarquia })
   );
-  $('#page-header').append($navbar, $header);
-}
 
-function appendMainHTML() {
   // --- Filters Bar ---
   const createFilterItem = (id, label) => $('<div>', { class: 'filter-item' }).append(
     $('<label>', { for: id, text: label }),
@@ -148,7 +148,7 @@ function appendMainHTML() {
       $('<nav>').append($('<ul>', { id: 'navControls', class: 'pagination mb-0' }))
     )
   );
-  $('#page-main').append($filters, $dataSection);
+  $('#page-main').append($titleBar, $filters, $dataSection);
 }
 
 function appendModalsHTML() {
@@ -523,7 +523,7 @@ export const UsuarioServidorGateway = {
 
 $(document).ready(async () => {
     if (user) {
-        LeftSidebar.init();
+        //LeftSidebar.init();
         await UsuarioServidorGateway.init(user);
     } else {
         alert('Usuário não localizado. Redirecionando...');
