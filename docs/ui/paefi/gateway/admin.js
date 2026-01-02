@@ -74,19 +74,21 @@ function buildPage() {
 }
 
 function structureLayout() {
-  const $top     = $('<div>', { id: 'shell-top', class: 'd-flex' });                // placeholder
-  const $right   = $('<div>', { id: 'shell-right', class: 'd-flex flex-column' });  // placeholder
-  const $bottom  = $('<div>', { id: 'shell-bottom', class: 'd-flex' });             // placeholder
-  const $left    = $('<div>', { id: 'shell-left', class: 'd-flex flex-column' });
-  
-  const $appHeader    = $('<div>', { id: 'app-header', class: 'app-header' });
-  const $pageContents = $('<div>', { id: 'page-contents', class: 'd-flex flex-column' })
+  const $appHeader = $('<div>', { id: 'app-header', class: 'app-header' });
+  appendNavbar($appHeader);
 
-  appendTopNavbar($appHeader);
-  $('#app-shell').append($appHeader, $top, $right, $bottom, $left, $pageContents);
+  const $pageMain  = $('<div>', { id: 'page-main', class: 'd-flex' }).append(
+    $('<div>', { id: 'shell-top', class: 'd-flex' }),
+    $('<div>', { id: 'shell-right', class: 'd-flex flex-column' }),
+    $('<div>', { id: 'shell-bottom', class: 'd-flex' }),
+    $('<div>', { id: 'shell-left', class: 'd-flex flex-column' })
+  );
+  appendContents($pageMain);
+
+  $('#app-shell').append($appHeader, $pageMain);
 }
 
-function appendTopNavbar(container) {
+function appendNavbar(container) {
   // --- SIDS Top Navbar ---
   const $topNavbar = $('<div>', { id: 'top-navbar', class: 'top-navbar d-flex justify-content-between align-items-center' }).append(
     $('<div>', { class: 'mx-5rem d-flex align-items-center flex-grow-1 flex-nowrap gap-4' }).append(
@@ -102,7 +104,7 @@ function appendTopNavbar(container) {
   container.append($topNavbar)
 }
 
-function appendPageContents() {
+function appendContents(container) {
   // --- Title bar : breadcrumbs & page info ---
   const $titleBar = $('<section>', { class: 'mx-5rem mt-2 ps-2 d-flex flex-column' }).append(
     $('<div>', { class: 'breadcrumbs d-flex justify-content-start align-items-center gap-2' }).append(
@@ -167,7 +169,10 @@ function appendPageContents() {
     )
   );
 
-  $('#page-contents').append($titleBar, $filters, $dataSection);
+  const $pageContents = $('<div>', { id: 'page-contents', class: 'd-flex flex-column' }).append(
+    $titleBar, $filters, $dataSection);
+
+  container.append($pageContents);
 }
 
 function appendModals() {
