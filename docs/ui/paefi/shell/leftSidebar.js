@@ -4,7 +4,7 @@ export const LeftSidebar = { init };
 
 function init() {
   ensureShell();
-  //renderSidebar();
+  renderSidebar();
   wireToggle();
   syncHeights();
   window.addEventListener('resize', syncHeights);
