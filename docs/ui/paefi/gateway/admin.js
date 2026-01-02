@@ -148,7 +148,11 @@ function appendMainHTML() {
       $('<nav>').append($('<ul>', { id: 'navControls', class: 'pagination mb-0' }))
     )
   );
-  $('#page-main').append($titleBar, $filters, $dataSection);
+
+  const $pageContent = $('<section>', { id: 'page-contents', class: 'd-flex flex-column' })
+  .append($titleBar, $filters, $dataSection);
+
+  $('#page-main').append($pageContent);
 }
 
 function appendModalsHTML() {
