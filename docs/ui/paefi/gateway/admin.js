@@ -69,12 +69,6 @@ async function loadData() {
 
 /* ---------- Rendering ---------- */
 function appendHeaderHTML() {
-  // --- Top Options Section ---
-  const $topOptions = $('<section>', { class: 'mx-5rem top-options container-fluid d-flex justify-content-between align-items-center gap-3 bg-white' }).append(
-    $('<div>', { id: 'divMensagem' }),
-    $('<a>', { href: '#', title: 'Documentação' }).append($('<i>', { class: 'fa fa-question' }))
-  );
-
   // --- SIDS Top Navbar ---
   const $navbar = $('<section>', { class: 'top-navbar d-flex justify-content-between align-items-center' }).append(
     $('<div>', { class: 'mx-5rem d-flex align-items-center flex-grow-1 flex-nowrap gap-4' }).append(
