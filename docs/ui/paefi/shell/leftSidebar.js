@@ -62,6 +62,5 @@ function init(containerID) {
       </div>
     </aside>
   `);
-
-  $(container).prepend($sidebar);
+  $(containerID).prepend($sidebar);
 }
