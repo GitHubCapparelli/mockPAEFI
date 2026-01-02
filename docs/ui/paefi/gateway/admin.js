@@ -49,7 +49,7 @@ async function init(user) {
   state.addModal  = new bootstrap.Modal('#divModalAdd');
   state.editModal = new bootstrap.Modal('#divModalEdit');
 
-  LeftSidebar.init('#page-shell');
+  //LeftSidebar.init('#page-shell');
 
   hydrateFilterSelects();
   hydrateModalSelects();
@@ -87,6 +87,14 @@ function appendHeaderHTML() {
 }
 
 function appendMainHTML() {
+  const $pageShell   = $('<section>', { id: 'page-shell', class: 'd-flex' });
+  const $pageContent = $('<section>', { id: 'page-contents', class: 'd-flex flex-column' });
+  
+  const $left = $('<div>', { id: 'left-sidebar', class: 'left-sidebar d-flex flex-column' });
+  
+  $pageShell.append($left, $pageContent);
+  $('#page-main').append($pageShell);
+
   // --- Breadcrumbs & Title Section ---
   const $titleBar = $('<section>', { class: 'mx-5rem mt-2 ps-2 d-flex flex-column' }).append(
     $('<div>', { class: 'breadcrumbs d-flex justify-content-start align-items-center gap-2' }).append(
@@ -150,13 +158,7 @@ function appendMainHTML() {
       $('<nav>').append($('<ul>', { id: 'navControls', class: 'pagination mb-0' }))
     )
   );
-
-  const $pageContent = $('<section>', { id: 'page-contents', class: 'd-flex flex-column' })
-  .append($titleBar, $filters, $dataSection);
-
-  const $pageShell = $('<section>', { id: 'page-shell', class: 'd-flex' }).append($pageContent);
-
-  $('#page-main').append($pageShell);
+  $pageContent.append($titleBar, $filters, $dataSection);
 }
 
 function appendModalsHTML() {
