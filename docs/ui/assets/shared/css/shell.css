@@ -1,0 +1,32 @@
+body {
+  display: flex;
+}
+
+.page-header,
+.page-main,
+.page-modals {
+  flex: 1;
+}
+
+.left-sidebar {
+  width: 260px;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  border-right: 1px solid #dee2e6;
+  padding: 0.75rem;
+}
+
+.left-sidebar .accordion-button {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.95rem;
+}
+
+.left-sidebar .accordion-body {
+  padding: 0.5rem 0.75rem;
+}
+
+.sidebar-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}

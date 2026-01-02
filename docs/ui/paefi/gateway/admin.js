@@ -2,6 +2,7 @@ import { Session, CurrentUserKey }                    from '../../../services/st
 import { FuncaoUsuario, CargoUsuario, Especialidade } from '../../../objModel.js';
 import { UsuariosServidoresAPI }                      from '../../../services/api/usuariosServidoresAPI.js';
 import { UnidadesAPI }                                from '../../../services/api/unidadesAPI.js';
+import { LeftSidebar }                                from '../shell/leftSidebar.js';
 
 const user              = Session.Get(CurrentUserKey);
 
@@ -528,6 +529,7 @@ export const UsuarioServidorGateway = {
 
 $(document).ready(async () => {
     if (user) {
+        LeftSidebar.init();
         await UsuarioServidorGateway.init(user);
     } else {
         alert('Usuário não localizado. Redirecionando...');
