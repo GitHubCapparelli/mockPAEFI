@@ -1,18 +1,17 @@
 /* ---------- Shell ---------- */
 .app-shell {
   display: flex;
+  flex-direction: column;
   height: 100vh;
   overflow: hidden;
 }
 
-/* ---------- (SIDS) Top Navbar ---------- */
-.top-navbar {
-  position: sticky;
-  top: 0;
-  z-index: 1030;
+.app-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
 }
 
-/* ---------- App main ---------- */
 .app-main {
   flex: 1;
   display: flex;
@@ -20,9 +19,17 @@
   overflow: hidden;
 }
 
-.page-main {
+.app-main,
+.page-contents {
   flex: 1;
   overflow-y: auto;
+}
+
+/* ---------- (SIDS) Top Navbar ---------- */
+.top-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1030;
 }
 
 /* ---------- Sidebar ---------- */

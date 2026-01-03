@@ -76,10 +76,12 @@ function appendStructure() {
   const $appHeader = $('<div>', { id: 'app-header', class: 'app-header' });
   appendNavbar($appHeader);
 
-  const $pageMain  = $('<div>', { id: 'page-main', class: 'page-main d-flex' });
-  appendContents($pageMain);
+  const $appMain  = $('<main>', { id: 'app-main', class: 'app-main' });
+  const $appBody   = $('<div>', { id: 'app-body', class: 'app-body' });
+  $appBody.append($appMain);
+  appendContents($appMain);
 
-  $('#app-shell').append($appHeader, $pageMain);
+  $('#app-shell').append($appHeader, $appBody);
 }
 
 function appendNavbar(container) {
@@ -100,7 +102,7 @@ function appendNavbar(container) {
 
 function appendContents(container) {
   // --- Title bar : breadcrumbs & page info ---
-  const $titleBar = $('<section>', { class: 'mx-5rem mt-2 ps-2 d-flex flex-column' }).append(
+  const $titleBar = $('<section>', { id: 'page-contents', class: 'page-contents mx-5rem mt-2 ps-2 d-flex flex-column' }).append(
     $('<div>', { class: 'breadcrumbs d-flex justify-content-start align-items-center gap-2' }).append(
       $('<a>', { href: '#', text: 'Home' }),
       $('<i>', { class: 'fa fa-angle-right fa-1x' }),

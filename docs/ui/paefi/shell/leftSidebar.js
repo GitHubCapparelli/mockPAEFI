@@ -33,7 +33,7 @@ function renderSidebar() {
     )
   );
   $sidebar.append($header, $body);
-  $('#app-shell').prepend($sidebar);
+  $('#app-body').prepend($sidebar);
 }
 
 /* ---------- Accordion ---------- */
