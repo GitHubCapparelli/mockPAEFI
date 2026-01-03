@@ -120,7 +120,7 @@ function appendContents(container) {
     $('<select>', { class: 'form-select', id: id })
   );
 
-  const $filters = $('<section>', { class: 'filters-bar mx-2 mt-2 d-flex flex-column' }).append(
+  const $filters = $('<section>', { class: 'filters-bar mx-2 d-flex flex-column' }).append(
     $('<h3>', { class: 'w-100 mt-2 ms-2', text: dataCaption }),
     $('<div>', { class: 'w-100 d-flex flex-column flex-wrap gap-1' }).append(
       $('<div>', { class: 'filter-options w-100 p-2 d-flex gap-3 flex-nowrap' }).append(
@@ -137,9 +137,9 @@ function appendContents(container) {
   );
 
   // --- Data Section (Table & Pagination) ---
-  const $dataSection = $('<section>', { class: 'mx-2 mt-2 data-section' }).append(
+  const $dataSection = $('<section>', { class: 'data-section' }).append(
     // Action Buttons
-    $('<div>', { class: 'mt-2 mx-2 action-buttons d-flex justify-content-between align-items-center gap-3' }).append(
+    $('<div>', { class: 'mx-2 mt-4 action-buttons d-flex justify-content-between align-items-center gap-3' }).append(
       $('<div>', { class: 'action-buttons-left d-flex align-items-center gap-3 flex-grow-1 flex-nowrap' }).append(
         $('<button>', { class: 'btn btn-primary', id: 'btnAddNew' }).append($('<i>', { class: 'fas fa-plus' }), ' Incluir')
       ),
