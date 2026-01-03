@@ -137,7 +137,7 @@ function appendContents(container) {
   );
 
   // --- Data Section (Table & Pagination) ---
-  const $dataSection = $('<section>', { class: 'mx-2 data-section' }).append(
+  const $dataSection = $('<section>', { class: 'mx-2 mt-2 data-section' }).append(
     // Action Buttons
     $('<div>', { class: 'mt-2 mx-2 action-buttons d-flex justify-content-between align-items-center gap-3' }).append(
       $('<div>', { class: 'action-buttons-left d-flex align-items-center gap-3 flex-grow-1 flex-nowrap' }).append(
