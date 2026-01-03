@@ -1,6 +1,8 @@
-export const CurrentUserKey       = 'currentUser';
-export const CurrentUnidadeKey    = 'currentUnidade';
-export const UserPreferencesKey   = 'userPreferences';
+export const CurrentUserKey         = 'currentUser';
+export const UserPreferencesKey     = 'userPreferences';
+export const LastAdminDomainKey     = 'lastAdminDomain';
+export const LastMonitorDomainKey   = 'lastMonitorDomain';
+export const LastAtenderDomainKey   = 'lastAtenderDomain';
 
 /* ---------- Persistent Adapters ---------- */
 export const Local = {
