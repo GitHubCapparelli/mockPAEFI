@@ -532,11 +532,11 @@ export function toggleTheme() {
   const html = document.documentElement;
   const next = html.dataset.bsTheme === 'dark' ? 'light' : 'dark';
   html.dataset.bsTheme = next;
-  Local.Set('bs-theme', next);
+  Local.Set('DarkMode', next);
 }
 
 export function restoreTheme() {
-  const saved = Local.Get('bs-theme');
+  const saved = Local.Get('DarkMode');
   if (saved) {
     document.documentElement.dataset.bsTheme = saved;
   }
@@ -556,7 +556,7 @@ export const UsuarioServidorGateway = {
 
 $(document).ready(async () => {
     if (user) {
-        const last = Local.Get(LastAdminDomain) || 'usuariosServidores';
+        const last = Local.Get('LastAdminDomain') || 'usuariosServidores';
         await UsuarioServidorGateway.init(user);
     } else {
         alert('Usuário não localizado. Redirecionando...');
