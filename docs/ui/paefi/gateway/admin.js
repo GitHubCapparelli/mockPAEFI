@@ -122,7 +122,7 @@ function appendContents(container) {
 
   const $filters = $('<section>', { class: 'filters-bar mx-2 d-flex flex-column' }).append(
     $('<h3>', { class: 'w-100 mt-2 ms-2', text: dataCaption }),
-    $('<div>', { class: 'w-100 d-flex flex-column flex-wrap gap-1' }).append(
+    $('<div>', { class: 'w-100 mt-0 d-flex flex-column flex-wrap gap-1' }).append(
       $('<div>', { class: 'filter-options w-100 p-2 d-flex gap-3 flex-nowrap' }).append(
         createFilterItem('cmbFilterUnidade', 'Unidade'),
         createFilterItem('cmbFilterEspecialidade', 'Especialidade'),
@@ -137,9 +137,9 @@ function appendContents(container) {
   );
 
   // --- Data Section (Table & Pagination) ---
-  const $dataSection = $('<section>', { class: 'data-section' }).append(
+  const $dataSection = $('<section>', { class: 'data-section mx-2' }).append(
     // Action Buttons
-    $('<div>', { class: 'mx-2 mt-4 action-buttons d-flex justify-content-between align-items-center gap-3' }).append(
+    $('<div>', { class: 'mt-5 action-buttons d-flex justify-content-between align-items-center gap-3' }).append(
       $('<div>', { class: 'action-buttons-left d-flex align-items-center gap-3 flex-grow-1 flex-nowrap' }).append(
         $('<button>', { class: 'btn btn-primary', id: 'btnAddNew' }).append($('<i>', { class: 'fas fa-plus' }), ' Incluir')
       ),
@@ -147,7 +147,7 @@ function appendContents(container) {
         //.append($('<button>', { class: 'btn btn-secondary', id: 'btnExport' }).append($('<i>', { class: 'fas fa-download' }), ' Exportar'))
     ),
     // Table
-    $('<div>', { class: 'mt-3 table-responsive' }).append(
+    $('<div>', { class: 'mt-0 table-responsive' }).append(
       $('<table>', { class: 'table table-striped table-hover' }).append(
         $('<thead>').append(thead), 
         $('<tbody>', { id: 'dataRows' }).append(
