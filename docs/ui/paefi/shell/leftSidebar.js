@@ -1,44 +1,52 @@
-// ui/paefi/shell/leftSidebar.js
+import { Local, UserPreferencesKey } from '../../../services/storage.js';
 
 export const LeftSidebar = { init };
 
-function init() {
-  renderSidebar();
-  wireToggle();
-  syncHeights();
+/* Preferences (storage) */
+function loadPrefs() { return Local.Get(UserPreferencesKey) || {}; }
+function savePrefs(prefs) { Local.Set(UserPreferencesKey, prefs); }
 
-  window.addEventListener('resize', syncHeights);
-}
-
-/* ---------- Sidebar ---------- */
-function renderSidebar() {
+/* Rendering */
+function render() {
   const $sidebar = $('<aside>', { id: 'leftSidebar', class: 'leftSidebar' });
-
-  const $header = $('<div>', { class: 'p-2 border-bottom d-flex justify-content-between align-items-center' }).append(
-    $('<span>', { id: 'leftSidebar-title', text: 'PAEFI', class: 'fw-bold' }),
+  const $header  = $('<div>', { 
+    class: 'p-2 border-bottom d-flex justify-content-between align-items-center'
+  }).append(
+    $('<span>', { class: 'fw-bold', text: 'PAEFI' }),
     $('<button>', {
-      class: 'btn btn-sm btn-outline-secondary btnSidebarToggle',
       id: 'btnSidebarToggle',
+      class: 'btn btn-sm btn-outline-secondary',
       title: 'Expandir / Recolher'
     }).append($('<i>', { class: 'fas fa-bars' }))
   );
 
-  const $body = $('<div>', { id: 'leftSidebar-body', class: 'leftSidebar-body p-2' }).append(
+  const $body = $('<div>', { class: 'leftSidebar-body p-2' }).append(
     $('<div>', { class: 'leftSidebar-top' }).append(
-      accordionSection('Navegação')
+      accordionSection('Opções', true)
     ),
     $('<div>', { class: 'leftSidebar-bottom' }).append(
-      accordionSection('Preferências'),
+      accordionSection('Preferências', false, renderPreferences),
       accordionSection('Documentação')
     )
   );
+
   $sidebar.append($header, $body);
   $('#app-body').prepend($sidebar);
+
+  syncHeights();
 }
 
-/* ---------- Accordion ---------- */
-function accordionSection(title, expanded = false) {
+function accordionSection(title, expanded = false, contentRenderer) {
   const id = `ls-${title.toLowerCase()}`;
+
+  const $body = $('<div>', { id, class: `accordion-collapse collapse ${expanded ? 'show' : ''}`
+  }).append($('<div>', { class: 'accordion-body' }));
+
+  if (contentRenderer) {
+    contentRenderer($body.find('.accordion-body'));
+  } else {
+    $body.find('.accordion-body').text('[em breve]');
+  }
 
   return $('<div>', { class: 'accordion mb-2' }).append(
     $('<div>', { class: 'accordion-item' }).append(
@@ -51,24 +59,80 @@ function accordionSection(title, expanded = false) {
           text: title
         })
       ),
-      $('<div>', {
-        id,
-        class: `accordion-collapse collapse ${expanded ? 'show' : ''}`
-      }).append(
-        $('<div>', { class: 'accordion-body text-muted', text: '[em breve]' })
-      )
+      $body
     )
   );
 }
 
-/* ---------- Behavior ---------- */
-function wireToggle() {
+function renderPreferences($container) {
+  const prefs = loadPrefs();
+
+  const $darkMode = $('<div>', { class: 'form-check form-switch mb-2' }).append(
+    $('<input>', { id: 'chkDarkMode', type: 'checkbox', class: 'form-check-input', 
+      checked: prefs.theme === 'dark'
+    }), $('<label>', { class: 'form-check-label', for: 'chkDarkMode', text: 'Modo escuro' })
+  );
+
+  const $resumeDomain = $('<div>', { class: 'form-check form-switch' }).append(
+    $('<input>', { id: 'chkResumeDomain', type: 'checkbox', class: 'form-check-input',
+      checked: !!prefs.resumeLastDomain
+    }), $('<label>', { class: 'form-check-label', for: 'chkResumeDomain', 
+      text: 'Lembrar última opção'
+    }));
+
+  $container.append($darkMode, $resumeDomain);
+}
+
+/* Behavior */
+function restoreState() {
+  const prefs = loadPrefs();
+  if (prefs.sidebarCollapsed) {
+    $('#leftSidebar').addClass('collapsed');
+  }
+  applyTheme(prefs.theme || 'light');
+}
+
+function wirePreferences() {
   $('#btnSidebarToggle').on('click', () => {
+    const prefs = loadPrefs();
     $('#leftSidebar').toggleClass('collapsed');
+    prefs.sidebarCollapsed = $('#leftSidebar').hasClass('collapsed');
+    savePrefs(prefs);
+  });
+
+  $('#chkDarkMode').on('change', function () {
+    const prefs = loadPrefs();
+    prefs.theme = this.checked ? 'dark' : 'light';
+    savePrefs(prefs);
+    applyTheme(prefs.theme);
+  });
+
+  $('#chkResumeDomain').on('change', function () {
+    const prefs = loadPrefs();
+    prefs.resumeLastDomain = this.checked;
+    savePrefs(prefs);
   });
 }
 
+/* Theme */
+function applyTheme(theme) {
+  document.documentElement.setAttribute(
+    'data-bs-theme',
+    theme === 'dark' ? 'dark' : 'light'
+  );
+}
+
+/* Layout */
 function syncHeights() {
   const navbarHeight = $('#top-navbar').outerHeight() || 0;
   $('#leftSidebar').css('height', `calc(100vh - ${navbarHeight}px)`);
+}
+
+/* Public */
+function init() {
+  render();
+  restoreState();
+  wirePreferences();
+
+  $(window).on('resize', syncHeights);
 }
