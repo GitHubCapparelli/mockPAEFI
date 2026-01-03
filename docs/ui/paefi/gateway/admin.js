@@ -102,7 +102,7 @@ function appendNavbar(container) {
 
 function appendContents(container) {
   // --- Title bar : breadcrumbs & page info ---
-  const $titleBar = $('<section>', { id: 'page-contents', class: 'page-contents mx-5rem mt-2 ps-2 d-flex flex-column' }).append(
+  const $titleBar = $('<section>', { id: 'page-contents', class: 'page-contents ms-2 mt-2 ps-2 d-flex flex-column' }).append(
     $('<div>', { class: 'breadcrumbs d-flex justify-content-start align-items-center gap-2' }).append(
       $('<a>', { href: '#', text: 'Home' }),
       $('<i>', { class: 'fa fa-angle-right fa-1x' }),
@@ -111,9 +111,10 @@ function appendContents(container) {
       $('<span>', { text: 'Gestão do PAEFI' }),
       $('<i>', { class: 'fa fa-angle-right fa-1x' })
     ),
-    $('<span>', { class: 'page-title', text: pageTitle }),
-    $('<span>', { id: 'txtUser-nome', class: 'mt-1 txtServidor-nome', text: state.currentUser.nome }),
-    $('<span>', { id: 'txtUser-unidade', class: 'txtServidor-unidade', text: state.currentUser.hierarquia })
+    $('<span>', { class: 'page-title', text: pageTitle })
+    //,
+    //$('<span>', { id: 'txtUser-nome', class: 'mt-1 txtServidor-nome', text: state.currentUser.nome }),
+    //$('<span>', { id: 'txtUser-unidade', class: 'txtServidor-unidade', text: state.currentUser.hierarquia })
   );
 
   // --- Filters Bar ---
@@ -122,7 +123,7 @@ function appendContents(container) {
     $('<select>', { class: 'form-select', id: id })
   );
 
-  const $filters = $('<section>', { class: 'filters-bar mx-5rem mt-3 d-flex flex-column' }).append(
+  const $filters = $('<section>', { class: 'filters-bar ms-2 mt-3 d-flex flex-column' }).append(
     $('<h3>', { class: 'w-100 mt-2 ms-2', text: dataCaption }),
     $('<div>', { class: 'w-100 d-flex flex-column flex-wrap gap-1' }).append(
       $('<div>', { class: 'filter-options w-100 p-2 d-flex gap-3 flex-nowrap' }).append(
@@ -139,14 +140,14 @@ function appendContents(container) {
   );
 
   // --- Data Section (Table & Pagination) ---
-  const $dataSection = $('<section>', { class: 'mx-5rem data-section' }).append(
+  const $dataSection = $('<section>', { class: 'ms-2 data-section' }).append(
     // Action Buttons
     $('<div>', { class: 'mt-2 mx-2 action-buttons d-flex justify-content-between align-items-center gap-3' }).append(
       $('<div>', { class: 'action-buttons-left d-flex align-items-center gap-3 flex-grow-1 flex-nowrap' }).append(
         $('<button>', { class: 'btn btn-primary', id: 'btnAddNew' }).append($('<i>', { class: 'fas fa-plus' }), ' Incluir')
       ),
       $('<div>', { class: 'action-buttons-right d-flex justify-content-end align-items-end gap-3' }).append(
-        $('<button>', { class: 'btn btn-secondary', id: 'btnExport' }).append($('<i>', { class: 'fas fa-download' }), ' Exportar')
+        //$('<button>', { class: 'btn btn-secondary', id: 'btnExport' }).append($('<i>', { class: 'fas fa-download' }), ' Exportar')
       )
     ),
     // Table

@@ -10,7 +10,7 @@ function savePrefs(prefs) { Local.Set(UserPreferencesKey, prefs); }
 function render() {
   const $sidebar = $('<aside>', { id: 'leftSidebar', class: 'leftSidebar' });
   const $header  = $('<div>', { 
-    class: 'p-2 border-bottom d-flex justify-content-between align-items-center'
+    class: 'p-2 d-flex justify-content-between align-items-center'
   }).append(
     $('<span>', { id:'leftSidebar-title', class: 'leftSidebar-title fw-bold', text: 'PAEFI' }),
     $('<button>', {
