@@ -52,6 +52,12 @@
   justify-content: center;
 }
 
+.leftSidebar.collapsed #leftSidebar-title,
+.leftSidebar.collapsed #leftSidebar-body
+{
+  display: none;
+}
+/*
 .leftSidebar.collapsed .accordion-button::after {
   display: none;
 }
@@ -63,10 +69,7 @@
 .leftSidebar.collapsed .leftSidebar-body {
   overflow: hidden;
 }
-
-.leftSidebar.collapsed #leftSidebar-title {
-  display: none;
-}
+*/
 
 /* ---------- Sidebar content ---------- */
 .leftSidebar-body {
