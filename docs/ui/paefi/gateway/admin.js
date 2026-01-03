@@ -139,7 +139,7 @@ function appendContents(container) {
   // --- Data Section (Table & Pagination) ---
   const $dataSection = $('<section>', { class: 'data-section mx-2' }).append(
     // Action Buttons
-    $('<div>', { class: 'mt-5 action-buttons d-flex justify-content-between align-items-center gap-3' }).append(
+    $('<div>', { class: 'mt-4 ms-2 action-buttons d-flex justify-content-between align-items-center gap-3' }).append(
       $('<div>', { class: 'action-buttons-left d-flex align-items-center gap-3 flex-grow-1 flex-nowrap' }).append(
         $('<button>', { class: 'btn btn-primary', id: 'btnAddNew' }).append($('<i>', { class: 'fas fa-plus' }), ' Incluir')
       ),
@@ -147,7 +147,7 @@ function appendContents(container) {
         //.append($('<button>', { class: 'btn btn-secondary', id: 'btnExport' }).append($('<i>', { class: 'fas fa-download' }), ' Exportar'))
     ),
     // Table
-    $('<div>', { class: 'mt-0 table-responsive' }).append(
+    $('<div>', { class: 'mt-0 ms-2 table-responsive' }).append(
       $('<table>', { class: 'table table-striped table-hover' }).append(
         $('<thead>').append(thead), 
         $('<tbody>', { id: 'dataRows' }).append(
