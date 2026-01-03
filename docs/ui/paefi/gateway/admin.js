@@ -144,8 +144,7 @@ function appendContents(container) {
         $('<button>', { class: 'btn btn-primary', id: 'btnAddNew' }).append($('<i>', { class: 'fas fa-plus' }), ' Incluir')
       ),
       $('<div>', { class: 'action-buttons-right d-flex justify-content-end align-items-end gap-3' })
-        //.append($('<button>', { class: 'btn btn-secondary', id: 'btnExport' }).append($('<i>', { class: 'fas fa-download' }), ' Exportar')
-      )
+        //.append($('<button>', { class: 'btn btn-secondary', id: 'btnExport' }).append($('<i>', { class: 'fas fa-download' }), ' Exportar'))
     ),
     // Table
     $('<div>', { class: 'mt-3 table-responsive' }).append(
