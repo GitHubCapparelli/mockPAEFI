@@ -1,4 +1,4 @@
-import { Session, CurrentUserKey }                    from '../../../services/storage.js';
+import { Local, Session, CurrentUserKey }             from '../../../services/storage.js';
 import { FuncaoUsuario, CargoUsuario, Especialidade } from '../../../objModel.js';
 import { UsuariosServidoresAPI }                      from '../../../services/api/usuariosServidoresAPI.js';
 import { UnidadesAPI }                                from '../../../services/api/unidadesAPI.js';
@@ -76,12 +76,7 @@ function appendStructure() {
   const $appHeader = $('<div>', { id: 'app-header', class: 'app-header' });
   appendNavbar($appHeader);
 
-  const $pageMain  = $('<div>', { id: 'page-main', class: 'page-main d-flex' }).append(
-    $('<div>', { id: 'shell-top', class: 'shell-top d-flex' }),
-    $('<div>', { id: 'shell-right', class: 'shell-right d-flex flex-column' }),
-    $('<div>', { id: 'shell-bottom', class: 'shell-bottom d-flex' }),
-    $('<div>', { id: 'shell-left', class: 'shell-left d-flex flex-column' })
-  );
+  const $pageMain  = $('<div>', { id: 'page-main', class: 'page-main d-flex' });
   appendContents($pageMain);
 
   $('#app-shell').append($appHeader, $pageMain);
@@ -533,6 +528,21 @@ function validateEdit(id) {
   return '';
 }
 
+export function toggleTheme() {
+  const html = document.documentElement;
+  const next = html.dataset.bsTheme === 'dark' ? 'light' : 'dark';
+  html.dataset.bsTheme = next;
+  Local.Set('bs-theme', next);
+}
+
+export function restoreTheme() {
+  const saved = Local.Get('bs-theme');
+  if (saved) {
+    document.documentElement.dataset.bsTheme = saved;
+  }
+}
+
+
 /* ---------- Public ---------- */
 export const UsuarioServidorGateway = {
   init,
@@ -546,6 +556,7 @@ export const UsuarioServidorGateway = {
 
 $(document).ready(async () => {
     if (user) {
+        const last = Local.Get(LastAdminDomain) || 'usuariosServidores';
         await UsuarioServidorGateway.init(user);
     } else {
         alert('Usuário não localizado. Redirecionando...');

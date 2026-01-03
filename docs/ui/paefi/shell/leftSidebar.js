@@ -33,7 +33,7 @@ function renderSidebar() {
     )
   );
   $sidebar.append($header, $body);
-  $('#shell-left').append($sidebar);
+  $('#app-shell').prepend($sidebar);
 }
 
 /* ---------- Accordion ---------- */
@@ -65,8 +65,6 @@ function accordionSection(title, expanded = false) {
 function wireToggle() {
   $('#btnSidebarToggle').on('click', () => {
     $('#leftSidebar').toggleClass('collapsed');
-    $('#leftSidebar-body').toggleClass('visible');
-    $('#leftSidebar-title').toggleClass('visible');
   });
 }
 
