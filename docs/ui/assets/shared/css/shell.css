@@ -44,7 +44,7 @@
 }
 
 .leftSidebar.collapsed {
-  width: 64px;
+  width: 40px;
 }
 
 .leftSidebar.collapsed .accordion-button {
@@ -57,19 +57,6 @@
 {
   display: none;
 }
-/*
-.leftSidebar.collapsed .accordion-button::after {
-  display: none;
-}
-
-.leftSidebar.collapsed .accordion-body {
-  display: none;
-}
-
-.leftSidebar.collapsed .leftSidebar-body {
-  overflow: hidden;
-}
-*/
 
 /* ---------- Sidebar content ---------- */
 .leftSidebar-body {
