@@ -4,7 +4,7 @@ import { LeftSidebar
 import { Local, Session, 
          CurrentUserKey, 
          UserPreferencesKey,
-         LastAdminDomainKey, 
+         LastAdminDomainKey 
        } from '../../services/storage.js';
 
 /* Internal State */
