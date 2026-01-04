@@ -48,7 +48,6 @@ export async function ActivateAdminGateway(domain) {
   if (!gateway) {
     throw new Error(`[coreGateway] Gateway not registered: ${domain}`);
   }
-
   state.currentAdminDomain = domain;
 
   const prefs = loadPrefs();
@@ -56,7 +55,7 @@ export async function ActivateAdminGateway(domain) {
     Local.Set(LastAdminDomainKey, domain);
   }
 
-  await gateway.init(state.currentUser);
+  await gateway.Init(state.currentUser);
 }
 
 /* Sidebar Integration */
@@ -99,6 +98,7 @@ export async function Init() {
 
   const initialDomain = await resolveInitialDomain();
   if (initialDomain && state.adminGateways[initialDomain]) {
+    console.log(initialDomain);
     await ActivateAdminGateway(initialDomain);
   }
 }
