@@ -16,6 +16,6 @@ async function bootstrapAdmin() {
 
   await CoreAdminGateway.Init(user);
   CoreAdminGateway.RegisterAdminGateway('usuariosServidores', UsuariosServidoresGateway);
-  CoreAdminGateway.RegisterAdminGateway('unidades', UnidadesGateway );
-  CoreAdminGateway.ActivateInitialGateway();
+  //CoreAdminGateway.RegisterAdminGateway('unidades', UnidadesGateway );
+  //CoreAdminGateway.ActivateInitialGateway();
 }
