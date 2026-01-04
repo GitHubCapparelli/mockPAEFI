@@ -98,7 +98,6 @@ export async function Init() {
 
   const initialDomain = await resolveInitialDomain();
   if (initialDomain && state.adminGateways[initialDomain]) {
-    console.log(initialDomain);
     await ActivateAdminGateway(initialDomain);
   }
 }

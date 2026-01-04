@@ -55,7 +55,7 @@ async function bootstrap() {
 /* Rendering */
 
 function render() {
-  console.log('rendering servidoresGateway');
+  console.log('rendering servidoresGateway...');
   const $container = $('#app-main').empty();
   $container.append(
     renderTitleBar(),
