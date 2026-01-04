@@ -53,6 +53,7 @@ function dataSection() {
       ),
       $('<div>', { id: 'divDataActionButtons-right', 
         class: 'action-buttons-right d-flex justify-content-end align-items-end gap-3' })
+        //.append($('<button>', { class: 'btn btn-secondary', id: 'btnExport' }).append($('<i>', { class: 'fas fa-download' }), ' Exportar'))
     ),
     // Table
     $('<div>', { class: 'mt-0 ms-2 table-responsive' }).append(
@@ -62,7 +63,7 @@ function dataSection() {
     $('<div>', { id: 'divPagination-section', 
         class: 'pagination-section d-flex justify-content-between align-items-center' }).append(
       $('<div>', { id: 'divPagination-info', 
-        class: 'pagination-info' }).append($('<span>', { id: 'navInfo' })),
+        class: 'pagination-info' }).append($('<span>', { id: 'navInfo', text: 'nav info' })),
       $('<nav>').append($('<ul>', { id: 'navControls', class: 'pagination mb-0' }))
     )
   );
