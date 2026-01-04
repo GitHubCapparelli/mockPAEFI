@@ -1,6 +1,6 @@
 //ui/paefi/shell/leftSidebar.js
 import { Local, UserPreferencesKey } from '../../../services/storage.js';
-import { CoreAdminGateway }          from '../gateway/coreGateway.js';
+import { CoreAdminGateway }          from '../gateway/coreAdminGateway.js';
 
 export const LeftSidebar = { init };
 
