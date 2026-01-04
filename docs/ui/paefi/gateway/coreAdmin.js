@@ -14,15 +14,6 @@ function init() {
     $('#domain-title').text('Current Domain');
 }
 
-function sampleTable() {
-    const columns = [
-        { key: 'nome',          label: 'Nome' },
-        { key: '__actions',     label: 'Ações' }
-    ];
-    const thead      = $('<tr>').append(columns.map(c => $('<th>').text(c.label)));
-    const colSpan    = columns.length;
-}
-
 function domainTitleBar() {
   return $('<div>', { class: 'mx-2 mt-2 ps-2 d-flex flex-column' }).append(
     $('<span>', { id:'domain-title', class: 'domain-title', text: 'current DomainTitle' })
@@ -52,7 +43,7 @@ function dataSection() {
                 $('<i>', { class: 'fas fa-download' }), ' Exportar')
     ));
     
-    const $table = $('<div>', { class: 'mt-0 ms-2 table-responsive' }).append(
+    const $table = $('<div>', { id:'divdataTable', class: 'divdataTable mt-0 ms-2 table-responsive' }).append(
         $('<span>', { text: 'Inclua a tabela aqui' })
     );
     
@@ -66,6 +57,25 @@ function dataSection() {
 
     return $('<section>', { id: 'dataSection', class: 'data-section mx-2' })
     .append($actions, $table, $nav);
+}
+
+function sampleTable() {
+    const columns = [
+        { key: 'nome',          label: 'Nome' },
+        { key: '__actions',     label: 'Ações' }
+    ];
+    const thead      = $('<tr>').append(columns.map(c => $('<th>').text(c.label)));
+    const colSpan    = columns.length;
+    
+    const $table = $('<table>', { class: 'table table-striped table-hover' }).append(
+        $('<thead>').append(thead), 
+        $('<tbody>', { id: 'dataRows' }).append(
+          $('<tr>').append($('<td>', { colspan: colSpan, class: 'text-center text-muted', text: 'Carregando...' }))
+        )
+      )
+
+    const $container = $('#divdataTable').empty();
+    $container.append($table);
 }
 
 $(document).ready(async () => {
