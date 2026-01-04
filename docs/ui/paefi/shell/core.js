@@ -1,6 +1,6 @@
-// ui/paefi/gateway/core.js
-import { CurrentUserKey }    from '../../../services/storage.js';
-import { LeftSidebar }       from '../shell/leftSidebar.js';
+// ui/paefi/shell/core.js
+import { Session, CurrentUserKey }  from '../../../services/storage.js';
+import { LeftSidebar }              from './leftSidebar.js';
 
 const currentUser = Session.Get(CurrentUserKey);
 
