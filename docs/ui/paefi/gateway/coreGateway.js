@@ -1,6 +1,6 @@
 // ui/paefi/gateway/coreGateway.js
 import { LeftSidebar 
-       } from './shell/leftSidebar.js';
+       } from '../shell/leftSidebar.js';
 import { Local, Session, 
          CurrentUserKey, 
          UserPreferencesKey,
