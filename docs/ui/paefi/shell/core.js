@@ -73,7 +73,7 @@ function init() {
 }
 
 export const Core = { 
-  PopulateSelectFromEnum
+  EnumToSelect
 };
 
 $(document).ready(async () => {
