@@ -55,8 +55,8 @@ function dataSection() {
         class: 'action-buttons-right d-flex justify-content-end align-items-end gap-3' })
     ),
     // Table
-    $('<div>', { id: 'divDataTable', class: 'divDataTable mt-0 ms-2 table-responsive' })).append(
-        $('<span>', { text: 'Inclua a tabela aqui'})
+    $('<div>', { class: 'mt-0 ms-2 table-responsive' }).append(
+      $('<span>', { text: 'Inclua a tabela aqui' })
     ),
     // Pagination
     $('<div>', { id: 'divPagination-section', 
@@ -64,11 +64,11 @@ function dataSection() {
       $('<div>', { id: 'divPagination-info', 
         class: 'pagination-info' }).append($('<span>', { id: 'navInfo' })),
       $('<nav>').append($('<ul>', { id: 'navControls', class: 'pagination mb-0' }))
-    );
+    )
+  );
 }
 
 $(document).ready(async () => {
-    console.log(currentUser);
     if (!currentUser) {
         alert('Usuário não localizado. Redirecionando...');
         window.location.href = '/mockPAEFI/';
