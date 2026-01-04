@@ -37,7 +37,7 @@ function restoreTheme() {
 
 /* Admin Gateway Registry */
 export function RegisterAdminGateway(domain, gateway) {
-  if (!domain || !gateway?.init) {
+  if (!domain || !gateway?.Init) {
     throw new Error(`[coreGateway] Invalid gateway registration: ${domain}`);
   }
   state.adminGateways[domain] = gateway;
