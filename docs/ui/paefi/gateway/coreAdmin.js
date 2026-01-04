@@ -12,6 +12,8 @@ function init() {
         dataSection()
     );
     $('#domain-title').text('Current Domain');
+
+    sampleTable();
 }
 
 function domainTitleBar() {
