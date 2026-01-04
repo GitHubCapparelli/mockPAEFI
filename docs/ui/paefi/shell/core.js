@@ -5,7 +5,7 @@ import { LeftSidebar }              from './leftSidebar.js';
 const currentUser = Session.Get(CurrentUserKey);
 
 /* Rendering */
-function appendStructure() {
+function renderStructure() {
   const $appHeader = $('<div>', { id: 'app-header', class: 'app-header' });
   appendNavbar($appHeader);
 
@@ -35,8 +35,10 @@ function appendNavbar(container) {
 
 function appendContents(container) {
   // --- Title bar : breadcrumbs & page info ---
-  const $titleBar = $('<div>', { id: 'page-title', class: 'page-title mx-2 mt-2 ps-2 d-flex flex-column' }).append(
-    $('<div>', { class: 'breadcrumbs d-flex justify-content-start align-items-center gap-2' }).append(
+  const $titleBar = $('<div>', { id: 'page-title-bar', 
+    class: 'page-title-bar mx-2 mt-2 ps-2 d-flex flex-column' }).append(
+    $('<div>', { 
+      class: 'breadcrumbs d-flex justify-content-start align-items-center gap-2' }).append(
       $('<a>', { href: '#', text: 'Home' }),
       $('<i>', { class: 'fa fa-angle-right fa-1x' }),
       $('<a>', { href: '../../', text: 'Assistência Social' }),
@@ -44,8 +46,12 @@ function appendContents(container) {
       $('<span>', { text: 'Gestão do PAEFI' }),
       $('<i>', { class: 'fa fa-angle-right fa-1x' })
     ),
-    $('<span>', { id: 'page-title', class: 'page-title', text: 'Page Title' })
+    $('<span>', { id: 'page-title-text', class: 'page-title-text', text: 'Page Title' })
   );
+  
+  const $pageContents = $('<div>', { id: 'page-contents', 
+    class: 'page-contents d-flex flex-column mb-3' }).append($titleBar);
+
   container.append($pageContents);
 }
 
@@ -68,7 +74,7 @@ export function EnumToSelect(selectId, enumType, includeEmpty = true, emptyLabel
 }
 
 function init() {
-  appendStructure();
+  renderStructure();
   LeftSidebar.Init();
 }
 
