@@ -1,6 +1,11 @@
 // ui/paefi/shell/core.js
 import { LeftSidebar }              from './leftSidebar.js';
 
+export function Init(pageTitle) {
+  renderStructure(pageTitle);
+  LeftSidebar.Init();
+}
+
 /* Rendering */
 function renderStructure(pageTitle) {
   const $appHeader = $('<div>', { id: 'app-header', class: 'app-header' });
@@ -53,7 +58,6 @@ function appendContents(container, pageTitle) {
 }
 
 /* Helper shared global methods */
-
 // previously PopulateSelectFromEnum()
 export function EnumToSelect(selectId, enumType, includeEmpty = true, emptyLabel = 'Selecione...', excludeKeys = []) {
   const $select = $(selectId);
@@ -68,11 +72,6 @@ export function EnumToSelect(selectId, enumType, includeEmpty = true, emptyLabel
 
     $select.append(`<option value="${item.Key}">${item.Value}</option>`);
   });
-}
-
-export function Init(pageTitle) {
-  renderStructure(pageTitle);
-  LeftSidebar.Init();
 }
 
 export const Core = { 

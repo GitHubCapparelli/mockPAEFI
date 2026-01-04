@@ -5,7 +5,6 @@ import { Core }                     from '../shell/core.js';
 const currentUser = Session.Get(CurrentUserKey);
 
 function init() {
-    Core.Init('Admin');
     const $container = $('#page-contents');
     renderDomainTitleBar($container, 'Current Domain');
     renderFiltersSection($container);
@@ -31,10 +30,12 @@ function renderFiltersSection(container) {
   container.append($div);
 }
 
-$(document).ready(async () => { 
-  if (!currentUser) {
-      alert('Usuário não localizado. Redirecionando...');
-      window.location.href = '/mockPAEFI/';
-  }
-  init(); 
+$(document).ready(async () => {
+    console.log(currentUser);
+    if (!currentUser) {
+        alert('Usuário não localizado. Redirecionando...');
+        window.location.href = '/mockPAEFI/';
+    }
+    Core.Init('Admin');
+    //init(); 
 });
