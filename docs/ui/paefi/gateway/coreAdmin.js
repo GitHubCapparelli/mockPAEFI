@@ -42,31 +42,30 @@ function filtersSection() {
 }
 
 function dataSection() {
-    return $('<section>', { id: 'dataSection', class: 'data-section mx-2' }).append(
-    // Action Buttons
-    $('<div>', { id: 'divDataActionButtons', 
-        class: 'mt-4 ms-2 action-buttons d-flex justify-content-between align-items-center gap-3' }).append(
-      $('<div>', { id: 'divDataActionButtons-left', 
-        class: 'action-buttons-left d-flex align-items-center gap-3 flex-grow-1 flex-nowrap' }).append(
-        $('<button>', { id: 'btnAddNew', 
-        class: 'btn btn-primary' }).append($('<i>', { class: 'fas fa-plus' }), ' Incluir')
-      ),
-      $('<div>', { id: 'divDataActionButtons-right', 
-        class: 'action-buttons-right d-flex justify-content-end align-items-end gap-3' })
-        .append($('<button>', { class: 'btn btn-terciary', id: 'btnExport' }).append($('<i>', { class: 'fas fa-download' }), ' Exportar'))
-    ),
-    // Table
-    $('<div>', { class: 'mt-0 ms-2 table-responsive' }).append(
-      $('<span>', { text: 'Inclua a tabela aqui' })
-    ),
-    // Pagination
-    $('<div>', { id: 'divPagination-section', 
-        class: 'pagination-section d-flex justify-content-between align-items-center' }).append(
-      $('<div>', { id: 'divPagination-info', 
-        class: 'pagination-info' }).append($('<span>', { id: 'navInfo', text: 'nav info' })),
-      $('<nav>').append($('<ul>', { id: 'navControls', class: 'pagination mb-0' }))
-    )
-  );
+    const $actions = $('<div>', { id: 'divDataActionButtons', class: 'mt-4 ms-2 divDataActionButtons d-flex justify-content-between align-items-center gap-3' }).append(
+        $('<div>', { id: 'divDataActionButtons-left', class: 'action-buttons-left d-flex align-items-center gap-3' }).append(
+            $('<button>', { id: 'btnAddNew', class: 'btn btn-primary' }).append(
+                $('<i>', { class: 'fas fa-plus' }), ' Incluir')
+        ),
+        $('<div>', { id: 'divDataActionButtons-right', class: 'action-buttons-right d-flex align-items-center gap-3' }).append(
+            $('<button>', { class: 'btn btn-terciary', id: 'btnExport' }).append(
+                $('<i>', { class: 'fas fa-download' }), ' Exportar')
+    ));
+    
+    const $table = $('<div>', { class: 'mt-0 ms-2 table-responsive' }).append(
+        $('<span>', { text: 'Inclua a tabela aqui' })
+    );
+    
+    const $nav = $('<div>', { id: 'divPagination-section', class: 'pagination-section d-flex justify-content-between align-items-center' }).append(
+        $('<div>', { id: 'divPagination-info', class: 'pagination-info' }).append(
+            $('<span>', { id: 'navInfo', text: 'nav info' })
+        ),
+        $('<nav>').append(
+            $('<ul>', { id: 'navControls', class: 'pagination mb-0' })
+    ));
+
+    return $('<section>', { id: 'dataSection', class: 'data-section mx-2' })
+    .append($actions, $table, $nav);
 }
 
 $(document).ready(async () => {
