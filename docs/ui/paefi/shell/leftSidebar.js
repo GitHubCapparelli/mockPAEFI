@@ -1,4 +1,5 @@
 import { Local, UserPreferencesKey } from '../../../services/storage.js';
+import { CoreAdminGateway }          from '../gateway/coreGateway.js';
 
 export const LeftSidebar = { init };
 
@@ -22,7 +23,7 @@ function render() {
 
   const $body = $('<div>', { id:'leftSidebar-body', class: 'leftSidebar-body p-2' }).append(
     $('<div>', { class: 'leftSidebar-top' }).append(
-      accordionSection('Opções', true)
+      accordionSection('Opções', true, renderAdminOptions)
     ),
     $('<div>', { class: 'leftSidebar-bottom' }).append(
       accordionSection('Preferências', false, renderPreferences),
@@ -34,6 +35,21 @@ function render() {
   $('#app-body').prepend($sidebar);
 
   syncHeights();
+}
+
+function renderAdminOptions($container) {
+  const options = [
+    { domain: 'usuariosServidores', label: 'Usuários Servidores' },
+    { domain: 'unidades',           label: 'Unidades' }
+  ];
+
+  options.forEach(opt => {
+    $('<button>', {
+      class: 'btn btn-sm btn-outline-primary w-100 mb-2',
+      text: opt.label,
+      'data-domain': opt.domain
+    }).appendTo($container);
+  });
 }
 
 function accordionSection(title, expanded = false, contentRenderer) {
@@ -92,6 +108,32 @@ function restoreState() {
   applyTheme(prefs.theme || 'light');
 }
 
+function wireNavigation() {
+  $(document).on('click', '[data-domain]', async function () {
+    const domain = $(this).data('domain');
+
+    try {
+      await CoreAdminGateway.ActivateAdminGateway(domain);
+    } catch (err) {
+      console.error('[LeftSidebar] Navigation failed:', err);
+      alert('Erro ao acessar a opção selecionada.');
+    }
+  });
+}
+
+function wireNavigation() {
+  $(document).on('click', '[data-domain]', async function () {
+    const domain = $(this).data('domain');
+
+    try {
+      await CoreAdminGateway.ActivateAdminGateway(domain);
+    } catch (err) {
+      console.error('[LeftSidebar] Navigation failed:', err);
+      alert('Erro ao acessar a opção selecionada.');
+    }
+  });
+}
+
 function wirePreferences() {
   $('#btnSidebarToggle').on('click', () => {
     const prefs = loadPrefs();
@@ -132,6 +174,7 @@ function syncHeights() {
 function init() {
   render();
   restoreState();
+  wireNavigation();
   wirePreferences();
 
   $(window).on('resize', syncHeights);
