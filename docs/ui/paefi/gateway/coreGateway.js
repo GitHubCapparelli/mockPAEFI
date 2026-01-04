@@ -5,7 +5,7 @@ import { Local, Session,
          CurrentUserKey, 
          UserPreferencesKey,
          LastAdminDomainKey 
-       } from '../../services/storage.js';
+       } from '../../../services/storage.js';
 
 /* Internal State */
 const state = {
