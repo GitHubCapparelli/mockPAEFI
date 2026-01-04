@@ -53,7 +53,7 @@ function dataSection() {
       ),
       $('<div>', { id: 'divDataActionButtons-right', 
         class: 'action-buttons-right d-flex justify-content-end align-items-end gap-3' })
-        //.append($('<button>', { class: 'btn btn-secondary', id: 'btnExport' }).append($('<i>', { class: 'fas fa-download' }), ' Exportar'))
+        .append($('<button>', { class: 'btn btn-terciary', id: 'btnExport' }).append($('<i>', { class: 'fas fa-download' }), ' Exportar'))
     ),
     // Table
     $('<div>', { class: 'mt-0 ms-2 table-responsive' }).append(
