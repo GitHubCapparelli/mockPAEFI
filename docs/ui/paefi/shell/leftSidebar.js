@@ -122,19 +122,6 @@ function wireNavigation() {
   });
 }
 
-function wireNavigation() {
-  $(document).on('click', '[data-domain]', async function () {
-    const domain = $(this).data('domain');
-
-    try {
-      await CoreAdminGateway.ActivateAdminGateway(domain);
-    } catch (err) {
-      console.error('[LeftSidebar] Navigation failed:', err);
-      alert('Erro ao acessar a opção selecionada.');
-    }
-  });
-}
-
 function wirePreferences() {
   $('#btnSidebarToggle').on('click', () => {
     const prefs = loadPrefs();
