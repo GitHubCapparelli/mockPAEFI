@@ -7,7 +7,7 @@ const currentUser = Session.Get(CurrentUserKey);
 function init() {
     Core.Init(currentUser, 'Admin');
     $('#page-contents').append(
-        renderDomainTitleBar(), 
+        domainTitleBar(), 
         filtersSection(),
         dataSection()
     );
