@@ -1,15 +1,15 @@
 // ui/paefi/shell/core.js
 import { LeftSidebar }              from './leftSidebar.js';
 
-export function Init(pageTitle) {
-  renderStructure(pageTitle);
+export function Init(user, pageTitle) {
+  renderStructure(pageTitle, user.login);
   LeftSidebar.Init();
 }
 
 /* Rendering */
-function renderStructure(pageTitle) {
+function renderStructure(pageTitle, login) {
   const $appHeader = $('<div>', { id: 'app-header', class: 'app-header' });
-  appendNavbar($appHeader);
+  appendNavbar($appHeader, login);
 
   const $appMain  = $('<main>', { id: 'app-main', class: 'app-main' });
   const $appBody   = $('<div>', { id: 'app-body', class: 'app-body' });
@@ -19,7 +19,7 @@ function renderStructure(pageTitle) {
   $('#app-shell').append($appHeader, $appBody);
 }
 
-function appendNavbar(container) {
+function appendNavbar(container, login) {
   // --- SIDS Top Navbar ---
   const $topNavbar = $('<div>', { id: 'top-navbar', class: 'top-navbar d-flex justify-content-between align-items-center' }).append(
     $('<div>', { class: 'mx-5rem d-flex align-items-center flex-grow-1 flex-nowrap gap-4' }).append(
@@ -30,7 +30,7 @@ function appendNavbar(container) {
       $('<span>', { text: 'Transferência de Renda' }),
       $('<span>', { text: 'Tutorial' })
     ),
-    $('<span>', { id: 'txtUser-login', class: 'mx-4rem', text: currentUser.login })
+    $('<span>', { id: 'txtUser-login', class: 'mx-4rem', text: login })
   );
   container.append($topNavbar)
 }

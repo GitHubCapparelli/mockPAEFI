@@ -36,6 +36,6 @@ $(document).ready(async () => {
         alert('Usuário não localizado. Redirecionando...');
         window.location.href = '/mockPAEFI/';
     }
-    Core.Init('Admin');
-    //init(); 
+    Core.Init(currentUser, 'Admin');
+    init(); 
 });
