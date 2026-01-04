@@ -1,18 +1,15 @@
 // ui/paefi/shell/core.js
-import { Session, CurrentUserKey }  from '../../../services/storage.js';
 import { LeftSidebar }              from './leftSidebar.js';
 
-const currentUser = Session.Get(CurrentUserKey);
-
 /* Rendering */
-function renderStructure() {
+function renderStructure(pageTitle) {
   const $appHeader = $('<div>', { id: 'app-header', class: 'app-header' });
   appendNavbar($appHeader);
 
   const $appMain  = $('<main>', { id: 'app-main', class: 'app-main' });
   const $appBody   = $('<div>', { id: 'app-body', class: 'app-body' });
   $appBody.append($appMain);
-  appendContents($appMain);
+  appendContents($appMain, pageTitle);
 
   $('#app-shell').append($appHeader, $appBody);
 }
@@ -33,7 +30,7 @@ function appendNavbar(container) {
   container.append($topNavbar)
 }
 
-function appendContents(container) {
+function appendContents(container, pageTitle) {
   // --- Title bar : breadcrumbs & page info ---
   const $titleBar = $('<div>', { id: 'page-title-bar', 
     class: 'page-title-bar mx-2 mt-2 ps-2 d-flex flex-column' }).append(
@@ -46,7 +43,7 @@ function appendContents(container) {
       $('<span>', { text: 'Gestão do PAEFI' }),
       $('<i>', { class: 'fa fa-angle-right fa-1x' })
     ),
-    $('<span>', { id: 'page-title-text', class: 'page-title-text', text: 'Page Title' })
+    $('<span>', { id: 'page-title-text', class: 'page-title-text', text: pageTitle })
   );
   
   const $pageContents = $('<div>', { id: 'page-contents', 
@@ -73,20 +70,12 @@ export function EnumToSelect(selectId, enumType, includeEmpty = true, emptyLabel
   });
 }
 
-function init() {
-  renderStructure();
+export function Init(pageTitle) {
+  renderStructure(pageTitle);
   LeftSidebar.Init();
 }
 
 export const Core = { 
+  Init,
   EnumToSelect
 };
-
-$(document).ready(async () => {
-    if (currentUser) {
-        init();
-    } else {
-        alert('Usuário não localizado. Redirecionando...');
-        window.location.href = '/mockPAEFI/';
-    }
-});
