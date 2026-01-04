@@ -12,12 +12,12 @@ function render() {
   const $header  = $('<div>', { 
     class: 'p-2 d-flex justify-content-between align-items-center'
   }).append(
-    $('<span>', { id:'leftSidebar-title', class: 'leftSidebar-title fw-bold', text: 'PAEFI' }),
     $('<button>', {
       id: 'btnSidebarToggle',
       class: 'btn btn-sm btn-outline-secondary',
       title: 'Expandir / Recolher'
-    }).append($('<i>', { class: 'fas fa-bars' }))
+    }).append($('<i>', { class: 'fas fa-bars' })),
+    $('<span>', { id:'leftSidebar-title', class: 'leftSidebar-title fw-bold', text: 'PAEFI' })
   );
 
   const $body = $('<div>', { id:'leftSidebar-body', class: 'leftSidebar-body p-2' }).append(
