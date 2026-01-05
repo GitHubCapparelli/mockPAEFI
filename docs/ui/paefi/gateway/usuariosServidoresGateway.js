@@ -35,7 +35,7 @@ export class UsuariosServidoresGateway extends DomainGateway {
     });
 
     this.unidades  = [];
-    
+
     this.query     = new QueryEngine(async (page, pageSize, filters) => {
       const result = await this.api.GetPaginated({ page, pageSize, filters });
       return {
@@ -75,7 +75,9 @@ export class UsuariosServidoresGateway extends DomainGateway {
     const result = await this.query.execute();
 
     this.render(result.data);
-    this.updatePaginationInfo(result.pagination);
+
+    await this.query.execute();
+    this.updatePaginationInfo(this.query.state);
   }
 
   /* -------------------------------------------------------
