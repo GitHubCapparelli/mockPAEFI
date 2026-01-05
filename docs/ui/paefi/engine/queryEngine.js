@@ -1,17 +1,15 @@
 // ui/paefi/engine/queryEngine.js
 export class QueryEngine {
 
-    constructor({ queryFn, initialState = {} }) {
+    constructor(queryFn, pageSize = 10) {
         this.queryFn = queryFn;
-
-        this.state = {
+        this.state   = {
             page: 1,
-            pageSize: initialState.pageSize || 10,
+            pageSize: pageSize,
             filters: {},
             totalItems: 0,
             totalPages: 0
         };
-
         this.lastResult = null;
     }
 
@@ -19,11 +17,7 @@ export class QueryEngine {
     async execute() {
         const { page, pageSize, filters } = this.state;
 
-        const result = await this.queryFn({
-            page,
-            pageSize,
-            filters
-        });
+        const result = await this.queryFn(page, pageSize, filters);
 
         this.state.totalItems = result.totalItems ?? 0;
         this.state.totalPages = Math.max(

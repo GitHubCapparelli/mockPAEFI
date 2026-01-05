@@ -1,21 +1,31 @@
-// ui/paefi/gateway/usuariosServidoresGateway.js
+// ui paefi gateway usuariosServidoresGateway.js
 
 import { DomainGateway }                              from './domainGateway.js';
 import { UsuariosServidoresAPI }                      from '../../../services/api/usuariosServidoresAPI.js';
 import { UnidadesAPI }                                from '../../../services/api/unidadesAPI.js';
 import { FuncaoUsuario, CargoUsuario, Especialidade } from '../../../objModel.js';
-import { CoreAdmin } from './coreAdmin.js';
+import { QueryEngine }                                from '../engine/queryEngine.js';
+import { CoreAdmin }                                  from './coreAdmin.js';
+
+/* =========================================================
+   Table definition
+========================================================= */
 
 const columns = [
-  { label: 'Nome', field: 'nome' },
-  { label: 'Unidade', field: 'unidade' },
-  { label: 'Especialidade', field: 'especialidade' },
-  { label: 'Função', field: 'funcao' },
-  { label: 'Cargo', field: 'cargo' },
-  { label: 'Ações', field: 'acoes' }
+  { label: 'Nome',            field: 'nome' },
+  { label: 'Unidade',         field: 'unidade' },
+  { label: 'Especialidade',   field: 'especialidade' },
+  { label: 'Função',          field: 'funcao' },
+  { label: 'Cargo',           field: 'cargo' },
+  { label: 'Ações',           field: 'acoes' }
 ];
 
+/* =========================================================
+   Gateway
+========================================================= */
+
 export class UsuariosServidoresGateway extends DomainGateway {
+
   constructor() {
     super({
       api: UsuariosServidoresAPI,
@@ -24,138 +34,177 @@ export class UsuariosServidoresGateway extends DomainGateway {
       }
     });
 
-    this.unidades = [];
+    this.unidades  = [];
+    
+    this.query     = new QueryEngine(async (page, pageSize, filters) => {
+      const result = await this.api.GetPaginated({ page, pageSize, filters });
+      return {
+        data: result.data,
+        totalItems: result.pagination.totalRecords
+      };
+    }, 5);
   }
 
+  /* -------------------------------------------------------
+     Lifecycle
+  ------------------------------------------------------- */
+
   async activate() {
-    await this.api.Init();                 
     await this.loadLookups();
-    
+
     this.renderFilters();
     this.hydrateFilters();
     this.renderPagination();
 
     CoreAdmin.BuildTable(columns);
+
     this.wireEvents();
     await this.load();
   }
 
+  /* -------------------------------------------------------
+     Data
+  ------------------------------------------------------- */
+
   async loadLookups() {
-    await this.lookups.unidades.Init();    
+    await this.lookups.unidades.Init();
     this.unidades = this.lookups.unidades.GetAll();
   }
-
-
-//  async load() {
-//    const response = await this.api.GetPaginated({
-//      page: this.state.page,
-//      pageSize: this.state.pageSize,
-//      filters: this.state.filters
-//    });
-
-//    this.state.lastData = response;
-//    this.render(response.data);
-//  }
 
   async load() {
     const result = await this.query.execute();
 
-    CoreAdmin.RenderRows(result.data);
+    this.render(result.data);
     this.updatePaginationInfo(result.pagination);
   }
 
+  /* -------------------------------------------------------
+     Rendering – Filters
+  ------------------------------------------------------- */
 
   renderFilters() {
     const $container = $('#divFilterOptions').empty();
 
-    $container.append(`
-      <select id="cmbFilterUnidade" class="form-select form-select-sm">
-        <option value="">Todas as Unidades</option>
-      </select>
-
-      <select id="cmbFilterEspecialidade" class="form-select form-select-sm">
-        <option value="">Todas as Especialidades</option>
-      </select>
-
-      <select id="cmbFilterFuncao" class="form-select form-select-sm">
-        <option value="">Todas as Funções</option>
-      </select>
-
-      <select id="cmbFilterCargo" class="form-select form-select-sm">
-        <option value="">Todos os Cargos</option>
-      </select>
-    `);
+    $container.append(
+      this.buildSelect('cmbFilterUnidade', 'Todas as Unidades'),
+      this.buildSelect('cmbFilterEspecialidade', 'Todas as Especialidades'),
+      this.buildSelect('cmbFilterFuncao', 'Todas as Funções'),
+      this.buildSelect('cmbFilterCargo', 'Todos os Cargos')
+    );
   }
 
   hydrateFilters() {
-    const $u = $('#cmbFilterUnidade');
+    const $unidades = $('#cmbFilterUnidade');
+
     this.unidades.forEach(u =>
-      $u.append(`<option value="${u.id}">${u.sigla}</option>`)
+      $unidades.append(
+        $('<option>', { value: u.id, text: u.sigla })
+      )
     );
 
-    Especialidade.All.forEach(e =>
-      $('#cmbFilterEspecialidade').append(`<option value="${e.Key}">${e.Value}</option>`)
-    );
+    this.fillEnum('#cmbFilterEspecialidade', Especialidade);
+    this.fillEnum('#cmbFilterFuncao',        FuncaoUsuario);
+    this.fillEnum('#cmbFilterCargo',         CargoUsuario);
+  }
 
-    FuncaoUsuario.All.forEach(e =>
-      $('#cmbFilterFuncao').append(`<option value="${e.Key}">${e.Value}</option>`)
-    );
-
-    CargoUsuario.All.forEach(e =>
-      $('#cmbFilterCargo').append(`<option value="${e.Key}">${e.Value}</option>`)
+  buildSelect(id, placeholder) {
+    return $('<select>', {
+      id,
+      class: 'form-select form-select-sm'
+    }).append(
+      $('<option>', { value: '', text: placeholder })
     );
   }
+
+  fillEnum(selector, enumType) {
+    const $select = $(selector);
+
+    enumType.All.forEach(e =>
+      $select.append(
+        $('<option>', { value: e.Key, text: e.Value })
+      )
+    );
+  }
+
+  /* -------------------------------------------------------
+     Rendering – Table
+  ------------------------------------------------------- */
 
   render(list) {
     const $tbody = $('#dataRows').empty();
 
     if (!list || !list.length) {
       $tbody.append(
-        '<tr><td colspan="6" class="text-center text-muted">Nenhum registro</td></tr>'
+        $('<tr>').append(
+          $('<td>', {
+            colspan: 6,
+            class: 'text-center text-muted',
+            text: 'Nenhum registro'
+          })
+        )
       );
       return;
     }
 
     list.forEach(u => {
       const unidade = this.unidades.find(x => x.id === u.unidadeID);
-
-      $tbody.append(`
-        <tr>
-          <td>${u.nome}</td>
-          <td>${unidade?.sigla || ''}</td>
-          <td>${Especialidade.ValueFromKey(u.especialidade) || ''}</td>
-          <td>${FuncaoUsuario.ValueFromKey(u.funcao) || ''}</td>
-          <td>${CargoUsuario.ValueFromKey(u.cargo) || ''}</td>
-          <td>
-            <button class="btn btn-sm btn-primary js-edit" data-id="${u.id}">
-              <i class="fas fa-edit"></i>
-            </button>
-          </td>
-        </tr>
-      `);
+      $tbody.append(this.buildRow(u, unidade));
     });
   }
+
+  buildRow(u, unidade) {
+    return $('<tr>').append(
+      $('<td>').text(u.nome),
+      $('<td>').text(unidade?.sigla || ''),
+      $('<td>').text(Especialidade.ValueFromKey(u.especialidade) || ''),
+      $('<td>').text(FuncaoUsuario.ValueFromKey(u.funcao) || ''),
+      $('<td>').text(CargoUsuario.ValueFromKey(u.cargo) || ''),
+      $('<td>').append(
+        $('<button>', {
+          class: 'btn btn-sm btn-primary js-edit',
+          'data-id': u.id
+        }).append(
+          $('<i>', { class: 'fas fa-edit' })
+        )
+      )
+    );
+  }
+
+  /* -------------------------------------------------------
+     Pagination
+  ------------------------------------------------------- */
 
   renderPagination() {
     const $container = $('#divPagination').empty();
 
-    $container.append(`
-      <nav>
-        <ul class="pagination pagination-sm mb-0">
-          <li class="page-item">
-            <a class="page-link" href="#" data-page="prev">«</a>
-          </li>
-
-          <li class="page-item disabled">
-            <span class="page-link" id="lblPaginationInfo"></span>
-          </li>
-
-          <li class="page-item">
-            <a class="page-link" href="#" data-page="next">»</a>
-          </li>
-        </ul>
-      </nav>
-    `);
+    $container.append(
+      $('<nav>').append(
+        $('<ul>', { class: 'pagination pagination-sm mb-0' }).append(
+          $('<li>', { class: 'page-item' }).append(
+            $('<a>', {
+              href: '#',
+              class: 'page-link',
+              'data-page': 'prev',
+              text: '«'
+            })
+          ),
+          $('<li>', { class: 'page-item disabled' }).append(
+            $('<span>', {
+              id: 'lblPaginationInfo',
+              class: 'page-link'
+            })
+          ),
+          $('<li>', { class: 'page-item' }).append(
+            $('<a>', {
+              href: '#',
+              class: 'page-link',
+              'data-page': 'next',
+              text: '»'
+            })
+          )
+        )
+      )
+    );
   }
 
   updatePaginationInfo({ page, totalPages, totalRecords }) {
@@ -164,16 +213,26 @@ export class UsuariosServidoresGateway extends DomainGateway {
     );
   }
 
+  /* -------------------------------------------------------
+     Events
+  ------------------------------------------------------- */
+
   wireEvents() {
-    // $('#btnApplyFilter').on('click', () => this.applyFilters());
-    // $('#btnClearFilter').on('click', () => this.clearFilters());
 
     $('#btnApplyFilter').on('click', async () => {
+      this.query.setFilters({
+        unidadeID:       $('#cmbFilterUnidade').val() || null,
+        especialidade:   $('#cmbFilterEspecialidade').val() || null,
+        funcao:          $('#cmbFilterFuncao').val() || null,
+        cargo:           $('#cmbFilterCargo').val() || null
+      });
+
       this.query.resetPage();
       await this.load();
     });
 
     $('#btnClearFilter').on('click', async () => {
+      $('.filters-bar select').val('');
       this.query.clearFilters();
       this.query.resetPage();
       await this.load();
@@ -188,23 +247,5 @@ export class UsuariosServidoresGateway extends DomainGateway {
 
       await this.load();
     });
-  }
-
-  applyFilters() {
-    this.state.filters = {
-      unidadeID: $('#cmbFilterUnidade').val() || null,
-      funcao: $('#cmbFilterFuncao').val() || null,
-      cargo: $('#cmbFilterCargo').val() || null,
-      especialidade: $('#cmbFilterEspecialidade').val() || null
-    };
-
-    this.state.page = 1;
-    this.load();
-  }
-
-  clearFilters() {
-    $('.filters-bar select').val('');
-    this.state.filters = {};
-    this.load();
   }
 }
