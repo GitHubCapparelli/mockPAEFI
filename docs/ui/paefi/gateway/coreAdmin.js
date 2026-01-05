@@ -4,6 +4,9 @@ import { Session, CurrentUserKey,
        } from '../../../services/storage.js';
 import { Core 
        } from '../shell/core.js';
+import { UsuariosServidoresGateway } from './usuariosServidoresGateway.js';
+
+let activeGateway = null;
 
 const currentUser = Session.Get(CurrentUserKey);
 
@@ -19,17 +22,18 @@ const Domains = [
 ];
 
 function init() {
-    const currentModule = resolveCurrentModule();
-    const currentDomain = resolveCurrentDomain(currentModule.key);
+  const currentModule = resolveCurrentModule();
+  const currentDomain = resolveCurrentDomain(currentModule.key);
+  
+  Core.Init(currentUser, currentModule.title);
+  $('#page-contents').append(
+      domainTitleBar(), 
+      filtersSection(),
+      dataSection()
+  );
 
-    Core.Init(currentUser, currentModule.title);
-    $('#page-contents').append(
-        domainTitleBar(), 
-        filtersSection(),
-        dataSection()
-    );
-
-    $('#domain-title').text(currentDomain.title);
+  $('#domain-title').text(currentDomain.title);
+  activateDomain(currentDomain.key);
 }
 
 function resolveCurrentDomain(currentModule) {
@@ -60,6 +64,24 @@ function resolveCurrentModule() {
     Local.Set(LastModuleKey, module.key);
     return module;
 }
+
+async function activateDomain(domainKey) {
+  if (activeGateway?.dispose) {
+    activeGateway.dispose();
+  }
+
+  switch (domainKey) {
+    case 'usuarios-servidores':
+      activeGateway = new UsuariosServidoresGateway();
+      await activeGateway.activate();
+      break;
+
+    default:
+      console.warn('[CoreAdmin] No gateway for domain:', domainKey);
+  }
+}
+
+
 
 function domainTitleBar() {
   return $('<div>', { class: 'mx-2 mt-2 ps-2 d-flex flex-column' }).append(
