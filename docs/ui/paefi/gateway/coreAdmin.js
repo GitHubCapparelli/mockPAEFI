@@ -128,17 +128,41 @@ function dataSection() {
     .append($actions, $table, $nav);
 }
 
+//export function BuildTable(columns) {
+//   const $table = $('<table>', { class: 'table table-striped table-hover' }).append(
+//   $('<thead>').append(thead), 
+//    $('<tbody>', { id: 'dataRows' }).append(
+//      $('<tr>').append($('<td>', { colspan: colSpan, 
+//        class: 'text-center text-muted', text: 'Carregando...' }))
+//    )
+//  );
+//  const $container = $('#divdataTable').empty();
+//  $container.append($table);
+//}
+
 export function BuildTable(columns) {
+  const $thead = $('<tr>').append(
+    columns.map(c => $('<th>').text(c.label))
+  );
+
+  const colSpan = columns.length;
+
   const $table = $('<table>', { class: 'table table-striped table-hover' }).append(
-    $('<thead>').append(thead), 
+    $('<thead>').append($thead),
     $('<tbody>', { id: 'dataRows' }).append(
-      $('<tr>').append($('<td>', { colspan: colSpan, 
-        class: 'text-center text-muted', text: 'Carregando...' }))
+      $('<tr>').append(
+        $('<td>', {
+          colspan: colSpan,
+          class: 'text-center text-muted',
+          text: 'Carregando...'
+        })
+      )
     )
   );
-  const $container = $('#divdataTable').empty();
-  $container.append($table);
+
+  $('#divdataTable').empty().append($table);
 }
+
 
 export const CoreAdmin = { 
   BuildTable
