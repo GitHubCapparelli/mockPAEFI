@@ -29,7 +29,11 @@ export class UsuariosServidoresGateway extends DomainGateway {
 
   async activate() {
     await this.api.Init();                 
-    await this.loadLookups();              
+    await this.loadLookups();
+    
+    this.renderFilters();
+    this.hydrateFilters();
+    
     CoreAdmin.BuildTable(columns);
     this.wireEvents();
     await this.load();
@@ -51,6 +55,29 @@ export class UsuariosServidoresGateway extends DomainGateway {
     this.state.lastData = response;
     this.render(response.data);
   }
+
+  renderFilters() {
+    const $container = $('#divFilterOptions').empty();
+
+    $container.append(`
+      <select id="cmbFilterUnidade" class="form-select form-select-sm">
+        <option value="">Todas as Unidades</option>
+      </select>
+
+      <select id="cmbFilterEspecialidade" class="form-select form-select-sm">
+        <option value="">Todas as Especialidades</option>
+      </select>
+
+      <select id="cmbFilterFuncao" class="form-select form-select-sm">
+        <option value="">Todas as Funções</option>
+      </select>
+
+      <select id="cmbFilterCargo" class="form-select form-select-sm">
+        <option value="">Todos os Cargos</option>
+      </select>
+    `);
+  }
+
 
   render(list) {
     const $tbody = $('#dataRows').empty();
@@ -81,6 +108,26 @@ export class UsuariosServidoresGateway extends DomainGateway {
       `);
     });
   }
+
+  hydrateFilters() {
+    const $u = $('#cmbFilterUnidade');
+    this.unidades.forEach(u =>
+      $u.append(`<option value="${u.id}">${u.sigla}</option>`)
+    );
+
+    Especialidade.All.forEach(e =>
+      $('#cmbFilterEspecialidade').append(`<option value="${e.Key}">${e.Value}</option>`)
+    );
+
+    FuncaoUsuario.All.forEach(e =>
+      $('#cmbFilterFuncao').append(`<option value="${e.Key}">${e.Value}</option>`)
+    );
+
+    CargoUsuario.All.forEach(e =>
+      $('#cmbFilterCargo').append(`<option value="${e.Key}">${e.Value}</option>`)
+    );
+  }
+
 
   wireEvents() {
     $('#btnApplyFilter').on('click', () => this.applyFilters());
