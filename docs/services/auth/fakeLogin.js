@@ -21,7 +21,7 @@
  */
 import { resolveDomainScope } from '../authz/domainScope.js';
 import { resolveAuthContext } from '../authz/index.js';
-import { Session, CurrentUserKey, CurrentUnidadeKey } from '../storage.js';
+import { Session, CurrentUserKey } from '../storage.js';
 
 const unidadesPATH    = '/mockPAEFI/data/mock/unidades.json';
 const servodoresPATH  = '/mockPAEFI/data/mock/usuariosServidores.json';
