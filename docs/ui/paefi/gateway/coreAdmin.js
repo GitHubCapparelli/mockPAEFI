@@ -5,6 +5,7 @@ import { Session, CurrentUserKey,
 import { Core 
        } from '../shell/core.js';
 import { UsuariosServidoresGateway } from './usuariosServidoresGateway.js';
+import { CoreAPI }                   from '../../../services/api/coreAPI.js';
 
 let activeGateway = null;
 
@@ -145,9 +146,11 @@ export const CoreAdmin = {
 };
 
 $(document).ready(async () => {
-    if (!currentUser) {
-        alert('Usuário não localizado. Redirecionando...');
-        window.location.href = '/mockPAEFI/';
-    }
-    init(); 
+  if (!currentUser) {
+      alert('Usuário não localizado. Redirecionando...');
+      window.location.href = '/mockPAEFI/';
+      return;
+  }
+  await CoreAPI.Init(); //currentUser);  
+  init(); 
 });
