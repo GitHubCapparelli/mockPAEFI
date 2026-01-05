@@ -33,7 +33,8 @@ export class UsuariosServidoresGateway extends DomainGateway {
     
     this.renderFilters();
     this.hydrateFilters();
-    
+    this.renderPagination();
+
     CoreAdmin.BuildTable(columns);
     this.wireEvents();
     await this.load();
@@ -45,16 +46,24 @@ export class UsuariosServidoresGateway extends DomainGateway {
   }
 
 
-  async load() {
-    const response = await this.api.GetPaginated({
-      page: this.state.page,
-      pageSize: this.state.pageSize,
-      filters: this.state.filters
-    });
+//  async load() {
+//    const response = await this.api.GetPaginated({
+//      page: this.state.page,
+//      pageSize: this.state.pageSize,
+//      filters: this.state.filters
+//    });
 
-    this.state.lastData = response;
-    this.render(response.data);
+//    this.state.lastData = response;
+//    this.render(response.data);
+//  }
+
+  async load() {
+    const result = await this.query.execute();
+
+    CoreAdmin.RenderRows(result.data);
+    this.updatePaginationInfo(result.pagination);
   }
+
 
   renderFilters() {
     const $container = $('#divFilterOptions').empty();
@@ -78,6 +87,24 @@ export class UsuariosServidoresGateway extends DomainGateway {
     `);
   }
 
+  hydrateFilters() {
+    const $u = $('#cmbFilterUnidade');
+    this.unidades.forEach(u =>
+      $u.append(`<option value="${u.id}">${u.sigla}</option>`)
+    );
+
+    Especialidade.All.forEach(e =>
+      $('#cmbFilterEspecialidade').append(`<option value="${e.Key}">${e.Value}</option>`)
+    );
+
+    FuncaoUsuario.All.forEach(e =>
+      $('#cmbFilterFuncao').append(`<option value="${e.Key}">${e.Value}</option>`)
+    );
+
+    CargoUsuario.All.forEach(e =>
+      $('#cmbFilterCargo').append(`<option value="${e.Key}">${e.Value}</option>`)
+    );
+  }
 
   render(list) {
     const $tbody = $('#dataRows').empty();
@@ -109,29 +136,58 @@ export class UsuariosServidoresGateway extends DomainGateway {
     });
   }
 
-  hydrateFilters() {
-    const $u = $('#cmbFilterUnidade');
-    this.unidades.forEach(u =>
-      $u.append(`<option value="${u.id}">${u.sigla}</option>`)
-    );
+  renderPagination() {
+    const $container = $('#divPagination').empty();
 
-    Especialidade.All.forEach(e =>
-      $('#cmbFilterEspecialidade').append(`<option value="${e.Key}">${e.Value}</option>`)
-    );
+    $container.append(`
+      <nav>
+        <ul class="pagination pagination-sm mb-0">
+          <li class="page-item">
+            <a class="page-link" href="#" data-page="prev">«</a>
+          </li>
 
-    FuncaoUsuario.All.forEach(e =>
-      $('#cmbFilterFuncao').append(`<option value="${e.Key}">${e.Value}</option>`)
-    );
+          <li class="page-item disabled">
+            <span class="page-link" id="lblPaginationInfo"></span>
+          </li>
 
-    CargoUsuario.All.forEach(e =>
-      $('#cmbFilterCargo').append(`<option value="${e.Key}">${e.Value}</option>`)
+          <li class="page-item">
+            <a class="page-link" href="#" data-page="next">»</a>
+          </li>
+        </ul>
+      </nav>
+    `);
+  }
+
+  updatePaginationInfo({ page, totalPages, totalRecords }) {
+    $('#lblPaginationInfo').text(
+      `Página ${page} de ${totalPages} (${totalRecords} registros)`
     );
   }
 
-
   wireEvents() {
-    $('#btnApplyFilter').on('click', () => this.applyFilters());
-    $('#btnClearFilter').on('click', () => this.clearFilters());
+    // $('#btnApplyFilter').on('click', () => this.applyFilters());
+    // $('#btnClearFilter').on('click', () => this.clearFilters());
+
+    $('#btnApplyFilter').on('click', async () => {
+      this.query.resetPage();
+      await this.load();
+    });
+
+    $('#btnClearFilter').on('click', async () => {
+      this.query.clearFilters();
+      this.query.resetPage();
+      await this.load();
+    });
+
+    $('#divPagination').on('click', 'a[data-page]', async e => {
+      e.preventDefault();
+
+      const action = $(e.currentTarget).data('page');
+      if (action === 'prev') this.query.prevPage();
+      if (action === 'next') this.query.nextPage();
+
+      await this.load();
+    });
   }
 
   applyFilters() {
