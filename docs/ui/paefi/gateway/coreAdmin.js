@@ -20,7 +20,7 @@ const AdminDomains = [
 
 function init() {
     const currentModule = resolveCurrentModule();
-    const currentDomain = resolveCurrentDomain(currentModule);
+    const currentDomain = resolveCurrentDomain(currentModule.key);
 
     Core.Init(currentUser, currentModule.title);
     $('#page-contents').append(
