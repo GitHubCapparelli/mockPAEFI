@@ -1,127 +1,131 @@
 // ui/paefi/gateway/usuariosServidoresGateway.js
+import {
+  CoreAdmin
+} from './coreAdmin.js';
+import {
+  UnidadesAPI
+} from '../../../services/api/unidadesAPI.js';
+import {
+  UsuariosServidoresAPI
+} from '../../../services/api/usuariosServidoresAPI.js';
+import {
+  FuncaoUsuario, CargoUsuario, Especialidade
+} from '../../../objModel.js';
 
-import { QueryEngine } from '../engine/queryEngine.js';
-import { UsuariosServidoresAPI } from '../api/usuariosServidoresAPI.js';
-import { Local } from '../../services/storage.js';
+export const Filters = [
+  { id: 'filterUnidade', label: 'Unidade', type: 'select', provider: () => [] }, //state.unidades },
+  { id: 'filterEspecialidade', label: 'Especialidade', type: 'enum', enum: Especialidade },
+  { id: 'filterFuncao', label: 'Função', type: 'enum', enum: FuncaoUsuario },
+  { id: 'filterCargo', label: 'Cargo', type: 'enum', enum: CargoUsuario }
+];
 
-const LAST_DOMAIN_KEY = 'lastDomain';
+export const Columns = [
+  { key: 'nome', label: 'Nome' },
+  { key: 'unidade', label: 'Unidade' },
+  { key: 'especialidade', label: 'Especialidade' },
+  { key: 'funcao', label: 'Função' },
+  { key: 'cargo', label: 'Cargo' },
+  { key: '__actions', label: 'Ações' }
+];
 
-export const UsuariosServidoresGateway = {
-  activate
-};
-
-/* =========================================================
- * Public entrypoint
- * ========================================================= */
-function activate({ module }) {
-  persistDomain('usuarios-servidores');
-
-  const engine = buildQueryEngine({ module });
-
-  engine.load();
+function Init() {
+  //await loadData();
 }
 
-/* =========================================================
- * Engine composition
- * ========================================================= */
-function buildQueryEngine({ module }) {
-  return QueryEngine({
-    fetch: ({ page, pageSize, filters }) =>
-      UsuariosServidoresAPI.getPaginated({
-        page,
-        pageSize,
-        filters
-      }),
+async function loadData() {
+  const response = await UsuariosServidoresAPI.GetPaginated({
+    page: state.page,
+    pageSize: state.pageSize,
+    filters: state.filters
+  });
+  state.lastData = response;
+  refreshTable(response.data);
+}
 
-    onData: (data) => render(module, data),
+function refreshTable(list) {
+  const $tbody = $('#dataRows').empty();
 
-    onPagination: (pagination) =>
-      renderPagination(module, pagination),
+  if (!list.length) {
+    $tbody.append('<tr><td colspan="6">Nenhum registro</td></tr>');
+    return;
+  }
 
-    onError: handleError,
+  list.forEach(u => {
+    const unidade = state.unidades.find(x => x.id === u.unidadeID);
+    const sigla = unidade ? unidade.sigla : '';
 
-    pageSize: 10
+    $tbody.append(`
+      <tr>
+        <td>${u.nome}</td>
+        <td>${sigla}</td>
+        <td>${Especialidade.ValueFromKey(u.especialidade) || ''}</td>
+        <td>${FuncaoUsuario.ValueFromKey(u.funcao) || ''}</td>
+        <td>${CargoUsuario.ValueFromKey(u.cargo) || ''}</td>
+        <td>
+          <button class="btn btn-sm btn-primary js-edit" data-id="${u.id}">
+            <i class="fas fa-edit"></i>
+          </button>
+        </td>
+      </tr>
+    `);
   });
 }
 
-/* =========================================================
- * Rendering delegation (gateway-owned)
- * ========================================================= */
-function render(module, data) {
-  switch (module) {
-    case 'admin':
-      renderAdminTable(data);
-      break;
+/* Wiring */
 
-    case 'atender':
-      renderAtenderCards(data);
-      break;
-
-    case 'monitor':
-      renderMonitorView(data);
-      break;
-
-    default:
-      console.warn('[UsuariosServidoresGateway] Unknown module:', module);
-  }
+function wireEvents() {
+  $('#btnApplyFilter').on('click', applyFilters);
+  $('#btnClearFilter').on('click', clearFilters);
 }
 
-/* =========================================================
- * Admin rendering (table)
- * ========================================================= */
-function renderAdminTable(rows) {
-  const tbody = document.querySelector('#tblUsuariosServidores tbody');
-  if (!tbody) return;
+function applyFilters() {
+  state.filters = {
+    unidadeID: $('#cmbFilterUnidade').val() || null,
+    funcao: $('#cmbFilterFuncao').val() || null,
+    cargo: $('#cmbFilterCargo').val() || null,
+    especialidade: $('#cmbFilterEspecialidade').val() || null
+  };
 
-  tbody.innerHTML = '';
-
-  for (const row of rows) {
-    const tr = document.createElement('tr');
-
-    tr.innerHTML = `
-      <td>${row.nome}</td>
-      <td>${row.matricula}</td>
-      <td>${row.unidade}</td>
-      <td>${row.status}</td>
-    `;
-
-    tbody.appendChild(tr);
-  }
+  state.page = 1;
+  loadData();
 }
 
-/* =========================================================
- * Future module renderers (placeholders)
- * ========================================================= */
-function renderAtenderCards(data) {
-  console.info('[UsuariosServidoresGateway] atender renderer not implemented', data);
+function clearFilters() {
+  $('.filters-bar select').val('');
+  state.filters = {};
+  loadData();
 }
 
-function renderMonitorView(data) {
-  console.info('[UsuariosServidoresGateway] monitor renderer not implemented', data);
+/* Select hydration */
+
+function hydrateSelects() {
+  populateUnidades('#cmbFilterUnidade');
+  populateEnum('#cmbFilterFuncao', FuncaoUsuario);
+  populateEnum('#cmbFilterCargo', CargoUsuario);
+  populateEnum('#cmbFilterEspecialidade', Especialidade);
 }
 
-/* =========================================================
- * Pagination (UI-neutral hook)
- * ========================================================= */
-function renderPagination(module, pagination) {
-  console.debug(
-    `[UsuariosServidoresGateway] pagination (${module})`,
-    pagination
+function populateEnum(selectId, enumType) {
+  const $s = $(selectId).empty();
+  $s.append('<option value="">Todos</option>');
+  enumType.All.forEach(e =>
+    $s.append(`<option value="${e.Key}">${e.Value}</option>`)
   );
-
-  // Hook only — actual controls already exist or will be wired later
 }
 
-/* =========================================================
- * Error handling
- * ========================================================= */
-function handleError(err) {
-  console.error('[UsuariosServidoresGateway]', err);
+function populateUnidades(selectId) {
+  const $s = $(selectId).empty();
+  $s.append('<option value="">Todas</option>');
+  state.unidades.forEach(u =>
+    $s.append(`<option value="${u.id}">${u.sigla}</option>`)
+  );
 }
 
-/* =========================================================
- * Persistence
- * ========================================================= */
-function persistDomain(domain) {
-  Local.Set(LAST_DOMAIN_KEY, domain);
-}
+/* Public interface */
+export const UsuariosServidoresGateway = {
+  Init
+};
+
+
+
+
