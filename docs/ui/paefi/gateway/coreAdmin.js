@@ -5,6 +5,8 @@ import { Session, CurrentUserKey,
 import { Core 
        } from '../shell/core.js';
 import { UsuariosServidoresGateway } from './usuariosServidoresGateway.js';
+import { CoreAPI }                   from '../../../services/api/coreAPI.js';
+
 
 let activeGateway = null;
 
@@ -174,5 +176,6 @@ $(document).ready(async () => {
       window.location.href = '/mockPAEFI/';
       return;
   }
+  await CoreAPI.InitAll();
   init(); 
 });

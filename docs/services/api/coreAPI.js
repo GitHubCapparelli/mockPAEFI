@@ -1,4 +1,15 @@
-import { InMemory } from '../storage.js';
+import { InMemory }              from '../storage.js';
+import { UsuariosServidoresAPI } from './usuariosServidoresAPI.js';
+import { UnidadesAPI }           from './unidadesAPI.js';
+
+export const CoreAPI = {
+  async InitAll() {
+    await Promise.all([
+      UsuariosServidoresAPI.Init(),
+      UnidadesAPI.Init()
+    ]);
+  }
+};
 
 export function CreateCoreAPI({
   entity,
@@ -138,3 +149,4 @@ export function CreateCoreAPI({
     SoftDelete
   };
 }
+
