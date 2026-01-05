@@ -1,6 +1,6 @@
 //ui/paefi/shell/leftSidebar.js
 import { Local, PreferencesKey } from '../../../services/storage.js';
-import { CoreAdminGateway }      from '../gateway/coreGateway.js';
+//import { CoreAdminGateway }      from '../gateway/coreGateway.js';
 
 export const LeftSidebar = { init };
 
@@ -113,12 +113,12 @@ function wireNavigation() {
   $(document).on('click', '[data-domain]', async function () {
     const domain = $(this).data('domain');
 
-    try {
-      await CoreAdminGateway.ActivateAdminGateway(domain);
-    } catch (err) {
-      console.error('[LeftSidebar] Navigation failed:', err);
-      alert('Erro ao acessar a opção selecionada.');
-    }
+    //try {
+    //  await CoreAdminGateway.ActivateAdminGateway(domain);
+    //} catch (err) {
+    //  console.error('[LeftSidebar] Navigation failed:', err);
+    //  alert('Erro ao acessar a opção selecionada.');
+    // }
   });
 }
 
