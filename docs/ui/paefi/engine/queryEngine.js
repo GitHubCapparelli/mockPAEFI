@@ -1,62 +1,91 @@
 // ui/paefi/engine/queryEngine.js
+export class QueryEngine {
 
-export function QueryEngine({
-    fetch,
-    onData,
-    onPagination,
-    onError,
-    pageSize = 10
-}) {
-    const state = {
-        page: 1,
-        pageSize,
-        filters: {},
-        loading: false
-    };
+    constructor({ queryFn, initialState = {} }) {
+        this.queryFn = queryFn;
 
-    async function load() {
-        if (state.loading) return;
+        this.state = {
+            page: 1,
+            pageSize: initialState.pageSize || 10,
+            filters: {},
+            totalItems: 0,
+            totalPages: 0
+        };
 
-        state.loading = true;
-        try {
-            const result = await fetch({
-                page: state.page,
-                pageSize: state.pageSize,
-                filters: state.filters
-            });
+        this.lastResult = null;
+    }
 
-            onData?.(result.data);
-            onPagination?.(result.pagination);
-        } catch (err) {
-            console.error('[QueryEngine]', err);
-            onError?.(err);
-        } finally {
-            state.loading = false;
+    /* -----------------------------
+     * Core execution
+     * ----------------------------- */
+    async execute() {
+        const { page, pageSize, filters } = this.state;
+
+        const result = await this.queryFn({
+            page,
+            pageSize,
+            filters
+        });
+
+        this.state.totalItems = result.totalItems ?? 0;
+        this.state.totalPages = Math.max(
+            1,
+            Math.ceil(this.state.totalItems / this.state.pageSize)
+        );
+
+        this.lastResult = result;
+        return result;
+    }
+
+    /* -----------------------------
+     * Pagination API
+     * ----------------------------- */
+    async next() {
+        if (this.state.page < this.state.totalPages) {
+            this.state.page++;
+            return this.execute();
         }
+        return this.lastResult;
     }
 
-    function setFilters(filters) {
-        state.filters = { ...filters };
-        state.page = 1;
-        load();
+    async prev() {
+        if (this.state.page > 1) {
+            this.state.page--;
+            return this.execute();
+        }
+        return this.lastResult;
     }
 
-    function goToPage(page) {
-        if (!page || page < 1 || page === state.page) return;
-        state.page = page;
-        load();
+    async goTo(page) {
+        const target = Math.max(1, Math.min(page, this.state.totalPages));
+        this.state.page = target;
+        return this.execute();
     }
 
-    function reset() {
-        state.page = 1;
-        state.filters = {};
-        load();
+    /* -----------------------------
+     * Filters
+     * ----------------------------- */
+    async setFilters(filters) {
+        this.state.filters = { ...filters };
+        this.state.page = 1;
+        return this.execute();
     }
 
-    return {
-        load,
-        setFilters,
-        goToPage,
-        reset
-    };
+    async reset() {
+        this.state.page = 1;
+        this.state.filters = {};
+        return this.execute();
+    }
+
+    /* -----------------------------
+     * Read-only helpers
+     * ----------------------------- */
+    get pagination() {
+        return {
+            page: this.state.page,
+            pageSize: this.state.pageSize,
+            totalItems: this.state.totalItems,
+            totalPages: this.state.totalPages
+        };
+    }
 }

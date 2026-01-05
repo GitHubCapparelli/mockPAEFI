@@ -1,125 +1,189 @@
 // ui/paefi/gateway/usuariosServidoresGateway.js
 
+import { CoreAdmin }             from './coreAdmin.js';
 import { QueryEngine }           from '../engine/queryEngine.js';
-import { UsuariosServidoresAPI } from '../api/usuariosServidoresAPI.js';
-import { Local, LastDomainKey }  from '../../services/storage.js';
+import { UnidadesAPI }           from '../../../services/api/unidadesAPI.js';
+import { UsuariosServidoresAPI } from '../../../services/api/usuariosServidoresAPI.js';
+import { FuncaoUsuario, CargoUsuario, Especialidade } from '../../../objModel.js';
 
-export const UsuariosServidoresGateway = {
-  activate
-};
+/* Filters & Columns (UI metadata only) */
+export const Filters = [
+  { id: 'filterUnidade',       label: 'Unidade',       type: 'select' },
+  { id: 'filterEspecialidade', label: 'Especialidade', type: 'enum', enum: Especialidade },
+  { id: 'filterFuncao',        label: 'Função',        type: 'enum', enum: FuncaoUsuario },
+  { id: 'filterCargo',         label: 'Cargo',         type: 'enum', enum: CargoUsuario }
+];
 
-/* =========================================================
- * Public entrypoint
- * ========================================================= */
-function activate({ module }) {
-  persistDomain('usuarios-servidores');
+export const Columns = [
+  { key: 'nome',          label: 'Nome' },
+  { key: 'unidade',       label: 'Unidade' },
+  { key: 'especialidade', label: 'Especialidade' },
+  { key: 'funcao',        label: 'Função' },
+  { key: 'cargo',         label: 'Cargo' },
+  { key: '__actions',     label: 'Ações' }
+];
 
-  const engine = buildQueryEngine({ module });
+/* Internal state (gateway-owned) */
+let queryEngine;
+let unidades = [];
 
-  engine.load();
-}
+/* Lifecycle */
+async function Init() {
+  await loadUnidades();
 
-/* =========================================================
- * Engine composition
- * ========================================================= */
-function buildQueryEngine({ module }) {
-  return QueryEngine({
-    fetch: ({ page, pageSize, filters }) =>
-      UsuariosServidoresAPI.getPaginated({
+  queryEngine = new QueryEngine({
+    queryFn: ({ page, pageSize, filters }) =>
+      UsuariosServidoresAPI.GetPaginated({
         page,
         pageSize,
         filters
       }),
+    initialState: {
+      pageSize: 10
+    }
+  });
 
-    onData: (data) => render(module, data),
+  wireEvents();
+  await load();
+}
 
-    onPagination: (pagination) =>
-      renderPagination(module, pagination),
+/* Data loading  */
+async function loadUnidades() {
+  unidades = await UnidadesAPI.GetAll();
+  hydrateUnidadesSelect();
+}
 
-    onError: handleError,
+async function load() {
+  const result = await queryEngine.execute();
+  refreshTable(result.data);
+  renderPagination();
+}
 
-    pageSize: 10
+/* Rendering  */
+function refreshTable(list) {
+  const $tbody = $('#dataRows').empty();
+
+  if (!list || !list.length) {
+    $tbody.append(
+      '<tr><td colspan="6" class="text-center text-muted">Nenhum registro</td></tr>'
+    );
+    return;
+  }
+
+  list.forEach(u => {
+    const unidade = unidades.find(x => x.id === u.unidadeID);
+    const sigla   = unidade ? unidade.sigla : '';
+
+    $tbody.append(`
+      <tr>
+        <td>${u.nome}</td>
+        <td>${sigla}</td>
+        <td>${Especialidade.ValueFromKey(u.especialidade) || ''}</td>
+        <td>${FuncaoUsuario.ValueFromKey(u.funcao) || ''}</td>
+        <td>${CargoUsuario.ValueFromKey(u.cargo) || ''}</td>
+        <td>
+          <button class="btn btn-sm btn-primary js-edit" data-id="${u.id}">
+            <i class="fas fa-edit"></i>
+          </button>
+        </td>
+      </tr>
+    `);
   });
 }
 
-/* =========================================================
- * Rendering delegation (gateway-owned)
- * ========================================================= */
-function render(module, data) {
-  switch (module) {
-    case 'admin':
-      renderAdminTable(data);
-      break;
+function renderPagination() {
+  const { page, totalPages, totalItems } = queryEngine.pagination;
 
-    case 'atender':
-      renderAtenderCards(data);
-      break;
-
-    case 'monitor':
-      renderMonitorView(data);
-      break;
-
-    default:
-      console.warn('[UsuariosServidoresGateway] Unknown module:', module);
-  }
-}
-
-/* =========================================================
- * Admin rendering (table)
- * ========================================================= */
-function renderAdminTable(rows) {
-  const tbody = document.querySelector('#tblUsuariosServidores tbody');
-  if (!tbody) return;
-
-  tbody.innerHTML = '';
-
-  for (const row of rows) {
-    const tr = document.createElement('tr');
-
-    tr.innerHTML = `
-      <td>${row.nome}</td>
-      <td>${row.matricula}</td>
-      <td>${row.unidade}</td>
-      <td>${row.status}</td>
-    `;
-
-    tbody.appendChild(tr);
-  }
-}
-
-/* =========================================================
- * Future module renderers (placeholders)
- * ========================================================= */
-function renderAtenderCards(data) {
-  console.info('[UsuariosServidoresGateway] atender renderer not implemented', data);
-}
-
-function renderMonitorView(data) {
-  console.info('[UsuariosServidoresGateway] monitor renderer not implemented', data);
-}
-
-/* =========================================================
- * Pagination (UI-neutral hook)
- * ========================================================= */
-function renderPagination(module, pagination) {
-  console.debug(
-    `[UsuariosServidoresGateway] pagination (${module})`,
-    pagination
+  $('#navInfo').text(
+    `Página ${page} de ${totalPages} — ${totalItems} registros`
   );
 
-  // Hook only — actual controls already exist or will be wired later
+  const $nav = $('#navControls').empty();
+
+  $nav.append(`
+    <li class="page-item ${page === 1 ? 'disabled' : ''}">
+      <a class="page-link js-prev" href="#">Anterior</a>
+    </li>
+  `);
+
+  for (let p = 1; p <= totalPages; p++) {
+    $nav.append(`
+      <li class="page-item ${p === page ? 'active' : ''}">
+        <a class="page-link js-page" data-page="${p}" href="#">${p}</a>
+      </li>
+    `);
+  }
+
+  $nav.append(`
+    <li class="page-item ${page === totalPages ? 'disabled' : ''}">
+      <a class="page-link js-next" href="#">Próxima</a>
+    </li>
+  `);
 }
 
-/* =========================================================
- * Error handling
- * ========================================================= */
-function handleError(err) {
-  console.error('[UsuariosServidoresGateway]', err);
+/* Filters */
+function applyFilters() {
+  queryEngine.setFilters({
+    unidadeID: $('#cmbFilterUnidade').val() || null,
+    especialidade: $('#cmbFilterEspecialidade').val() || null,
+    funcao: $('#cmbFilterFuncao').val() || null,
+    cargo: $('#cmbFilterCargo').val() || null
+  })
+  .then(result => { 
+    refreshTable(result.data);
+    renderPagination();
+  });
 }
 
-/* =========================================================
- * Persistence
- * ========================================================= */
-function persistDomain(domain) {
-  Local.Set(LastDomainKey, domain);
+function clearFilters() {
+  $('.filters-bar select').val('');
+
+  queryEngine.reset()
+  .then(result => { 
+    refreshTable(result.data);
+    renderPagination();
+  });
 }
+
+/* Select hydration  */
+function hydrateUnidadesSelect() {
+  const $s = $('#cmbFilterUnidade').empty();
+  $s.append('<option value="">Todas</option>');
+  unidades.forEach(u => { $s.append(`<option value="${u.id}">${u.sigla}</option>`); });
+}
+
+/* Events */
+function wireEvents() {
+  $('#btnApplyFilter').on('click', applyFilters);
+  $('#btnClearFilter').on('click', clearFilters);
+
+  $(document).on('click', '.js-prev', e => {
+    e.preventDefault();
+    queryEngine.prev().then(r => {
+      refreshTable(r.data);
+      renderPagination();
+    });
+  });
+
+  $(document).on('click', '.js-next', e => {
+    e.preventDefault();
+    queryEngine.next().then(r => {
+      refreshTable(r.data);
+      renderPagination();
+    });
+  });
+
+  $(document).on('click', '.js-page', e => {
+    e.preventDefault();
+    const page = Number($(e.currentTarget).data('page'));
+    queryEngine.goTo(page).then(r => {
+      refreshTable(r.data);
+      renderPagination();
+    });
+  });
+}
+
+/* Public API */
+export const UsuariosServidoresGateway = {
+  Init
+};
