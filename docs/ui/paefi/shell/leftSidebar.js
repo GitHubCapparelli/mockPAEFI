@@ -2,8 +2,6 @@
 import { Local, PreferencesKey } from '../../../services/storage.js';
 //import { CoreAdminGateway }      from '../gateway/coreGateway.js';
 
-export const LeftSidebar = { init };
-
 /* Preferences (storage) */
 function loadPrefs()      { return Local.Get(PreferencesKey) || {}; }
 function savePrefs(prefs) { Local.Set(PreferencesKey, prefs); }
@@ -159,7 +157,7 @@ function syncHeights() {
 }
 
 /* Public */
-function init() {
+export function Init() {
   render();
   restoreState();
   wireNavigation();
@@ -167,3 +165,5 @@ function init() {
 
   $(window).on('resize', syncHeights);
 }
+
+export const LeftSidebar = { Init };
