@@ -28,15 +28,18 @@ export class UsuariosServidoresGateway extends DomainGateway {
   }
 
   async activate() {
-    await this.loadLookups();
+    await this.api.Init();                 // ✅ init main API
+    await this.loadLookups();              // ✅ init lookups inside
     CoreAdmin.BuildTable(columns);
     this.wireEvents();
     await this.load();
   }
 
   async loadLookups() {
-    this.unidades = await this.lookups.unidades.GetAll();
+    await this.lookups.unidades.Init();    // ✅ init lookup API
+    this.unidades = this.lookups.unidades.GetAll();
   }
+
 
   async load() {
     const response = await this.api.GetPaginated({
