@@ -15,9 +15,7 @@ export class QueryEngine {
         this.lastResult = null;
     }
 
-    /* -----------------------------
-     * Core execution
-     * ----------------------------- */
+    /* Core execution */
     async execute() {
         const { page, pageSize, filters } = this.state;
 
@@ -37,9 +35,7 @@ export class QueryEngine {
         return result;
     }
 
-    /* -----------------------------
-     * Pagination API
-     * ----------------------------- */
+    /* Pagination */
     async next() {
         if (this.state.page < this.state.totalPages) {
             this.state.page++;
@@ -62,9 +58,7 @@ export class QueryEngine {
         return this.execute();
     }
 
-    /* -----------------------------
-     * Filters
-     * ----------------------------- */
+    /* Filters */
     async setFilters(filters) {
         this.state.filters = { ...filters };
         this.state.page = 1;
@@ -77,9 +71,7 @@ export class QueryEngine {
         return this.execute();
     }
 
-    /* -----------------------------
-     * Read-only helpers
-     * ----------------------------- */
+    /* Read-only helpers */
     get pagination() {
         return {
             page: this.state.page,
