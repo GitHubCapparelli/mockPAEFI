@@ -35,7 +35,7 @@ export class UsuariosServidoresGateway extends DomainGateway {
     });
 
     this.unidades  = [];
-
+    
     this.query     = new QueryEngine(async (page, pageSize, filters) => {
       const result = await this.api.GetPaginated({ page, pageSize, filters });
       return {
@@ -207,9 +207,9 @@ export class UsuariosServidoresGateway extends DomainGateway {
     );
   }
 
-  updatePaginationInfo(p) {
+  updatePaginationInfo({ page, totalPages, totalRecords }) {
     $('#lblPaginationInfo').text(
-      `Página ${p.page} de ${p.totalPages} (${p.totalRecords} registros)`
+      `Página ${page} de ${totalPages} (${totalRecords} registros)`
     );
   }
 
