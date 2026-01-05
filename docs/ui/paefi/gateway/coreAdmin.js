@@ -1,6 +1,6 @@
 //ui/paefi/gateway/coreAdmin.js (module's orchestrator)
 import { Session, CurrentUserKey,
-         Local, LastModuleKey, LastAdminDomainKey, LastAtenderDomainKey, LastMonitorDomainKey
+         Local, LastModuleKey, LastDomainKey
        } from '../../../services/storage.js';
 import { Core 
        } from '../shell/core.js';
@@ -13,7 +13,7 @@ const Modules = [
   { key: 'monitor',  title: 'Supervisão' }
 ];
 
-const AdminDomains = [
+const Domains = [
   { key: 'unidades',             title: 'Unidades' },
   { key: 'usuarios-servidores',  title: 'Usuários Servidores' }
 ];
@@ -34,10 +34,13 @@ function init() {
 
 function resolveCurrentDomain(currentModule) {
   if (currentModule === 'admin') {
-    const lastKey = Local.Get(LastAdminDomainKey);
-    const domain  = AdminDomains.find(x => x.key === lastKey) || 
-                    AdminDomains.find(x => x.key === 'usuarios-servidores');
-    if (domain) return domain;
+    const lastKey = Local.Get(LastDomainKey);
+    const domain  = Domains.find(x => x.key === lastKey) || 
+                    Domains.find(x => x.key === 'usuarios-servidores');
+    if (domain) {
+      Local.Set(LastDomainKey, domain)
+      return domain;
+    }
   }
   throw new Error(`[resolveCurrentDomain] Erro: Domínio não localizado para o módulo: ${currentModule}`);
 }
