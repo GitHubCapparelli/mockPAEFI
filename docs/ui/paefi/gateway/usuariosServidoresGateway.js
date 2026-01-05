@@ -1,8 +1,8 @@
 // ui/paefi/gateway/usuariosServidoresGateway.js
 
-import { DomainGateway } from './DomainGateway.js';
-import { UsuariosServidoresAPI } from '../../../services/api/usuariosServidoresAPI.js';
-import { UnidadesAPI } from '../../../services/api/unidadesAPI.js';
+import { DomainGateway }                              from './domainGateway.js';
+import { UsuariosServidoresAPI }                      from '../../../services/api/usuariosServidoresAPI.js';
+import { UnidadesAPI }                                from '../../../services/api/unidadesAPI.js';
 import { FuncaoUsuario, CargoUsuario, Especialidade } from '../../../objModel.js';
 import { CoreAdmin } from './coreAdmin.js';
 
