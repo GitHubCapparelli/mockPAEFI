@@ -1,4 +1,6 @@
 // ui/paefi/gateway/usuariosServidoresGateway.js
+import { CoreAdmin
+       } from './coreAdmin.js';
 import { UnidadesAPI 
        } from '../../../services/api/unidadesAPI.js';
 import { UsuariosServidoresAPI 
@@ -6,119 +8,25 @@ import { UsuariosServidoresAPI
 import { FuncaoUsuario, CargoUsuario, Especialidade 
        } from '../../../objModel.js';
 
-/* Internal State (private) */
-const state = {
-  initialized : false,
-  currentUser : null,
+export const Filters = [
+  { id: 'filterUnidade',       label: 'Unidade',       type:'select', provider: () => [] }, //state.unidades },
+  { id: 'filterEspecialidade', label: 'Especialidade', type:'enum',   enum: Especialidade },
+  { id: 'filterFuncao',        label: 'Função',        type:'enum',   enum: FuncaoUsuario },
+  { id: 'filterCargo',         label: 'Cargo',         type:'enum',   enum: CargoUsuario}
+];
 
-  page        : 1,
-  pageSize    : 5,
-  filters     : {},
+export const Columns = [
+  { key: 'nome',          label: 'Nome' },
+  { key: 'unidade',       label: 'Unidade' },
+  { key: 'especialidade', label: 'Especialidade' },
+  { key: 'funcao',        label: 'Função' },
+  { key: 'cargo',         label: 'Cargo' },
+  { key: '__actions',     label: 'Ações' }
+];
 
-  unidades    : [],
-  lastData    : null,
-
-  addModal    : null,
-  editModal   : null
-};
-
-/* Public Init */
-async function Init(user) {
-  if (!user) { throw new Error('[UsuariosServidoresGateway] User is required'); }
-
-  state.currentUser = user;
-  if (!state.initialized) {
-    await bootstrap();
-    state.initialized = true;
-  }
-  await loadData();
+function Init() {
+  //await loadData();
 }
-
-/* Bootstrap (executed once) */
-async function bootstrap() {
-  await Promise.all([
-    UnidadesAPI.Init(),
-    UsuariosServidoresAPI.Init()
-  ]);
-
-  state.unidades = UnidadesAPI.GetAll();
-
-  render();
-  wireEvents();
-
-  state.addModal  = new bootstrap.Modal('#divModalAdd');
-  state.editModal = new bootstrap.Modal('#divModalEdit');
-
-  hydrateSelects();
-}
-
-/* Rendering */
-
-function render() {
-  console.log('rendering servidoresGateway...');
-  const $container = $('#app-main').empty();
-  $container.append(
-    renderTitleBar(),
-    renderFilters(),
-    renderTableSection()
-  );
-  renderModals();
-}
-
-function renderTitleBar() {
-  return $('<div>', {
-    class: 'page-title mx-2 mt-2 ps-2 d-flex flex-column'
-  }).append(
-    $('<span>', { class: 'page-title', text: 'Usuários Servidores' })
-  );
-}
-
-function renderFilters() {
-  const createFilter = (id, label) =>
-    $('<div>', { class: 'filter-item' }).append(
-      $('<label>', { for: id, text: label }),
-      $('<select>', { id, class: 'form-select' })
-    );
-
-  return $('<section>', { class: 'filters-bar mx-2' }).append(
-    $('<div>', { class: 'filter-options p-2 d-flex gap-3' }).append(
-      createFilter('cmbFilterUnidade', 'Unidade'),
-      createFilter('cmbFilterEspecialidade', 'Especialidade'),
-      createFilter('cmbFilterFuncao', 'Função'),
-      createFilter('cmbFilterCargo', 'Cargo')
-    ),
-    $('<div>', { class: 'filter-buttons p-2 d-flex gap-2' }).append(
-      $('<button>', { id: 'btnApplyFilter', class: 'btn btn-primary', text: 'Filtrar' }),
-      $('<button>', { id: 'btnClearFilter', class: 'btn btn-outline-secondary', text: 'Limpar' })
-    )
-  );
-}
-
-function renderTableSection() {
-  return $('<section>', { class: 'data-section mx-2 mt-3' }).append(
-    $('<div>', { class: 'table-responsive' }).append(
-      $('<table>', { class: 'table table-striped table-hover' }).append(
-        $('<thead>').append(
-          $('<tr>').append(
-            ['Nome','Unidade','Especialidade','Função','Cargo','Ações']
-              .map(h => $('<th>').text(h))
-          )
-        ),
-        $('<tbody>', { id: 'dataRows' }).append(
-          $('<tr>').append(
-            $('<td>', {
-              colspan: 6,
-              class: 'text-center text-muted',
-              text: 'Carregando...'
-            })
-          )
-        )
-      )
-    )
-  );
-}
-
-/* Data */
 
 async function loadData() {
   const response = await UsuariosServidoresAPI.GetPaginated({

@@ -1,19 +1,62 @@
-//ui/paefi/gateway/coreAdmin.js (module)
-import { Session, CurrentUserKey }  from '../../../services/storage.js';
-import { Core }                     from '../shell/core.js';
+//ui/paefi/gateway/coreAdmin.js (module's orchestrator)
+import { Session, CurrentUserKey,
+         Local, LastModuleKey, LastAdminDomainKey, LastAtenderDomainKey, LastMonitorDomainKey, 
+         LastModuleKey
+       } from '../../../services/storage.js';
+import { Core 
+       } from '../shell/core.js';
 
 const currentUser = Session.Get(CurrentUserKey);
 
+const Modules = [
+  { key: 'admin',    title: 'Administração' },
+  { key: 'atender',  title: 'Atendimento' },
+  { key: 'monitor',  title: 'Supervisão' }
+];
+
+const AdminDomains = [
+  { key: 'unidades',             title: 'Unidades' },
+  { key: 'usuarios-servidores',  title: 'Usuários Servidores' }
+];
+
 function init() {
-    Core.Init(currentUser, 'Admin');
+    const currentModule = resolveCurrentModule();
+    const currentDomain = resolveCurrentDomain(currentModule);
+
+    Core.Init(currentUser, currentModule.title);
     $('#page-contents').append(
         domainTitleBar(), 
         filtersSection(),
         dataSection()
     );
-    $('#domain-title').text('Current Domain');
 
-    sampleTable();
+    $('#domain-title').text(currentDomain.title);
+}
+
+function resolveCurrentDomain(currentModule) {
+  if (currentModule === 'admin') {
+    const lastKey = Local.Get(LastAdminDomainKey);
+    const domain  = AdminDomains.find(x => x.key === lastKey) || 
+                    AdminDomains.find(x => x.key === 'usuarios-servidores');
+    if (domain) return domain;
+  }
+  throw new Error(`[resolveCurrentDomain] Erro: Domínio não localizado para o módulo: ${currentModule}`);
+}
+
+function resolveCurrentModule() {
+  const url    = window.location.href;
+  const module = url.includes('index.html') 
+               ? Modules.find(x => x.key === 'atender')
+               : url.includes('monitor.html') 
+               ? Modules.find(x => x.key === 'monitor')
+               : url.includes('admin.html') 
+               ? Modules.find(x => x.key === 'admin')
+               : null; 
+    if (!module) {
+      throw new Error("[resolveCurrentModule] Erro ao carregar página.");
+    }
+    Local.Set(LastModuleKey, module.key);
+    return module;
 }
 
 function domainTitleBar() {
@@ -61,24 +104,21 @@ function dataSection() {
     .append($actions, $table, $nav);
 }
 
-function sampleTable() {
-    const columns = [
-        { key: 'nome',          label: 'Nome' },
-        { key: '__actions',     label: 'Ações' }
-    ];
-    const thead      = $('<tr>').append(columns.map(c => $('<th>').text(c.label)));
-    const colSpan    = columns.length;
-    
-    const $table = $('<table>', { class: 'table table-striped table-hover' }).append(
-        $('<thead>').append(thead), 
-        $('<tbody>', { id: 'dataRows' }).append(
-          $('<tr>').append($('<td>', { colspan: colSpan, class: 'text-center text-muted', text: 'Carregando...' }))
-        )
-      )
-
-    const $container = $('#divdataTable').empty();
-    $container.append($table);
+export function BuildTable(columns) {
+  const $table = $('<table>', { class: 'table table-striped table-hover' }).append(
+    $('<thead>').append(thead), 
+    $('<tbody>', { id: 'dataRows' }).append(
+      $('<tr>').append($('<td>', { colspan: colSpan, 
+        class: 'text-center text-muted', text: 'Carregando...' }))
+    )
+  );
+  const $container = $('#divdataTable').empty();
+  $container.append($table);
 }
+
+export const CoreAdmin = { 
+  BuildTable
+};
 
 $(document).ready(async () => {
     if (!currentUser) {

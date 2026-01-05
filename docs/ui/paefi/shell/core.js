@@ -52,7 +52,8 @@ function appendContents(container, pageTitle) {
   );
   
   const $pageContents = $('<div>', { id: 'page-contents', 
-    class: 'page-contents d-flex flex-column mb-3' }).append($titleBar);
+    class: 'page-contents d-flex flex-column mb-3' })
+    .append($titleBar);
 
   container.append($pageContents);
 }

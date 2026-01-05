@@ -1,10 +1,12 @@
 //ui/paefi/shell/leftSidebar.js
-import { Local, UserPreferencesKey } from '../../../services/storage.js';
-import { CoreAdminGateway }          from '../gateway/coreAdminGateway.js';
+import { Local, PreferencesKey } from '../../../services/storage.js';
+import { CoreAdminGateway }      from '../gateway/coreGateway.js';
+
+export const LeftSidebar = { init };
 
 /* Preferences (storage) */
-function loadPrefs() { return Local.Get(UserPreferencesKey) || {}; }
-function savePrefs(prefs) { Local.Set(UserPreferencesKey, prefs); }
+function loadPrefs()      { return Local.Get(PreferencesKey) || {}; }
+function savePrefs(prefs) { Local.Set(PreferencesKey, prefs); }
 
 /* Rendering */
 function render() {
@@ -12,12 +14,12 @@ function render() {
   const $header  = $('<div>', { 
     class: 'p-2 d-flex justify-content-between align-items-center'
   }).append(
+    $('<span>', { id:'leftSidebar-title', class: 'leftSidebar-title fw-bold', text: 'PAEFI' }),
     $('<button>', {
       id: 'btnSidebarToggle',
       class: 'btn btn-sm btn-outline-secondary',
       title: 'Expandir / Recolher'
-    }).append($('<i>', { class: 'fas fa-bars' })),
-    $('<span>', { id:'leftSidebar-title', class: 'leftSidebar-title fw-bold', text: 'PAEFI' })
+    }).append($('<i>', { class: 'fas fa-bars' }))
   );
 
   const $body = $('<div>', { id:'leftSidebar-body', class: 'leftSidebar-body p-2' }).append(
@@ -157,7 +159,7 @@ function syncHeights() {
 }
 
 /* Public */
-function Init() {
+function init() {
   render();
   restoreState();
   wireNavigation();
@@ -165,5 +167,3 @@ function Init() {
 
   $(window).on('resize', syncHeights);
 }
-
-export const LeftSidebar = { Init };
