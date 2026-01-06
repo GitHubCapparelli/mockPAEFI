@@ -21,9 +21,9 @@ function init() {
   Render.PageStructure();
   Render.DomainStructure(currentModuleEnum.Key);
 
-  $(Elemento.TextoLogin.Key).text(currentUser.login);
-  $(Elemento.TextoTituloPagina.Key).text(currentModuleEnum.Value);
-  $(Elemento.TextoOpcaoAtual.Key).text(currentDomainEnum.Value);
+  $(Elemento.TextoLogin.JQuery).text(currentUser.login);
+  $(Elemento.TextoTituloPagina.JQuery).text(currentModuleEnum.Value);
+  $(Elemento.TextoOpcaoAtual.JQuery).text(currentDomainEnum.Value);
 
   LeftSidebar.Init(currentModuleEnum.Key);
   initCurrentDomain();
@@ -54,8 +54,8 @@ function resolvecurrentDomainEnum() {
 }
 
 function SetDomain(domainKey) {
-  const el = Elemento.FromKey(domainKey);
-  $(el.JQuery).text(el.Value);
+  const el = Dominio.FromKey(domainKey);
+  $(Elemento.TextoOpcaoAtual.JQuery).text(el.Value);
 }
 
 function initCurrentDomain() {
