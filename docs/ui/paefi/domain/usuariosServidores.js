@@ -1,7 +1,7 @@
 //ui.paefi.domain.usuariosServidores.js
 
-import { BaseDomain }                                 from '../core/objectModel.js';
-import { FuncaoUsuario, CargoUsuario, Especialidade } from '../core/enums.js';
+import { BaseDomain }                                 from '../core/omClass.js';
+import { FuncaoUsuario, CargoUsuario, Especialidade } from '../core/omEnum.js';
 import { UsuariosServidoresAPI }                      from '../../../services/api/usuariosServidoresAPI.js';
 import { UnidadesAPI }                                from '../../../services/api/unidadesAPI.js';
 //import { CoreAdmin }                                  from './coreAdmin.js';
