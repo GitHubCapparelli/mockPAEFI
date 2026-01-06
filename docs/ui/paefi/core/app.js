@@ -20,11 +20,11 @@ function init() {
   Render.PageStructure();
   Render.DomainStructure(currentModuleEnum.Key);
 
-  initCurrentDomain();
+  $(Elemento.TextoLogin.Key).text(currentUser.login);
+  $(Elemento.TextoTituloPagina.Key).text(currentModuleEnum.Value);
+  $(Elemento.TextoOpcao.Key).text(currentDomainEnum.Value);
 
-  $(Elemento.TextoLogin).text(currentUser.login);
-  $(Elemento.TextoTituloPagina).text(currentModuleEnum.Value);
-  $(Elemento.TextoOpcao).text(currentDomainEnum.Value);
+  initCurrentDomain();
 }
 
 function resolvecurrentModuleEnum() {
@@ -57,7 +57,7 @@ function initLeftSidebar() {
 
 function initCurrentDomain() {
   if (currentDomainEnum.Key === Dominio.UsuariosServidores.Key) {
-    currentDomain = new UsuariosServidoresDomain();
+    currentDomain = new UsuariosServidoresDomain(currentModuleEnum.Key);
   }  
 }
 

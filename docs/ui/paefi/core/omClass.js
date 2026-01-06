@@ -1,9 +1,10 @@
 // ui.paefi.core.objectModel
 
 export class BaseDomain {
-    constructor({ api, lookups = {} }) {
-        this.api = api;
-        this.lookups = lookups;
+    constructor({ moduleKEY, api, lookups = {} }) {
+        this.moduleKEY   = moduleKEY;
+        this.api         = api;
+        this.lookups     = lookups;
         this.QueryEngine = new QueryEngine(api);
     }
 
@@ -12,7 +13,7 @@ export class BaseDomain {
         await this.loadData();
     }
 
-    async load() {
+    async loadData() {
         throw new Error('load() not implemented');
     }
 

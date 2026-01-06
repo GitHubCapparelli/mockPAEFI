@@ -1,7 +1,6 @@
 // ui.paefi.core.utils
 
-import { LeftSidebar }     from './leftSidebar.js';
-import { Modulo, Dominio } from './omEnum.js';
+import { Modulo } from './omEnum.js';
 
 /* Helper shared global methods */
 
@@ -102,7 +101,7 @@ function datagrid() {
     ));
 
   const $table = $('<div>', { id: 'divdataTable', class: 'divdataTable mt-0 ms-2 table-responsive' }).append(
-    $('<span>', { text: 'Inclua a tabela aqui' })
+    $('<span>', { text: 'Dados' })
   );
 
   const $nav = $('<div>', { id: 'divPagination-section', class: 'pagination-section d-flex justify-content-between align-items-center' }).append(

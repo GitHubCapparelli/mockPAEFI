@@ -26,8 +26,9 @@ const columns = [
 
 export class UsuariosServidoresDomain extends BaseDomain {
 
-  constructor() {
+  constructor(moduleKEY) {
     super({
+      moduleKEY,
       api: UsuariosServidoresAPI,
       lookups: {
         unidades: UnidadesAPI
@@ -73,7 +74,7 @@ export class UsuariosServidoresDomain extends BaseDomain {
     this.unidades = this.lookups.unidades.GetAll();
   }
 
-  async load() {
+  async loadData() {
     const result = await this.query.execute();
     this.render(result.data);
 
