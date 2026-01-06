@@ -85,7 +85,7 @@ function pageContents() {
 function divFilters() {
   return $('<div>', { class: 'filters-bar mx-2' }).append(
     $('<div>', { id: 'divFilterOptions', class: 'filter-options p-2 d-flex gap-3' }).append(
-      $('<span>', { text: 'Inclua os filtros aqui' })
+      $('<span>', { text: 'Carregando...' })
     ),
     $('<div>', { id: 'divFilterButtons', class: 'filter-buttons p-2 d-flex gap-2' }).append(
       $('<button>', { id: 'btnApplyFilter', class: 'btn btn-primary btnApplyFilter', text: 'Filtrar' }),
