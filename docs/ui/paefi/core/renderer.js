@@ -143,14 +143,14 @@ function leftSidebar() {
 
 function accordion(elemento, expanded = false) {
   const $body = $('<div>', {
-    class: `accordion-collapse accordion-flush collapse ${expanded ? 'show' : ''}`
+    class: `accordion-collapse collapse ${expanded ? 'show' : ''}`
   }).append($('<div>', { id: elemento.Key, class: 'accordion-body', text: '[em breve]' }));
 
   return $('<div>', { class: 'accordion accordion-flush mb-2' }).append(
     $('<div>', { class: 'accordion-item' }).append(
-      $('<h2>', { class: 'accordion-header' }).append(
+      $('<h2>', { class: 'accordion-headers hadow-none bg-transparent' }).append(
         $('<button>', {
-          class: `accordion-button border-0 ${expanded ? '' : 'collapsed'}`,
+          class: `accordion-button ${expanded ? '' : 'collapsed'}`,
           'data-bs-toggle': 'collapse',
           'data-bs-target': `#${elemento.Key}`,
           type: 'button',
@@ -165,7 +165,7 @@ function accordion(elemento, expanded = false) {
 export function Options(options) {
   const container = $(Elemento.DivOpcoesDominio.JQuery).empty();
   options.forEach(opt => {
-    container.append($('<button>', { class: 'btn btn-sm btn-outline-primary w-100 mb-2', text: opt.Value, 'data-domain': opt.Key }));
+    container.append($('<button>', { class: 'btn btn-sm btn-outline-primary border-0 w-100 mb-2', text: opt.Value, 'data-domain': opt.Key }));
   });
 }
 
@@ -193,7 +193,7 @@ function Preferences(prefs) {
 function OurDocs() {
   const container = $(Elemento.divOurDocs.JQuery).empty();
   Elemento.OurDocs.All.forEach(opt => {
-    container.append($('<button>', { id: opt.Key, class: 'btn btn-sm btn-outline-primary w-100 mb-2', text: opt.Value }));
+    container.append($('<button>', { id: opt.Key, class: 'btn btn-sm btn-outline-primary border-0 w-100 mb-2', text: opt.Value }));
   });
 }
 
