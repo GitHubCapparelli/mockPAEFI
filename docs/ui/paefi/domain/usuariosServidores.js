@@ -62,7 +62,7 @@ export class UsuariosServidoresDomain extends BaseDomain {
     Render.BuildTable(columns);
 
     this.wireEvents();
-    await this.load();
+    await this.loadData();
   }
 
   /* -------------------------------------------------------

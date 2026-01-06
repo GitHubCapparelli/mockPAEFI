@@ -98,7 +98,14 @@ body {
     text-decoration: underline;
 }
 
-.page-title {
+.page-title-text {
+    color: var(--bs-gray-500);
+    font-size: 2rem;
+    font-weight: 500;
+    line-height: 1.1;
+}
+
+.domain-title {
     color: var(--primary-color);
     font-size: 2rem;
     font-weight: 500;

@@ -56,7 +56,7 @@ function navbar() {
 
 function pageContents() {
   // --- Title bar : breadcrumbs & page info ---
-  const $moduleInfo = $('<div>', { id: 'page-title-bar', class: 'page-title-bar mx-2 mt-2 ps-2 d-flex flex-column' })
+  const $moduleInfo = $('<div>', { id: 'page-title-bar', class: 'page-title-bar mx-2 mt-2 ps-2 d-flex justify-content-between' })
     .append($('<div>', { class: 'breadcrumbs d-flex justify-content-start align-items-center gap-2' })
       .append(
         $('<a>', { href: '#', text: 'Home' }),
@@ -128,7 +128,7 @@ function leftSidebar() {
                             $( '<span>', { id: 'leftSidebar-title', class: 'leftSidebar-title fw-bold', text: 'PAEFI' })
                     );
 
-  const $body = $( '<div>', { id: 'leftSidebar-body', class: 'leftSidebar-body p-2' })
+  const $body = $( '<div>', { id: 'leftSidebar-body', class: 'leftSidebar-body p-2 overflow-auto' })
                 .append( $(' <div>', { class: 'leftSidebar-top' }
                           ).append( accordion( Elemento.DivOpcoesDominio, true ))
                           ,
