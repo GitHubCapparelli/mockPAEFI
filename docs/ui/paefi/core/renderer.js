@@ -188,9 +188,8 @@ function accordionSection(title, expanded = false, contentRenderer) {
   );
 }
 
-function renderPreferences($container) {
-  const prefs = loadPrefs();
-
+function renderPreferences($container, prefs) {
+//  const prefs = loadPrefs();
   const $darkMode = $('<div>', { class: 'form-check form-switch mb-2' }).append(
     $('<input>', {
       id: 'chkDarkMode', type: 'checkbox', class: 'form-check-input',
