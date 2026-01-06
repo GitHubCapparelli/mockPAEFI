@@ -1,5 +1,6 @@
 //ui.paefi.core.leftSidebar
 
+import { App }                         from './app.js';
 import { Render }                      from './renderer.js';
 import { Modulo, Dominio, Elemento }   from './omEnum.js';
 import { Local, PreferencesKey }       from '../../../services/storage.js';
@@ -19,12 +20,7 @@ function renderOpcoes(moduleKey) {
 function wireOpcoes() {
   $(document).on('click', '[data-domain]', async function () {
     const domain = $(this).data('domain');
-    //try {
-    //  await CoreAdminGateway.ActivateAdminGateway(domain);
-    //} catch (err) {
-    //  console.error('[LeftSidebar] Navigation failed:', err);
-    //  alert('Erro ao acessar a opção selecionada.');
-    // }
+    App.SetDomain(domain);
   });
 }
 

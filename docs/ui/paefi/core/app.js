@@ -1,4 +1,4 @@
-// ui.paefi.core.layout
+// ui.paefi.core.app
 
 import { Render }                    from './renderer.js';
 import { LeftSidebar }               from './leftSidebar.js';
@@ -53,8 +53,8 @@ function resolvecurrentDomainEnum() {
   }
 }
 
-function initLeftSidebar() {
-  
+function SetDomain(domainKey) {
+    alert(domainKey);
 }
 
 function initCurrentDomain() {
@@ -62,6 +62,8 @@ function initCurrentDomain() {
     currentDomain = new UsuariosServidoresDomain(currentModuleEnum.Key);
   }  
 }
+
+export const App = { SetDomain };
 
 $(document).ready(async () => {
   if (!currentUser) {
