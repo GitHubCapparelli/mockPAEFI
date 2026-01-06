@@ -35,13 +35,13 @@ export class UsuariosServidoresDomain extends BaseDomain {
 
     this.unidades  = [];
 
-    this.query     = new QueryEngine(async (page, pageSize, filters) => {
-      const result = await this.api.GetPaginated({ page, pageSize, filters });
-      return {
-        data: result.data,
-        totalItems: result.pagination.totalRecords
-      };
-    }, 5);
+//    this.query     = new QueryEngine(async (page, pageSize, filters) => {
+//      const result = await this.api.GetPaginated({ page, pageSize, filters });
+//      return {
+//        data: result.data,
+//        totalItems: result.pagination.totalRecords
+//      };
+//    }, 5);
 
     this.activate();
   }
