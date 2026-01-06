@@ -51,10 +51,6 @@ function initCurrentDomain() {
   if (currentDomainEnum.Key === Dominio.UsuariosServidores.Key) {
     currentDomain = new UsuariosServidoresDomain();
   }  
-
-  if (currentDomain) {
-    currentDomain.Init();
-  }
 }
 
 $(document).ready(async () => {

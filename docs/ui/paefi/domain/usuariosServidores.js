@@ -43,7 +43,7 @@ export class UsuariosServidoresDomain extends BaseDomain {
 //      };
 //    }, 5);
 
-    this.activate();
+    this.Init();
   }
 
   /* -------------------------------------------------------
