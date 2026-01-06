@@ -1,7 +1,7 @@
 // ui.paefi.core.layout
 
 import { Render }                    from './renderer.js';
-import { Modulo, Dominio }           from './omEnums.js';
+import { Modulo, Dominio }           from './omEnum.js';
 import { UsuariosServidoresDomain }  from '../domain/usuariosServidores.js';
 import { Session, CurrentUserKey,
          Local, LastModuleKey, LastDomainKey
