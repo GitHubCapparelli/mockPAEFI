@@ -3,10 +3,6 @@
 import { LeftSidebar }     from './leftSidebar.js';
 import { Modulo, Dominio } from './omEnum.js';
 
-const txtUserLoginID   = 'txtUser-login';
-const txtPageTitleID   = 'page-title-text';
-const txtDomainTitleID = 'domain-title';
-
 /* Helper shared global methods */
 
 // previously PopulateSelectFromEnum()
@@ -55,7 +51,7 @@ function navbar() {
       $('<span>', { text: 'Transferência de Renda' }),
       $('<span>', { text: 'Tutorial' })
     ),
-    $('<span>', { id: 'txtUser-login', class: 'mx-4rem', text: 'Carregando...' })
+    $('<span>', { id: 'txtUser-login', class: 'mx-4rem', text: 'user.login' })
   );
 }
 
@@ -71,11 +67,11 @@ function pageContents() {
         $('<span>', { text: 'Gestão do PAEFI' }),
         $('<i>', { class: 'fa fa-angle-right fa-1x' })
       ),
-      $('<span>', { id: 'page-title-text', class: 'page-title-text', text: 'Carregando...' })
+      $('<span>', { id: 'page-title-text', class: 'page-title-text', text: 'Página' })
     );
 
   const $domainTitle = $('<div>', { class: 'mx-2 mt-2 ps-2 d-flex flex-column' }).append(
-    $('<span>', { id: 'domain-title', class: 'domain-title', text: 'Carregando...' })
+    $('<span>', { id: 'domain-title', class: 'domain-title', text: 'Opção' })
   );
 
   return $('<div>', { id: 'page-contents', class: 'page-contents d-flex flex-column mb-3' })
@@ -85,7 +81,7 @@ function pageContents() {
 function divFilters() {
   return $('<div>', { class: 'filters-bar mx-2' }).append(
     $('<div>', { id: 'divFilterOptions', class: 'filter-options p-2 d-flex gap-3' }).append(
-      $('<span>', { text: 'Carregando...' })
+      $('<span>', { text: 'Filtros' })
     ),
     $('<div>', { id: 'divFilterButtons', class: 'filter-buttons p-2 d-flex gap-2' }).append(
       $('<button>', { id: 'btnApplyFilter', class: 'btn btn-primary btnApplyFilter', text: 'Filtrar' }),

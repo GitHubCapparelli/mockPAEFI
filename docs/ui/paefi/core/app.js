@@ -1,7 +1,7 @@
 // ui.paefi.core.layout
 
 import { Render }                    from './renderer.js';
-import { Modulo, Dominio }           from './omEnum.js';
+import { Modulo, Dominio, Elemento } from './omEnum.js';
 import { UsuariosServidoresDomain }  from '../domain/usuariosServidores.js';
 import { Session, CurrentUserKey,
          Local, LastModuleKey, LastDomainKey
@@ -21,6 +21,10 @@ function init() {
   Render.DomainStructure(currentModuleEnum.Key);
 
   initCurrentDomain();
+
+  $(Elemento.TextoLogin).text(currentUser.login);
+  $(Elemento.TextoTituloPagina).text(currentModuleEnum.Value);
+  $(Elemento.TextoOpcao).text(currentDomainEnum.Value);
 }
 
 function resolvecurrentModuleEnum() {
@@ -43,7 +47,7 @@ function resolvecurrentDomainEnum() {
     if (currentModuleEnum == Modulo.Admin) {
       currentDomainEnum = Dominio.UsuariosServidores;
     }
-    // resolver valor default para os outros módulos...
+    Local.Set(LastDomainKey, currentDomainEnum.Key);
   }
 }
 

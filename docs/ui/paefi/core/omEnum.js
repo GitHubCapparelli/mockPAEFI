@@ -1,3 +1,30 @@
+export class Elemento {
+    static All = [];
+
+    static FromKey(key)        { return Elemento.All.find(x => x.Key === key) ?? null; }
+    static FromValue(value)    { return Elemento.All.find(x => x.Value === value) ?? null; }
+    static ValueFromKey(key)   { return Elemento.FromKey(key)?.Value ?? null; }
+    static KeyFromValue(value) { return Elemento.FromValue(value)?.Key ?? null; }
+
+    static TextoLogin          = new Elemento('txtUser-login','');
+    static TextoTituloPagina   = new Elemento('page-title-text','');
+    static TextoOpcao          = new Elemento('domain-title','');
+
+    constructor(key, value) {
+        this.Key = key;
+        this.Value = value;
+
+        if (!Modulo.All.some(x => x.Key === key)) {
+            Modulo.All.push(this);
+        }
+        Object.freeze(this);
+    }
+ 
+    toJSON() { return this.Key; }
+}
+Object.freeze(Elemento.All);
+
+
 export class Modulo {
     static All = [];
 
