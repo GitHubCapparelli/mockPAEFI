@@ -47,7 +47,7 @@ function resolveCurrentModule() {
 /* Rendering */
 function renderStructure() {
   const $appHeader = $('<div>', { id: 'app-header', class: 'app-header' });
-  appendNavbar($appHeader, login);
+  appendNavbar($appHeader);
 
   const $appMain  = $('<main>', { id: 'app-main', class: 'app-main' });
   const $appBody   = $('<div>', { id: 'app-body', class: 'app-body' });
@@ -58,6 +58,7 @@ function renderStructure() {
 }
 
 function appendNavbar(container) {
+
   // --- SIDS Top Navbar ---
   const $topNavbar = $('<div>', { id: 'top-navbar', class: 'top-navbar d-flex justify-content-between align-items-center' }).append(
     $('<div>', { class: 'mx-5rem d-flex align-items-center flex-grow-1 flex-nowrap gap-4' }).append(
