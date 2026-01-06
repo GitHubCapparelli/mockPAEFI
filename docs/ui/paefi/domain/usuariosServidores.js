@@ -22,7 +22,7 @@ export class UsuariosServidoresDomain {
     this.modulo      = modulo;
     this.api         = UsuariosServidoresAPI;
     this.unidades    = [];
-    this.render      = new Render();
+    this.render      = new Renderer();
     this.query       = new QueryEngine(this.api, this.render);
     this.Init();
   }
@@ -75,7 +75,7 @@ export class UsuariosServidoresDomain {
   }
 }
 
-class Render {
+class Renderer {
   Filters() {
     const $container = $('#divFilterOptions').empty();
 
