@@ -76,13 +76,18 @@ function syncHeights() {
 /* Public */
 export function Init(moduleKey) {
   renderOpcoes(moduleKey);
-  wireOpcoes();
-
   renderPreferences();
-  wirePreferences();
+  Render.OurDocs();
 
+  wireAll();
   syncHeights();
   $(window).on('resize', syncHeights);
+}
+
+function wireAll() {
+  wireOpcoes();
+  wirePreferences();
+  // wireOurDocs....
 }
 
 export const LeftSidebar = { Init };

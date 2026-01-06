@@ -29,6 +29,38 @@ export class Elemento {
 Object.freeze(Elemento.All);
 
 
+
+
+export class OurDocs {
+    static All = [];
+
+    static FromKey(key)        { return OurDocs.All.find(x => x.Key === key) ?? null; }
+    static FromValue(value)    { return OurDocs.All.find(x => x.Value === value) ?? null; }
+    static ValueFromKey(key)   { return OurDocs.FromKey(key)?.Value ?? null; }
+    static KeyFromValue(value) { return OurDocs.FromValue(value)?.Key ?? null; }
+
+    static DocExecutivo        = new OurDocs('docExecutivo','Documento Executivo');
+    static DocTecnico          = new OurDocs('docTecnico','Documetação Técnica');
+    static DocUsuario          = new OurDocs('docUsuario','Manual do Usuário');
+
+    constructor(key, value) {
+        this.Key = key;
+        this.Value = value;
+        this.JQuery = `#${key}`;
+
+        if (!OurDocs.All.some(x => x.Key === key)) {
+            OurDocs.All.push(this);
+        }
+        Object.freeze(this);
+    }
+ 
+    toJSON() { return this.Key; }
+}
+Object.freeze(OurDocs.All);
+
+
+
+
 export class Modulo {
     static All = [];
 
@@ -137,6 +169,8 @@ export class FuncaoUnidade {
     toJSON() { return this.Key; }
 }
 Object.freeze(FuncaoUnidade.All);
+
+
 
 
 export class FuncaoUsuario {

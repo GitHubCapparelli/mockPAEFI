@@ -134,7 +134,7 @@ function leftSidebar() {
                           ,
                           $(' <div>', { class: 'leftSidebar-bottom' }
                            ).append( accordion( Elemento.DivPreferencias )
-                                   , accordionSection( 'Documentação' )
+                                   , accordion( Elemento.DivOurDocs )
     )
   );
   $sidebar.append($header, $body);
@@ -163,7 +163,7 @@ function accordion(elemento, expanded = false) {
 }
 
 export function Options(options) {
-  const container = $(`#${Elemento.DivOpcoesDominio.Key}`).empty();
+  const container = $(Elemento.DivOpcoesDominio.JQuery).empty();
   options.forEach(opt => {
     container.append($('<button>', { class: 'btn btn-sm btn-outline-primary w-100 mb-2', text: opt.Value, 'data-domain': opt.Key }));
   });
@@ -190,6 +190,14 @@ function Preferences(prefs) {
   container.append($darkMode, $resumeDomain);
 }
 
+function OurDocs() {
+  const container = $(Elemento.divOurDocs.JQuery).empty();
+  Elemento.OurDocs.All.forEach(opt => {
+    container.append($('<button>', { id: opt.Key, class: 'btn btn-sm btn-outline-primary w-100 mb-2', text: opt.Value }));
+  });
+}
+
+// gone....
 function accordionSection(title, expanded = false, contentRenderer) {
   const id = `ls-${title.toLowerCase()}`;
 
