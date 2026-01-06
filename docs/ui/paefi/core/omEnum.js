@@ -14,8 +14,9 @@ export class Elemento {
     static DivOurDocs          = new Elemento('divOurDocs','Documentos');
 
     constructor(key, value) {
-        this.Key = key;
-        this.Value = value;
+        this.Key    = key;
+        this.Value  = value;
+        this.JQuery = $(`#${key}`);
 
         if (!Elemento.All.some(x => x.Key === key)) {
             Elemento.All.push(this);

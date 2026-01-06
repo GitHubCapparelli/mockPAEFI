@@ -54,7 +54,7 @@ function resolvecurrentDomainEnum() {
 }
 
 function SetDomain(domainKey) {
-  $(Elemento.TextoOpcaoAtual.Key).text(domainKey);
+  Elemento.TextoOpcaoAtual.JQuery.text(domainKey);
 }
 
 function initCurrentDomain() {
