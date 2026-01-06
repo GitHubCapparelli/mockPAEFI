@@ -143,7 +143,7 @@ function leftSidebar() {
 
 function accordion(elemento, expanded = false) {
   const $body = $('<div>', {
-    class: `accordion-collapse collapse ${expanded ? 'show' : ''}`
+    class: `accordion-collapse accordion-flush collapse ${expanded ? 'show' : ''}`
   }).append($('<div>', { id: elemento.Key, class: 'accordion-body', text: '[em breve]' }));
 
   return $('<div>', { class: 'accordion mb-2' }).append(
