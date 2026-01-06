@@ -15,7 +15,7 @@ export class QueryEngine {
     }
 
     async GetPaginated(filters) {
-        const response = await api.GetPaginated({
+        const response = await this.api.GetPaginated({
             page     : this.page,
             pageSize : this.pageSize,
             filters  : filters
