@@ -24,12 +24,17 @@ function wireOpcoes() {
   });
 }
 
-function loadPreferences() {
+function renderPreferences() {
   const prefs = getPreferences();
-  if (prefs.sidebarCollapsed) {
+  apply(prefs);
+  Render.Preferences(prefs);
+}
+
+function apply(preferences) {
+  if (preferences.sidebarCollapsed) {
     $('#leftSidebar').addClass('collapsed');
   }
-  applyTheme(prefs.theme || 'light');
+  applyTheme(preferences.theme || 'light');
 }
 
 function wirePreferences() {
@@ -73,8 +78,7 @@ export function Init(moduleKey) {
   renderOpcoes(moduleKey);
   wireOpcoes();
 
-  Render.Preferences(getPreferences());
-  loadPreferences();
+  renderPreferences();
   wirePreferences();
 
   syncHeights();
