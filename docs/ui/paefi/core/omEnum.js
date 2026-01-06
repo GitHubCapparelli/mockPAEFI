@@ -14,8 +14,8 @@ export class Elemento {
         this.Key = key;
         this.Value = value;
 
-        if (!Modulo.All.some(x => x.Key === key)) {
-            Modulo.All.push(this);
+        if (!Elemento.All.some(x => x.Key === key)) {
+            Elemento.All.push(this);
         }
         Object.freeze(this);
     }
