@@ -36,7 +36,7 @@ export class QueryEngine {
 
     constructor(api) {
         this.API = api
-        this.queryFn = queryFn;
+        //this.queryFn = queryFn;
         this.state   = {
             page: 1,
             pageSize: 5,

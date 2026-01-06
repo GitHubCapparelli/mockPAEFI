@@ -1,0 +1,213 @@
+// ui.paefi.core.utils
+
+import { LeftSidebar } from './leftSidebar.js';
+
+/* Helper shared global methods */
+
+// previously PopulateSelectFromEnum()
+export function EnumToSelect(selectId, enumType, includeEmpty = true, emptyLabel = 'Selecione...', excludeKeys = []) {
+  const $select = $(selectId);
+  $select.empty();
+
+  if (includeEmpty) {
+    $select.append(`<option value="">${emptyLabel}</option>`);
+  }
+
+  enumType.All.forEach(item => {
+    if (excludeKeys.includes(item.Key)) return;
+
+    $select.append(`<option value="${item.Key}">${item.Value}</option>`);
+  });
+}
+
+export function PageStructure() {
+  const $appHeader = $('<div>', { id: 'app-header', class: 'app-header' })
+    .append(navbar());
+
+  const $appBody = $('<div>', { id: 'app-body', class: 'app-body' })
+    .append($('<main>', { id: 'app-main', class: 'app-main' })
+      .append(pageContents()));
+
+  $('#app-shell').append($appHeader, $appBody);
+  $('#app-body').append(leftSidebar());
+}
+
+export function DomainStructure() {
+  if (currentModuleEnum == Modulo.Admin) {
+    $('#page-contents').append(
+      divFilters(),
+      datagrid()
+    );
+  }
+}
+
+function navbar() {
+  // --- SIDS Top Navbar ---
+  return $('<div>', { id: 'top-navbar', class: 'top-navbar d-flex justify-content-between align-items-center' }).append(
+    $('<div>', { class: 'mx-5rem d-flex align-items-center flex-grow-1 flex-nowrap gap-4' }).append(
+      $('<span>', { text: 'Menu' }),
+      $('<span>', { text: 'Home' }),
+      $('<a>', { href: '../../', text: 'Assistência Social' }),
+      $('<span>', { text: 'Segurança Alimentar' }),
+      $('<span>', { text: 'Transferência de Renda' }),
+      $('<span>', { text: 'Tutorial' })
+    ),
+    $('<span>', { id: 'txtUser-login', class: 'mx-4rem', text: currentUser.login })
+  );
+}
+
+function pageContents() {
+  // --- Title bar : breadcrumbs & page info ---
+  const $moduleInfo = $('<div>', { id: 'page-title-bar', class: 'page-title-bar mx-2 mt-2 ps-2 d-flex flex-column' })
+    .append($('<div>', { class: 'breadcrumbs d-flex justify-content-start align-items-center gap-2' })
+      .append(
+        $('<a>', { href: '#', text: 'Home' }),
+        $('<i>', { class: 'fa fa-angle-right fa-1x' }),
+        $('<a>', { href: '../../', text: 'Assistência Social' }),
+        $('<i>', { class: 'fa fa-angle-right fa-1x' }),
+        $('<span>', { text: 'Gestão do PAEFI' }),
+        $('<i>', { class: 'fa fa-angle-right fa-1x' })
+      ),
+      $('<span>', { id: 'page-title-text', class: 'page-title-text', text: currentModuleEnum.Value })
+    );
+
+  const $domainTitle = $('<div>', { class: 'mx-2 mt-2 ps-2 d-flex flex-column' }).append(
+    $('<span>', { id: 'domain-title', class: 'domain-title', text: currentDomainEnum.Value })
+  );
+
+  return $('<div>', { id: 'page-contents', class: 'page-contents d-flex flex-column mb-3' })
+    .append($moduleInfo, $domainTitle);
+}
+
+function divFilters() {
+  return $('<div>', { class: 'filters-bar mx-2' }).append(
+    $('<div>', { id: 'divFilterOptions', class: 'filter-options p-2 d-flex gap-3' }).append(
+      $('<span>', { text: 'Inclua os filtros aqui' })
+    ),
+    $('<div>', { id: 'divFilterButtons', class: 'filter-buttons p-2 d-flex gap-2' }).append(
+      $('<button>', { id: 'btnApplyFilter', class: 'btn btn-primary btnApplyFilter', text: 'Filtrar' }),
+      $('<button>', { id: 'btnClearFilter', class: 'btn btn-outline-secondary btnClearFilter', text: 'Limpar' })
+    )
+  );
+}
+
+function datagrid() {
+  const $actions = $('<div>', { id: 'divDataActionButtons', class: 'mt-4 ms-2 divDataActionButtons d-flex justify-content-between align-items-center gap-3' }).append(
+    $('<div>', { id: 'divDataActionButtons-left', class: 'action-buttons-left d-flex align-items-center gap-3' }).append(
+      $('<button>', { id: 'btnAddNew', class: 'btn btn-primary' }).append(
+        $('<i>', { class: 'fas fa-plus' }), ' Incluir')
+    ),
+    $('<div>', { id: 'divDataActionButtons-right', class: 'action-buttons-right d-flex align-items-center gap-3' }).append(
+      $('<button>', { class: 'btn btn-terciary', id: 'btnExport' }).append(
+        $('<i>', { class: 'fas fa-download' }), ' Exportar')
+    ));
+
+  const $table = $('<div>', { id: 'divdataTable', class: 'divdataTable mt-0 ms-2 table-responsive' }).append(
+    $('<span>', { text: 'Inclua a tabela aqui' })
+  );
+
+  const $nav = $('<div>', { id: 'divPagination-section', class: 'pagination-section d-flex justify-content-between align-items-center' }).append(
+    $('<div>', { id: 'divPagination-info', class: 'pagination-info' }).append(
+      $('<span>', { id: 'navInfo', text: 'nav info' })
+    ),
+    $('<nav>').append(
+      $('<ul>', { id: 'navControls', class: 'pagination mb-0' })
+    ));
+
+  return $('<section>', { id: 'dataSection', class: 'data-section mx-2' })
+    .append($actions, $table, $nav);
+}
+
+function leftSidebar() {
+  const $sidebar = $( '<aside>', { id: 'leftSidebar', class: 'leftSidebar' });
+
+  const $header  = $( '<div>', { class: 'p-2 d-flex justify-content-between align-items-center' })
+                    .append($('<button>', { id: 'btnSidebarToggle', 
+                                            class: 'btn btn-sm btn-outline-secondary',
+                                            title: 'Expandir / Recolher' }
+                            ).append( $( '<i>', { class: 'fas fa-bars' } ))
+                            ,
+                            $( '<span>', { id: 'leftSidebar-title', class: 'leftSidebar-title fw-bold', text: 'PAEFI' })
+                    );
+
+  const $body = $( '<div>', { id: 'leftSidebar-body', class: 'leftSidebar-body p-2' })
+                .append( $(' <div>', { class: 'leftSidebar-top' }
+//                          ).append( accordionSection( 'Opções', true, renderAdminOptions ))
+                          ).append( accordionSection( 'Opções', true ))
+                          ,
+                          $(' <div>', { class: 'leftSidebar-bottom' }
+                           ).append( accordionSection( 'Preferências', false, renderPreferences )
+                                   , accordionSection( 'Documentação' )
+    )
+  );
+  $sidebar.append($header, $body);
+  return $sidebar;
+}
+
+function renderAdminOptions($container, options) {
+  //const options = Dominio.All.filter(x => x.Key !== Dominio.Nenhum.Key);
+  options.forEach(opt => {
+    $('<button>', {
+      class: 'btn btn-sm btn-outline-primary w-100 mb-2',
+      text: opt.Value,
+      'data-domain': opt.Key
+    }).appendTo($container);
+  });
+}
+
+function accordionSection(title, expanded = false, contentRenderer) {
+  const id = `ls-${title.toLowerCase()}`;
+
+  const $body = $('<div>', {
+    id, class: `accordion-collapse collapse ${expanded ? 'show' : ''}`
+  }).append($('<div>', { class: 'accordion-body' }));
+
+  if (contentRenderer) {
+    contentRenderer($body.find('.accordion-body'));
+  } else {
+    $body.find('.accordion-body').text('[em breve]');
+  }
+
+  return $('<div>', { class: 'accordion mb-2' }).append(
+    $('<div>', { class: 'accordion-item' }).append(
+      $('<h2>', { class: 'accordion-header' }).append(
+        $('<button>', {
+          class: `accordion-button ${expanded ? '' : 'collapsed'}`,
+          'data-bs-toggle': 'collapse',
+          'data-bs-target': `#${id}`,
+          type: 'button',
+          text: title
+        })
+      ),
+      $body
+    )
+  );
+}
+
+function renderPreferences($container) {
+  const prefs = loadPrefs();
+
+  const $darkMode = $('<div>', { class: 'form-check form-switch mb-2' }).append(
+    $('<input>', {
+      id: 'chkDarkMode', type: 'checkbox', class: 'form-check-input',
+      checked: prefs.theme === 'dark'
+    }), $('<label>', { class: 'form-check-label', for: 'chkDarkMode', text: 'Modo escuro' })
+  );
+
+  const $resumeDomain = $('<div>', { class: 'form-check form-switch' }).append(
+    $('<input>', {
+      id: 'chkResumeDomain', type: 'checkbox', class: 'form-check-input',
+      checked: !!prefs.resumeLastDomain
+    }), $('<label>', {
+      class: 'form-check-label', for: 'chkResumeDomain',
+      text: 'Lembrar última opção'
+    }));
+
+  $container.append($darkMode, $resumeDomain);
+}
+
+export const Render = { 
+  EnumToSelect,
+  PageStructure,
+  DomainStructure
+};

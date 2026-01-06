@@ -7,91 +7,6 @@ import { Dominio } from './enums.js';
 function loadPrefs()      { return Local.Get(PreferencesKey) || {}; }
 function savePrefs(prefs) { Local.Set(PreferencesKey, prefs); }
 
-/* Rendering */
-function render() {
-  const $sidebar = $('<aside>', { id: 'leftSidebar', class: 'leftSidebar' });
-  const $header  = $('<div>', { 
-    class: 'p-2 d-flex justify-content-between align-items-center' }).append(
-    $('<button>', { id: 'btnSidebarToggle', class: 'btn btn-sm btn-outline-secondary',
-      title: 'Expandir / Recolher' }).append($('<i>', { class: 'fas fa-bars' })),
-    $('<span>', { id:'leftSidebar-title', class: 'leftSidebar-title fw-bold', text: 'PAEFI' })
-  );
-
-  const $body = $('<div>', { id:'leftSidebar-body', class: 'leftSidebar-body p-2' }).append(
-    $('<div>', { class: 'leftSidebar-top' }).append(
-      accordionSection('Opções', true, renderAdminOptions)
-    ),
-    $('<div>', { class: 'leftSidebar-bottom' }).append(
-      accordionSection('Preferências', false, renderPreferences),
-      accordionSection('Documentação')
-    )
-  );
-
-  $sidebar.append($header, $body);
-  $('#app-body').prepend($sidebar);
-
-  syncHeights();
-}
-
-function renderAdminOptions($container) {
-  const options = Dominio.All.filter(x => x.Key !== Dominio.Nenhum.Key);
-
-  options.forEach(opt => {
-    $('<button>', {
-      class: 'btn btn-sm btn-outline-primary w-100 mb-2',
-      text: opt.Value,
-      'data-domain': opt.Key
-    }).appendTo($container);
-  });
-}
-
-function accordionSection(title, expanded = false, contentRenderer) {
-  const id = `ls-${title.toLowerCase()}`;
-
-  const $body = $('<div>', { id, class: `accordion-collapse collapse ${expanded ? 'show' : ''}`
-  }).append($('<div>', { class: 'accordion-body' }));
-
-  if (contentRenderer) {
-    contentRenderer($body.find('.accordion-body'));
-  } else {
-    $body.find('.accordion-body').text('[em breve]');
-  }
-
-  return $('<div>', { class: 'accordion mb-2' }).append(
-    $('<div>', { class: 'accordion-item' }).append(
-      $('<h2>', { class: 'accordion-header' }).append(
-        $('<button>', {
-          class: `accordion-button ${expanded ? '' : 'collapsed'}`,
-          'data-bs-toggle': 'collapse',
-          'data-bs-target': `#${id}`,
-          type: 'button',
-          text: title
-        })
-      ),
-      $body
-    )
-  );
-}
-
-function renderPreferences($container) {
-  const prefs = loadPrefs();
-
-  const $darkMode = $('<div>', { class: 'form-check form-switch mb-2' }).append(
-    $('<input>', { id: 'chkDarkMode', type: 'checkbox', class: 'form-check-input', 
-      checked: prefs.theme === 'dark'
-    }), $('<label>', { class: 'form-check-label', for: 'chkDarkMode', text: 'Modo escuro' })
-  );
-
-  const $resumeDomain = $('<div>', { class: 'form-check form-switch' }).append(
-    $('<input>', { id: 'chkResumeDomain', type: 'checkbox', class: 'form-check-input',
-      checked: !!prefs.resumeLastDomain
-    }), $('<label>', { class: 'form-check-label', for: 'chkResumeDomain', 
-      text: 'Lembrar última opção'
-    }));
-
-  $container.append($darkMode, $resumeDomain);
-}
-
 /* Behavior */
 function restoreState() {
   const prefs = loadPrefs();
@@ -157,6 +72,7 @@ export function Init() {
   wireNavigation();
   wirePreferences();
 
+  syncHeights();
   $(window).on('resize', syncHeights);
 }
 
