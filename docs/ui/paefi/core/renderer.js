@@ -191,44 +191,11 @@ function Preferences(prefs) {
 }
 
 function OurDocs() {
-  const container = $(Elemento.divOurDocs.JQuery).empty();
+  const container = $(Elemento.DivOurDocs.JQuery).empty();
   Elemento.OurDocs.All.forEach(opt => {
     container.append($('<button>', { id: opt.Key, class: 'btn btn-sm btn-outline-primary border-0 w-100 mb-2', text: opt.Value }));
   });
 }
-
-// gone....
-function accordionSection(title, expanded = false, contentRenderer) {
-  const id = `ls-${title.toLowerCase()}`;
-
-  const $body = $('<div>', {
-    id, class: `accordion-collapse collapse ${expanded ? 'show' : ''}`
-  }).append($('<div>', { class: 'accordion-body' }));
-
-//  if (contentRenderer) {
-//    contentRenderer($body.find('.accordion-body'));
-//  } else {
-//    $body.find('.accordion-body').text('[em breve]');
-//  }
-
-  $body.find('.accordion-body').text('[em breve]');
-
-  return $('<div>', { class: 'accordion mb-2' }).append(
-    $('<div>', { class: 'accordion-item' }).append(
-      $('<h2>', { class: 'accordion-header' }).append(
-        $('<button>', {
-          class: `accordion-button ${expanded ? '' : 'collapsed'}`,
-          'data-bs-toggle': 'collapse',
-          'data-bs-target': `#${id}`,
-          type: 'button',
-          text: title
-        })
-      ),
-      $body
-    )
-  );
-}
-
 
 export function BuildTable(columns) {
   const thead = columns.map(c => `<th>${c.label}</th>`).join('');
