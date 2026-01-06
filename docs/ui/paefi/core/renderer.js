@@ -143,14 +143,12 @@ function leftSidebar() {
 }
 
 export function Options(options) {
-  const container = $(Elemento.DivOpcoesDominio.Key);
+  const container = $(`#${Elemento.DivOpcoesDominio.Key}`);
   options.forEach(opt => {
-    $('<button>', {
-      class: 'btn btn-sm btn-outline-primary w-100 mb-2',
-      text: opt.Value,
-      'data-domain': opt.Key
-    }).appendTo(container);
+    console.log(opt);
+    container.append($('<button>', { class: 'btn btn-sm btn-outline-primary w-100 mb-2', text: opt.Value, 'data-domain': opt.Key }));
   });
+  console.log(container.length);
 }
 
 function accordionOptions(expanded = false) {
