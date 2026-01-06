@@ -23,7 +23,7 @@ const columns = [
    Gateway
 ========================================================= */
 
-export class UsuariosServidoresGateway extends DomainGateway {
+export class UsuariosServidoresDomain extends BaseDomain {
 
   constructor() {
     super({
@@ -42,13 +42,16 @@ export class UsuariosServidoresGateway extends DomainGateway {
         totalItems: result.pagination.totalRecords
       };
     }, 5);
+
+    this.activate();
   }
 
   /* -------------------------------------------------------
      Lifecycle
   ------------------------------------------------------- */
 
-  async activate() {
+  // activate
+  async Init() {
     await this.loadLookups();
 
     this.renderFilters();

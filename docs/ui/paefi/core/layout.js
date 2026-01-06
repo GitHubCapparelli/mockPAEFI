@@ -5,61 +5,88 @@ import { Session, CurrentUserKey,
        } from '../../../services/storage.js';
 import { LeftSidebar }               from './leftSidebar.js';
 import { Modulo, Dominio } from './enums.js';
+import { UsuariosServidoresDomain } from '../domain/usuariosServidores.js';
 
-let currentModule;
 let currentDomain;
+let currentDomainEnum;
+let currentModuleEnum;
+
 const currentUser = Session.Get(CurrentUserKey);
 
 function init() {
-  resolveCurrentModule();
-  resolveCurrentDomain();
+  resolvecurrentModuleEnum();
+  resolvecurrentDomainEnum();
 
   renderStructure();
   LeftSidebar.Init();
-//  activateDomain(currentDomain.key);
+
+  renderDomainStructure();
+
+  initCurrentDomain();
 }
 
-function resolveCurrentDomain() {
-  const lastKey = Local.Get(LastDomainKey);
-  currentDomain = Dominio.All.find(x => x.Key === lastKey);
-
-  if (!currentDomain || currentDomain.Key === Dominio.Nenhum.Key) {
-    if (currentModule == Modulo.Admin) {
-      currentDomain = Dominio.UsuariosServidores;
-    }
-    // resolver valor default para os outros módulos...
-  }
-}
-
-function resolveCurrentModule() {
+function resolvecurrentModuleEnum() {
   const url     = window.location.href;
-  currentModule = url.includes('index.html') 
+  currentModuleEnum = url.includes('index.html') 
                ? Modulo.Atender
                : url.includes('monitor.html') 
                ? Modulo.Monitor
                : url.includes('admin.html') 
                ? Modulo.Admin
                : Modulo.Nenhum; 
-  Local.Set(LastModuleKey, currentModule.Key);
+  Local.Set(LastModuleKey, currentModuleEnum.Key);
+}
+
+function resolvecurrentDomainEnum() {
+  const lastKey = Local.Get(LastDomainKey);
+  currentDomainEnum = Dominio.All.find(x => x.Key === lastKey);
+
+  if (!currentDomainEnum || currentDomainEnum.Key === Dominio.Nenhum.Key) {
+    if (currentModuleEnum == Modulo.Admin) {
+      currentDomainEnum = Dominio.UsuariosServidores;
+    }
+    // resolver valor default para os outros módulos...
+  }
+}
+
+function initCurrentDomain() {
+  try {
+    if (currentDomainEnum.Key === Dominio.UsuariosServidores.Key) {
+      currentDomain = new UsuariosServidoresDomain();
+    }  
+
+    if (currentDomain) {
+      currentDomain.Init();
+    }
+  } catch(err) {
+    alert(err.toString());
+  }
 }
 
 /* Rendering */
 function renderStructure() {
-  const $appHeader = $('<div>', { id: 'app-header', class: 'app-header' });
-  appendNavbar($appHeader);
+  const $appHeader = $('<div>', { id: 'app-header', class: 'app-header' })
+  .append(navbar());
 
-  const $appMain  = $('<main>', { id: 'app-main', class: 'app-main' });
-  const $appBody   = $('<div>', { id: 'app-body', class: 'app-body' });
-  $appBody.append($appMain);
-  appendContents($appMain);
+  const $appBody   = $('<div>', { id: 'app-body', class: 'app-body' })
+  .append($('<main>', { id: 'app-main', class: 'app-main' })
+  .append(pageContents()));
 
   $('#app-shell').append($appHeader, $appBody);
 }
 
-function appendNavbar(container) {
+function renderDomainStructure() {
+  if (currentModuleEnum == Modulo.Admin) {
+    $('#page-contents').append(
+        divFilters(),
+        datagrid()
+    );
+  }
+}
 
+function navbar() {
   // --- SIDS Top Navbar ---
-  const $topNavbar = $('<div>', { id: 'top-navbar', class: 'top-navbar d-flex justify-content-between align-items-center' }).append(
+  return $('<div>', { id: 'top-navbar', class: 'top-navbar d-flex justify-content-between align-items-center' }).append(
     $('<div>', { class: 'mx-5rem d-flex align-items-center flex-grow-1 flex-nowrap gap-4' }).append(
       $('<span>', { text: 'Menu' }),
       $('<span>', { text: 'Home' }),
@@ -70,15 +97,13 @@ function appendNavbar(container) {
     ),
     $('<span>', { id: 'txtUser-login', class: 'mx-4rem', text: currentUser.login })
   );
-  container.append($topNavbar)
 }
 
-function appendContents(container) {
+function pageContents() {
   // --- Title bar : breadcrumbs & page info ---
-  const $titleBar = $('<div>', { id: 'page-title-bar', 
-    class: 'page-title-bar mx-2 mt-2 ps-2 d-flex flex-column' }).append(
-    $('<div>', { 
-      class: 'breadcrumbs d-flex justify-content-start align-items-center gap-2' }).append(
+  const $moduleInfo = $('<div>', { id: 'page-title-bar', class: 'page-title-bar mx-2 mt-2 ps-2 d-flex flex-column' })
+  .append($('<div>', { class: 'breadcrumbs d-flex justify-content-start align-items-center gap-2' })
+  .append(
       $('<a>', { href: '#', text: 'Home' }),
       $('<i>', { class: 'fa fa-angle-right fa-1x' }),
       $('<a>', { href: '../../', text: 'Assistência Social' }),
@@ -86,34 +111,18 @@ function appendContents(container) {
       $('<span>', { text: 'Gestão do PAEFI' }),
       $('<i>', { class: 'fa fa-angle-right fa-1x' })
     ),
-    $('<span>', { id: 'page-title-text', class: 'page-title-text', text: currentModule.Value })
+    $('<span>', { id: 'page-title-text', class: 'page-title-text', text: currentModuleEnum.Value })
   );
-  
-  const $pageContents = $('<div>', { id: 'page-contents', 
-    class: 'page-contents d-flex flex-column mb-3' })
-    .append($titleBar);
 
-  container.append($pageContents);
-}
-
-function renderDomain() {
-  $('#page-contents').append(domainTitleBar());
-
-  if (currentModule == Modulo.Admin) {
-    $('#page-contents').append(
-        filtersSection(),
-        dataSection()
-    );
-  }
-}
-
-function domainTitleBar() {
-  return $('<div>', { class: 'mx-2 mt-2 ps-2 d-flex flex-column' }).append(
-    $('<span>', { id:'domain-title', class: 'domain-title', text: currentDomain.Value })
+  const $domainTitle =  $('<div>', { class: 'mx-2 mt-2 ps-2 d-flex flex-column' }).append(
+    $('<span>', { id:'domain-title', class: 'domain-title', text: currentDomainEnum.Value })
   );
+ 
+  return $('<div>', { id: 'page-contents', class: 'page-contents d-flex flex-column mb-3' })
+  .append($moduleInfo, $domainTitle);
 }
 
-function filtersSection() {
+function divFilters() {
   return $('<div>', { class: 'filters-bar mx-2' }).append(
     $('<div>', { id:'divFilterOptions', class: 'filter-options p-2 d-flex gap-3' }).append(
         $('<span>', { text: 'Inclua os filtros aqui'})
@@ -125,7 +134,7 @@ function filtersSection() {
   );
 }
 
-function dataSection() {
+function datagrid() {
     const $actions = $('<div>', { id: 'divDataActionButtons', class: 'mt-4 ms-2 divDataActionButtons d-flex justify-content-between align-items-center gap-3' }).append(
         $('<div>', { id: 'divDataActionButtons-left', class: 'action-buttons-left d-flex align-items-center gap-3' }).append(
             $('<button>', { id: 'btnAddNew', class: 'btn btn-primary' }).append(
