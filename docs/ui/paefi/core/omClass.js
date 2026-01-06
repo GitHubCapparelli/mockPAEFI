@@ -2,7 +2,7 @@
 
 export class QueryEngine {
 
-    constructor(api, renderer) {
+    constructor(api, renderer, fnRefresh) {
         this.api        = api;
         this.page       = 1;
         this.pageSize   = 5;
@@ -10,7 +10,7 @@ export class QueryEngine {
         this.totalPages = 0;
         this.lastResult = null;
         this.render     = renderer;
-
+        this.refresh    = fnRefresh;
         api.Init();
     }
 
@@ -26,8 +26,7 @@ export class QueryEngine {
 
     async loadData(filters) {
         const response = await this.GetPaginated(filters);
-        this.render.Rows(response.data);
-        this.render.Info(response.pagination);
+        this.refresh(response);
     }
 
     async Apply(filters) {

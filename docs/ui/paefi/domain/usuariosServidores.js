@@ -23,7 +23,7 @@ export class UsuariosServidoresDomain {
     this.api         = UsuariosServidoresAPI;
     this.unidades    = [];
     this.render      = new Renderer();
-    this.query       = new QueryEngine(this.api, this.render);
+    this.query       = new QueryEngine(this.api, this.render, this.refresh);
     this.Init();
   }
 
@@ -47,6 +47,11 @@ export class UsuariosServidoresDomain {
 
       this.wireEvents();
       await this.query.loadData();
+  }
+
+  refresh(response) {
+    this.render.Rows(response.data, this.unidades);
+    this.render.Info(response.pagination);
   }
 
   getFilters() {
@@ -117,7 +122,7 @@ class Renderer {
     );
   }
 
-  Rows(list) 
+  Rows(list, unidades) 
   {
     const tbody = $('#dataRows').empty();
     if (!list.length) {
@@ -126,7 +131,7 @@ class Renderer {
     }
 
     list.forEach(u => {
-      const unidade = state.unidades.find(un => un.id === u.unidadeID);
+      const unidade = unidades.find(un => un.id === u.unidadeID);
       const sigla   = unidade ? unidade.sigla : 'ooops';
       tbody.append(`
         <tr>
