@@ -6,9 +6,9 @@ export class Elemento {
     static ValueFromKey(key)   { return Elemento.FromKey(key)?.Value ?? null; }
     static KeyFromValue(value) { return Elemento.FromValue(value)?.Key ?? null; }
 
-    static TextoLogin          = new Elemento('txtUser-login','');
-    static TextoTituloPagina   = new Elemento('page-title-text','');
-    static TextoOpcaoAtual     = new Elemento('domain-title','');
+    static TextoLogin          = new Elemento('txtUser-login','Login');
+    static TextoTituloPagina   = new Elemento('page-title-text','Página');
+    static TextoOpcaoAtual     = new Elemento('domain-title','Opção');
     static DivOpcoesDominio    = new Elemento('divOpcoes','Opções');
     static DivPreferencias     = new Elemento('divPreferencias','Preferências');
     static DivOurDocs          = new Elemento('divOurDocs','Documentos');
