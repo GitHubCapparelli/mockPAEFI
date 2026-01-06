@@ -16,7 +16,7 @@ export class Elemento {
     constructor(key, value) {
         this.Key    = key;
         this.Value  = value;
-        this.JQuery = $(`#${key}`);
+        this.JQuery = `#${key}`;
 
         if (!Elemento.All.some(x => x.Key === key)) {
             Elemento.All.push(this);
