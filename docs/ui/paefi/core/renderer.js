@@ -164,9 +164,9 @@ function accordionOptions(expanded = false) {
         $('<button>', {
           class: `accordion-button ${expanded ? '' : 'collapsed'}`,
           'data-bs-toggle': 'collapse',
-          'data-bs-target': `#${id}`,
+          'data-bs-target': `#${Elemento.DivOpcoesDominio.Key}`,
           type: 'button',
-          text: title
+          text: Elemento.DivOpcoesDominio.Value
         })
       ),
       $body
