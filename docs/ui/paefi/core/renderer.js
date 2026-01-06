@@ -2,6 +2,10 @@
 
 import { LeftSidebar } from './leftSidebar.js';
 
+const txtUserLoginID   = 'txtUser-login';
+const txtPageTitleID   = 'page-title-text';
+const txtDomainTitleID = 'domain-title';
+
 /* Helper shared global methods */
 
 // previously PopulateSelectFromEnum()
@@ -52,7 +56,7 @@ function navbar() {
       $('<span>', { text: 'Transferência de Renda' }),
       $('<span>', { text: 'Tutorial' })
     ),
-    $('<span>', { id: 'txtUser-login', class: 'mx-4rem', text: currentUser.login })
+    $('<span>', { id: 'txtUser-login', class: 'mx-4rem', text: 'Carregando...' })
   );
 }
 
@@ -68,11 +72,11 @@ function pageContents() {
         $('<span>', { text: 'Gestão do PAEFI' }),
         $('<i>', { class: 'fa fa-angle-right fa-1x' })
       ),
-      $('<span>', { id: 'page-title-text', class: 'page-title-text', text: currentModuleEnum.Value })
+      $('<span>', { id: 'page-title-text', class: 'page-title-text', text: 'Carregando...' })
     );
 
   const $domainTitle = $('<div>', { class: 'mx-2 mt-2 ps-2 d-flex flex-column' }).append(
-    $('<span>', { id: 'domain-title', class: 'domain-title', text: currentDomainEnum.Value })
+    $('<span>', { id: 'domain-title', class: 'domain-title', text: 'Carregando...' })
   );
 
   return $('<div>', { id: 'page-contents', class: 'page-contents d-flex flex-column mb-3' })
