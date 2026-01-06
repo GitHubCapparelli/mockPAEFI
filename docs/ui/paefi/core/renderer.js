@@ -211,8 +211,27 @@ function renderPreferences($container, prefs) {
   $container.append($darkMode, $resumeDomain);
 }
 
+
+export function BuildTable(columns) {
+  const thead = columns.map(c => `<th>${c.label}</th>`).join('');
+  const colSpan = columns.length;
+
+  const $table = $('<table>', { class: 'table table-striped table-hover' }).append(
+    $('<thead>').append(thead),
+    $('<tbody>', { id: 'dataRows' }).append(
+      $('<tr>').append($('<td>', {
+        colspan: colSpan,
+        class: 'text-center text-muted', text: 'Carregando...'
+      }))
+    )
+  );
+  const $container = $('#divdataTable').empty();
+  $container.append($table);
+}   
+
 export const Render = { 
   EnumToSelect,
   PageStructure,
-  DomainStructure
+  DomainStructure,
+  BuildTable
 };

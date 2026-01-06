@@ -1,5 +1,6 @@
 //ui.paefi.domain.usuariosServidores.js
 
+import { Render }                                     from '../core/renderer.js';
 import { BaseDomain }                                 from '../core/omClass.js';
 import { FuncaoUsuario, CargoUsuario, Especialidade } from '../core/omEnum.js';
 import { UsuariosServidoresAPI }                      from '../../../services/api/usuariosServidoresAPI.js';
@@ -58,7 +59,7 @@ export class UsuariosServidoresDomain extends BaseDomain {
     this.hydrateFilters();
     this.renderPagination();
 
-    super.BuildTable(columns);
+    Render.BuildTable(columns);
 
     this.wireEvents();
     await this.load();

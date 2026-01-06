@@ -17,19 +17,7 @@ export class BaseDomain {
     }
 
     wireEvents() { }
-    dispose() { }
-
-    BuildTable(columns) {
-        const $table = $('<table>', { class: 'table table-striped table-hover' }).append(
-        $('<thead>').append(thead), 
-            $('<tbody>', { id: 'dataRows' }).append(
-            $('<tr>').append($('<td>', { colspan: colSpan, 
-                class: 'text-center text-muted', text: 'Carregando...' }))
-            )
-        );
-        const $container = $('#divdataTable').empty();
-        $container.append($table);
-    }    
+    dispose() { } 
 }
 
 export class QueryEngine {
