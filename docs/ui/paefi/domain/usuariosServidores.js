@@ -1,15 +1,11 @@
 //ui.paefi.domain.usuariosServidores.js
 
 import { Render }                                     from '../core/renderer.js';
-import { BaseDomain }                                 from '../core/omClass.js';
-import { FuncaoUsuario, CargoUsuario, Especialidade } from '../core/omEnum.js';
-import { UsuariosServidoresAPI }                      from '../../../services/api/usuariosServidoresAPI.js';
+import { QueryEngine }                                from '../core/omClass.js';
 import { UnidadesAPI }                                from '../../../services/api/unidadesAPI.js';
-//import { CoreAdmin }                                  from './coreAdmin.js';
-
-/* =========================================================
-   Table definition
-========================================================= */
+import { UsuariosServidoresAPI }                      from '../../../services/api/usuariosServidoresAPI.js';
+import { FuncaoUsuario, CargoUsuario, Especialidade, 
+         Dominio, Modulo } from '../core/omEnum.js';
 
 const columns = [
   { label: 'Nome',            field: 'nome' },
@@ -20,98 +16,90 @@ const columns = [
   { label: 'Ações',           field: 'acoes' }
 ];
 
-/* =========================================================
-   Gateway
-========================================================= */
+export class UsuariosServidoresDomain {
 
-export class UsuariosServidoresDomain extends BaseDomain {
-
-  constructor(moduleKEY) {
-    super({
-      moduleKEY,
-      api: UsuariosServidoresAPI,
-      lookups: {
-        unidades: UnidadesAPI
-      }
-    });
-
-    this.unidades  = [];
-
-//    this.query     = new QueryEngine(async (page, pageSize, filters) => {
-//      const result = await this.api.GetPaginated({ page, pageSize, filters });
-//      return {
-//        data: result.data,
-//        totalItems: result.pagination.totalRecords
-//      };
-//    }, 5);
-
+  constructor(modulo) {
+    this.modulo      = modulo;
+    this.api         = UsuariosServidoresAPI;
+    this.unidades    = [];
+    this.render      = new Render();
+    this.query       = new QueryEngine(this.api, this.render);
     this.Init();
   }
 
-  /* -------------------------------------------------------
-     Lifecycle
-  ------------------------------------------------------- */
-
-  // activate
   async Init() {
-    await this.loadLookups();
+    await Promise.all([
+      UnidadesAPI.Init(),
+      UsuariosServidoresAPI.Init()
+    ]);
 
-    this.renderFilters();
-    this.hydrateFilters();
-    this.renderPagination();
-    Render.BuildTable(columns);
+    this.unidades = await UnidadesAPI.GetAll();
 
-    this.wireEvents();
-    await this.loadData();
+    if (this.modulo.Key === Modulo.Admin.Key) {
+      await this.viewAdmin();
+    }
   }
 
-  /* -------------------------------------------------------
-     Data
-  ------------------------------------------------------- */
+  async viewAdmin() {
+      this.render.Filters();
+      this.render.FiltersItems();
+      Render.BuildTable(columns);
 
-  async loadLookups() {
-    await this.lookups.unidades.Init();
-    this.unidades = this.lookups.unidades.GetAll();
+      this.wireEvents();
+      await this.query.loadData();
   }
 
-  async loadData() {
-    const result = await this.query.execute();
-    this.render(result.data);
-
-    await this.query.execute();
-    this.updatePaginationInfo(this.query.state);
+  getFilters() {
+    return {
+      unidadeID:       $('#cmbFilterUnidade').val() || null,
+      especialidade:   $('#cmbFilterEspecialidade').val() || null,
+      funcao:          $('#cmbFilterFuncao').val() || null,
+      cargo:           $('#cmbFilterCargo').val() || null
+    };
   }
 
-  /* -------------------------------------------------------
-     Rendering – Filters
-  ------------------------------------------------------- */
+  wireEvents() {
+    $('#btnApplyFilter').on('click', async () => {
+      const filters = this.getFilters();
+      this.query.Apply(filters);
+    });
 
-  renderFilters() {
+    $('#btnClearFilter').on('click', async () => {
+      $('.filters-bar select').val('');
+      this.query.Clear();
+    });
+
+    $('#navControls').on('click', 'a.page-link', async e => {
+      this.query.Navigate(e, $(this).data('page'));
+    });  
+  }
+}
+
+class Render {
+  Filters() {
     const $container = $('#divFilterOptions').empty();
 
     $container.append(
-      this.buildSelect('cmbFilterUnidade', 'Todas as Unidades'),
-      this.buildSelect('cmbFilterEspecialidade', 'Todas as Especialidades'),
-      this.buildSelect('cmbFilterFuncao', 'Todas as Funções'),
-      this.buildSelect('cmbFilterCargo', 'Todos os Cargos')
+      this.List('cmbFilterUnidade', 'Todas as Unidades'),
+      this.List('cmbFilterEspecialidade', 'Todas as Especialidades'),
+      this.List('cmbFilterFuncao', 'Todas as Funções'),
+      this.List('cmbFilterCargo', 'Todos os Cargos')
     );
   }
 
-  hydrateFilters() {
+  FiltersItems() {
     const $unidades = $('#cmbFilterUnidade');
-
     this.unidades.forEach(u =>
       $unidades.append(
         $('<option>', { value: u.id, text: u.sigla })
       )
     );
-
-    this.fillEnum('#cmbFilterEspecialidade', Especialidade);
-    this.fillEnum('#cmbFilterFuncao',        FuncaoUsuario);
-    this.fillEnum('#cmbFilterCargo',         CargoUsuario);
+    this.Enum('#cmbFilterEspecialidade', Especialidade);
+    this.Enum('#cmbFilterFuncao',        FuncaoUsuario);
+    this.Enum('#cmbFilterCargo',         CargoUsuario);
   }
 
-  buildSelect(id, placeholder) {
+  List(id, placeholder) {
     return $('<select>', {
       id,
       class: 'form-select form-select-sm'
@@ -120,9 +108,8 @@ export class UsuariosServidoresDomain extends BaseDomain {
     );
   }
 
-  fillEnum(selector, enumType) {
+  Enum(selector, enumType) {
     const $select = $(selector);
-
     enumType.All.forEach(e =>
       $select.append(
         $('<option>', { value: e.Key, text: e.Value })
@@ -130,126 +117,66 @@ export class UsuariosServidoresDomain extends BaseDomain {
     );
   }
 
-  /* -------------------------------------------------------
-     Rendering – Table
-  ------------------------------------------------------- */
-
-  render(list) {
-    const $tbody = $('#dataRows').empty();
-
-    if (!list || !list.length) {
-      $tbody.append(
-        $('<tr>').append(
-          $('<td>', {
-            colspan: 6,
-            class: 'text-center text-muted',
-            text: 'Nenhum registro'
-          })
-        )
-      );
+  Rows(list) 
+  {
+    const tbody = $('#dataRows').empty();
+    if (!list.length) {
+      tbody.append(`<tr><td colspan="${columns.length}">Nenhum registro</td></tr>`);
       return;
     }
 
     list.forEach(u => {
-      const unidade = this.unidades.find(x => x.id === u.unidadeID);
-      $tbody.append(this.buildRow(u, unidade));
+      const unidade = state.unidades.find(un => un.id === u.unidadeID);
+      const sigla   = unidade ? unidade.sigla : 'ooops';
+      tbody.append(`
+        <tr>
+          <td title="${u.nome}">${u.nome}</td>
+          <td>${sigla}</td>
+          <td>${u.especialidade === Especialidade.NaoInformada.Key ? '' : Especialidade.ValueFromKey(u.especialidade)}</td>
+          <td>${u.funcao === FuncaoUsuario.NaoInformada.Key        ? '' : FuncaoUsuario.ValueFromKey(u.funcao)}</td>
+          <td>${u.cargo === CargoUsuario.NaoInformado.Key          ? '' : CargoUsuario.ValueFromKey(u.cargo)}</td>
+          <td>
+            <button class="btn btn-sm btn-primary js-edit" data-id="${u.id}" title="Editar">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-sm btn-danger js-delete" data-id="${u.id}" title="Deletar">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+      `);
     });
   }
 
-  buildRow(u, unidade) {
-    return $('<tr>').append(
-      $('<td>').text(u.nome),
-      $('<td>').text(unidade?.sigla || ''),
-      $('<td>').text(Especialidade.ValueFromKey(u.especialidade) || ''),
-      $('<td>').text(FuncaoUsuario.ValueFromKey(u.funcao) || ''),
-      $('<td>').text(CargoUsuario.ValueFromKey(u.cargo) || ''),
-      $('<td>').append(
-        $('<button>', {
-          class: 'btn btn-sm btn-primary js-edit',
-          'data-id': u.id
-        }).append(
-          $('<i>', { class: 'fas fa-edit' })
-        )
-      )
-    );
-  }
+  Info(p) {
+    const start         = (p.page - 1) * p.pageSize + 1;
+    const end           = Math.min(start + p.pageSize - 1, p.totalRecords);
+    const prevDisabled  = p.page === 1 ? 'disabled' : '';
+    const nextDisabled  = p.page === p.totalPages ? 'disabled' : '';
 
-  /* -------------------------------------------------------
-     Pagination
-  ------------------------------------------------------- */
+    const $navInfo  = $('#navInfo');
+    $navInfo.text(`Mostrando ${start} - ${end} de ${p.totalRecords} registros`);
 
-  renderPagination() {
-    const $container = $('#divPagination').empty();
+    const $ul       = $('#navControls').empty();
+    $ul.append(`
+      <li class="page-item ${prevDisabled}">
+        <a class="page-link" href="#" data-page="${p.page - 1}">Anterior</a>
+      </li>
+    `);
 
-    $container.append(
-      $('<nav>').append(
-        $('<ul>', { class: 'pagination pagination-sm mb-0' }).append(
-          $('<li>', { class: 'page-item' }).append(
-            $('<a>', {
-              href: '#',
-              class: 'page-link',
-              'data-page': 'prev',
-              text: '«'
-            })
-          ),
-          $('<li>', { class: 'page-item disabled' }).append(
-            $('<span>', {
-              id: 'lblPaginationInfo',
-              class: 'page-link'
-            })
-          ),
-          $('<li>', { class: 'page-item' }).append(
-            $('<a>', {
-              href: '#',
-              class: 'page-link',
-              'data-page': 'next',
-              text: '»'
-            })
-          )
-        )
-      )
-    );
-  }
+    for (let i = 1; i <= p.totalPages; i++) {
+      const active = i === p.page ? 'active' : '';
+      $ul.append(`
+        <li class="page-item ${active}">
+          <a class="page-link" href="#" data-page="${i}">${i}</a>
+        </li>
+      `);
+    }
 
-  updatePaginationInfo({ page, totalPages, totalRecords }) {
-    $('#lblPaginationInfo').text(
-      `Página ${page} de ${totalPages} (${totalRecords} registros)`
-    );
-  }
-
-  /* -------------------------------------------------------
-     Events
-  ------------------------------------------------------- */
-
-  wireEvents() {
-
-    $('#btnApplyFilter').on('click', async () => {
-      this.query.setFilters({
-        unidadeID:       $('#cmbFilterUnidade').val() || null,
-        especialidade:   $('#cmbFilterEspecialidade').val() || null,
-        funcao:          $('#cmbFilterFuncao').val() || null,
-        cargo:           $('#cmbFilterCargo').val() || null
-      });
-
-      this.query.resetPage();
-      await this.load();
-    });
-
-    $('#btnClearFilter').on('click', async () => {
-      $('.filters-bar select').val('');
-      this.query.clearFilters();
-      this.query.resetPage();
-      await this.load();
-    });
-
-    $('#divPagination').on('click', 'a[data-page]', async e => {
-      e.preventDefault();
-
-      const action = $(e.currentTarget).data('page');
-      if (action === 'prev') this.query.prevPage();
-      if (action === 'next') this.query.nextPage();
-
-      await this.load();
-    });
+    $ul.append(`
+      <li class="page-item ${nextDisabled}">
+        <a class="page-link" href="#" data-page="${p.page + 1}">Próxima</a>
+      </li>
+    `);
   }
 }

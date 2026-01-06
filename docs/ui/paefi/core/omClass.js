@@ -1,100 +1,52 @@
 // ui.paefi.core.objectModel
 
-export class BaseDomain {
-    constructor({ moduleKEY, api, lookups = {} }) {
-        this.moduleKEY   = moduleKEY;
-        this.api         = api;
-        this.lookups     = lookups;
-        this.QueryEngine = new QueryEngine(api);
-    }
-
-    async activate() {
-        this.wireEvents();
-        await this.loadData();
-    }
-
-    async loadData() {
-        throw new Error('load() not implemented');
-    }
-
-    wireEvents() { }
-    dispose() { } 
-}
-
 export class QueryEngine {
 
-    constructor(api) {
-        this.API = api
-        //this.queryFn = queryFn;
-        this.state   = {
-            page: 1,
-            pageSize: 5,
-            filters: {},
-            totalItems: 0,
-            totalPages: 0
-        };
+    constructor(api, renderer) {
+        this.api        = api;
+        this.page       = 1;
+        this.pageSize   = 5;
+        this.totalItems = 0;
+        this.totalPages = 0;
         this.lastResult = null;
+        this.render     = renderer;
+
+        api.Init();
     }
 
-    /* Core execution */
-    async execute() {
-        const { page, pageSize, filters } = this.state;
-
-        const result = await this.queryFn(page, pageSize, filters);
-
-        this.state.totalItems = result.totalItems ?? 0;
-        this.state.totalPages = Math.max(
-            1,
-            Math.ceil(this.state.totalItems / this.state.pageSize)
-        );
-
-        this.lastResult = result;
-        return result;
+    async GetPaginated(filters) {
+        const response = await api.GetPaginated({
+            page     : this.page,
+            pageSize : this.pageSize,
+            filters  : filters
+        });
+        this.lastResult = response;
+        return response;
     }
 
-    /* Pagination */
-    async next() {
-        if (this.state.page < this.state.totalPages) {
-            this.state.page++;
-            return this.execute();
-        }
-        return this.lastResult;
+    async loadData(filters) {
+        const response = await this.GetPaginated(filters);
+        this.render.Rows(response.data);
+        this.render.Info(response.pagination);
     }
 
-    async prev() {
-        if (this.state.page > 1) {
-            this.state.page--;
-            return this.execute();
-        }
-        return this.lastResult;
+    async Apply(filters) {
+      this.page = 1;
+      await this.loadData(filters);
     }
 
-    async goTo(page) {
-        const target = Math.max(1, Math.min(page, this.state.totalPages));
-        this.state.page = target;
-        return this.execute();
+    async Clear() {
+      this.page = 1;
+      await this.loadData();
     }
 
-    /* Filters */
-    async setFilters(filters) {
-        this.state.filters = { ...filters };
-        this.state.page = 1;
-        return this.execute();
-    }
+    async Navigate(e, page) {
+      e.preventDefault();
 
-    async reset() {
-        this.state.page = 1;
-        this.state.filters = {};
-        return this.execute();
-    }
+      const x = Number(page);
+      if (!x || x === this.page) return;
 
-    /* Read-only helpers */
-    get pagination() {
-        return {
-            page: this.state.page,
-            pageSize: this.state.pageSize,
-            totalItems: this.state.totalItems,
-            totalPages: this.state.totalPages
-        };
+      this.page = x;
+      await this.loadData();
     }
 }
