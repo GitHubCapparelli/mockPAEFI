@@ -44,7 +44,7 @@ export class UsuariosServidoresDomain extends BaseDomain {
 //      };
 //    }, 5);
 
-    this.Init();
+    //this.Init();
   }
 
   /* -------------------------------------------------------
@@ -58,7 +58,6 @@ export class UsuariosServidoresDomain extends BaseDomain {
     this.renderFilters();
     this.hydrateFilters();
     this.renderPagination();
-
     Render.BuildTable(columns);
 
     this.wireEvents();
@@ -76,7 +75,6 @@ export class UsuariosServidoresDomain extends BaseDomain {
 
   async load() {
     const result = await this.query.execute();
-
     this.render(result.data);
 
     await this.query.execute();
