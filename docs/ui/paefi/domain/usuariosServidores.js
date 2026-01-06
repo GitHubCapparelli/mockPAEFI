@@ -1,10 +1,10 @@
 //ui.paefi.domain.usuariosServidores.js
 
 import { BaseDomain }                                 from '../core/objectModel.js';
-import { FuncaoUsuario, CargoUsuario, Especialidade } from '../enums.js';
+import { FuncaoUsuario, CargoUsuario, Especialidade } from '../core/enums.js';
 import { UsuariosServidoresAPI }                      from '../../../services/api/usuariosServidoresAPI.js';
 import { UnidadesAPI }                                from '../../../services/api/unidadesAPI.js';
-import { CoreAdmin }                                  from './coreAdmin.js';
+//import { CoreAdmin }                                  from './coreAdmin.js';
 
 /* =========================================================
    Table definition
@@ -58,7 +58,7 @@ export class UsuariosServidoresDomain extends BaseDomain {
     this.hydrateFilters();
     this.renderPagination();
 
-    CoreAdmin.BuildTable(columns);
+    super.BuildTable(columns);
 
     this.wireEvents();
     await this.load();
