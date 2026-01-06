@@ -373,3 +373,9 @@ table td {
 .leftSidebar-bottom {
   margin-top: auto;
 }
+
+.accordion-headers:hover,
+.accordion-headers:active {
+    background-color: transparent;
+    box-shadow: none;
+}

@@ -148,7 +148,7 @@ function accordion(elemento, expanded = false) {
 
   return $('<div>', { class: 'accordion accordion-flush mb-2' }).append(
     $('<div>', { class: 'accordion-item' }).append(
-      $('<h2>', { class: 'accordion-headers hadow-none bg-transparent' }).append(
+      $('<h2>', { class: 'accordion-headers shadow-none' }).append(
         $('<button>', {
           class: `accordion-button ${expanded ? '' : 'collapsed'}`,
           'data-bs-toggle': 'collapse',
@@ -192,7 +192,7 @@ function Preferences(prefs) {
 
 function OurDocs() {
   const container = $(Elemento.DivOurDocs.JQuery).empty();
-  Elemento.OurDocs.All.forEach(opt => {
+  OurDocs.All.forEach(opt => {
     container.append($('<button>', { id: opt.Key, class: 'btn btn-sm btn-outline-primary border-0 w-100 mb-2', text: opt.Value }));
   });
 }
