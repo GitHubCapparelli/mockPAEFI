@@ -146,11 +146,11 @@ function accordion(elemento, expanded = false) {
     class: `accordion-collapse accordion-flush collapse ${expanded ? 'show' : ''}`
   }).append($('<div>', { id: elemento.Key, class: 'accordion-body', text: '[em breve]' }));
 
-  return $('<div>', { class: 'accordion mb-2' }).append(
+  return $('<div>', { class: 'accordion accordion-flush mb-2' }).append(
     $('<div>', { class: 'accordion-item' }).append(
       $('<h2>', { class: 'accordion-header' }).append(
         $('<button>', {
-          class: `accordion-button ${expanded ? '' : 'collapsed'}`,
+          class: `accordion-button border-0 ${expanded ? '' : 'collapsed'}`,
           'data-bs-toggle': 'collapse',
           'data-bs-target': `#${elemento.Key}`,
           type: 'button',
