@@ -42,7 +42,7 @@ export class UsuariosServidoresDomain {
 
   async viewAdmin() {
       this.render.Filters();
-      this.render.FiltersItems();
+      this.render.FiltersItems(this.unidades);
       Render.BuildTable(columns);
 
       this.wireEvents();
@@ -87,9 +87,9 @@ class Renderer {
     );
   }
 
-  FiltersItems() {
+  FiltersItems(unidades) {
     const $unidades = $('#cmbFilterUnidade');
-    this.unidades.forEach(u =>
+    unidades.forEach(u =>
       $unidades.append(
         $('<option>', { value: u.id, text: u.sigla })
       )
