@@ -13,10 +13,9 @@ const currentUser = Session.Get(CurrentUserKey);
 function init() {
   resolveCurrentModule();
   resolveCurrentDomain();
-  LeftSidebar.Init();
-  renderStructure();
-//  LeftSidebar.Init();
 
+  renderStructure();
+  LeftSidebar.Init();
 //  activateDomain(currentDomain.key);
 }
 

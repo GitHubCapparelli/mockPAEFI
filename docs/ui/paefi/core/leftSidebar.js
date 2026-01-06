@@ -1,6 +1,7 @@
-//ui/paefi/shell/leftSidebar.js
+//ui.paefi.core.leftSidebar
+
 import { Local, PreferencesKey } from '../../../services/storage.js';
-//import { CoreAdminGateway }      from '../gateway/coreGateway.js';
+import { Dominio } from './enums.js';
 
 /* Preferences (storage) */
 function loadPrefs()      { return Local.Get(PreferencesKey) || {}; }
@@ -33,16 +34,13 @@ function render() {
 }
 
 function renderAdminOptions($container) {
-  const options = [
-    { domain: 'usuariosServidores', label: 'Usuários Servidores' },
-    { domain: 'unidades',           label: 'Unidades' }
-  ];
+  const options = Dominio.All.filter(x => x.Key !== Dominio.Nenhum.Key);
 
   options.forEach(opt => {
     $('<button>', {
       class: 'btn btn-sm btn-outline-primary w-100 mb-2',
-      text: opt.label,
-      'data-domain': opt.domain
+      text: opt.Value,
+      'data-domain': opt.Key
     }).appendTo($container);
   });
 }
