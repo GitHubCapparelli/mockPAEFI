@@ -140,7 +140,8 @@ function leftSidebar() {
                           ).append( accordionSection( 'Opções', true ))
                           ,
                           $(' <div>', { class: 'leftSidebar-bottom' }
-                           ).append( accordionSection( 'Preferências', false, renderPreferences )
+//                          ).append(accordionSection('Preferências', false, renderPreferences)
+                           ).append( accordionSection( 'Preferências' )
                                    , accordionSection( 'Documentação' )
     )
   );
@@ -166,11 +167,13 @@ function accordionSection(title, expanded = false, contentRenderer) {
     id, class: `accordion-collapse collapse ${expanded ? 'show' : ''}`
   }).append($('<div>', { class: 'accordion-body' }));
 
-  if (contentRenderer) {
-    contentRenderer($body.find('.accordion-body'));
-  } else {
-    $body.find('.accordion-body').text('[em breve]');
-  }
+//  if (contentRenderer) {
+//    contentRenderer($body.find('.accordion-body'));
+//  } else {
+//    $body.find('.accordion-body').text('[em breve]');
+//  }
+
+  $body.find('.accordion-body').text('[em breve]');
 
   return $('<div>', { class: 'accordion mb-2' }).append(
     $('<div>', { class: 'accordion-item' }).append(
