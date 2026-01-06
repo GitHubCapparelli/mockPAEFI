@@ -1,6 +1,7 @@
 // ui.paefi.core.utils
 
-import { LeftSidebar } from './leftSidebar.js';
+import { LeftSidebar }     from './leftSidebar.js';
+import { Modulo, Dominio } from './omEnum.js';
 
 const txtUserLoginID   = 'txtUser-login';
 const txtPageTitleID   = 'page-title-text';
@@ -36,8 +37,8 @@ export function PageStructure() {
   $('#app-body').append(leftSidebar());
 }
 
-export function DomainStructure() {
-  if (currentModuleEnum == Modulo.Admin) {
+export function DomainStructure(moduleKey) {
+  if (moduleKey == Modulo.Admin.Key) {
     $('#page-contents').append(
       divFilters(),
       datagrid()
