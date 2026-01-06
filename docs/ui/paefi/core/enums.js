@@ -1,3 +1,61 @@
+export class Modulo {
+    static All = [];
+
+    static FromKey(key)        { return Modulo.All.find(x => x.Key === key) ?? null; }
+    static FromValue(value)    { return Modulo.All.find(x => x.Value === value) ?? null; }
+    static ValueFromKey(key)   { return Modulo.FromKey(key)?.Value ?? null; }
+    static KeyFromValue(value) { return Modulo.FromValue(value)?.Key ?? null; }
+
+    static Nenhum       = new Modulo('','Módulo');
+    static Admin        = new Modulo('admin','Administração');
+    static Monitor      = new Modulo('monitor','Supervisão');
+    static Atender      = new Modulo('atender','Atendimento');
+
+    constructor(key, value) {
+        this.Key = key;
+        this.Value = value;
+
+        if (!Modulo.All.some(x => x.Key === key)) {
+            Modulo.All.push(this);
+        }
+        Object.freeze(this);
+    }
+ 
+    toJSON() { return this.Key; }
+}
+Object.freeze(Modulo.All);
+
+
+
+export class Dominio {
+    static All = [];
+
+    static FromKey(key)        { return Dominio.All.find(x => x.Key === key) ?? null; }
+    static FromValue(value)    { return Dominio.All.find(x => x.Value === value) ?? null; }
+    static ValueFromKey(key)   { return Dominio.FromKey(key)?.Value ?? null; }
+    static KeyFromValue(value) { return Dominio.FromValue(value)?.Key ?? null; }
+
+    static Nenhum                 = new Dominio('','Domínio');
+    static Unidades               = new Dominio('unidades','Unidades');
+    static UsuariosServidores     = new Dominio('usuarios-servidores','Usuários Servidores');
+
+    constructor(key, value) {
+        this.Key = key;
+        this.Value = value;
+
+        if (!Dominio.All.some(x => x.Key === key)) {
+            Dominio.All.push(this);
+        }
+        Object.freeze(this);
+    }
+ 
+    toJSON() { return this.Key; }
+}
+Object.freeze(Dominio.All);
+
+
+
+
 export class FuncaoUnidade {
     static All = [];
 

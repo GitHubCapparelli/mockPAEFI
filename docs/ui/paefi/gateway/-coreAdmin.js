@@ -2,8 +2,8 @@
 import { Session, CurrentUserKey,
          Local, LastModuleKey, LastDomainKey
        } from '../../../services/storage.js';
-import { Core 
-       } from '../shell/core.js';
+import { CoreLayout 
+       } from '../core/coreLayout.js';
 import { UsuariosServidoresGateway } from './usuariosServidoresGateway.js';
 import { CoreAPI }                   from '../../../services/api/coreAPI.js';
 
@@ -27,7 +27,7 @@ function init() {
   const currentModule = resolveCurrentModule();
   const currentDomain = resolveCurrentDomain(currentModule.key);
   
-  Core.Init(currentUser, currentModule.title);
+  CoreLayout.Init(currentUser, currentModule.title);
   $('#page-contents').append(
       domainTitleBar(), 
       filtersSection(),
@@ -164,7 +164,6 @@ export function BuildTable(columns) {
 
   $('#divdataTable').empty().append($table);
 }
-
 
 export const CoreAdmin = { 
   BuildTable

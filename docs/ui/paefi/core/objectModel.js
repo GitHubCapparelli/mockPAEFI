@@ -1,11 +1,33 @@
-// ui/paefi/engine/queryEngine.js
+// ui.paefi.core.objectModel
+
+export class BaseDomain {
+    constructor({ api, lookups = {} }) {
+        this.api = api;
+        this.lookups = lookups;
+        this.QueryEngine = new QueryEngine();
+    }
+
+    async activate() {
+        this.wireEvents();
+        await this.loadData();
+    }
+
+    async load() {
+        throw new Error('load() not implemented');
+    }
+
+    wireEvents() { }
+    dispose() { }
+}
+
 export class QueryEngine {
 
-    constructor(queryFn, pageSize = 10) {
+    constructor(api) {
+        this.API = api
         this.queryFn = queryFn;
         this.state   = {
             page: 1,
-            pageSize: pageSize,
+            pageSize: 5,
             filters: {},
             totalItems: 0,
             totalPages: 0
