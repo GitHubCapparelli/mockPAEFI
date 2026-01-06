@@ -250,6 +250,7 @@ export function BuildTable(columns) {
 export const Render = { 
   Options,
   Preferences,
+  OurDocs,
   EnumToSelect,
   PageStructure,
   DomainStructure,
