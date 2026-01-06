@@ -45,6 +45,7 @@ export class Modulo {
     constructor(key, value) {
         this.Key = key;
         this.Value = value;
+        this.JQuery = `#${key}`;
 
         if (!Modulo.All.some(x => x.Key === key)) {
             Modulo.All.push(this);
@@ -66,15 +67,32 @@ export class Dominio {
     static ValueFromKey(key)   { return Dominio.FromKey(key)?.Value ?? null; }
     static KeyFromValue(value) { return Dominio.FromValue(value)?.Key ?? null; }
 
-    static Nenhum                 = new Dominio('','Domínio');
-    static Unidades               = new Dominio('unidades','Unidades');
-    static UsuariosServidores     = new Dominio('usuarios-servidores','Usuários Servidores');
-    static Demandas               = new Dominio('demandas','Demandas');
-    static Documentos             = new Dominio('documentos','Documntos');
+    static Nenhum               = new Dominio('','Domínio');
+    static Anotacoes            = new Dominio('anotacoes', 'Anotações');
+    static Atendimentos         = new Dominio('atendimentos', 'Atendimentos');
+    static Atividades           = new Dominio('atividades', 'Atividades');
+    static CasosDeUso           = new Dominio('casos-de-uso', 'Casos de Uso');
+    static Compromissos         = new Dominio('compromissos', 'Compromissos');
+    static Demandas             = new Dominio('demandas','Demandas');
+    static Denuncias            = new Dominio('denuncias', 'Denuncias');
+    static Documentos           = new Dominio('documentos','Documentos');
+    static Enderecos            = new Dominio('enderecos', 'Endereços');
+    static Historico            = new Dominio('historico', 'Histórico de Operacoes');
+    static Interfaces           = new Dominio('interfaces', 'Interfaces (wireframes)');
+    static Objetivos            = new Dominio('objetivos', 'Objetivos');
+    static Processos            = new Dominio('processos', 'Processos');
+    static Riscos               = new Dominio('riscos', 'Riscos');
+    static Servicos             = new Dominio('servicos', 'Serviços');
+    static Tarefas              = new Dominio('tarefas', 'Tarefas');
+    static Unidades             = new Dominio('unidades','Unidades');
+    static usuariosCidadaos     = new Dominio('usuarios-cidadaos','Usuarios Cidadãos');
+    static UsuariosServidores   = new Dominio('usuarios-servidores','Usuários Servidores');
+    static Violações            = new Dominio('violacoes','Violações');
 
     constructor(key, value) {
         this.Key = key;
         this.Value = value;
+        this.JQuery = `#${key}`;
 
         if (!Dominio.All.some(x => x.Key === key)) {
             Dominio.All.push(this);
@@ -108,6 +126,7 @@ export class FuncaoUnidade {
     constructor(key, value) {
         this.Key = key;
         this.Value = value;
+        this.JQuery = `#${key}`;
 
         if (!FuncaoUnidade.All.some(x => x.Key === key)) {
             FuncaoUnidade.All.push(this);
@@ -147,6 +166,7 @@ export class FuncaoUsuario {
     constructor(key, value) {
         this.Key = key;
         this.Value = value;
+        this.JQuery = `#${key}`;
 
         if (!FuncaoUsuario.All.some(x => x.Key === key)) {
             FuncaoUsuario.All.push(this);
@@ -180,6 +200,7 @@ export class CargoUsuario {
     constructor(key, value) {
         this.Key = key;
         this.Value = value;
+        this.JQuery = `#${key}`;
 
         if (!CargoUsuario.All.some(x => x.Key === key)) {
             CargoUsuario.All.push(this);
@@ -224,6 +245,7 @@ export class Especialidade {
     constructor(key, value) {
         this.Key = key;
         this.Value = value;
+        this.JQuery = `#${key}`;
 
         if (!Especialidade.All.some(x => x.Key === key)) {
             Especialidade.All.push(this);

@@ -45,7 +45,7 @@ export class UsuariosServidoresDomain extends BaseDomain {
 //      };
 //    }, 5);
 
-    //this.Init();
+    this.Init();
   }
 
   /* -------------------------------------------------------
