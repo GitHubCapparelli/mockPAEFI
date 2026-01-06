@@ -14,7 +14,7 @@ function init() {
   resolveCurrentModule();
   resolveCurrentDomain();
   LeftSidebar.Init();
-  renderStructure(currentModule.Value, user.login);
+  renderStructure();
 //  LeftSidebar.Init();
 
 //  activateDomain(currentDomain.key);
@@ -45,19 +45,19 @@ function resolveCurrentModule() {
 }
 
 /* Rendering */
-function renderStructure(pageTitle, login) {
+function renderStructure() {
   const $appHeader = $('<div>', { id: 'app-header', class: 'app-header' });
   appendNavbar($appHeader, login);
 
   const $appMain  = $('<main>', { id: 'app-main', class: 'app-main' });
   const $appBody   = $('<div>', { id: 'app-body', class: 'app-body' });
   $appBody.append($appMain);
-  appendContents($appMain, pageTitle);
+  appendContents($appMain);
 
   $('#app-shell').append($appHeader, $appBody);
 }
 
-function appendNavbar(container, login) {
+function appendNavbar(container) {
   // --- SIDS Top Navbar ---
   const $topNavbar = $('<div>', { id: 'top-navbar', class: 'top-navbar d-flex justify-content-between align-items-center' }).append(
     $('<div>', { class: 'mx-5rem d-flex align-items-center flex-grow-1 flex-nowrap gap-4' }).append(
@@ -68,12 +68,12 @@ function appendNavbar(container, login) {
       $('<span>', { text: 'Transferência de Renda' }),
       $('<span>', { text: 'Tutorial' })
     ),
-    $('<span>', { id: 'txtUser-login', class: 'mx-4rem', text: login })
+    $('<span>', { id: 'txtUser-login', class: 'mx-4rem', text: currentUser.login })
   );
   container.append($topNavbar)
 }
 
-function appendContents(container, pageTitle) {
+function appendContents(container) {
   // --- Title bar : breadcrumbs & page info ---
   const $titleBar = $('<div>', { id: 'page-title-bar', 
     class: 'page-title-bar mx-2 mt-2 ps-2 d-flex flex-column' }).append(
@@ -86,7 +86,7 @@ function appendContents(container, pageTitle) {
       $('<span>', { text: 'Gestão do PAEFI' }),
       $('<i>', { class: 'fa fa-angle-right fa-1x' })
     ),
-    $('<span>', { id: 'page-title-text', class: 'page-title-text', text: pageTitle })
+    $('<span>', { id: 'page-title-text', class: 'page-title-text', text: currentModule.Value })
   );
   
   const $pageContents = $('<div>', { id: 'page-contents', 
