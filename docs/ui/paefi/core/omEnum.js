@@ -8,7 +8,8 @@ export class Elemento {
 
     static TextoLogin          = new Elemento('txtUser-login','');
     static TextoTituloPagina   = new Elemento('page-title-text','');
-    static TextoOpcao          = new Elemento('domain-title','');
+    static TextoOpcaoAtual     = new Elemento('domain-title','');
+    static DivOpcoesDominio    = new Elemento('divOpcoes','Opções');
 
     constructor(key, value) {
         this.Key = key;
@@ -65,6 +66,8 @@ export class Dominio {
     static Nenhum                 = new Dominio('','Domínio');
     static Unidades               = new Dominio('unidades','Unidades');
     static UsuariosServidores     = new Dominio('usuarios-servidores','Usuários Servidores');
+    static Demandas               = new Dominio('demandas','Demandas');
+    static Documentos             = new Dominio('documentos','Documntos');
 
     constructor(key, value) {
         this.Key = key;

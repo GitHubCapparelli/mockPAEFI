@@ -1,6 +1,6 @@
 // ui.paefi.core.utils
 
-import { Modulo } from './omEnum.js';
+import { Modulo, Elemento } from './omEnum.js';
 
 /* Helper shared global methods */
 
@@ -130,8 +130,7 @@ function leftSidebar() {
 
   const $body = $( '<div>', { id: 'leftSidebar-body', class: 'leftSidebar-body p-2' })
                 .append( $(' <div>', { class: 'leftSidebar-top' }
-//                          ).append( accordionSection( 'Opções', true, renderAdminOptions ))
-                          ).append( accordionSection( 'Opções', true ))
+                          ).append( accordionOptions( true ))
                           ,
                           $(' <div>', { class: 'leftSidebar-bottom' }
 //                          ).append(accordionSection('Preferências', false, renderPreferences)
@@ -143,15 +142,36 @@ function leftSidebar() {
   return $sidebar;
 }
 
-function renderAdminOptions($container, options) {
-  //const options = Dominio.All.filter(x => x.Key !== Dominio.Nenhum.Key);
+export function Options(options) {
+  const container = $(Elemento.DivOpcoesDominio.Key);
   options.forEach(opt => {
     $('<button>', {
       class: 'btn btn-sm btn-outline-primary w-100 mb-2',
       text: opt.Value,
       'data-domain': opt.Key
-    }).appendTo($container);
+    }).appendTo(container);
   });
+}
+
+function accordionOptions(expanded = false) {
+  const $body = $('<div>', {
+    class: `accordion-collapse collapse ${expanded ? 'show' : ''}`
+  }).append($('<div>', { id: Elemento.DivOpcoesDominio.Key, class: 'accordion-body', text: '[em breve]' }));
+
+  return $('<div>', { class: 'accordion mb-2' }).append(
+    $('<div>', { class: 'accordion-item' }).append(
+      $('<h2>', { class: 'accordion-header' }).append(
+        $('<button>', {
+          class: `accordion-button ${expanded ? '' : 'collapsed'}`,
+          'data-bs-toggle': 'collapse',
+          'data-bs-target': `#${id}`,
+          type: 'button',
+          text: title
+        })
+      ),
+      $body
+    )
+  );
 }
 
 function accordionSection(title, expanded = false, contentRenderer) {
@@ -225,6 +245,7 @@ export function BuildTable(columns) {
 }   
 
 export const Render = { 
+  Options,
   EnumToSelect,
   PageStructure,
   DomainStructure,

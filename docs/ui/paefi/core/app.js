@@ -1,6 +1,7 @@
 // ui.paefi.core.layout
 
 import { Render }                    from './renderer.js';
+import { LeftSidebar }               from './leftSidebar.js';
 import { Modulo, Dominio, Elemento } from './omEnum.js';
 import { UsuariosServidoresDomain }  from '../domain/usuariosServidores.js';
 import { Session, CurrentUserKey,
@@ -22,8 +23,9 @@ function init() {
 
   $(Elemento.TextoLogin.Key).text(currentUser.login);
   $(Elemento.TextoTituloPagina.Key).text(currentModuleEnum.Value);
-  $(Elemento.TextoOpcao.Key).text(currentDomainEnum.Value);
+  $(Elemento.TextoOpcaoAtual.Key).text(currentDomainEnum.Value);
 
+  LeftSidebar.Init(currentModuleEnum.Key);
   initCurrentDomain();
 }
 

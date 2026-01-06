@@ -1,13 +1,22 @@
 //ui.paefi.core.leftSidebar
 
-import { Local, PreferencesKey } from '../../../services/storage.js';
+import { Render }                      from './renderer.js';
+import { Modulo, Dominio, Elemento }   from './omEnum.js';
+import { Local, PreferencesKey }       from '../../../services/storage.js';
 
 /* Preferences (storage) */
 function loadPrefs()      { return Local.Get(PreferencesKey) || {}; }
 function savePrefs(prefs) { Local.Set(PreferencesKey, prefs); }
 
 /* Behavior */
-function restoreState() {
+function loadOpcoes(moduleKey) {
+  if (moduleKey === Modulo.Admin.Key) {
+    const options = Dominio.All.filter(x => x.Key !== Dominio.Nenhum.Key);
+    Render.Options(options);
+  }
+}
+
+function loadPreferences() {
   const prefs = loadPrefs();
   if (prefs.sidebarCollapsed) {
     $('#leftSidebar').addClass('collapsed');
@@ -65,9 +74,10 @@ function syncHeights() {
 }
 
 /* Public */
-export function Init() {
-  render();
-  restoreState();
+export function Init(moduleKey) {
+  loadOpcoes(moduleKey);
+  loadPreferences();
+
   wireNavigation();
   wirePreferences();
 
