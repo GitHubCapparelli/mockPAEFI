@@ -48,16 +48,12 @@ function resolvecurrentDomainEnum() {
 }
 
 function initCurrentDomain() {
-  try {
-    if (currentDomainEnum.Key === Dominio.UsuariosServidores.Key) {
-      currentDomain = new UsuariosServidoresDomain();
-    }  
+  if (currentDomainEnum.Key === Dominio.UsuariosServidores.Key) {
+    currentDomain = new UsuariosServidoresDomain();
+  }  
 
-    if (currentDomain) {
-      currentDomain.Init();
-    }
-  } catch(err) {
-    alert(err.toString());
+  if (currentDomain) {
+    currentDomain.Init();
   }
 }
 

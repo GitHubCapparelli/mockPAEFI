@@ -4,7 +4,7 @@ export class BaseDomain {
     constructor({ api, lookups = {} }) {
         this.api = api;
         this.lookups = lookups;
-        this.QueryEngine = new QueryEngine();
+        this.QueryEngine = new QueryEngine(api);
     }
 
     async activate() {
