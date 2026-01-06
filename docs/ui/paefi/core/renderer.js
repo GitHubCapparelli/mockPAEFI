@@ -30,11 +30,9 @@ export function PageStructure() {
     .append(navbar());
 
   const $appBody = $('<div>', { id: 'app-body', class: 'app-body' })
-    .append($('<main>', { id: 'app-main', class: 'app-main' })
-      .append(pageContents()));
+    .append(leftSidebar() , pageContents());
 
   $('#app-shell').append($appHeader, $appBody);
-  $('#app-body').append(leftSidebar());
 }
 
 export function DomainStructure(moduleKey) {
