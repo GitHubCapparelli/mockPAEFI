@@ -1,7 +1,6 @@
 //ui.paefi.core.leftSidebar
 
 import { Local, PreferencesKey } from '../../../services/storage.js';
-import { Dominio } from './enums.js';
 
 /* Preferences (storage) */
 function loadPrefs()      { return Local.Get(PreferencesKey) || {}; }
