@@ -10,6 +10,8 @@ export class Elemento {
     static TextoTituloPagina   = new Elemento('page-title-text','');
     static TextoOpcaoAtual     = new Elemento('domain-title','');
     static DivOpcoesDominio    = new Elemento('divOpcoes','Opções');
+    static DivPreferencias     = new Elemento('divPreferencias','Preferências');
+    static DivOurDocs          = new Elemento('divOurDocs','Documentos');
 
     constructor(key, value) {
         this.Key = key;

@@ -5,29 +5,20 @@ import { Modulo, Dominio, Elemento }   from './omEnum.js';
 import { Local, PreferencesKey }       from '../../../services/storage.js';
 
 /* Preferences (storage) */
-function loadPrefs()      { return Local.Get(PreferencesKey) || {}; }
+function getPreferences() { return Local.Get(PreferencesKey) || {}; }
 function savePrefs(prefs) { Local.Set(PreferencesKey, prefs); }
 
 /* Behavior */
-function loadOpcoes(moduleKey) {
+function renderOpcoes(moduleKey) {
   if (moduleKey === Modulo.Admin.Key) {
     const options = Dominio.All.filter(x => x.Key !== Dominio.Nenhum.Key);
     Render.Options(options);
   }
 }
 
-function loadPreferences() {
-  const prefs = loadPrefs();
-  if (prefs.sidebarCollapsed) {
-    $('#leftSidebar').addClass('collapsed');
-  }
-  applyTheme(prefs.theme || 'light');
-}
-
-function wireNavigation() {
+function wireOpcoes() {
   $(document).on('click', '[data-domain]', async function () {
     const domain = $(this).data('domain');
-
     //try {
     //  await CoreAdminGateway.ActivateAdminGateway(domain);
     //} catch (err) {
@@ -37,23 +28,31 @@ function wireNavigation() {
   });
 }
 
+function loadPreferences() {
+  const prefs = getPreferences();
+  if (prefs.sidebarCollapsed) {
+    $('#leftSidebar').addClass('collapsed');
+  }
+  applyTheme(prefs.theme || 'light');
+}
+
 function wirePreferences() {
   $('#btnSidebarToggle').on('click', () => {
-    const prefs = loadPrefs();
+    const prefs = getPreferences();
     $('#leftSidebar').toggleClass('collapsed');
     prefs.sidebarCollapsed = $('#leftSidebar').hasClass('collapsed');
     savePrefs(prefs);
   });
 
   $('#chkDarkMode').on('change', function () {
-    const prefs = loadPrefs();
+    const prefs = getPreferences();
     prefs.theme = this.checked ? 'dark' : 'light';
     savePrefs(prefs);
     applyTheme(prefs.theme);
   });
 
   $('#chkResumeDomain').on('change', function () {
-    const prefs = loadPrefs();
+    const prefs = getPreferences();
     prefs.resumeLastDomain = this.checked;
     savePrefs(prefs);
   });
@@ -75,10 +74,11 @@ function syncHeights() {
 
 /* Public */
 export function Init(moduleKey) {
-  loadOpcoes(moduleKey);
-  loadPreferences();
+  renderOpcoes(moduleKey);
+  wireOpcoes();
 
-  wireNavigation();
+  Render.Preferences(getPreferences());
+  loadPreferences();
   wirePreferences();
 
   syncHeights();

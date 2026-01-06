@@ -130,11 +130,10 @@ function leftSidebar() {
 
   const $body = $( '<div>', { id: 'leftSidebar-body', class: 'leftSidebar-body p-2' })
                 .append( $(' <div>', { class: 'leftSidebar-top' }
-                          ).append( accordionOptions( true ))
+                          ).append( accordion( Elemento.DivOpcoesDominio, true ))
                           ,
                           $(' <div>', { class: 'leftSidebar-bottom' }
-//                          ).append(accordionSection('Preferências', false, renderPreferences)
-                           ).append( accordionSection( 'Preferências' )
+                           ).append( accordion( Elemento.DivPreferencias )
                                    , accordionSection( 'Documentação' )
     )
   );
@@ -142,19 +141,10 @@ function leftSidebar() {
   return $sidebar;
 }
 
-export function Options(options) {
-  const container = $(`#${Elemento.DivOpcoesDominio.Key}`);
-  options.forEach(opt => {
-    console.log(opt);
-    container.append($('<button>', { class: 'btn btn-sm btn-outline-primary w-100 mb-2', text: opt.Value, 'data-domain': opt.Key }));
-  });
-  console.log(container.length);
-}
-
-function accordionOptions(expanded = false) {
+function accordion(elemento, expanded = false) {
   const $body = $('<div>', {
     class: `accordion-collapse collapse ${expanded ? 'show' : ''}`
-  }).append($('<div>', { id: Elemento.DivOpcoesDominio.Key, class: 'accordion-body', text: '[em breve]' }));
+  }).append($('<div>', { id: elemento.Key, class: 'accordion-body', text: '[em breve]' }));
 
   return $('<div>', { class: 'accordion mb-2' }).append(
     $('<div>', { class: 'accordion-item' }).append(
@@ -162,14 +152,42 @@ function accordionOptions(expanded = false) {
         $('<button>', {
           class: `accordion-button ${expanded ? '' : 'collapsed'}`,
           'data-bs-toggle': 'collapse',
-          'data-bs-target': `#${Elemento.DivOpcoesDominio.Key}`,
+          'data-bs-target': `#${elemento.Key}`,
           type: 'button',
-          text: Elemento.DivOpcoesDominio.Value
+          text: elemento.Value
         })
       ),
       $body
     )
   );
+}
+
+export function Options(options) {
+  const container = $(`#${Elemento.DivOpcoesDominio.Key}`).empty();
+  options.forEach(opt => {
+    container.append($('<button>', { class: 'btn btn-sm btn-outline-primary w-100 mb-2', text: opt.Value, 'data-domain': opt.Key }));
+  });
+}
+
+function Preferences(prefs) {
+  const $darkMode = $('<div>', { class: 'form-check form-switch mb-2' }).append(
+    $('<input>', {
+      id: 'chkDarkMode', type: 'checkbox', class: 'form-check-input',
+      checked: prefs.theme === 'dark'
+    }), $('<label>', { class: 'form-check-label', for: 'chkDarkMode', text: 'Modo escuro' })
+  );
+
+  const $resumeDomain = $('<div>', { class: 'form-check form-switch' }).append(
+    $('<input>', {
+      id: 'chkResumeDomain', type: 'checkbox', class: 'form-check-input',
+      checked: !!prefs.resumeLastDomain
+    }), $('<label>', {
+      class: 'form-check-label', for: 'chkResumeDomain',
+      text: 'Lembrar última opção'
+    }));
+
+  const container = $(`#${Elemento.DivPreferencias.Key}`).empty();
+  container.append($darkMode, $resumeDomain);
 }
 
 function accordionSection(title, expanded = false, contentRenderer) {
@@ -203,27 +221,6 @@ function accordionSection(title, expanded = false, contentRenderer) {
   );
 }
 
-function renderPreferences($container, prefs) {
-//  const prefs = loadPrefs();
-  const $darkMode = $('<div>', { class: 'form-check form-switch mb-2' }).append(
-    $('<input>', {
-      id: 'chkDarkMode', type: 'checkbox', class: 'form-check-input',
-      checked: prefs.theme === 'dark'
-    }), $('<label>', { class: 'form-check-label', for: 'chkDarkMode', text: 'Modo escuro' })
-  );
-
-  const $resumeDomain = $('<div>', { class: 'form-check form-switch' }).append(
-    $('<input>', {
-      id: 'chkResumeDomain', type: 'checkbox', class: 'form-check-input',
-      checked: !!prefs.resumeLastDomain
-    }), $('<label>', {
-      class: 'form-check-label', for: 'chkResumeDomain',
-      text: 'Lembrar última opção'
-    }));
-
-  $container.append($darkMode, $resumeDomain);
-}
-
 
 export function BuildTable(columns) {
   const thead = columns.map(c => `<th>${c.label}</th>`).join('');
@@ -244,6 +241,7 @@ export function BuildTable(columns) {
 
 export const Render = { 
   Options,
+  Preferences,
   EnumToSelect,
   PageStructure,
   DomainStructure,
