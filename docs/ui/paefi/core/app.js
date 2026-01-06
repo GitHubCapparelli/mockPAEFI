@@ -18,7 +18,7 @@ function init() {
   resolvecurrentDomainEnum();
 
   Render.PageStructure();
-  Render.DomainStructure(currentDomainEnum.Key);
+  Render.DomainStructure(currentModuleEnum.Key);
 
   initCurrentDomain();
 }
