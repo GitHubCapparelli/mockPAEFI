@@ -31,8 +31,8 @@ export class UsuariosServidoresDomain {
       UnidadesAPI.Init(),
       UsuariosServidoresAPI.Init()
     ]);
-    const unidades = UnidadesAPI.GetAll();
-    const instance = new UsuariosServidoresDomain(modulo, [unidades], UsuariosServidoresAPI);
+    const lookups = { unidades: UnidadesAPI.GetAll() };
+    const instance = new UsuariosServidoresDomain(modulo, lookups, UsuariosServidoresAPI);
 
     if (modulo.Key === Modulo.Admin.Key) {
       await instance.viewAdmin();
@@ -133,7 +133,7 @@ class Renderer {
     list.forEach(u => {
       tbody.append(`<tr>
           <td title="${u.nome}">${u.nome}</td>
-          <td>${this.lookups[0]?.find(un => un.id === u.unidadeID)?.sigla}</td>
+          <td>${this.lookups.unidades?.find(un => un.id === u.unidadeID)?.sigla ?? ''}</td>
           <td>${u.especialidade === Especialidade.NaoInformada.Key ? '' : Especialidade.ValueFromKey(u.especialidade)}</td>
           <td>${u.funcao === FuncaoUsuario.NaoInformada.Key ? '' : FuncaoUsuario.ValueFromKey(u.funcao)}</td>
           <td>${u.cargo === CargoUsuario.NaoInformado.Key ? '' : CargoUsuario.ValueFromKey(u.cargo)}</td>
