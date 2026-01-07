@@ -20,9 +20,9 @@ const columns = [
 
 export class UsuariosServidoresDomain {
 
-  constructor(modulo, unidades, api) {
+  constructor(modulo, lookups, api) {
     this.modulo = modulo;
-    this.render = new Renderer(unidades);
+    this.render = new Renderer(lookups);
     this.query  = new QueryEngine(api, (x) => this.render.Rows(x));
   }
 
@@ -32,7 +32,7 @@ export class UsuariosServidoresDomain {
       UsuariosServidoresAPI.Init()
     ]);
     const unidades = UnidadesAPI.GetAll();
-    const instance = new UsuariosServidoresDomain(modulo, unidades, UsuariosServidoresAPI);
+    const instance = new UsuariosServidoresDomain(modulo, [unidades], UsuariosServidoresAPI);
 
     if (modulo.Key === Modulo.Admin.Key) {
       await instance.viewAdmin();
