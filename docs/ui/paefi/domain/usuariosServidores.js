@@ -31,7 +31,6 @@ export class UsuariosServidoresDomain {
       UnidadesAPI.Init(),
       UsuariosServidoresAPI.Init()
     ]);
-
     const unidades = UnidadesAPI.GetAll();
     const instance = new UsuariosServidoresDomain(modulo, unidades, UsuariosServidoresAPI);
 
@@ -79,7 +78,6 @@ export class UsuariosServidoresDomain {
 class Renderer {
   constructor(lookups) {
     this.lookups = lookups;
-    lookups.forEach(x => x.GetAll());
   }
 
   Filters() {
