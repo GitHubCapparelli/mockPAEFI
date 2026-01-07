@@ -33,7 +33,7 @@ export class UsuariosServidoresDomain {
       UsuariosServidoresAPI.Init()
     ]);
 
-    this.unidades = await UnidadesAPI.GetAll();
+    this.unidades = UnidadesAPI.GetAll();
 
     if (this.modulo.Key === Modulo.Admin.Key) {
       await this.viewAdmin();
