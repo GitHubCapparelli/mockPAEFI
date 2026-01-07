@@ -54,14 +54,24 @@ function resolvecurrentDomainEnum() {
 }
 
 function SetDomain(domainKey) {
-  const el = Dominio.FromKey(domainKey);
-  $(Elemento.TextoOpcaoAtual.JQuery).text(el.Value);
+  if (domainKey === currentDomainEnum.Key) return;
+
+  currentDomainEnum = Dominio.FromKey(domainKey);
+  Local.Set(LastDomainKey, currentDomainEnum.Key);
+
+  $(Elemento.TextoOpcaoAtual.JQuery).text(currentDomainEnum.Value);
+
+  if (currentModuleEnum.Key === Modulo.Admin.Key) {
+    $(Elemento.DivFilterOptions.JQuery).empty();
+    $(Elemento.DataSection.JQuery).empty();
+  }
 }
 
 function initCurrentDomain() {
   if (currentDomainEnum.Key === Dominio.UsuariosServidores.Key) {
     currentDomain = UsuariosServidoresDomain.Create(currentModuleEnum);
   }  
+  ///
 }
 
 export const App = { SetDomain };

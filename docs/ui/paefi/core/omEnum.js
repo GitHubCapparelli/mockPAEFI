@@ -12,6 +12,8 @@ export class Elemento {
     static DivOpcoesDominio    = new Elemento('divOpcoes','Opções');
     static DivPreferencias     = new Elemento('divPreferencias','Preferências');
     static DivOurDocs          = new Elemento('divOurDocs','Documentos');
+    static DivFilterOptions    = new Elemento('divFilterOptions','');
+    static DataSection         = new Elemento('dataSection','');
 
     constructor(key, value) {
         this.Key    = key;
