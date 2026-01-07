@@ -21,20 +21,17 @@ const columns = [
 export class UsuariosServidoresDomain {
 
   constructor(modulo) {
-    this.modulo = modulo;
-    this.api = UsuariosServidoresAPI;
+    this.modulo   = modulo;
+    this.api      = UsuariosServidoresAPI;
     this.unidades = [];
-    this.render = new Renderer();
-    this.query = new QueryEngine(this.api, (x) => this.render.Rows(x));
-    this.Init();
+    this.render   = new Renderer([UnidadesAPI]);
+    this.query    = new QueryEngine(this.api, (x) => this.render.Rows(x));
+
+    UsuariosServidoresAPI.Init()
+    this.init();
   }
 
-  async Init() {
-    await Promise.all([
-      UnidadesAPI.Init(),
-      UsuariosServidoresAPI.Init()
-    ]);
-
+  async init() {
     if (this.modulo.Key === Modulo.Admin.Key) {
       await this.viewAdmin();
     }
@@ -43,9 +40,8 @@ export class UsuariosServidoresDomain {
   async viewAdmin() {
     Render.BuildTable(columns);
 
-    this.unidades = UnidadesAPI.GetAll();
-    this.render.Filters(this.unidades);
-    await this.query.loadData({}, this.unidades);
+    this.render.Filters();
+    await this.query.loadData();
 
     this.wireAdminEvents();
   }
@@ -77,11 +73,15 @@ export class UsuariosServidoresDomain {
 }
 
 class Renderer {
-  constructor() {
-    this.lookups = [];
+  constructor(lookups) {
+    this.lookups = lookups;
+    lookups.forEach(x => { 
+      x.Init();
+      x.GetAll();
+    });
   }
 
-  Filters(unidades) {
+  Filters() {
     const $container = $('#divFilterOptions').empty();
 
     $container.append(
@@ -90,15 +90,14 @@ class Renderer {
       this.List('cmbFilterFuncao', 'Todas as Funções'),
       this.List('cmbFilterCargo', 'Todos os Cargos')
     );
-    this.FiltersItems(unidades);
+    this.FiltersItems();
   }
 
-  FiltersItems(unidades) {
-    const $unidades = $('#cmbFilterUnidade');
-    unidades.forEach(u =>
-      $unidades.append(
-        $('<option>', { value: u.id, text: u.sigla })
-      )
+  FiltersItems() {
+    const $el  = $('#cmbFilterUnidade');
+    const list = this.lookups[0];
+    list.forEach(u =>
+      $el.append($('<option>', { value: u.id, text: u.sigla }))
     );
     this.Enum('#cmbFilterEspecialidade', Especialidade);
     this.Enum('#cmbFilterFuncao', FuncaoUsuario);
@@ -124,13 +123,15 @@ class Renderer {
   }
 
   Rows(response) {
+    const list  = response.data;
     const tbody = $('#dataRows').empty();
+
     if (!list.length) {
       tbody.append(`<tr><td colspan="${columns.length}">Nenhum registro</td></tr>`);
       return;
     }
 
-    response.data.forEach(u => {
+    list.forEach(u => {
       tbody.append(`<tr>
           <td title="${u.nome}">${u.nome}</td>
           <td>${this.lookups[0]?.find(un => un.id === u.unidadeID)?.sigla}</td>
