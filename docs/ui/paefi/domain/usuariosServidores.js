@@ -67,16 +67,16 @@ export class UsuariosServidoresDomain {
   wireAdminEvents() {
     $('#btnApplyFilter').on('click', async () => {
       const filters = this.getFilters();
-      this.query.Apply(filters);
+      this.query.Apply(filters, this.unidades);
     });
 
     $('#btnClearFilter').on('click', async () => {
       $('.filters-bar select').val('');
-      this.query.Clear();
+      this.query.Clear(this.unidades);
     });
 
     $('#navControls').on('click', 'a.page-link', async e => {
-      this.query.Navigate(e, $(this).data('page'));
+      this.query.Navigate(e, $(this).data('page'), this.unidades);
     });
   }
 }
@@ -132,14 +132,9 @@ class Renderer {
     }
 
     list.forEach(u => {
-      let sigla = 'Xiii!';
-      if (unidades) {
-        const unidade = unidades.find(un => un.id === u.unidadeID);
-        sigla = unidade ? unidade.sigla : 'ooops';
-      }
       tbody.append(`<tr>
           <td title="${u.nome}">${u.nome}</td>
-          <td>${sigla}</td>
+          <td>${unidades?.find(un => un.id === u.unidadeID)?.sigla}</td>
           <td>${u.especialidade === Especialidade.NaoInformada.Key ? '' : Especialidade.ValueFromKey(u.especialidade)}</td>
           <td>${u.funcao === FuncaoUsuario.NaoInformada.Key ? '' : FuncaoUsuario.ValueFromKey(u.funcao)}</td>
           <td>${u.cargo === CargoUsuario.NaoInformado.Key ? '' : CargoUsuario.ValueFromKey(u.cargo)}</td>
