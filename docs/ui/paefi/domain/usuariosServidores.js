@@ -19,18 +19,19 @@ const columns = [
 export class UsuariosServidoresDomain {
 
   constructor(modulo) {
+    UnidadesAPI.Init();
+    UsuariosServidoresAPI.Init();
+
     this.modulo      = modulo;
     this.api         = UsuariosServidoresAPI;
     this.unidades    = [];
     this.render      = new Renderer();
     this.query       = new QueryEngine(this.api, this.render, this.refresh);
+
     this.Init();
   }
 
   async Init() {
-    UnidadesAPI.Init();
-    UsuariosServidoresAPI.Init();
-
     this.unidades = UnidadesAPI.GetAll();
 
     if (this.modulo.Key === Modulo.Admin.Key) {
