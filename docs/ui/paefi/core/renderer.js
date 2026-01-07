@@ -31,9 +31,7 @@ export function PageStructure() {
 }
 
 export function DomainStructure(moduleKey) {
-  const $pageBody = $('#page-body');
-  $pageBody.empty();
-  
+  const $pageBody = $('#page-body').empty();
   if (moduleKey == Modulo.Admin.Key) {
     $pageBody.append(
       divFilters(),
@@ -195,6 +193,7 @@ function OurDocs() {
   });
 }
 
+
 export function BuildTable(columns) {
   const thead = columns.map(c => `<th>${c.label}</th>`).join('');
   const colSpan = columns.length;
@@ -211,7 +210,6 @@ export function BuildTable(columns) {
   const $container = $('#divdataTable').empty();
   $container.append($table);
 }
-
 
 export function List(id, placeholder) {
   return $('<select>', { id,  class: 'form-select form-select-sm'})

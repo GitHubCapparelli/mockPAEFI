@@ -1,4 +1,4 @@
-//ui.paefi.domain.usuariosServidores.js
+//ui.paefi.domain.usuariosServidores
 
 import { Render } from '../core/renderer.js';
 import { QueryEngine } from '../core/omClass.js';

@@ -7,6 +7,7 @@ import { UsuariosServidoresDomain }  from '../domain/usuariosServidores.js';
 import { Session, CurrentUserKey,
          Local, LastModuleKey, LastDomainKey
        } from '../../../services/storage.js';
+import { UnidadesDomain } from '../domain/unidades.js';
 
 let currentDomain;
 let currentDomainEnum;
@@ -48,7 +49,7 @@ function resolvecurrentDomainEnum() {
   if (!currentDomainEnum || currentDomainEnum.Key === Dominio.Nenhum.Key) {
     if (currentModuleEnum == Modulo.Admin) {
       currentDomainEnum = Dominio.UsuariosServidores;
-    }
+    } 
     Local.Set(LastDomainKey, currentDomainEnum.Key);
   }
 }
@@ -66,10 +67,11 @@ function SetDomain(domainKey) {
 }
 
 function initCurrentDomain() {
-  if (currentDomainEnum.Key === Dominio.UsuariosServidores.Key) {
-    currentDomain = UsuariosServidoresDomain.Create(currentModuleEnum);
-  }  
-  ///
+  if (currentDomainEnum.DomainClass) {
+    currentDomainEnum.DomainClass.Create(currentModuleEnum); // async ?
+  } else {
+    console.warn(`Domínio ${currentDomainEnum.Value} não implementado (ainda).`);
+  }
 }
 
 export const App = { SetDomain };
