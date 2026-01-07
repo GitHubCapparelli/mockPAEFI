@@ -3,74 +3,71 @@
 import { Render }                    from './renderer.js';
 import { LeftSidebar }               from './leftSidebar.js';
 import { Modulo, Dominio, Elemento } from './omEnum.js';
-import { UsuariosServidoresDomain }  from '../domain/usuariosServidores.js';
 import { Session, CurrentUserKey,
          Local, LastModuleKey, LastDomainKey
        } from '../../../services/storage.js';
-import { UnidadesDomain } from '../domain/unidades.js';
 
 let currentDomain;
-let currentDomainEnum;
-let currentModuleEnum;
+let currentModule;
 
 const currentUser = Session.Get(CurrentUserKey);
 
 function init() {
-  resolvecurrentModuleEnum();
-  resolvecurrentDomainEnum();
+  resolvecurrentModule();
+  resolvecurrentDomain();
 
   Render.PageStructure();
-  Render.DomainStructure(currentModuleEnum.Key);
+  Render.DomainStructure(currentModule.Key);
 
   $(Elemento.TextoLogin.JQuery).text(currentUser.login);
-  $(Elemento.TextoTituloPagina.JQuery).text(currentModuleEnum.Value);
-  $(Elemento.TextoOpcaoAtual.JQuery).text(currentDomainEnum.Value);
+  $(Elemento.TextoTituloPagina.JQuery).text(currentModule.Value);
+  $(Elemento.TextoOpcaoAtual.JQuery).text(currentDomain.Value);
 
-  LeftSidebar.Init(currentModuleEnum.Key);
+  LeftSidebar.Init(currentModule.Key);
   initCurrentDomain();
 }
 
-function resolvecurrentModuleEnum() {
+function resolvecurrentModule() {
   const url     = window.location.href;
-  currentModuleEnum = url.includes('index.html') 
+  currentModule = url.includes('index.html') 
                ? Modulo.Atender
                : url.includes('monitor.html') 
                ? Modulo.Monitor
                : url.includes('admin.html') 
                ? Modulo.Admin
                : Modulo.Nenhum; 
-  Local.Set(LastModuleKey, currentModuleEnum.Key);
+  Local.Set(LastModuleKey, currentModule.Key);
 }
 
-function resolvecurrentDomainEnum() {
+function resolvecurrentDomain() {
   const lastKey = Local.Get(LastDomainKey);
-  currentDomainEnum = Dominio.All.find(x => x.Key === lastKey);
+  currentDomain = Dominio.All.find(x => x.Key === lastKey);
 
-  if (!currentDomainEnum || currentDomainEnum.Key === Dominio.Nenhum.Key) {
-    if (currentModuleEnum == Modulo.Admin) {
-      currentDomainEnum = Dominio.UsuariosServidores;
+  if (!currentDomain || currentDomain.Key === Dominio.Nenhum.Key) {
+    if (currentModule == Modulo.Admin) {
+      currentDomain = Dominio.UsuariosServidores;
     } 
-    Local.Set(LastDomainKey, currentDomainEnum.Key);
+    Local.Set(LastDomainKey, currentDomain.Key);
   }
 }
 
 function SetDomain(domainKey) {
-  if (domainKey === currentDomainEnum.Key) return;
+  if (domainKey === currentDomain.Key) return;
 
-  currentDomainEnum = Dominio.FromKey(domainKey);
-  Local.Set(LastDomainKey, currentDomainEnum.Key);
+  currentDomain = Dominio.FromKey(domainKey);
+  Local.Set(LastDomainKey, currentDomain.Key);
 
-  $(Elemento.TextoOpcaoAtual.JQuery).text(currentDomainEnum.Value);
+  $(Elemento.TextoOpcaoAtual.JQuery).text(currentDomain.Value);
 
-  Render.DomainStructure(currentModuleEnum.Key);
+  Render.DomainStructure(currentModule.Key);
   initCurrentDomain();
 }
 
 function initCurrentDomain() {
-  if (currentDomainEnum.DomainClass) {
-    currentDomainEnum.DomainClass.Create(currentModuleEnum); // async ?
+  if (currentDomain.DomainClass) {
+    currentDomain.DClass.Create(currentModule); // async ?
   } else {
-    console.warn(`Domínio ${currentDomainEnum.Value} não implementado (ainda).`);
+    console.warn(`Domínio ${currentDomain.Value} não implementado (ainda).`);
   }
 }
 
