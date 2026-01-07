@@ -94,8 +94,7 @@ class Renderer {
 
   FiltersItems() {
     const $el  = $('#cmbFilterUnidade');
-    const list = this.lookups[0];
-    list.forEach(u =>
+    this.lookups.unidades.forEach(u =>
       $el.append($('<option>', { value: u.id, text: u.sigla }))
     );
     this.Enum('#cmbFilterEspecialidade', Especialidade);
