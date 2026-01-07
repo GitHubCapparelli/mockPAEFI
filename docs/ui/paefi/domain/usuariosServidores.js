@@ -20,30 +20,21 @@ const columns = [
 
 export class UsuariosServidoresDomain {
 
-  constructor(modulo, api, lookups) {
+  constructor(modulo) {
+    UnidadesAPI.Init();
+    UsuariosServidoresAPI.Init();
 
     this.modulo   = modulo;
-    this.api      = api;
-    //this.unidades = [];
-    this.render   = new Renderer(lookups);
-    this.query    = new QueryEngine(this.api, (x) => this.render.Rows(x));
+    this.render   = null;
+    this.query    = null;
 
-    UsuariosServidoresAPI.Init();
     this.init();
   }
 
-  static async Create(modulo) {
-    const api      = UsuariosServidoresAPI;
-    const unidades = UnidadesAPI;
-
-    await Promise.all([
-      unidades.Init(),
-      api.Init()
-    ]);
-    return new UsuariosServidoresDomain(modulo, api, [unidades]);
-  }
-
   async init() {
+    this.render = new Renderer([UnidadesAPI.GetAll()]);
+    this.query  = new QueryEngine(UsuariosServidoresAPI, (x) => this.render.Rows(x));
+
     if (this.modulo.Key === Modulo.Admin.Key) {
       await this.viewAdmin();
     }
