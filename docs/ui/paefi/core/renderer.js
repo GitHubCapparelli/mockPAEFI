@@ -31,8 +31,11 @@ export function PageStructure() {
 }
 
 export function DomainStructure(moduleKey) {
+  const $pageBody = $('#page-body');
+  $pageBody.empty();
+  
   if (moduleKey == Modulo.Admin.Key) {
-    $('#page-contents').append(
+    $pageBody.append(
       divFilters(),
       datagrid()
     );
@@ -56,25 +59,18 @@ function navbar() {
 
 function pageContents() {
   // --- Title bar : breadcrumbs & page info ---
-  const $moduleInfo = $('<div>', { id: 'page-title-bar', class: 'page-title-bar mx-2 mt-2 ps-2 d-flex justify-content-between' })
-    .append($('<div>', { class: 'breadcrumbs d-flex justify-content-start align-items-center gap-2' })
-      .append(
-        $('<a>', { href: '#', text: 'Home' }),
-        $('<i>', { class: 'fa fa-angle-right fa-1x' }),
-        $('<a>', { href: '../../', text: 'Assistência Social' }),
-        $('<i>', { class: 'fa fa-angle-right fa-1x' }),
-        $('<span>', { text: 'Gestão do PAEFI' }),
-        $('<i>', { class: 'fa fa-angle-right fa-1x' })
-      ),
-      $('<span>', { id: 'page-title-text', class: 'page-title-text', text: 'Página' })
-    );
+  const $moduleInfo   = $('<div>', { id: 'page-title-bar', class: 'page-title-bar mx-2 mt-2 ps-2 d-flex justify-content-between' })
+    .append($('<div>', { class: 'breadcrumbs d-flex justify-content-start align-items-center gap-2' }));
 
-  const $domainTitle = $('<div>', { class: 'mx-2 mt-2 ps-2 d-flex flex-column' }).append(
-    $('<span>', { id: 'domain-title', class: 'domain-title', text: 'Opção' })
-  );
+  const $pageHeader   = $('<div>', { id: 'page-header', class: 'page-header mx-2 mt-2 ps-2 d-flex flex-column' }).append(
+    $('<span>', { id: 'domain-title', class: 'domain-title', text: 'Opção' }));
 
-  return $('<div>', { id: 'page-contents', class: 'page-contents d-flex flex-column mb-3' })
-    .append($moduleInfo, $domainTitle);
+  const $pageBody     = $('<div>', { id: 'page-body', class: 'page-body mx-2 mt-2 ps-2 d-flex flex-column' });
+
+  const $pageContents = $('<div>', { id: 'page-contents', class: 'page-contents d-flex flex-column mb-3' });
+  $pageContents.append($moduleInfo, $pageHeader, $pageBody);
+
+  return $pageContents;
 }
 
 function divFilters() {

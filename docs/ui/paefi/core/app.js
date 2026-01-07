@@ -61,10 +61,7 @@ function SetDomain(domainKey) {
 
   $(Elemento.TextoOpcaoAtual.JQuery).text(currentDomainEnum.Value);
 
-  if (currentModuleEnum.Key === Modulo.Admin.Key) {
-    $(Elemento.DivFilterOptions.JQuery).empty();
-    $(Elemento.DataSection.JQuery).empty();
-  }
+  Render.DomainStructure(currentModuleEnum.Key);
   initCurrentDomain();
 }
 

@@ -14,6 +14,7 @@ export class Elemento {
     static DivOurDocs          = new Elemento('divOurDocs','Documentos');
     static DivFilterOptions    = new Elemento('divFilterOptions','');
     static DataSection         = new Elemento('dataSection','');
+    static PageBody            = new Elemento('page-body','');
 
     constructor(key, value) {
         this.Key    = key;
