@@ -198,7 +198,6 @@ export function OurDocs() {
 }
 
 // Admin
-
 export function BuildTable(columns) {
   const thead = columns.map(c => `<th>${c.label}</th>`).join('');
   const colSpan = columns.length;

@@ -40,12 +40,11 @@ export class UsuariosServidoresDomain {
   }
 
   async viewAdmin() {
-      Render.Filters();
-      Render.BuildTable(columns);
-      this.render.FiltersItems(this.unidades);
+    this.render.Filters(this.unidades);
+    Render.BuildTable(columns);
 
-      this.wireEvents();
-      await this.query.loadData();      
+    this.wireEvents();
+    await this.query.loadData();      
   }
 
   refresh(response) {
