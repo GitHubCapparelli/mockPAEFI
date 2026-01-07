@@ -14,7 +14,7 @@ let currentModuleEnum;
 
 const currentUser = Session.Get(CurrentUserKey);
 
-function init() {
+async function init() {
   resolvecurrentModuleEnum();
   resolvecurrentDomainEnum();
 
@@ -26,7 +26,7 @@ function init() {
   $(Elemento.TextoOpcaoAtual.JQuery).text(currentDomainEnum.Value);
 
   LeftSidebar.Init(currentModuleEnum.Key);
-  initCurrentDomain();
+  await initCurrentDomain();
 }
 
 function resolvecurrentModuleEnum() {
@@ -58,9 +58,9 @@ function SetDomain(domainKey) {
   $(Elemento.TextoOpcaoAtual.JQuery).text(el.Value);
 }
 
-function initCurrentDomain() {
+async function initCurrentDomain() {
   if (currentDomainEnum.Key === Dominio.UsuariosServidores.Key) {
-    currentDomain = new UsuariosServidoresDomain(currentModuleEnum);
+    currentDomain = await UsuariosServidoresDomain.Create(currentModuleEnum);
   }  
 }
 
@@ -72,5 +72,5 @@ $(document).ready(async () => {
       window.location.href = '/mockPAEFI/';
       return;
   }
-  init(); 
+  await init(); 
 });

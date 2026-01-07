@@ -20,15 +20,27 @@ const columns = [
 
 export class UsuariosServidoresDomain {
 
-  constructor(modulo) {
+  constructor(modulo, api, lookups) {
+
     this.modulo   = modulo;
-    this.api      = UsuariosServidoresAPI;
-    this.unidades = [];
-    this.render   = new Renderer([UnidadesAPI]);
+    this.api      = api;
+    //this.unidades = [];
+    this.render   = new Renderer(lookups);
     this.query    = new QueryEngine(this.api, (x) => this.render.Rows(x));
 
-    UsuariosServidoresAPI.Init()
+    UsuariosServidoresAPI.Init();
     this.init();
+  }
+
+  static async Create(modulo) {
+    const api      = UsuariosServidoresAPI;
+    const unidades = UnidadesAPI;
+
+    await Promise.all([
+      unidades.Init(),
+      api.Init()
+    ]);
+    return new UsuariosServidoresDomain(modulo, api, [unidades]);
   }
 
   async init() {
@@ -75,10 +87,7 @@ export class UsuariosServidoresDomain {
 class Renderer {
   constructor(lookups) {
     this.lookups = lookups;
-    lookups.forEach(x => { 
-      x.Init();
-      x.GetAll();
-    });
+    lookups.forEach(x => x.GetAll());
   }
 
   Filters() {
