@@ -28,10 +28,8 @@ export class UsuariosServidoresDomain {
   }
 
   async Init() {
-    await Promise.all([
-      UnidadesAPI.Init(),
-      UsuariosServidoresAPI.Init()
-    ]);
+    UnidadesAPI.Init();
+    UsuariosServidoresAPI.Init();
 
     this.unidades = UnidadesAPI.GetAll();
 
