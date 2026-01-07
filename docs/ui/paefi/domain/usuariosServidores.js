@@ -45,15 +45,13 @@ export class UsuariosServidoresDomain {
 
     this.unidades = UnidadesAPI.GetAll();
     this.render.Filters(this.unidades);
-
-    await this.query.loadData();
-    this.render.FiltersItems(this.unidades);
+    await this.query.loadData({}, this.unidades);
 
     this.wireAdminEvents();
   }
 
-  refresh(response) {
-    this.render.Rows(response.data, this.unidades);
+  refresh(response, lookup) {
+    this.render.Rows(response.data, lookup);
     this.render.Info(response.pagination);
   }
 

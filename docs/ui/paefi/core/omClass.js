@@ -24,9 +24,9 @@ export class QueryEngine {
         return response;
     }
 
-    async loadData(filters) {
+    async loadData(filters, lookup = null) {
         const response = await this.GetPaginated(filters);
-        this.refresh(response);
+        this.refresh(response, lookup);
     }
 
     async Apply(filters) {
