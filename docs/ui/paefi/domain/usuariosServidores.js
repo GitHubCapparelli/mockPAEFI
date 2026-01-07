@@ -136,7 +136,7 @@ class Renderer {
         const sigla   = unidade ? unidade.sigla : 'ooops';
       }
       else {
-        const sigla = 'Xiii!'
+        const sigla = 'Xiii!';
       }
       tbody.append(`<tr>
           <td title="${u.nome}">${u.nome}</td>
