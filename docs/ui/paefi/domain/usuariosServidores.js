@@ -20,25 +20,26 @@ const columns = [
 
 export class UsuariosServidoresDomain {
 
-  constructor(modulo) {
-    UnidadesAPI.Init();
-    UsuariosServidoresAPI.Init();
-
-    this.modulo   = modulo;
-    this.render   = null;
-    this.query    = null;
-
-    this.init();
+  constructor(modulo, unidades, api) {
+    this.modulo = modulo;
+    this.render = new Renderer(unidades);
+    this.query  = new QueryEngine(api, (x) => this.render.Rows(x));
   }
 
-  async init() {
-    this.render = new Renderer([UnidadesAPI.GetAll()]);
-    this.query  = new QueryEngine(UsuariosServidoresAPI, (x) => this.render.Rows(x));
+  static async Create(modulo) {
+    await Promise.all([
+      UnidadesAPI.Init(),
+      UsuariosServidoresAPI.Init()
+    ]);
 
-    if (this.modulo.Key === Modulo.Admin.Key) {
-      await this.viewAdmin();
+    const unidades = UnidadesAPI.GetAll();
+    const instance = new UsuariosServidoresDomain(modulo, unidades, UsuariosServidoresAPI);
+
+    if (modulo.Key === Modulo.Admin.Key) {
+      await instance.viewAdmin();
     }
-  }
+    return instance;
+  }  
 
   async viewAdmin() {
     Render.BuildTable(columns);

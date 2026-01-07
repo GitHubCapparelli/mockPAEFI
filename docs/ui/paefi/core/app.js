@@ -60,7 +60,7 @@ function SetDomain(domainKey) {
 
 function initCurrentDomain() {
   if (currentDomainEnum.Key === Dominio.UsuariosServidores.Key) {
-    currentDomain = new UsuariosServidoresDomain(currentModuleEnum);
+    currentDomain = UsuariosServidoresDomain.Create(currentModuleEnum);
   }  
 }
 
