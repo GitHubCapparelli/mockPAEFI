@@ -144,11 +144,11 @@ export class FuncaoUnidade {
     static KeyFromValue(value) { return FuncaoUnidade.FromValue(value)?.Key ?? null; }
 
     static NaoInformada        = new FuncaoUnidade('NaoInformada','Não Informada');
-    static Direcao             = new FuncaoUnidade('Direcao','Direcao');
-    static Coordenacao         = new FuncaoUnidade('Coordenacao','Coordenacao');
-    static Gestao              = new FuncaoUnidade('Gestao','Gestao');
-    static Governanca          = new FuncaoUnidade('Governanca','Governanca');
-    static AssistenciaSocial   = new FuncaoUnidade('AssistenciaSocial','AssistenciaSocial');
+    static Direcao             = new FuncaoUnidade('Direcao','Direção');
+    static Coordenacao         = new FuncaoUnidade('Coordenacao','Coordenação');
+    static Gestao              = new FuncaoUnidade('Gestao','Gestão');
+    static Governanca          = new FuncaoUnidade('Governanca','Governança');
+    static AssistenciaSocial   = new FuncaoUnidade('AssistenciaSocial','Assistencia Social');
     static Outra               = new FuncaoUnidade('Outra','Outra');
 
     constructor(key, value) {
