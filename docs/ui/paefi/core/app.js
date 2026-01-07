@@ -65,6 +65,7 @@ function SetDomain(domainKey) {
     $(Elemento.DivFilterOptions.JQuery).empty();
     $(Elemento.DataSection.JQuery).empty();
   }
+  initCurrentDomain();
 }
 
 function initCurrentDomain() {
