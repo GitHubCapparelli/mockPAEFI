@@ -1,6 +1,3 @@
-import { UnidadesDomain }             from "../domain/unidades.js";
-import { UsuariosServidoresDomain }   from "../domain/usuariosServidores.js";
-
 export class Elemento {
     static All = [];
 
@@ -117,16 +114,15 @@ export class Dominio {
     static Riscos               = new Dominio('riscos', 'Riscos');
     static Servicos             = new Dominio('servicos', 'Serviços');
     static Tarefas              = new Dominio('tarefas', 'Tarefas');
-    static Unidades             = new Dominio('unidades','Unidades', UnidadesDomain);
+    static Unidades             = new Dominio('unidades','Unidades');
     static usuariosCidadaos     = new Dominio('usuarios-cidadaos','Usuarios Cidadãos');
-    static UsuariosServidores   = new Dominio('usuarios-servidores','Usuários Servidores', UsuariosServidoresDomain);
+    static UsuariosServidores   = new Dominio('usuarios-servidores','Usuários Servidores');
     static Violações            = new Dominio('violacoes','Violações');
 
-    constructor(key, value, dClass = null) {
+    constructor(key, value) {
         this.Key       = key;
         this.Value     = value;
         this.JQuery    = `#${key}`;
-        this.DClass    = dClass;
 
         if (!Dominio.All.some(x => x.Key === key)) {
             Dominio.All.push(this);

@@ -64,10 +64,9 @@ function SetDomain(domainKey) {
 }
 
 function initCurrentDomain() {
-  if (currentDomain.DomainClass) {
-    currentDomain.DClass.Create(currentModule); // async ?
-  } else {
-    console.warn(`Domínio ${currentDomain.Value} não implementado (ainda).`);
+  switch (currentDomain.Key) {
+    case Dominio.UsuariosServidores.Key  : UsuariosServidoresDomain.Create(currentModule); break;
+    case Dominio.Unidades.Key            : UnidadesDomain.Create(currentModule); break;
   }
 }
 
