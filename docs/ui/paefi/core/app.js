@@ -7,6 +7,9 @@ import { Session, CurrentUserKey,
          Local, LastModuleKey, LastDomainKey
        } from '../../../services/storage.js';
 
+import { UnidadesDomain }            from '../domain/unidades.js';
+import { UsuariosServidoresDomain }  from '../domain/usuariosServidores.js';
+
 let currentDomain;
 let currentModule;
 
