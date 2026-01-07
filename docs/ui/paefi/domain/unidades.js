@@ -1,9 +1,9 @@
 //ui.paefi.domain.unidades
 
-import { Render }               from '../core/renderer.js';
-import { QueryEngine }          from '../core/omClass.js';
-import { UnidadesAPI }          from '../../../services/api/unidadesAPI.js';
-import { FuncaoUnidade, Modulo} from '../core/omEnum.js';
+import { Render }                     from '../core/renderer.js';
+import { QueryEngine, CommandEngine } from '../core/omClass.js';
+import { UnidadesAPI }                from '../../../services/api/unidadesAPI.js';
+import { FuncaoUnidade, Modulo}       from '../core/omEnum.js';
 
 const columns = [
   { label: 'Função', field: 'funcao' },
@@ -16,9 +16,10 @@ const columns = [
 export class UnidadesDomain {
 
   constructor(modulo, api) {
-    this.modulo = modulo;
-    this.render = new Renderer();
-    this.query  = new QueryEngine(api, (x) => this.render.Rows(x));
+    this.modulo   = modulo;
+    this.render   = new Renderer();
+    this.query    = new QueryEngine(api, (x) => this.render.Rows(x));
+    this.command  = new CommandEngine(api, (x) => this.render.Rows(x));
   }
 
   static async Create(modulo) {
@@ -32,7 +33,7 @@ export class UnidadesDomain {
   }  
 
   async viewAdmin() {
-    Render.BuildTable(columns);
+    Render.Table(columns);
 
     this.render.Filters();
     await this.query.loadData();
@@ -67,7 +68,7 @@ class Renderer {
   Filters() {
     const $container = $('#divFilterOptions').empty();
     $container.append(
-      Render.List('cmbFilterFuncao', 'Todas as Funções')
+      Render.Select('cmbFilterFuncao', 'Todas as Funções')
     );
     this.FiltersItems();
   }

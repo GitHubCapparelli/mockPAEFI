@@ -1,14 +1,14 @@
 // ui.paefi.core.objectModel
 
 export class QueryEngine {
-  constructor(api, fnRefresh) {
+  constructor(api, onLoaded) {
       this.api        = api;
       this.page       = 1;
       this.pageSize   = 5;
       this.totalItems = 0;
       this.totalPages = 0;
       this.lastResult = null;
-      this.refresh    = fnRefresh;
+      this.onLoaded   = onLoaded;
       api.Init();
   }
 
@@ -20,11 +20,6 @@ export class QueryEngine {
       });
       this.lastResult = response;
       return response;
-  }
-
-  async loadData(filters) {
-      const response = await this.GetPaginated(filters);
-      this.refresh(response);
   }
 
   async Apply(filters) {
@@ -45,5 +40,44 @@ export class QueryEngine {
 
     this.page = x;
     await this.loadData();
+  }
+
+  async loadData(filters) {
+    const response = await this.GetPaginated(filters);
+    this.onLoaded(response);
+  }
+}
+
+export class CommandEngine {
+  constructor(api, onExecuted) {
+    this.api        = api;
+    this.onExecuted = onExecuted;
+
+    api.Init();
+  }
+
+  async Create(data) {
+    await this.api.Create(data);
+    this.onExecuted();
+  }
+
+  async Update(id, data) {
+    await this.api.Update(id, data);
+    this.onExecuted();
+  }
+  
+  async Delete(id, data) {
+    await this.api.SoftDelete(id, data);
+    this.onExecuted();
+  }
+}
+
+class baseModal {
+  constructor(title, api, onCommand) {
+    this.api       = api;
+    this.title     = title;
+    this.onCommand = onCommand;
+
+    api.Init();
   }
 }

@@ -2,24 +2,7 @@
 
 import { Modulo, Elemento } from './omEnum.js';
 
-/* Helper shared global methods */
-
-// previously PopulateSelectFromEnum()
-export function EnumToSelect(selectId, enumType, includeEmpty = true, emptyLabel = 'Selecione...', excludeKeys = []) {
-  const $select = $(selectId);
-  $select.empty();
-
-  if (includeEmpty) {
-    $select.append(`<option value="">${emptyLabel}</option>`);
-  }
-
-  enumType.All.forEach(item => {
-    if (excludeKeys.includes(item.Key)) return;
-
-    $select.append(`<option value="${item.Key}">${item.Value}</option>`);
-  });
-}
-
+// Layout structure //
 export function PageStructure() {
   const $appHeader = $('<div>', { id: 'app-header', class: 'app-header' })
     .append(navbar());
@@ -71,45 +54,8 @@ function pageContents() {
   return $pageContents;
 }
 
-function divFilters() {
-  return $('<div>', { class: 'filters-bar mx-2' }).append(
-    $('<div>', { id: 'divFilterOptions', class: 'filter-options p-2 d-flex gap-3' }).append(
-      $('<span>', { text: 'Filtros' })
-    ),
-    $('<div>', { id: 'divFilterButtons', class: 'filter-buttons p-2 d-flex gap-2' }).append(
-      $('<button>', { id: 'btnApplyFilter', class: 'btn btn-primary btnApplyFilter', text: 'Filtrar' }),
-      $('<button>', { id: 'btnClearFilter', class: 'btn btn-outline-secondary btnClearFilter', text: 'Limpar' })
-    )
-  );
-}
 
-function datagrid() {
-  const $actions = $('<div>', { id: 'divDataActionButtons', class: 'mt-4 ms-2 divDataActionButtons d-flex justify-content-between align-items-center gap-3' }).append(
-    $('<div>', { id: 'divDataActionButtons-left', class: 'action-buttons-left d-flex align-items-center gap-3' }).append(
-      $('<button>', { id: 'btnAddNew', class: 'btn btn-primary' }).append(
-        $('<i>', { class: 'fas fa-plus' }), ' Incluir')
-    ),
-    $('<div>', { id: 'divDataActionButtons-right', class: 'action-buttons-right d-flex align-items-center gap-3' }).append(
-      $('<button>', { class: 'btn btn-terciary', id: 'btnExport' }).append(
-        $('<i>', { class: 'fas fa-download' }), ' Exportar')
-    ));
-
-  const $table = $('<div>', { id: 'divdataTable', class: 'divdataTable mt-0 ms-2 table-responsive' }).append(
-    $('<span>', { text: 'Dados' })
-  );
-
-  const $nav = $('<div>', { id: 'divPagination-section', class: 'pagination-section d-flex justify-content-between align-items-center' }).append(
-    $('<div>', { id: 'divPagination-info', class: 'pagination-info' }).append(
-      $('<span>', { id: 'navInfo', text: 'nav info' })
-    ),
-    $('<nav>').append(
-      $('<ul>', { id: 'navControls', class: 'pagination mb-0' })
-    ));
-
-  return $('<section>', { id: 'dataSection', class: 'data-section mx-2' })
-    .append($actions, $table, $nav);
-}
-
+// left sidebar //
 function leftSidebar() {
   const $sidebar = $('<aside>', { id: 'leftSidebar', class: 'leftSidebar' });
 
@@ -193,8 +139,47 @@ function OurDocs() {
   });
 }
 
+// filters and tables (admin) //
+function divFilters() {
+  return $('<div>', { class: 'filters-bar mx-2' }).append(
+    $('<div>', { id: 'divFilterOptions', class: 'filter-options p-2 d-flex gap-3' }).append(
+      $('<span>', { text: 'Filtros' })
+    ),
+    $('<div>', { id: 'divFilterButtons', class: 'filter-buttons p-2 d-flex gap-2' }).append(
+      $('<button>', { id: 'btnApplyFilter', class: 'btn btn-primary btnApplyFilter', text: 'Filtrar' }),
+      $('<button>', { id: 'btnClearFilter', class: 'btn btn-outline-secondary btnClearFilter', text: 'Limpar' })
+    )
+  );
+}
 
-export function BuildTable(columns) {
+function datagrid() {
+  const $actions = $('<div>', { id: 'divDataActionButtons', class: 'mt-4 ms-2 divDataActionButtons d-flex justify-content-between align-items-center gap-3' }).append(
+    $('<div>', { id: 'divDataActionButtons-left', class: 'action-buttons-left d-flex align-items-center gap-3' }).append(
+      $('<button>', { id: 'btnAddNew', class: 'btn btn-primary' }).append(
+        $('<i>', { class: 'fas fa-plus' }), ' Incluir')
+    ),
+    $('<div>', { id: 'divDataActionButtons-right', class: 'action-buttons-right d-flex align-items-center gap-3' }).append(
+      $('<button>', { class: 'btn btn-terciary', id: 'btnExport' }).append(
+        $('<i>', { class: 'fas fa-download' }), ' Exportar')
+    ));
+
+  const $table = $('<div>', { id: 'divdataTable', class: 'divdataTable mt-0 ms-2 table-responsive' }).append(
+    $('<span>', { text: 'Dados' })
+  );
+
+  const $nav = $('<div>', { id: 'divPagination-section', class: 'pagination-section d-flex justify-content-between align-items-center' }).append(
+    $('<div>', { id: 'divPagination-info', class: 'pagination-info' }).append(
+      $('<span>', { id: 'navInfo', text: 'nav info' })
+    ),
+    $('<nav>').append(
+      $('<ul>', { id: 'navControls', class: 'pagination mb-0' })
+    ));
+
+  return $('<section>', { id: 'dataSection', class: 'data-section mx-2' })
+    .append($actions, $table, $nav);
+}
+
+export function Table(columns) {
   const thead = columns.map(c => `<th>${c.label}</th>`).join('');
   const colSpan = columns.length;
 
@@ -211,14 +196,9 @@ export function BuildTable(columns) {
   $container.append($table);
 }
 
-export function List(id, placeholder) {
+export function Select(id, value) {
   return $('<select>', { id,  class: 'form-select form-select-sm'})
-         .append($('<option>', { value: '', text: placeholder }));
-}
-
-export function Enum(selector, enumType) {
-  const $select = $(selector);
-  enumType.All.forEach(e => $select.append($('<option>', { value: e.Key, text: e.Value })));
+  .append($('<option>', { value: '', text: value }));
 }
 
 export function Info(p) {
@@ -253,16 +233,20 @@ export function Info(p) {
     `);
 }
 
+export function Enum(selector, enumType) {
+  const $select = $(selector);
+  enumType.All.forEach(e => $select.append($('<option>', { value: e.Key, text: e.Value })));
+}
 
+// Public interface //
 export const Render = {
-  List,
-  Enum,
-  Info,
+  PageStructure,
+  DomainStructure,
   Options,
   Preferences,
   OurDocs,
-  EnumToSelect,
-  PageStructure,
-  DomainStructure,
-  BuildTable
+  Select,
+  Enum,
+  Table,
+  Info
 };

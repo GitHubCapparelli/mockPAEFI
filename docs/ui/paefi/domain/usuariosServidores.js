@@ -1,9 +1,9 @@
 //ui.paefi.domain.usuariosServidores
 
-import { Render } from '../core/renderer.js';
-import { QueryEngine } from '../core/omClass.js';
-import { UnidadesAPI } from '../../../services/api/unidadesAPI.js';
-import { UsuariosServidoresAPI } from '../../../services/api/usuariosServidoresAPI.js';
+import { Render }                     from '../core/renderer.js';
+import { QueryEngine, CommandEngine } from '../core/omClass.js';
+import { UnidadesAPI }                from '../../../services/api/unidadesAPI.js';
+import { UsuariosServidoresAPI }      from '../../../services/api/usuariosServidoresAPI.js';
 import {
   FuncaoUsuario, CargoUsuario, Especialidade,
   Dominio, Modulo
@@ -19,11 +19,11 @@ const columns = [
 ];
 
 export class UsuariosServidoresDomain {
-
-  constructor(modulo, lookups, api) {
-    this.modulo = modulo;
-    this.render = new Renderer(lookups);
-    this.query  = new QueryEngine(api, (x) => this.render.Rows(x));
+  constructor(modulo, lookups, api)   {
+    this.modulo   = modulo;
+    this.render   = new Renderer(lookups);
+    this.query    = new QueryEngine(api,   (x) => this.render.Rows(x));
+    this.command  = new CommandEngine(api, (x) => this.render.Rows(x));
   }
 
   static async Create(modulo) {
@@ -41,7 +41,7 @@ export class UsuariosServidoresDomain {
   }  
 
   async viewAdmin() {
-    Render.BuildTable(columns);
+    Render.Table(columns);
 
     this.render.Filters();
     await this.query.loadData();
@@ -84,10 +84,10 @@ class Renderer {
     const $container = $('#divFilterOptions').empty();
 
     $container.append(
-      Render.List('cmbFilterUnidade', 'Todas as Unidades'),
-      Render.List('cmbFilterEspecialidade', 'Todas as Especialidades'),
-      Render.List('cmbFilterFuncao', 'Todas as Funções'),
-      Render.List('cmbFilterCargo', 'Todos os Cargos')
+      Render.Select('cmbFilterUnidade', 'Todas as Unidades'),
+      Render.Select('cmbFilterEspecialidade', 'Todas as Especialidades'),
+      Render.Select('cmbFilterFuncao', 'Todas as Funções'),
+      Render.Select('cmbFilterCargo', 'Todos os Cargos')
     );
     this.FiltersItems();
   }
