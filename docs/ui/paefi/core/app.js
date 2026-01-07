@@ -58,7 +58,7 @@ function SetDomain(domainKey) {
   $(Elemento.TextoOpcaoAtual.JQuery).text(el.Value);
 }
 
-asyncfunction initCurrentDomain() {
+function initCurrentDomain() {
   if (currentDomainEnum.Key === Dominio.UsuariosServidores.Key) {
     currentDomain = new UsuariosServidoresDomain(currentModuleEnum);
   }  
