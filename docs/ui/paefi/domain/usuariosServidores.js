@@ -19,20 +19,19 @@ const columns = [
 export class UsuariosServidoresDomain {
 
   constructor(modulo) {
-    UnidadesAPI.Init();
-    UsuariosServidoresAPI.Init();
-
     this.modulo      = modulo;
     this.api         = UsuariosServidoresAPI;
     this.unidades    = [];
     this.render      = new Renderer();
     this.query       = new QueryEngine(this.api, this.render, this.refresh);
-
     this.Init();
   }
 
   async Init() {
-    this.unidades = UnidadesAPI.GetAll();
+    await Promise.all([
+      UnidadesAPI.Init(),
+      UsuariosServidoresAPI.Init()
+    ]);
 
     if (this.modulo.Key === Modulo.Admin.Key) {
       await this.viewAdmin();
@@ -41,11 +40,13 @@ export class UsuariosServidoresDomain {
 
   async viewAdmin() {
       this.render.Filters();
-      this.render.FiltersItems(this.unidades);
       Render.BuildTable(columns);
 
       this.wireEvents();
       await this.query.loadData();
+      
+      this.unidades = UnidadesAPI.GetAll();
+      this.render.FiltersItems(this.unidades);
   }
 
   refresh(response) {
