@@ -41,14 +41,14 @@ export class UsuariosServidoresDomain {
   }
 
   async viewAdmin() {
-    this.render.Filters();
+    this.render.Filters(this.unidades);
     Render.BuildTable(columns);
 
     this.wireEvents();
     await this.query.loadData();
 
-    this.unidades = UnidadesAPI.GetAll();
-    this.render.FiltersItems(this.unidades);
+//     this.unidades = UnidadesAPI.GetAll();
+//     this.render.FiltersItems(this.unidades);
   }
 
   refresh(response) {
@@ -83,7 +83,7 @@ export class UsuariosServidoresDomain {
 }
 
 class Renderer {
-  Filters() {
+  Filters(unidades) {
     const $container = $('#divFilterOptions').empty();
 
     $container.append(
@@ -92,6 +92,7 @@ class Renderer {
       this.List('cmbFilterFuncao', 'Todas as Funções'),
       this.List('cmbFilterCargo', 'Todos os Cargos')
     );
+    this.FiltersItems(unidades);
   }
 
   FiltersItems(unidades) {
