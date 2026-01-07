@@ -87,7 +87,7 @@ class Renderer {
 
     list.forEach(u => {
       tbody.append(`<tr>
-          <td>${u.funcao === FuncaoUsuario.NaoInformada.Key ? '' : FuncaoUsuario.ValueFromKey(u.funcao)}</td>
+          <td>${u.funcao === FuncaoUnidade.NaoInformada.Key ? '' : FuncaoUnidade.ValueFromKey(u.funcao)}</td>
           <td>${u.sigla}</td>
           <td>${u.nome}</td>
           <td>${u.IbgeId}</td>
