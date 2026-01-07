@@ -84,40 +84,21 @@ class Renderer {
     const $container = $('#divFilterOptions').empty();
 
     $container.append(
-      this.List('cmbFilterUnidade', 'Todas as Unidades'),
-      this.List('cmbFilterEspecialidade', 'Todas as Especialidades'),
-      this.List('cmbFilterFuncao', 'Todas as Funções'),
-      this.List('cmbFilterCargo', 'Todos os Cargos')
+      Render.List('cmbFilterUnidade', 'Todas as Unidades'),
+      Render.List('cmbFilterEspecialidade', 'Todas as Especialidades'),
+      Render.List('cmbFilterFuncao', 'Todas as Funções'),
+      Render.List('cmbFilterCargo', 'Todos os Cargos')
     );
     this.FiltersItems();
   }
 
   FiltersItems() {
     const $el  = $('#cmbFilterUnidade');
-    this.lookups.unidades.forEach(u =>
-      $el.append($('<option>', { value: u.id, text: u.sigla }))
-    );
-    this.Enum('#cmbFilterEspecialidade', Especialidade);
-    this.Enum('#cmbFilterFuncao', FuncaoUsuario);
-    this.Enum('#cmbFilterCargo', CargoUsuario);
-  }
+    this.lookups.unidades.forEach(u => $el.append($('<option>', { value: u.id, text: u.sigla })));
 
-  List(id, placeholder) {
-    return $('<select>', {
-      id,
-      class: 'form-select form-select-sm'
-    }).append(
-      $('<option>', { value: '', text: placeholder })
-    );
-  }
-
-  Enum(selector, enumType) {
-    const $select = $(selector);
-    enumType.All.forEach(e =>
-      $select.append(
-        $('<option>', { value: e.Key, text: e.Value })
-      )
-    );
+    Render.Enum('#cmbFilterEspecialidade', Especialidade);
+    Render.Enum('#cmbFilterFuncao', FuncaoUsuario);
+    Render.Enum('#cmbFilterCargo', CargoUsuario);
   }
 
   Rows(response) {
@@ -148,38 +129,6 @@ class Renderer {
       `);
     });
 
-    this.Info(response.pagination);
-  }
-
-  Info(p) {
-    const start = (p.page - 1) * p.pageSize + 1;
-    const end = Math.min(start + p.pageSize - 1, p.totalRecords);
-    const prevDisabled = p.page === 1 ? 'disabled' : '';
-    const nextDisabled = p.page === p.totalPages ? 'disabled' : '';
-
-    const $navInfo = $('#navInfo');
-    $navInfo.text(`Mostrando ${start} - ${end} de ${p.totalRecords} registros`);
-
-    const $ul = $('#navControls').empty();
-    $ul.append(`
-      <li class="page-item ${prevDisabled}">
-        <a class="page-link" href="#" data-page="${p.page - 1}">Anterior</a>
-      </li>
-    `);
-
-    for (let i = 1; i <= p.totalPages; i++) {
-      const active = i === p.page ? 'active' : '';
-      $ul.append(`
-        <li class="page-item ${active}">
-          <a class="page-link" href="#" data-page="${i}">${i}</a>
-        </li>
-      `);
-    }
-
-    $ul.append(`
-      <li class="page-item ${nextDisabled}">
-        <a class="page-link" href="#" data-page="${p.page + 1}">Próxima</a>
-      </li>
-    `);
+    Render.Info(response.pagination);
   }
 }

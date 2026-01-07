@@ -216,7 +216,54 @@ export function BuildTable(columns) {
   $container.append($table);
 }
 
+
+export function List(id, placeholder) {
+  return $('<select>', { id,  class: 'form-select form-select-sm'})
+         .append($('<option>', { value: '', text: placeholder }));
+}
+
+export function Enum(selector, enumType) {
+  const $select = $(selector);
+  enumType.All.forEach(e => $select.append($('<option>', { value: e.Key, text: e.Value })));
+}
+
+export function Info(p) {
+  const start = (p.page - 1) * p.pageSize + 1;
+  const end = Math.min(start + p.pageSize - 1, p.totalRecords);
+  const prevDisabled = p.page === 1 ? 'disabled' : '';
+  const nextDisabled = p.page === p.totalPages ? 'disabled' : '';
+
+  const $navInfo = $('#navInfo');
+  $navInfo.text(`Mostrando ${start} - ${end} de ${p.totalRecords} registros`);
+
+  const $ul = $('#navControls').empty();
+  $ul.append(`
+      <li class="page-item ${prevDisabled}">
+        <a class="page-link" href="#" data-page="${p.page - 1}">Anterior</a>
+      </li>
+    `);
+
+  for (let i = 1; i <= p.totalPages; i++) {
+    const active = i === p.page ? 'active' : '';
+    $ul.append(`
+        <li class="page-item ${active}">
+          <a class="page-link" href="#" data-page="${i}">${i}</a>
+        </li>
+      `);
+  }
+
+  $ul.append(`
+      <li class="page-item ${nextDisabled}">
+        <a class="page-link" href="#" data-page="${p.page + 1}">Próxima</a>
+      </li>
+    `);
+}
+
+
 export const Render = {
+  List,
+  Enum,
+  Info,
   Options,
   Preferences,
   OurDocs,

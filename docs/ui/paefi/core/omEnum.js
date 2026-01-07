@@ -29,8 +29,6 @@ export class Elemento {
 Object.freeze(Elemento.All);
 
 
-
-
 export class OurDocs {
     static All = [];
 
@@ -57,8 +55,6 @@ export class OurDocs {
     toJSON() { return this.Key; }
 }
 Object.freeze(OurDocs.All);
-
-
 
 
 export class Modulo {
@@ -88,7 +84,6 @@ export class Modulo {
     toJSON() { return this.Key; }
 }
 Object.freeze(Modulo.All);
-
 
 
 export class Dominio {
@@ -137,8 +132,6 @@ export class Dominio {
 Object.freeze(Dominio.All);
 
 
-
-
 export class FuncaoUnidade {
     static All = [];
 
@@ -169,8 +162,6 @@ export class FuncaoUnidade {
     toJSON() { return this.Key; }
 }
 Object.freeze(FuncaoUnidade.All);
-
-
 
 
 export class FuncaoUsuario {
