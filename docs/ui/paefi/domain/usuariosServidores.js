@@ -41,14 +41,15 @@ export class UsuariosServidoresDomain {
   }
 
   async viewAdmin() {
-    this.render.Filters(this.unidades);
     Render.BuildTable(columns);
 
-    this.wireEvents();
-    await this.query.loadData();
+    this.unidades = UnidadesAPI.GetAll();
+    this.render.Filters(this.unidades);
 
-//     this.unidades = UnidadesAPI.GetAll();
-//     this.render.FiltersItems(this.unidades);
+    await this.query.loadData();
+    this.render.FiltersItems(this.unidades);
+
+    this.wireAdminEvents();
   }
 
   refresh(response) {
@@ -65,7 +66,7 @@ export class UsuariosServidoresDomain {
     };
   }
 
-  wireEvents() {
+  wireAdminEvents() {
     $('#btnApplyFilter').on('click', async () => {
       const filters = this.getFilters();
       this.query.Apply(filters);
