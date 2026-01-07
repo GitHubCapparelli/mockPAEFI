@@ -131,12 +131,10 @@ class Renderer {
     }
 
     list.forEach(u => {
+      let sigla = 'Xiii!';
       if (unidades) {
         const unidade = unidades.find(un => un.id === u.unidadeID);
-        const sigla   = unidade ? unidade.sigla : 'ooops';
-      }
-      else {
-        const sigla = 'Xiii!';
+        sigla = unidade ? unidade.sigla : 'ooops';
       }
       tbody.append(`<tr>
           <td title="${u.nome}">${u.nome}</td>
