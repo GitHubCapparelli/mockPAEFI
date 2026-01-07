@@ -169,7 +169,7 @@ export function Options(options) {
   });
 }
 
-function Preferences(prefs) {
+export function Preferences(prefs) {
   const $darkMode = $('<div>', { class: 'form-check form-switch mb-2' }).append(
     $('<input>', {
       id: 'chkDarkMode', type: 'checkbox', class: 'form-check-input',
@@ -190,12 +190,14 @@ function Preferences(prefs) {
   container.append($darkMode, $resumeDomain);
 }
 
-function OurDocs() {
+export function OurDocs() {
   const container = $(Elemento.DivOurDocs.JQuery).empty();
   OurDocs.All.forEach(opt => {
     container.append($('<button>', { id: opt.Key, class: 'btn btn-sm btn-outline-primary border-0 w-100 mb-2', text: opt.Value }));
   });
 }
+
+// Admin
 
 export function BuildTable(columns) {
   const thead = columns.map(c => `<th>${c.label}</th>`).join('');
@@ -214,7 +216,72 @@ export function BuildTable(columns) {
   $container.append($table);
 }   
 
-export const Render = { 
+export function Filters() {
+  const $container = $('#divFilterOptions').empty();
+
+  $container.append(
+    List('cmbFilterUnidade', 'Todas as Unidades'),
+    List('cmbFilterEspecialidade', 'Todas as Especialidades'),
+    List('cmbFilterFuncao', 'Todas as Funções'),
+    List('cmbFilterCargo', 'Todos os Cargos')
+  );
+}
+
+function List(id, placeholder) {
+  return $('<select>', {
+    id,
+    class: 'form-select form-select-sm'
+  }).append(
+    $('<option>', { value: '', text: placeholder })
+  );
+}
+
+function Enum(selector, enumType) {
+  const $select = $(selector);
+  enumType.All.forEach(e =>
+    $select.append(
+      $('<option>', { value: e.Key, text: e.Value })
+    )
+  );
+}
+
+export function Info(p) {
+  const start         = (p.page - 1) * p.pageSize + 1;
+  const end           = Math.min(start + p.pageSize - 1, p.totalRecords);
+  const prevDisabled  = p.page === 1 ? 'disabled' : '';
+  const nextDisabled  = p.page === p.totalPages ? 'disabled' : '';
+
+  const $navInfo  = $('#navInfo');
+  $navInfo.text(`Mostrando ${start} - ${end} de ${p.totalRecords} registros`);
+
+  const $ul       = $('#navControls').empty();
+  $ul.append(`
+    <li class="page-item ${prevDisabled}">
+      <a class="page-link" href="#" data-page="${p.page - 1}">Anterior</a>
+    </li>
+  `);
+
+  for (let i = 1; i <= p.totalPages; i++) {
+    const active = i === p.page ? 'active' : '';
+    $ul.append(`
+      <li class="page-item ${active}">
+        <a class="page-link" href="#" data-page="${i}">${i}</a>
+      </li>
+    `);
+  }
+
+  $ul.append(`
+    <li class="page-item ${nextDisabled}">
+      <a class="page-link" href="#" data-page="${p.page + 1}">Próxima</a>
+    </li>
+  `);
+}
+
+// Public interface //
+
+export const Render = {
+  Filters,
+  Info,
   Options,
   Preferences,
   OurDocs,

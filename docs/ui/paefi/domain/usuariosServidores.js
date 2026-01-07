@@ -34,24 +34,23 @@ export class UsuariosServidoresDomain {
     ]);
 
     if (this.modulo.Key === Modulo.Admin.Key) {
+      this.unidades = UnidadesAPI.GetAll();
       await this.viewAdmin();
     }
   }
 
   async viewAdmin() {
-      this.render.Filters();
+      Render.Filters();
       Render.BuildTable(columns);
+      this.render.FiltersItems(this.unidades);
 
       this.wireEvents();
-      await this.query.loadData();
-      
-      this.unidades = UnidadesAPI.GetAll();
-      this.render.FiltersItems(this.unidades);
+      await this.query.loadData();      
   }
 
   refresh(response) {
     this.render.Rows(response.data, this.unidades);
-    this.render.Info(response.pagination);
+    Render.Info(response.pagination);
   }
 
   getFilters() {
@@ -81,7 +80,8 @@ export class UsuariosServidoresDomain {
 }
 
 class Renderer {
-  Filters() {
+  //Nope
+  Filters(unidades) {
     const $container = $('#divFilterOptions').empty();
 
     $container.append(
@@ -90,6 +90,7 @@ class Renderer {
       this.List('cmbFilterFuncao', 'Todas as Funções'),
       this.List('cmbFilterCargo', 'Todos os Cargos')
     );
+    this.FiltersItems(unidades);
   }
 
   FiltersItems(unidades) {
@@ -104,6 +105,7 @@ class Renderer {
     this.Enum('#cmbFilterCargo',         CargoUsuario);
   }
 
+  //Nope
   List(id, placeholder) {
     return $('<select>', {
       id,
@@ -113,6 +115,7 @@ class Renderer {
     );
   }
 
+  //Nope
   Enum(selector, enumType) {
     const $select = $(selector);
     enumType.All.forEach(e =>
@@ -155,6 +158,7 @@ class Renderer {
     });
   }
 
+  //Nope
   Info(p) {
     const start         = (p.page - 1) * p.pageSize + 1;
     const end           = Math.min(start + p.pageSize - 1, p.totalRecords);
