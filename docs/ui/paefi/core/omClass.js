@@ -1,14 +1,13 @@
 // ui.paefi.core.objectModel
 
 export class QueryEngine {
-  constructor(api, renderer, fnRefresh) {
+  constructor(api, fnRefresh) {
       this.api        = api;
       this.page       = 1;
       this.pageSize   = 5;
       this.totalItems = 0;
       this.totalPages = 0;
       this.lastResult = null;
-      this.render     = renderer;
       this.refresh    = fnRefresh;
       api.Init();
   }
@@ -23,28 +22,28 @@ export class QueryEngine {
       return response;
   }
 
-  async loadData(filters, lookup = null) {
+  async loadData(filters) {
       const response = await this.GetPaginated(filters);
-      this.refresh(response, lookup);
+      this.refresh(response);
   }
 
-  async Apply(filters, lookup = null) {
+  async Apply(filters) {
     this.page = 1;
-    await this.loadData(filters, lookup);
+    await this.loadData(filters);
   }
 
-  async Clear(lookup = null) {
+  async Clear() {
     this.page = 1;
-    await this.loadData({}, lookup);
+    await this.loadData();
   }
 
-  async Navigate(e, page, lookup = null) {
+  async Navigate(e, page) {
     e.preventDefault();
 
     const x = Number(page);
     if (!x || x === this.page) return;
 
     this.page = x;
-    await this.loadData({}, lookup);
+    await this.loadData();
   }
 }

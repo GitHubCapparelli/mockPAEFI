@@ -25,7 +25,7 @@ export class UsuariosServidoresDomain {
     this.api = UsuariosServidoresAPI;
     this.unidades = [];
     this.render = new Renderer();
-    this.query = new QueryEngine(this.api, this.render, this.refresh);
+    this.query = new QueryEngine(this.api, (x) => this.render.Rows(x));
     this.Init();
   }
 
@@ -50,11 +50,6 @@ export class UsuariosServidoresDomain {
     this.wireAdminEvents();
   }
 
-  refresh(response, lookup) {
-    this.render.Rows(response.data, lookup);
-    this.render.Info(response.pagination);
-  }
-
   getFilters() {
     return {
       unidadeID: $('#cmbFilterUnidade').val() || null,
@@ -67,21 +62,25 @@ export class UsuariosServidoresDomain {
   wireAdminEvents() {
     $('#btnApplyFilter').on('click', async () => {
       const filters = this.getFilters();
-      this.query.Apply(filters, this.unidades);
+      this.query.Apply(filters);
     });
 
     $('#btnClearFilter').on('click', async () => {
       $('.filters-bar select').val('');
-      this.query.Clear(this.unidades);
+      this.query.Clear();
     });
 
     $('#navControls').on('click', 'a.page-link', async e => {
-      this.query.Navigate(e, $(this).data('page'), this.unidades);
+      this.query.Navigate(e, $(this).data('page'));
     });
   }
 }
 
 class Renderer {
+  constructor() {
+    this.lookups = [];
+  }
+
   Filters(unidades) {
     const $container = $('#divFilterOptions').empty();
 
@@ -124,17 +123,17 @@ class Renderer {
     );
   }
 
-  Rows(list, unidades) {
+  Rows(response) {
     const tbody = $('#dataRows').empty();
     if (!list.length) {
       tbody.append(`<tr><td colspan="${columns.length}">Nenhum registro</td></tr>`);
       return;
     }
 
-    list.forEach(u => {
+    response.data.forEach(u => {
       tbody.append(`<tr>
           <td title="${u.nome}">${u.nome}</td>
-          <td>${unidades?.find(un => un.id === u.unidadeID)?.sigla}</td>
+          <td>${this.lookups[0]?.find(un => un.id === u.unidadeID)?.sigla}</td>
           <td>${u.especialidade === Especialidade.NaoInformada.Key ? '' : Especialidade.ValueFromKey(u.especialidade)}</td>
           <td>${u.funcao === FuncaoUsuario.NaoInformada.Key ? '' : FuncaoUsuario.ValueFromKey(u.funcao)}</td>
           <td>${u.cargo === CargoUsuario.NaoInformado.Key ? '' : CargoUsuario.ValueFromKey(u.cargo)}</td>
@@ -149,6 +148,8 @@ class Renderer {
         </tr>
       `);
     });
+
+    this.Info(response.pagination);
   }
 
   Info(p) {
