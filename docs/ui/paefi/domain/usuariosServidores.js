@@ -131,10 +131,14 @@ class Renderer {
     }
 
     list.forEach(u => {
-      const unidade = unidades.find(un => un.id === u.unidadeID);
-      const sigla   = unidade ? unidade.sigla : 'ooops';
-      tbody.append(`
-        <tr>
+      if (unidades) {
+        const unidade = unidades.find(un => un.id === u.unidadeID);
+        const sigla   = unidade ? unidade.sigla : 'ooops';
+      }
+      else {
+        const sigla = 'Xiii!'
+      }
+      tbody.append(`<tr>
           <td title="${u.nome}">${u.nome}</td>
           <td>${sigla}</td>
           <td>${u.especialidade === Especialidade.NaoInformada.Key ? '' : Especialidade.ValueFromKey(u.especialidade)}</td>
