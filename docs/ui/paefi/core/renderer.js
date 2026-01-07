@@ -1,4 +1,4 @@
-// ui.paefi.core.utils
+// ui.paefi.core.renderer
 
 import { Modulo, Elemento } from './omEnum.js';
 
@@ -25,7 +25,7 @@ export function PageStructure() {
     .append(navbar());
 
   const $appBody = $('<div>', { id: 'app-body', class: 'app-body' })
-    .append(leftSidebar() , pageContents());
+    .append(leftSidebar(), pageContents());
 
   $('#app-shell').append($appHeader, $appBody);
 }
@@ -117,26 +117,28 @@ function datagrid() {
 }
 
 function leftSidebar() {
-  const $sidebar = $( '<aside>', { id: 'leftSidebar', class: 'leftSidebar' });
+  const $sidebar = $('<aside>', { id: 'leftSidebar', class: 'leftSidebar' });
 
-  const $header  = $( '<div>', { class: 'p-2 d-flex justify-content-between align-items-center' })
-                    .append($('<button>', { id: 'btnSidebarToggle', 
-                                            class: 'btn btn-sm btn-outline-secondary',
-                                            title: 'Expandir / Recolher' }
-                            ).append( $( '<i>', { class: 'fas fa-bars' } ))
-                            ,
-                            $( '<span>', { id: 'leftSidebar-title', class: 'leftSidebar-title fw-bold', text: 'PAEFI' })
-                    );
+  const $header = $('<div>', { class: 'p-2 d-flex justify-content-between align-items-center' })
+    .append($('<button>', {
+      id: 'btnSidebarToggle',
+      class: 'btn btn-sm btn-outline-secondary',
+      title: 'Expandir / Recolher'
+    }
+    ).append($('<i>', { class: 'fas fa-bars' }))
+      ,
+      $('<span>', { id: 'leftSidebar-title', class: 'leftSidebar-title fw-bold', text: 'PAEFI' })
+    );
 
-  const $body = $( '<div>', { id: 'leftSidebar-body', class: 'leftSidebar-body p-2 overflow-auto' })
-                .append( $(' <div>', { class: 'leftSidebar-top' }
-                          ).append( accordion( Elemento.DivOpcoesDominio, true ))
-                          ,
-                          $(' <div>', { class: 'leftSidebar-bottom' }
-                           ).append( accordion( Elemento.DivPreferencias )
-                                   , accordion( Elemento.DivOurDocs )
-    )
-  );
+  const $body = $('<div>', { id: 'leftSidebar-body', class: 'leftSidebar-body p-2 overflow-auto' })
+    .append($(' <div>', { class: 'leftSidebar-top' }
+    ).append(accordion(Elemento.DivOpcoesDominio, true))
+      ,
+      $(' <div>', { class: 'leftSidebar-bottom' }
+      ).append(accordion(Elemento.DivPreferencias)
+        , accordion(Elemento.DivOurDocs)
+      )
+    );
   $sidebar.append($header, $body);
   return $sidebar;
 }
@@ -169,7 +171,7 @@ export function Options(options) {
   });
 }
 
-export function Preferences(prefs) {
+function Preferences(prefs) {
   const $darkMode = $('<div>', { class: 'form-check form-switch mb-2' }).append(
     $('<input>', {
       id: 'chkDarkMode', type: 'checkbox', class: 'form-check-input',
@@ -190,14 +192,13 @@ export function Preferences(prefs) {
   container.append($darkMode, $resumeDomain);
 }
 
-export function OurDocs() {
+function OurDocs() {
   const container = $(Elemento.DivOurDocs.JQuery).empty();
   OurDocs.All.forEach(opt => {
     container.append($('<button>', { id: opt.Key, class: 'btn btn-sm btn-outline-primary border-0 w-100 mb-2', text: opt.Value }));
   });
 }
 
-// Admin
 export function BuildTable(columns) {
   const thead = columns.map(c => `<th>${c.label}</th>`).join('');
   const colSpan = columns.length;
@@ -213,74 +214,9 @@ export function BuildTable(columns) {
   );
   const $container = $('#divdataTable').empty();
   $container.append($table);
-}   
-
-export function Filters() {
-  const $container = $('#divFilterOptions').empty();
-
-  $container.append(
-    List('cmbFilterUnidade', 'Todas as Unidades'),
-    List('cmbFilterEspecialidade', 'Todas as Especialidades'),
-    List('cmbFilterFuncao', 'Todas as Funções'),
-    List('cmbFilterCargo', 'Todos os Cargos')
-  );
 }
-
-function List(id, placeholder) {
-  return $('<select>', {
-    id,
-    class: 'form-select form-select-sm'
-  }).append(
-    $('<option>', { value: '', text: placeholder })
-  );
-}
-
-function Enum(selector, enumType) {
-  const $select = $(selector);
-  enumType.All.forEach(e =>
-    $select.append(
-      $('<option>', { value: e.Key, text: e.Value })
-    )
-  );
-}
-
-export function Info(p) {
-  const start         = (p.page - 1) * p.pageSize + 1;
-  const end           = Math.min(start + p.pageSize - 1, p.totalRecords);
-  const prevDisabled  = p.page === 1 ? 'disabled' : '';
-  const nextDisabled  = p.page === p.totalPages ? 'disabled' : '';
-
-  const $navInfo  = $('#navInfo');
-  $navInfo.text(`Mostrando ${start} - ${end} de ${p.totalRecords} registros`);
-
-  const $ul       = $('#navControls').empty();
-  $ul.append(`
-    <li class="page-item ${prevDisabled}">
-      <a class="page-link" href="#" data-page="${p.page - 1}">Anterior</a>
-    </li>
-  `);
-
-  for (let i = 1; i <= p.totalPages; i++) {
-    const active = i === p.page ? 'active' : '';
-    $ul.append(`
-      <li class="page-item ${active}">
-        <a class="page-link" href="#" data-page="${i}">${i}</a>
-      </li>
-    `);
-  }
-
-  $ul.append(`
-    <li class="page-item ${nextDisabled}">
-      <a class="page-link" href="#" data-page="${p.page + 1}">Próxima</a>
-    </li>
-  `);
-}
-
-// Public interface //
 
 export const Render = {
-  Filters,
-  Info,
   Options,
   Preferences,
   OurDocs,
