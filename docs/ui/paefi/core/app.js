@@ -59,14 +59,13 @@ function SetDomain(domainKey) {
 
   currentDomain = Dominio.FromKey(domainKey);
   Local.Set(LastDomainKey, currentDomain.Key);
-
-  $(Elemento.TextoOpcaoAtual.JQuery).text(currentDomain.Value);
-
+  
   Render.DomainStructure(currentModule.Key);
   initCurrentDomain();
 }
 
 function initCurrentDomain() {
+  $(Elemento.TextoOpcaoAtual.JQuery).text(currentDomain.Value);
   switch (currentDomain.Key) {
     case Dominio.UsuariosServidores.Key  : UsuariosServidoresDomain.Create(currentModule); break;
     case Dominio.Unidades.Key            : UnidadesDomain.Create(currentModule); break;
