@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="light">
+
 <head>
-    <title>PoC - PAEFI | Supervisão</title>
+    <title>PAEFI (Monitor - PoC)</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1">
@@ -11,13 +12,15 @@
     <link rel="stylesheet" href="/mockPAEFI/ui/assets/shared/css/all.fontAwesome.min.css">
     <link rel="stylesheet" href="/mockPAEFI/ui/assets/shared/css/styles.css">
 </head>
-<body>
-    <header id="page-header"><span>Em breve!!!</span></header> 
-    <main id="page-main"></main>
-    <section id="page-modals"></section>
 
-    <script src="/mockPAEFI/ui/assets/shared/js/jquery-3.4.1.min.js"></script>
-    <script src="/mockPAEFI/ui/assets/shared/js/bootstrap.bundle.min.js"></script>
-    <script type="module" src="/mockPAEFI/ui/paefi/gateway/monitor.js"></script>
+<body>
+    <section id="app-shell" class="app-shell">
+        </main>
+        <section id="page-modals" class="page-modals"></section>
+
+        <script src="/mockPAEFI/ui/assets/shared/js/jquery-3.4.1.min.js"></script>
+        <script src="/mockPAEFI/ui/assets/shared/js/bootstrap.bundle.min.js"></script>
+        <script type="module" src="/mockPAEFI/ui/paefi/core/app.js"></script>
 </body>
+
 </html>

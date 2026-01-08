@@ -26,6 +26,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    box-shadow: none !important;
 }
 
 body {
@@ -67,6 +68,9 @@ body {
     color: white;
     height: 80px;
     font-size: 13px;
+    position: sticky;
+    top: 0;
+    z-index: 1030;
 }
 
 .top-navbar a {
@@ -98,7 +102,14 @@ body {
     text-decoration: underline;
 }
 
-.page-title {
+.page-title-text {
+    color: var(--bs-gray-500);
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.1;
+}
+
+.domain-title {
     color: var(--primary-color);
     font-size: 2rem;
     font-weight: 500;
@@ -221,13 +232,6 @@ table td {
         background-color: rgba(0, 0, 0, 0.02);
     }
 
-    .btn:hover,
-    .pagination .page-link:hover {
-        transform: translateY(-1px);
-        box-shadow: var(--shadow-sm);
-        transition: all 0.2s ease;
-    }
-
     .table td:first-child {
         max-width: 320px;
         overflow: hidden;
@@ -320,13 +324,6 @@ table td {
   overflow-y: auto;
 }
 
-/* ---------- (SIDS) Top Navbar ---------- */
-.top-navbar {
-  position: sticky;
-  top: 0;
-  z-index: 1030;
-}
-
 /* ---------- Sidebar ---------- */
 .leftSidebar {
   width: 260px;
@@ -351,6 +348,11 @@ table td {
   display: none;
 }
 
+.leftSidebar .btn {
+  justify-content: flex-start;
+  text-align: left;
+}
+
 /* ---------- Sidebar content ---------- */
 .leftSidebar-body {
   flex: 1;
@@ -366,3 +368,51 @@ table td {
 .leftSidebar-bottom {
   margin-top: auto;
 }
+
+.accordion-item:active,
+.accordion-header:active {
+  background-color: transparent !important;
+}
+
+.leftSidebar * {
+  background-color: transparent !important;
+  border: none;
+}
+
+/*btnSidebarToggle*/
+
+.leftSidebar-header {
+    border: 1px solid var(--bs-border-color);
+}
+
+.form-check-input,
+.form-check-input:checked {
+    color: var(--bs-terciary);
+    border: 1px solid var(--bs-terciary);
+    background-color: var(--bs-tertiary-bg);
+}
+
+.ellipsis25 {
+    max-width: 25%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* LeftSidebar – normalize accordion header typography */
+.leftSidebar .accordion-button {
+    padding: var(--bs-list-group-item-padding-y);
+    font-size: var(--bs-body-font-size);
+    font-weight: var(--bs-body-font-weight);
+    line-height: var(--bs-body-line-height);
+}
+
+/* Checkboxes */
+.form-check-input:disabled,
+.form-check-input:not(:disabled) {
+    border: 1px solid var(--bs-border-color);
+    color: var(--bs-border-color);
+    border-color: var(--bs-border-color);
+    background-color: var(--bs-secondary-bg);
+}
+

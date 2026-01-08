@@ -1,4 +1,15 @@
-import { InMemory } from '../storage.js';
+import { InMemory }              from '../storage.js';
+import { UsuariosServidoresAPI } from './usuariosServidoresAPI.js';
+import { UnidadesAPI }           from './unidadesAPI.js';
+
+export const CoreAPI = {
+  async InitAll() {
+    await Promise.all([
+      UsuariosServidoresAPI.Init(),
+      UnidadesAPI.Init()
+    ]);
+  }
+};
 
 export function CreateCoreAPI({
   entity,
@@ -10,6 +21,7 @@ export function CreateCoreAPI({
   applyFilters = (data, filters) => data
 }) {
 
+  // Init
   let initialized = false;
   let initPromise = null;
 
@@ -48,6 +60,7 @@ export function CreateCoreAPI({
     }
   }
 
+  // CRUD
   function GetAll({ orderBy = defaultOrderBy, order = 'asc' } = {}) {
     ensureInitialized();
 
@@ -128,6 +141,7 @@ export function CreateCoreAPI({
     return next[idx];
   }
 
+  
   return {
     Init,
     GetAll,
@@ -138,3 +152,4 @@ export function CreateCoreAPI({
     SoftDelete
   };
 }
+

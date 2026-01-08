@@ -2,8 +2,13 @@
 import { Session, CurrentUserKey,
          Local, LastModuleKey, LastDomainKey
        } from '../../../services/storage.js';
-import { Core 
-       } from '../shell/core.js';
+import { CoreLayout 
+       } from '../core/coreLayout.js';
+import { UsuariosServidoresGateway } from './usuariosServidoresGateway.js';
+import { CoreAPI }                   from '../../../services/api/coreAPI.js';
+
+
+let activeGateway = null;
 
 const currentUser = Session.Get(CurrentUserKey);
 
@@ -19,17 +24,18 @@ const Domains = [
 ];
 
 function init() {
-    const currentModule = resolveCurrentModule();
-    const currentDomain = resolveCurrentDomain(currentModule.key);
+  const currentModule = resolveCurrentModule();
+  const currentDomain = resolveCurrentDomain(currentModule.key);
+  
+  CoreLayout.Init(currentUser, currentModule.title);
+  $('#page-contents').append(
+      domainTitleBar(), 
+      filtersSection(),
+      dataSection()
+  );
 
-    Core.Init(currentUser, currentModule.title);
-    $('#page-contents').append(
-        domainTitleBar(), 
-        filtersSection(),
-        dataSection()
-    );
-
-    $('#domain-title').text(currentDomain.title);
+  $('#domain-title').text(currentDomain.title);
+  activateDomain(currentDomain.key);
 }
 
 function resolveCurrentDomain(currentModule) {
@@ -60,6 +66,24 @@ function resolveCurrentModule() {
     Local.Set(LastModuleKey, module.key);
     return module;
 }
+
+async function activateDomain(domainKey) {
+  if (activeGateway?.dispose) {
+    activeGateway.dispose();
+  }
+
+  switch (domainKey) {
+    case 'usuarios-servidores':
+      activeGateway = new UsuariosServidoresGateway();
+      await activeGateway.activate();
+      break;
+
+    default:
+      console.warn('[CoreAdmin] No gateway for domain:', domainKey);
+  }
+}
+
+
 
 function domainTitleBar() {
   return $('<div>', { class: 'mx-2 mt-2 ps-2 d-flex flex-column' }).append(
@@ -106,16 +130,39 @@ function dataSection() {
     .append($actions, $table, $nav);
 }
 
+//export function BuildTable(columns) {
+//   const $table = $('<table>', { class: 'table table-striped table-hover' }).append(
+//   $('<thead>').append(thead), 
+//    $('<tbody>', { id: 'dataRows' }).append(
+//      $('<tr>').append($('<td>', { colspan: colSpan, 
+//        class: 'text-center text-muted', text: 'Carregando...' }))
+//    )
+//  );
+//  const $container = $('#divdataTable').empty();
+//  $container.append($table);
+//}
+
 export function BuildTable(columns) {
+  const $thead = $('<tr>').append(
+    columns.map(c => $('<th>').text(c.label))
+  );
+
+  const colSpan = columns.length;
+
   const $table = $('<table>', { class: 'table table-striped table-hover' }).append(
-    $('<thead>').append(thead), 
+    $('<thead>').append($thead),
     $('<tbody>', { id: 'dataRows' }).append(
-      $('<tr>').append($('<td>', { colspan: colSpan, 
-        class: 'text-center text-muted', text: 'Carregando...' }))
+      $('<tr>').append(
+        $('<td>', {
+          colspan: colSpan,
+          class: 'text-center text-muted',
+          text: 'Carregando...'
+        })
+      )
     )
   );
-  const $container = $('#divdataTable').empty();
-  $container.append($table);
+
+  $('#divdataTable').empty().append($table);
 }
 
 export const CoreAdmin = { 
@@ -123,9 +170,11 @@ export const CoreAdmin = {
 };
 
 $(document).ready(async () => {
-    if (!currentUser) {
-        alert('Usuário não localizado. Redirecionando...');
-        window.location.href = '/mockPAEFI/';
-    }
-    init(); 
+  if (!currentUser) {
+      alert('Usuário não localizado. Redirecionando...');
+      window.location.href = '/mockPAEFI/';
+      return;
+  }
+  await CoreAPI.InitAll();
+  init(); 
 });
