@@ -184,7 +184,7 @@ function datagrid() {
         $('<i>', { class: 'fas fa-download' }), ' Exportar')
     ));
 
-  const $table = $('<div>', { id: 'divdataTable', class: 'divdataTable mt-1 ms-2 table-responsive' }).append(
+  const $table = $('<div>', { id: 'divdataTable', class: 'divdataTable mt-2 ms-2 table-responsive' }).append(
     $('<span>', { text: 'Dados' })
   );
 
