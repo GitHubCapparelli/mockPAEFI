@@ -48,7 +48,7 @@ export class UnidadesDomain {
   }
 
   wireAdminEvents() {
-    $('#btnApplyFilter').on('click', async () => {
+    $(document).on('change', '.filters-bar select', async () => {
       const filters = this.getFilters();
       this.query.Apply(filters);
     });

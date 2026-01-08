@@ -385,3 +385,9 @@ table td {
     border: 1px solid var(--bs-border-color);
 }
 
+.form-check-input,
+.form-check-input:checked {
+    color: var(--bs-terciary);
+    border: 1px solid var(--bs-terciary);
+    background-color: var(--bs-tertiary-bg);
+}
