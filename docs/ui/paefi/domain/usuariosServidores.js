@@ -113,7 +113,7 @@ class Renderer {
 
     list.forEach(u => {
       tbody.append(`<tr>
-          <td title="${u.nome}">${u.nome}</td>
+          <td class="ellipsis25" title="${u.nome}">${u.nome}</td>
           <td>${this.lookups.unidades?.find(un => un.id === u.unidadeID)?.sigla ?? ''}</td>
           <td>${u.especialidade === Especialidade.NaoInformada.Key ? '' : Especialidade.ValueFromKey(u.especialidade)}</td>
           <td>${u.funcao === FuncaoUsuario.NaoInformada.Key ? '' : FuncaoUsuario.ValueFromKey(u.funcao)}</td>
