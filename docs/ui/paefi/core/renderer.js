@@ -71,13 +71,9 @@ function pageContents() {
 function leftSidebar() {
   const $sidebar = $('<aside>', { id: 'leftSidebar', class: 'leftSidebar' });
 
-  const $header = $('<div>', { class: 'p-2 d-flex justify-content-between align-items-center' })
-    .append($('<button>', {
-      id: 'btnSidebarToggle',
-      class: 'btnSidebarToggle btn btn-sm btn-outline-secondary',
-      title: 'Expandir / Recolher'
-    }
-    ).append($('<i>', { class: 'fas fa-bars' }))
+  const $header = $('<div>', { class: 'p-2 mt-2 d-flex justify-content-between align-items-center' })
+      .append($('<button>', {id: 'btnSidebarToggle', class: 'btnSidebarToggle btn btn-sm btn-outline-secondary',
+      title: 'Menu de opções'}).append($('<i>', { class: 'fas fa-bars' }))
       ,
       $('<span>', { id: 'leftSidebar-title', class: 'leftSidebar-title fw-bold', text: 'PAEFI' })
     );
@@ -85,12 +81,12 @@ function leftSidebar() {
   const $body = $('<div>', { id: 'leftSidebar-body', class: 'leftSidebar-body p-2 overflow-auto' })
     .append($(' <div>', { class: 'leftSidebar-top' }
       ).append(
-        accordion(Elemento.DivPreferencias)
-        ,
         accordion(Elemento.DivOpcoesDominio, true))
       ,
       $(' <div>', { class: 'leftSidebar-bottom' }
       ).append(
+        accordion(Elemento.DivPreferencias)
+        ,
         accordion(Elemento.DivOurDocs)
       )
     );
