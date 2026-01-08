@@ -56,7 +56,7 @@ function pageContents() {
   const $pageHeader   = $('<div>', { id: 'page-header', class: 'page-header mx-2 mt-2 ps-2 d-flex flex-column' })
     .append(
       $pageTop,
-      $('<span>', { id: 'domain-title', class: 'mx-2 domain-title', text: 'Opção | Domínio' }));
+      $('<span>', { id: 'domain-title', class: 'mx-2 ps-1 domain-title', text: 'Opção | Domínio' }));
 
   const $pageBody     = $('<div>', { id: 'page-body', class: 'page-body mx-2 mt-2 ps-2 d-flex flex-column' });
 

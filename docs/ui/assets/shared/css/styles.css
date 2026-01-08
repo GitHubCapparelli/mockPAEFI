@@ -373,3 +373,7 @@ table td {
 .accordion-header:active {
   background-color: transparent !important;
 }
+
+.leftSidebar * {
+  background-color: transparent !important;
+}
