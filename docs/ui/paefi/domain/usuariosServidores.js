@@ -59,7 +59,7 @@ export class UsuariosServidoresDomain {
   }
 
   wireAdminEvents() {
-    $('#btnApplyFilter').on('change', 'select', async () => {
+    $('#navControls').on('change', 'select', async () => {
       const filters = this.getFilters();
       this.query.Apply(filters);
     });
