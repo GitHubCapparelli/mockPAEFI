@@ -124,7 +124,7 @@ export function Options(options) {
   });
 }
 
-function Preferences(prefs) {
+export function Preferences(prefs) {
   const $darkMode = $('<div>', { class: 'form-check form-switch mb-2' }).append(
     $('<input>', {
       id: 'chkDarkMode', type: 'checkbox', class: 'form-check-input',
@@ -145,7 +145,7 @@ function Preferences(prefs) {
   container.append($darkMode, $resumeDomain);
 }
 
-function OurDocs() {
+export function OurDocs() {
   const container = $(Elemento.DivOurDocs.JQuery).empty();
   OurDocs.All.forEach(opt => {
     container.append($('<button>', { id: opt.Key, class: 'btn btn-sm btn-outline-primary border-0 w-100 mb-2', text: opt.Value }));
