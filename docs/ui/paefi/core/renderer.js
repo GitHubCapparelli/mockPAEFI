@@ -97,7 +97,7 @@ function leftSidebar() {
 function accordion(element, expanded = false) {
   const collapseId = element.Key;
   const $button    = $('<button>', {
-    class: `accordion-button ms-0 ps-0 ${expanded ? '' : 'collapsed'}`,
+    class: `accordion-button ${expanded ? '' : 'collapsed'}`,
     type: 'button',
     'data-bs-toggle': 'collapse',
     'data-bs-target': `#${collapseId}`,

@@ -401,25 +401,18 @@ table td {
 
 /* LeftSidebar – normalize accordion header typography */
 .leftSidebar .accordion-button {
-    padding-top: var(--bs-list-group-item-padding-y);
-    padding-bottom: var(--bs-list-group-item-padding-y);
+    padding: var(--bs-list-group-item-padding-y);
     font-size: var(--bs-body-font-size);
     font-weight: var(--bs-body-font-weight);
     line-height: var(--bs-body-line-height);
 }
 
-/* LeftSidebar – checkbox border behavior */
-.leftSidebar .form-check-input {
-    border-width: var(--bs-border-width);
-}
-
-/* Disabled checkbox */
-.leftSidebar .form-check-input:disabled {
+/* Checkboxes */
+.form-check-input:disabled,
+.form-check-input:not(:disabled) {
+    border: 1px solid var(--bs-border-color);
+    color: var(--bs-border-color);
     border-color: var(--bs-border-color);
     background-color: var(--bs-secondary-bg);
 }
 
-/* Enabled checkbox follows text color */
-.leftSidebar .form-check-input:not(:disabled) {
-    border-color: currentColor;
-}
