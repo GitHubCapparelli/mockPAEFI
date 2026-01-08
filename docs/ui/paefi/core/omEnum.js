@@ -42,7 +42,7 @@ export class DocLinks {
 
     static DocExecutivo        = new DocLinks('docExecutivo','Documento Executivo');
     static DocTecnico          = new DocLinks('docTecnico','Documetação Técnica');
-    static DocUsuario          = new DocLinks'docUsuario','Manual do Usuário');
+    static DocUsuario          = new DocLinks('docUsuario','Manual do Usuário');
 
     constructor(key, value) {
         this.Key = key;
