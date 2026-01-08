@@ -71,7 +71,7 @@ function pageContents() {
 function leftSidebar() {
   const $sidebar = $('<aside>', { id: 'leftSidebar', class: 'leftSidebar' });
 
-  const $header = $('<div>', { class: 'p-2 mt-2 d-flex justify-content-between align-items-center' })
+  const $header = $('<div>', { class: 'p-2 mt-1 d-flex justify-content-between align-items-center' })
       .append($('<button>', {id: 'btnSidebarToggle', class: 'btnSidebarToggle btn btn-sm btn-outline-secondary',
       title: 'Menu de opções'}).append($('<i>', { class: 'fas fa-bars' }))
       ,
@@ -95,28 +95,28 @@ function leftSidebar() {
 }
 
 function accordion(element, expanded = false) {
-  const $body = $('<div>', {
-    class: `accordion-collapse collapse ${expanded ? 'show' : ''}`
-  }).append($('<div>', { id: `${element.Key}`, 
-    class: 'accordion-body', text: '[em breve]' }));
-
-  const $btn = $('<button>', {
+  const collapseId = element.Key;
+  const $button    = $('<button>', {
     class: `accordion-button ${expanded ? '' : 'collapsed'}`,
-    'data-bs-toggle': 'collapse',
-    'data-bs-target': `#${element.Key}`,
     type: 'button',
+    'data-bs-toggle': 'collapse',
+    'data-bs-target': `#${collapseId}`,
+    'aria-expanded': expanded,
     text: element.Value
   });
-  
-  const $header = $('<h2>',  { class: 'accordion-header shadow-none' });
-  const $item   = $('<div>', { class: 'accordion-item' });
-  $item.append($header, $btn);
+  const $header    = $('<h2>', { class: 'accordion-header shadow-none' }).append($button);
 
-  const $group  = $('<div>', { class: 'accordion accordion-flush mb-2' });
-  $group.append($item, $body);
+  const $body      = $('<div>', { class: 'accordion-body' })
+    .append($('<span>', { class: 'text-muted', text: '[em breve]' }) );
 
+  const $collapse  = $('<div>', { id: collapseId, class: `accordion-collapse collapse ${expanded ? 'show' : ''}` } )
+    .append($body);
+
+  const $item      = $('<div>', { class: 'accordion-item' }).append($header, $collapse);
+  const $group     = $('<div>', { class: 'accordion accordion-flush mb-2' }).append($item);
   return $group;
 }
+
 
 export function Options(domains) {
   const container = $(Elemento.DivOpcoesDominio.JQuery).empty();

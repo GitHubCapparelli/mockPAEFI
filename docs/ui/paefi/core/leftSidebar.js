@@ -77,7 +77,7 @@ function syncHeights() {
 export function Init(moduleKey) {
   renderOpcoes(moduleKey);
   renderPreferences();
-  Render.OurDocs(); // bug.... ???
+  Render.OurDocs(); 
 
   wireAll();
   syncHeights();
