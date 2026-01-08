@@ -50,13 +50,13 @@ function pageContents() {
         $('<span>', { text: 'Gestão do PAEFI' }),
         $('<i>', { class: 'fa fa-angle-right fa-1x' })
       ),
-      $('<span>', { id: 'page-title-text', class: 'page-title-text', text: 'Página' })
+      $('<span>', { id: 'page-title-text', class: 'page-title-text', text: 'Página | Módulo' })
     );
 
   const $pageHeader   = $('<div>', { id: 'page-header', class: 'page-header mx-2 mt-2 ps-2 d-flex flex-column' })
     .append(
       $pageTop,
-      $('<span>', { id: 'domain-title', class: 'mx-2 ps-2 domain-title', text: 'Opção | Domínio' }));
+      $('<span>', { id: 'domain-title', class: 'mx-2 domain-title', text: 'Opção | Domínio' }));
 
   const $pageBody     = $('<div>', { id: 'page-body', class: 'page-body mx-2 mt-2 ps-2 d-flex flex-column' });
 
@@ -153,20 +153,8 @@ function OurDocs() {
 }
 
 // filters and tables (admin) //
-function divFilters_old_deprecated() {
-  return $('<div>', { class: 'filters-bar mx-2' }).append(
-    $('<div>', { id: 'divFilterOptions', class: 'filter-options p-2 d-flex gap-3' }).append(
-      $('<span>', { text: 'Filtros' })
-    ),
-    $('<div>', { id: 'divFilterButtons', class: 'filter-buttons p-2 d-flex gap-2' }).append(
-      $('<button>', { id: 'btnApplyFilter', class: 'btn btn-primary btnApplyFilter', text: 'Filtrar' }),
-      $('<button>', { id: 'btnClearFilter', class: 'btn btn-outline-secondary btnClearFilter', text: 'Limpar' })
-    )
-  );
-}
-
 function divFilters() {
-  return $('<div>', { class: 'filters-bar mx-2' }).append(
+  return $('<div>', { class: 'filters-bar mx-1' }).append(
     $('<div>', { id: 'divFilterOptions', class: 'filter-options p-2 d-flex gap-3' }).append(
       $('<span>', { text: 'Filtros' })
     )

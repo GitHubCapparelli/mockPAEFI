@@ -232,13 +232,6 @@ table td {
         background-color: rgba(0, 0, 0, 0.02);
     }
 
-    /*.btn:hover,
-    .pagination .page-link:hover {
-        transform: translateY(-1px);
-        box-shadow: var(--shadow-sm);
-        transition: all 0.2s ease;
-    }*/
-
     .table td:first-child {
         max-width: 320px;
         overflow: hidden;
@@ -376,8 +369,7 @@ table td {
   margin-top: auto;
 }
 
-/*.accordion-headers:hover,
-.accordion-headers:active {
-    background-color: transparent;
-    box-shadow: none;
-}*/
+.accordion-item,
+.accordion-header {
+  background-color: transparent !important;
+}
