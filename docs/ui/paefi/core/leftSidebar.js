@@ -17,24 +17,17 @@ function renderOpcoes(moduleKey) {
   }
 }
 
+function renderPreferences() {
+  const prefs = getPreferences();
+  Render.Preferences(prefs);
+  apply(prefs);
+}
+
 function wireOpcoes() {
   $(document).on('click', '[data-domain]', async function () {
     const domain = $(this).data('domain');
     App.SetDomain(domain);
   });
-}
-
-function renderPreferences() {
-  const prefs = getPreferences();
-  apply(prefs);
-  Render.Preferences(prefs);
-}
-
-function apply(preferences) {
-  if (preferences.sidebarCollapsed) {
-    $('#leftSidebar').addClass('collapsed');
-  }
-  applyTheme(preferences.theme || 'light');
 }
 
 function wirePreferences() {
@@ -59,6 +52,13 @@ function wirePreferences() {
   });
 }
 
+function apply(preferences) {
+  if (preferences.sidebarCollapsed) {
+    $('#leftSidebar').addClass('collapsed');
+  }
+  applyTheme(preferences.theme || 'light');
+}
+
 /* Theme */
 function applyTheme(theme) {
   document.documentElement.setAttribute(
@@ -77,7 +77,7 @@ function syncHeights() {
 export function Init(moduleKey) {
   renderOpcoes(moduleKey);
   renderPreferences();
-  //Render.OurDocs(); // bug....
+  Render.OurDocs(); // bug.... ???
 
   wireAll();
   syncHeights();

@@ -1,6 +1,6 @@
 // ui.paefi.core.renderer
 
-import { Modulo, Elemento } from './omEnum.js';
+import { Modulo, Elemento, DocLinks } from './omEnum.js';
 
 // Layout structure //
 export function PageStructure() {
@@ -149,8 +149,10 @@ export function Preferences(prefs) {
 
 export function OurDocs() {
   const container = $(Elemento.DivOurDocs.JQuery).empty();
-  OurDocs.All.forEach(opt => {
-    container.append($('<button>', { id: opt.Key, class: 'btn btn-sm btn-outline-primary border-0 w-100 mb-2', text: opt.Value }));
+  DocLinks.All.forEach(opt => {
+    container.append($('<button>', { id: opt.Key, 
+      class: 'btn btn-sm btn-outline-primary border-0 w-100 mb-2', 
+      text: opt.Value }));
   });
 }
 
