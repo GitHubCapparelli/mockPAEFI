@@ -369,7 +369,7 @@ table td {
   margin-top: auto;
 }
 
-.accordion-item,
-.accordion-header {
+.accordion-item:active,
+.accordion-header:active {
   background-color: transparent !important;
 }
