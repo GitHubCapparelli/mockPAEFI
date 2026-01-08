@@ -128,17 +128,21 @@ export function CreateCoreAPI({
   }
 
   function SoftDelete(id, rawData) {
+    return Update(id, data);
+  }
+
+  function HardDelete(id) {
     ensureInitialized();
 
     const data = InMemory.GetAll(entity);
-    const idx  = data.findIndex(x => x.id === id);
-    if (idx === -1) return null;
+    const next = data.filter(x => x.id !== id);
 
-    const next = [...data];
-    next[idx]  = { ...next[idx], ...rawData };
+    if (next.length === data.length) {
+      return null; // not found
+    }
 
     InMemory.SetAll(entity, next);
-    return next[idx];
+    return true;
   }
 
   
@@ -149,7 +153,8 @@ export function CreateCoreAPI({
     GetPaginated,
     Create,
     Update,
-    SoftDelete
+    SoftDelete,
+    HardDelete
   };
 }
 

@@ -1,9 +1,9 @@
 //ui.paefi.domain.usuariosServidores
 
-import { Render }                     from '../core/renderer.js';
-import { QueryEngine, CommandEngine } from '../core/omClass.js';
-import { UnidadesAPI }                from '../../../services/api/unidadesAPI.js';
-import { UsuariosServidoresAPI }      from '../../../services/api/usuariosServidoresAPI.js';
+import { Render }                             from '../core/renderer.js';
+import { QueryEngine, CommandEngine, Modal }  from '../core/omClass.js';
+import { UnidadesAPI }                        from '../../../services/api/unidadesAPI.js';
+import { UsuariosServidoresAPI }              from '../../../services/api/usuariosServidoresAPI.js';
 import {
   FuncaoUsuario, CargoUsuario, Especialidade,
   Dominio, Modulo
@@ -18,12 +18,46 @@ const columns = [
   { label: 'Ações', field: 'acoes' }
 ];
 
+//export class Base
+
 export class UsuariosServidoresDomain {
   constructor(modulo, lookups, api)   {
-    this.modulo   = modulo;
-    this.render   = new Renderer(lookups);
-    this.query    = new QueryEngine(api,   (x) => this.render.Rows(x));
-    this.command  = new CommandEngine(api, (x) => this.render.Rows(x));
+    this.modulo     = modulo;
+    this.render     = new Renderer(lookups);
+    this.query      = new QueryEngine(api,   (x) => this.render.Rows(x));
+    this.command    = new CommandEngine(api, () => this.query.loadData(this.getFilters()));
+    this.addModal   = new Modal('add-modal',  'Novo Usuário Servidor',      () => this.modalRequested('create'));
+    this.editModal  = new Modal('edit-modal', 'Editando Usuário Servidor',  () => this.modalRequested('update'));
+  }
+
+  modalRequested(mode, data, id = null) {
+    if (mode === 'create') {
+      this.command.Create(data);
+    } 
+    if (mode === 'update') {
+      this.command.Update(id, data);
+    } 
+  }
+
+  wireAdminEvents() {
+    $(document).on('change', '.filters-bar select', async () => {
+      const filters = this.getFilters();
+      this.query.Apply(filters);
+    });
+
+    $(document).on('click', '#btnAddNew', () => {
+      this.addModal.open()
+    });
+
+    $('#btnClearFilter').on('click', async () => {
+      $('.filters-bar select').val('');
+      this.query.Clear();
+    });
+
+    $('#navControls').on('click', 'a.page-link', async e => {
+      const page = $(e.currentTarget).data('page');
+      await this.query.Navigate(e, page);
+    });
   }
 
   static async Create(modulo) {
@@ -51,28 +85,11 @@ export class UsuariosServidoresDomain {
 
   getFilters() {
     return {
-      unidadeID: $('#cmbFilterUnidade').val() || null,
-      especialidade: $('#cmbFilterEspecialidade').val() || null,
-      funcao: $('#cmbFilterFuncao').val() || null,
-      cargo: $('#cmbFilterCargo').val() || null
+      unidadeID      : $('#cmbFilterUnidade').val() || null,
+      especialidade  : $('#cmbFilterEspecialidade').val() || null,
+      funcao         : $('#cmbFilterFuncao').val() || null,
+      cargo          : $('#cmbFilterCargo').val() || null
     };
-  }
-
-  wireAdminEvents() {
-    $(document).on('change', '.filters-bar select', async () => {
-      const filters = this.getFilters();
-      this.query.Apply(filters);
-    });
-
-    $('#btnClearFilter').on('click', async () => {
-      $('.filters-bar select').val('');
-      this.query.Clear();
-    });
-
-    $('#navControls').on('click', 'a.page-link', async e => {
-      const page = $(e.currentTarget).data('page');
-      await this.query.Navigate(e, page);
-    });
   }
 }
 
