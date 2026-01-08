@@ -9,41 +9,6 @@ import { CoreAdmin }                                  from './coreAdmin.js';
 
 /* =========================================================
    Table definition
-========================================================= */
-
-const columns = [
-  { label: 'Nome',            field: 'nome' },
-  { label: 'Unidade',         field: 'unidade' },
-  { label: 'Especialidade',   field: 'especialidade' },
-  { label: 'Função',          field: 'funcao' },
-  { label: 'Cargo',           field: 'cargo' },
-  { label: 'Ações',           field: 'acoes' }
-];
-
-/* =========================================================
-   Gateway
-========================================================= */
-
-export class UsuariosServidoresGateway extends DomainGateway {
-
-  constructor() {
-    super({
-      api: UsuariosServidoresAPI,
-      lookups: {
-        unidades: UnidadesAPI
-      }
-    });
-
-    this.unidades  = [];
-
-    this.query     = new QueryEngine(async (page, pageSize, filters) => {
-      const result = await this.api.GetPaginated({ page, pageSize, filters });
-      return {
-        data: result.data,
-        totalItems: result.pagination.totalRecords
-      };
-    }, 5);
-  }
 
   /* -------------------------------------------------------
      Lifecycle
