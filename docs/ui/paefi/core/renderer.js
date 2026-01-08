@@ -74,7 +74,7 @@ function leftSidebar() {
   const $header = $('<div>', { class: 'p-2 d-flex justify-content-between align-items-center' })
     .append($('<button>', {
       id: 'btnSidebarToggle',
-      class: 'btn btn-sm btn-outline-secondary',
+      class: 'btnSidebarToggle btn btn-sm btn-outline-secondary',
       title: 'Expandir / Recolher'
     }
     ).append($('<i>', { class: 'fas fa-bars' }))
@@ -84,11 +84,14 @@ function leftSidebar() {
 
   const $body = $('<div>', { id: 'leftSidebar-body', class: 'leftSidebar-body p-2 overflow-auto' })
     .append($(' <div>', { class: 'leftSidebar-top' }
-    ).append(accordion(Elemento.DivOpcoesDominio, true))
+      ).append(
+        accordion(Elemento.DivPreferencias)
+        ,
+        accordion(Elemento.DivOpcoesDominio, true))
       ,
       $(' <div>', { class: 'leftSidebar-bottom' }
-      ).append(accordion(Elemento.DivPreferencias)
-        , accordion(Elemento.DivOurDocs)
+      ).append(
+        accordion(Elemento.DivOurDocs)
       )
     );
   $sidebar.append($header, $body);
