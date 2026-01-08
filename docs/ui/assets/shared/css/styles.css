@@ -26,6 +26,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    box-shadow: none !important;
 }
 
 body {
@@ -67,6 +68,9 @@ body {
     color: white;
     height: 80px;
     font-size: 13px;
+    position: sticky;
+    top: 0;
+    z-index: 1030;
 }
 
 .top-navbar a {
@@ -228,12 +232,12 @@ table td {
         background-color: rgba(0, 0, 0, 0.02);
     }
 
-    .btn:hover,
+    /*.btn:hover,
     .pagination .page-link:hover {
         transform: translateY(-1px);
         box-shadow: var(--shadow-sm);
         transition: all 0.2s ease;
-    }
+    }*/
 
     .table td:first-child {
         max-width: 320px;
@@ -327,13 +331,6 @@ table td {
   overflow-y: auto;
 }
 
-/* ---------- (SIDS) Top Navbar ---------- */
-.top-navbar {
-  position: sticky;
-  top: 0;
-  z-index: 1030;
-}
-
 /* ---------- Sidebar ---------- */
 .leftSidebar {
   width: 260px;
@@ -358,6 +355,11 @@ table td {
   display: none;
 }
 
+.leftSidebar .btn {
+  justify-content: flex-start;
+  text-align: left;
+}
+
 /* ---------- Sidebar content ---------- */
 .leftSidebar-body {
   flex: 1;
@@ -374,8 +376,8 @@ table td {
   margin-top: auto;
 }
 
-.accordion-headers:hover,
+/*.accordion-headers:hover,
 .accordion-headers:active {
     background-color: transparent;
     box-shadow: none;
-}
+}*/

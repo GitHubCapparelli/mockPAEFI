@@ -98,7 +98,8 @@ function leftSidebar() {
 function accordion(elemento, expanded = false) {
   const $body = $('<div>', {
     class: `accordion-collapse collapse ${expanded ? 'show' : ''}`
-  }).append($('<div>', { id: elemento.Key, class: 'accordion-body', text: '[em breve]' }));
+  }).append($('<div>', { id: `collapse-${elemento.Key}`, 
+    class: 'accordion-body', text: '[em breve]' }));
 
   return $('<div>', { class: 'accordion accordion-flush mb-2' }).append(
     $('<div>', { class: 'accordion-item' }).append(
@@ -106,7 +107,7 @@ function accordion(elemento, expanded = false) {
         $('<button>', {
           class: `accordion-button ${expanded ? '' : 'collapsed'}`,
           'data-bs-toggle': 'collapse',
-          'data-bs-target': `#${elemento.Key}`,
+          'data-bs-target': `#collapse-${elemento.Key}`,
           type: 'button',
           text: elemento.Value
         })
@@ -152,7 +153,7 @@ function OurDocs() {
 }
 
 // filters and tables (admin) //
-function divFilters() {
+function divFilters_old_deprecated() {
   return $('<div>', { class: 'filters-bar mx-2' }).append(
     $('<div>', { id: 'divFilterOptions', class: 'filter-options p-2 d-flex gap-3' }).append(
       $('<span>', { text: 'Filtros' })
@@ -160,6 +161,14 @@ function divFilters() {
     $('<div>', { id: 'divFilterButtons', class: 'filter-buttons p-2 d-flex gap-2' }).append(
       $('<button>', { id: 'btnApplyFilter', class: 'btn btn-primary btnApplyFilter', text: 'Filtrar' }),
       $('<button>', { id: 'btnClearFilter', class: 'btn btn-outline-secondary btnClearFilter', text: 'Limpar' })
+    )
+  );
+}
+
+function divFilters() {
+  return $('<div>', { class: 'filters-bar mx-2' }).append(
+    $('<div>', { id: 'divFilterOptions', class: 'filter-options p-2 d-flex gap-3' }).append(
+      $('<span>', { text: 'Filtros' })
     )
   );
 }

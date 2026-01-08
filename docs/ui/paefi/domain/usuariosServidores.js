@@ -59,7 +59,7 @@ export class UsuariosServidoresDomain {
   }
 
   wireAdminEvents() {
-    $('#btnApplyFilter').on('click', async () => {
+    $('#btnApplyFilter').on('change', 'select', async () => {
       const filters = this.getFilters();
       this.query.Apply(filters);
     });
@@ -70,7 +70,8 @@ export class UsuariosServidoresDomain {
     });
 
     $('#navControls').on('click', 'a.page-link', async e => {
-      this.query.Navigate(e, $(this).data('page'));
+      const page = $(e.currentTarget).data('page');
+      await this.query.Navigate(e, page);
     });
   }
 }
