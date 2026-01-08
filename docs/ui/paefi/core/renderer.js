@@ -95,31 +95,33 @@ function leftSidebar() {
   return $sidebar;
 }
 
-function accordion(elemento, expanded = false) {
+function accordion(element, expanded = false) {
   const $body = $('<div>', {
     class: `accordion-collapse collapse ${expanded ? 'show' : ''}`
-  }).append($('<div>', { id: `collapse-${elemento.Key}`, 
+  }).append($('<div>', { id: `${element.Key}`, 
     class: 'accordion-body', text: '[em breve]' }));
 
-  return $('<div>', { class: 'accordion accordion-flush mb-2' }).append(
-    $('<div>', { class: 'accordion-item' }).append(
-      $('<h2>', { class: 'accordion-headers shadow-none' }).append(
-        $('<button>', {
-          class: `accordion-button ${expanded ? '' : 'collapsed'}`,
-          'data-bs-toggle': 'collapse',
-          'data-bs-target': `#collapse-${elemento.Key}`,
-          type: 'button',
-          text: elemento.Value
-        })
-      ),
-      $body
-    )
-  );
+  const $btn = $('<button>', {
+    class: `accordion-button ${expanded ? '' : 'collapsed'}`,
+    'data-bs-toggle': 'collapse',
+    'data-bs-target': `#${element.Key}`,
+    type: 'button',
+    text: element.Value
+  });
+  
+  const $header = $('<h2>',  { class: 'accordion-header shadow-none' });
+  const $item   = $('<div>', { class: 'accordion-item' });
+  $item.append($header, $btn);
+
+  const $group  = $('<div>', { class: 'accordion accordion-flush mb-2' });
+  $group.append($item, $body);
+
+  return $group;
 }
 
-export function Options(options) {
+export function Options(domains) {
   const container = $(Elemento.DivOpcoesDominio.JQuery).empty();
-  options.forEach(opt => {
+  domains.forEach(opt => {
     container.append($('<button>', { class: 'btn btn-sm btn-outline-primary border-0 w-100 mb-2', text: opt.Value, 'data-domain': opt.Key }));
   });
 }

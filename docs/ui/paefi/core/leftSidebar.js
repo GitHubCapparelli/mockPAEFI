@@ -12,8 +12,8 @@ function savePrefs(prefs) { Local.Set(PreferencesKey, prefs); }
 /* Behavior */
 function renderOpcoes(moduleKey) {
   if (moduleKey === Modulo.Admin.Key) {
-    const options = Dominio.All.filter(x => x.Key !== Dominio.Nenhum.Key);
-    Render.Options(options);
+    const domains = Dominio.All.filter(x => x.Key !== Dominio.Nenhum.Key);
+    Render.Options(domains);
   }
 }
 
