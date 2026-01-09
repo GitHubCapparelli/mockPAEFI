@@ -1,4 +1,4 @@
-//ui.paefi.core.leftSidebar
+// ui paefi core leftSidebar
 
 import { App }                         from './app.js';
 import { Render }                      from './renderer.js';

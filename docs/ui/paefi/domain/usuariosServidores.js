@@ -34,7 +34,7 @@ export class UsuariosServidoresDomain {
   }
   async  init(modulo) {
     if (modulo.Key === Modulo.Admin.Key) {
-      await instance.viewAdmin();
+      await viewAdmin();
     }
   }
   static async Create(modulo) {
