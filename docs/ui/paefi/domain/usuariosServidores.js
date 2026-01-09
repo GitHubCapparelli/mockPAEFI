@@ -18,7 +18,7 @@ const columns = [
   { label: 'Ações', field: 'acoes' }
 ];
 
-export class BaseOrchestrator(api, lookups, modulo)
+// class BaseOrchestrator(api, lookups, modulo)
 
 // instance //
 export class UsuariosServidoresDomain {
