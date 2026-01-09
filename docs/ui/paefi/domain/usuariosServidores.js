@@ -30,9 +30,9 @@ export class UsuariosServidoresDomain {
     this.addModal   = new Modal('add-modal',  'Novo Usuário Servidor',      () => this.modalRequested('create'));
     this.editModal  = new Modal('edit-modal', 'Editando Usuário Servidor',  () => this.modalRequested('update',));
 
-    this.init();
+    this.init(modulo);
   }
-  async  init() {
+  async  init(modulo) {
     if (modulo.Key === Modulo.Admin.Key) {
       await instance.viewAdmin();
     }
