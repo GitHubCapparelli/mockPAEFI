@@ -1,10 +1,14 @@
-export class Elemento {
+class BaseEnum {
     static All = [];
 
-    static FromKey(key)        { return Elemento.All.find(x => x.Key === key) ?? null; }
-    static FromValue(value)    { return Elemento.All.find(x => x.Value === value) ?? null; }
-    static ValueFromKey(key)   { return Elemento.FromKey(key)?.Value ?? null; }
-    static KeyFromValue(value) { return Elemento.FromValue(value)?.Key ?? null; }
+    static FromKey(key)        { return this.All.find(x => x.Key === key) ?? null; }
+    static FromValue(value)    { return this.All.find(x => x.Value === value) ?? null; }
+    static ValueFromKey(key)   { return this.FromKey(key)?.Value ?? null; }
+    static KeyFromValue(value) { return this.FromValue(value)?.Key ?? null; }
+}
+
+export class Elemento extends BaseEnum {
+    static All = [];
 
     static TextoLogin          = new Elemento('txtUser-login','Login');
     static TextoTituloPagina   = new Elemento('page-title-text','Página');
@@ -26,19 +30,14 @@ export class Elemento {
         }
         Object.freeze(this);
     }
- 
-    toJSON() { return this.Key; }
+    
+    toJSON() { return JSON.stringify(this); }
 }
 Object.freeze(Elemento.All);
 
 
-export class DocLinks {
+export class DocLinks extends BaseEnum {
     static All = [];
-
-    static FromKey(key)        { return DocLinks.All.find(x => x.Key === key) ?? null; }
-    static FromValue(value)    { return DocLinks.All.find(x => x.Value === value) ?? null; }
-    static ValueFromKey(key)   { return DocLinks.FromKey(key)?.Value ?? null; }
-    static KeyFromValue(value) { return DocLinks.FromValue(value)?.Key ?? null; }
 
     static DocExecutivo        = new DocLinks('docExecutivo','Documento Executivo');
     static DocTecnico          = new DocLinks('docTecnico','Documetação Técnica');
@@ -54,19 +53,14 @@ export class DocLinks {
         }
         Object.freeze(this);
     }
- 
-    toJSON() { return this.Key; }
+    
+    toJSON() { return JSON.stringify(this); }
 }
 Object.freeze(DocLinks.All);
 
 
-export class Modulo {
+export class Modulo extends BaseEnum {
     static All = [];
-
-    static FromKey(key)        { return Modulo.All.find(x => x.Key === key) ?? null; }
-    static FromValue(value)    { return Modulo.All.find(x => x.Value === value) ?? null; }
-    static ValueFromKey(key)   { return Modulo.FromKey(key)?.Value ?? null; }
-    static KeyFromValue(value) { return Modulo.FromValue(value)?.Key ?? null; }
 
     static Nenhum       = new Modulo('','Módulo');
     static Admin        = new Modulo('admin','Administração');
@@ -83,19 +77,14 @@ export class Modulo {
         }
         Object.freeze(this);
     }
- 
-    toJSON() { return this.Key; }
+    
+    toJSON() { return JSON.stringify(this); }
 }
 Object.freeze(Modulo.All);
 
 
-export class Dominio {
+export class Dominio extends BaseEnum {
     static All = [];
-
-    static FromKey(key)        { return Dominio.All.find(x => x.Key === key) ?? null; }
-    static FromValue(value)    { return Dominio.All.find(x => x.Value === value) ?? null; }
-    static ValueFromKey(key)   { return Dominio.FromKey(key)?.Value ?? null; }
-    static KeyFromValue(value) { return Dominio.FromValue(value)?.Key ?? null; }
 
     static Nenhum               = new Dominio('','Domínio');
     static Anotacoes            = new Dominio('anotacoes', 'Anotações');
@@ -129,19 +118,14 @@ export class Dominio {
         }
         Object.freeze(this);
     }
- 
-    toJSON() { return this.Key; }
+    
+    toJSON() { return JSON.stringify(this); }
 }
 Object.freeze(Dominio.All);
 
 
-export class FuncaoUnidade {
+export class FuncaoUnidade extends BaseEnum {
     static All = [];
-
-    static FromKey(key)        { return FuncaoUnidade.All.find(x => x.Key === key) ?? null; }
-    static FromValue(value)    { return FuncaoUnidade.All.find(x => x.Value === value) ?? null; }
-    static ValueFromKey(key)   { return FuncaoUnidade.FromKey(key)?.Value ?? null; }
-    static KeyFromValue(value) { return FuncaoUnidade.FromValue(value)?.Key ?? null; }
 
     static NaoInformada        = new FuncaoUnidade('NaoInformada','Não Informada');
     static Direcao             = new FuncaoUnidade('Direcao','Direção');
@@ -161,19 +145,14 @@ export class FuncaoUnidade {
         }
         Object.freeze(this);
     }
- 
-    toJSON() { return this.Key; }
+    
+    toJSON() { return JSON.stringify(this); }
 }
 Object.freeze(FuncaoUnidade.All);
 
 
-export class FuncaoUsuario {
+export class FuncaoUsuario extends BaseEnum {
     static All = [];
-
-    static FromKey(key)        { return FuncaoUsuario.All.find(x => x.Key === key) ?? null; }
-    static FromValue(value)    { return FuncaoUsuario.All.find(x => x.Value === value) ?? null; }
-    static ValueFromKey(key)   { return FuncaoUsuario.FromKey(key)?.Value ?? null; }
-    static KeyFromValue(value) { return FuncaoUsuario.FromValue(value)?.Key ?? null; }
 
     static NaoInformada        = new FuncaoUsuario('NaoInformada','Não Informada');
     static Assessor            = new FuncaoUsuario('Assessor','Assessor');
@@ -201,19 +180,14 @@ export class FuncaoUsuario {
         }
         Object.freeze(this);
     }
- 
-    toJSON() { return this.Key; }
+    
+    toJSON() { return JSON.stringify(this); }
 }
 Object.freeze(FuncaoUsuario.All);
 
 
-export class CargoUsuario {
+export class CargoUsuario extends BaseEnum {
     static All = [];
-
-    static FromKey(key)        { return CargoUsuario.All.find(x => x.Key === key) ?? null; }
-    static FromValue(value)    { return CargoUsuario.All.find(x => x.Value === value) ?? null; }
-    static ValueFromKey(key)   { return CargoUsuario.FromKey(key)?.Value ?? null; }
-    static KeyFromValue(value) { return CargoUsuario.FromValue(value)?.Key ?? null; }
 
     static NaoInformado               = new CargoUsuario('NaoInformado','Não Informado');
     static AnalistaPlanejamento       = new CargoUsuario('AnalistaPlanejamento','Analista de Planejamento');
@@ -235,19 +209,14 @@ export class CargoUsuario {
         }
         Object.freeze(this);
     }
- 
-    toJSON() { return this.Key; }
+    
+    toJSON() { return JSON.stringify(this); }
 }
 Object.freeze(CargoUsuario.All);
 
 
-export class Especialidade {
+export class Especialidade extends BaseEnum {
     static All = [];
-
-    static FromKey(key)        { return Especialidade.All.find(x => x.Key === key) ?? null; }
-    static FromValue(value)    { return Especialidade.All.find(x => x.Value === value) ?? null; }
-    static ValueFromKey(key)   { return Especialidade.FromKey(key)?.Value ?? null; }
-    static KeyFromValue(value) { return Especialidade.FromValue(value)?.Key ?? null; }
 
     static NaoInformada           = new Especialidade('NaoInformada','Não Informada');
     static Administrador          = new Especialidade('Administrador','Administrador');
@@ -280,7 +249,7 @@ export class Especialidade {
         }
         Object.freeze(this);
     }
- 
-    toJSON() { return this.Key; }
+    
+    toJSON() { return JSON.stringify(this); }
 }
 Object.freeze(Especialidade.All);
