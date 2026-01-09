@@ -18,8 +18,9 @@ const columns = [
   { label: 'Ações', field: 'acoes' }
 ];
 
-//export class Base
+export class BaseOrchestrator(api, lookups, modulo)
 
+// instance //
 export class UsuariosServidoresDomain {
   constructor(modulo, lookups, api)   {
     this.modulo     = modulo;
@@ -27,8 +28,23 @@ export class UsuariosServidoresDomain {
     this.query      = new QueryEngine(api,   (x) => this.render.Rows(x));
     this.command    = new CommandEngine(api, () => this.query.loadData(this.getFilters()));
     this.addModal   = new Modal('add-modal',  'Novo Usuário Servidor',      () => this.modalRequested('create'));
-    this.editModal  = new Modal('edit-modal', 'Editando Usuário Servidor',  () => this.modalRequested('update'));
+    this.editModal  = new Modal('edit-modal', 'Editando Usuário Servidor',  () => this.modalRequested('update',));
+
+    this.init();
   }
+  async  init() {
+    if (modulo.Key === Modulo.Admin.Key) {
+      await instance.viewAdmin();
+    }
+  }
+  static async Create(modulo) {
+    await Promise.all([
+      UnidadesAPI.Init(),
+      UsuariosServidoresAPI.Init()
+    ]);
+    const lookups = { unidades: UnidadesAPI.GetAll() };
+    return new UsuariosServidoresDomain(modulo, lookups, UsuariosServidoresAPI);
+  }  
 
   modalRequested(mode, data, id = null) {
     if (mode === 'create') {
@@ -60,19 +76,6 @@ export class UsuariosServidoresDomain {
     });
   }
 
-  static async Create(modulo) {
-    await Promise.all([
-      UnidadesAPI.Init(),
-      UsuariosServidoresAPI.Init()
-    ]);
-    const lookups = { unidades: UnidadesAPI.GetAll() };
-    const instance = new UsuariosServidoresDomain(modulo, lookups, UsuariosServidoresAPI);
-
-    if (modulo.Key === Modulo.Admin.Key) {
-      await instance.viewAdmin();
-    }
-    return instance;
-  }  
 
   async viewAdmin() {
     Render.Table(columns);
