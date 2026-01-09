@@ -8,49 +8,36 @@ import {
   Dominio, Modulo
 } from '../core/omEnum.js';
 
-export class UsuariosServidoresSpec {
-    static All = [];
-
-    constructor(key, value) {
-        this.Key = key;
-        this.Value = value;
-        this.JQuery = `#${key}`;
-
-        if (!DocLinks.All.some(x => x.Key === key)) {
-            DocLinks.All.push(this);
-        }
+//
+export class UsuariosServidoresSpecs {
+    constructor() {
+        this.api            = UsuariosServidoresAPI;
+        this.lookups        = { unidades: UnidadesAPI.GetAll() };
+        this.gridColumns    = [
+            { title: 'Nome',            dto: 'nome' },
+            { title: 'Unidade',         dto: 'unidade' },
+            { title: 'Especialidade',   dto: 'especialidade' },
+            { title: 'Função',          dto: 'funcao' },
+            { title: 'Cargo',           dto: 'cargo' }
+        ];
         Object.freeze(this);
     }
 
-    static FromKey(key)        { return DocLinks.All.find(x => x.Key === key) ?? null; }
-    static FromValue(value)    { return DocLinks.All.find(x => x.Value === value) ?? null; }
-    static ValueFromKey(key)   { return DocLinks.FromKey(key)?.Value ?? null; }
-    static KeyFromValue(value) { return DocLinks.FromValue(value)?.Key ?? null; }
-
-    static DocExecutivo        = new DocLinks('docExecutivo','Documento Executivo');
-    static DocTecnico          = new DocLinks('docTecnico','Documetação Técnica');
-    static DocUsuario          = new DocLinks('docUsuario','Manual do Usuário');
- 
-    toJSON() { return this.Key; }
+    apiFilters() {
+        return {
+        unidadeID      : $('#cmbFilterUnidade').val()       || null,
+        especialidade  : $('#cmbFilterEspecialidade').val() || null,
+        funcao         : $('#cmbFilterFuncao').val()        || null,
+        cargo          : $('#cmbFilterCargo').val()         || null
+        };
+    }
+  
+    modalRequested(action, data, id = null) {
+        if (action === 'create') {
+            this.command.Create(data);
+        } 
+        if (action === 'update') {
+            this.command.Update(id, data);
+        } 
+    }
 }
-Object.freeze(DocLinks.All);
-
-const columns = [
-  { label: 'Nome', field: 'nome' },
-  { label: 'Unidade', field: 'unidade' },
-  { label: 'Especialidade', field: 'especialidade' },
-  { label: 'Função', field: 'funcao' },
-  { label: 'Cargo', field: 'cargo' },
-  { label: 'Ações', field: 'acoes' }
-];
-
-  getFilters() {
-    return {
-      unidadeID      : $('#cmbFilterUnidade').val() || null,
-      especialidade  : $('#cmbFilterEspecialidade').val() || null,
-      funcao         : $('#cmbFilterFuncao').val() || null,
-      cargo          : $('#cmbFilterCargo').val() || null
-    };
-  }
-
-

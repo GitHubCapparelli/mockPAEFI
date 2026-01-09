@@ -18,7 +18,19 @@ const columns = [
   { label: 'Ações', field: 'acoes' }
 ];
 
-// class BaseOrchestrator(api, lookups, modulo)
+class BaseOrchestrator {
+  constructor(modulo, lookups, api)   {
+    this.modulo     = modulo;
+    this.render     = new Renderer(lookups);
+    this.query      = new QueryEngine(api,   (x) => this.render.Rows(x));
+    this.command    = new CommandEngine(api, () => this.query.loadData(this.getFilters()));
+    this.addModal   = new Modal('add-modal',  'Novo Usuário Servidor',      () => this.modalRequested('create'));
+    this.editModal  = new Modal('edit-modal', 'Editando Usuário Servidor',  () => this.modalRequested('update',));
+
+    this.init(modulo);
+  }
+
+};
 
 // instance //
 export class UsuariosServidoresDomain {
@@ -45,6 +57,7 @@ export class UsuariosServidoresDomain {
     const lookups = { unidades: UnidadesAPI.GetAll() };
     return new UsuariosServidoresDomain(modulo, lookups, UsuariosServidoresAPI);
   }  
+  //
 
   modalRequested(mode, data, id = null) {
     if (mode === 'create') {
@@ -79,7 +92,6 @@ export class UsuariosServidoresDomain {
 
   async viewAdmin() {
     Render.Table(columns);
-
     this.render.Filters();
     await this.query.loadData();
 
