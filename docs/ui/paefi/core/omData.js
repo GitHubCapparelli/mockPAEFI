@@ -197,7 +197,7 @@ export class Catalog {          // DatabaseTable, dataSource
 
         this.Versao     = { ...Metadata.Versao      , Value: versao };
         this.Finalidade = { ...Metadata.Finalidade  , Value: finalidade  };
-        this.Campos     = [ ...Catalog.SharedFields, ...fields];
+        this.Campos     = [ ...Object.values(Catalog.SharedFields), ...fields];
 
         if (!Catalog.All.some(x => x.Key === key || x.Name === name)) {
             Catalog.All.push(this);
