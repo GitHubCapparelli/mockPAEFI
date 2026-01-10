@@ -94,8 +94,7 @@ export class Metadata {         // fields, attribs (spec)
         maxLen        = null,
         cripto        = TipoCriptografia.Nenhuma.Key, 
         access        = TipoAcesso.Interno.Key,
-        lookup        = lookup,
-        domain        = domain
+        lookup        = null
     } ) {                                               // origem?
         this.Key            = key;
         this.DbColName      = dbColName;
@@ -139,10 +138,10 @@ export class Metadata {         // fields, attribs (spec)
     static Sigla               = new Metadata({ key: crypto.randomUUID(), dbColName:'sigla'         , uiKey:'#txtSigla'          , uiTitle: 'Sigla'          , minLen: 5 , maxLen: 250, required: true     });
     static IbgeId              = new Metadata({ key: crypto.randomUUID(), dbColName:'ibgeId'        , uiKey:'#txtIbgeId'         , uiTitle: 'IBGE'           , minLen: 11, maxLen: 11 });
     
-    static UnidadeID           = new Metadata({ key: crypto.randomUUID(), dbColName:'unidadeID'     , uiKey:'#cmbFilterUnidade'  , uiTitle: 'Unidade'        , type:'UUID'       , pfKey:'FK', required: true, domain: 'unidades' });
-    static Login               = new Metadata({ key: crypto.randomUUID(), dbColName:'login'         , uiKey:'#txtLogin'          , uiTitle: 'Login'          , required: true    , minLen: 5 , maxLen: 50 });
-    static Matricula           = new Metadata({ key: crypto.randomUUID(), dbColName:'matricula'     , uiKey:'#txtMatricula'      , uiTitle: 'Matrícula'      , required: true    , minLen: 8 , maxLen: 8 });
-    static CPF                 = new Metadata({ key: crypto.randomUUID(), dbColName:'cpf'           , uiKey:'#txtCPF'            , uiTitle: 'CPF'            , required: true    , minLen: 11, maxLen: 11 });
+    static UnidadeID           = new Metadata({ key: crypto.randomUUID(), dbColName:'unidadeID'     , uiKey:'#cmbFilterUnidade'  , uiTitle: 'Unidade'        , required: true   , type:'UUID'       , pfKey:'FK' });
+    static Login               = new Metadata({ key: crypto.randomUUID(), dbColName:'login'         , uiKey:'#txtLogin'          , uiTitle: 'Login'          , required: true   , minLen: 5 , maxLen: 50 });
+    static Matricula           = new Metadata({ key: crypto.randomUUID(), dbColName:'matricula'     , uiKey:'#txtMatricula'      , uiTitle: 'Matrícula'      , required: true   , minLen: 8 , maxLen: 8 });
+    static CPF                 = new Metadata({ key: crypto.randomUUID(), dbColName:'cpf'           , uiKey:'#txtCPF'            , uiTitle: 'CPF'            , required: true   , minLen: 11, maxLen: 11 });
     
     static UnidadeFuncao       = new Metadata({ key: crypto.randomUUID(), dbColName:'funcao'        , uiKey:'#cmbFilterFuncao'          , uiTitle: 'Função'         , required: true, type:'enum', lookup: Enum.FuncaoUnidade });
     static UsuarioFuncao       = new Metadata({ key: crypto.randomUUID(), dbColName:'funcao'        , uiKey:'#cmbFilterFuncao'          , uiTitle: 'Função'         , required: true, type:'enum', lookup: Enum.FuncaoUsuario });
