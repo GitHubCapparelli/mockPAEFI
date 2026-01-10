@@ -2,6 +2,7 @@
 
 import * as API from '../../../services/api/_index.js';
 import * as DTO from '../../../data/factory/_index.js';
+import * as Enum from './omEnum.js';
 
 export class TipoCriptografia extends Enum.BaseEnum {
     static All = [];
