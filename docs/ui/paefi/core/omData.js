@@ -1,10 +1,8 @@
 // ui paefi core omData
 
-import * from '../../../services/api/_index.js';
-import * from '../../../data/factory/_index.js';
-import * from './omEnum.js';
-
-//
+import * as API from '../../../services/api/_index.js';
+import * as DTO from '../../../data/factory/_index.js';
+import * as Enum from './omEnum.js';
 
 export class Metadata {         // fields, attribs (spec)
     static All = [];
@@ -40,6 +38,9 @@ export class Metadata {         // fields, attribs (spec)
         this.MaxLength      = maxLen;
         this.Cripto         = cripto;
         this.Access         = access;
+        
+        this.Dominio        = domain;
+        this.Lookup         = lookup
 
         if (!Metadata.All.some(x => x.Key === key)) {
             Metadata.All.push(this);
@@ -69,11 +70,11 @@ export class Metadata {         // fields, attribs (spec)
     static Matricula           = new Metadata({ key: crypto.randomUUID(), dbColName:'matricula'     , uiKey:'#txtMatricula'      , uiTitle: 'Matrícula'      , required: true    , minLen: 8 , maxLen: 8 });
     static CPF                 = new Metadata({ key: crypto.randomUUID(), dbColName:'cpf'           , uiKey:'#txtCPF'            , uiTitle: 'CPF'            , required: true    , minLen: 11, maxLen: 11 });
     
-    static UnidadeFuncao       = new Metadata({ key: crypto.randomUUID(), dbColName:'funcao'        , uiKey:'#cmbFilterFuncao'          , uiTitle: 'Função'         , required: true, type:'enum', lookup: FuncaoUnidade });
-    static UsuarioFuncao       = new Metadata({ key: crypto.randomUUID(), dbColName:'funcaoUsuario' , uiKey:'#cmbFilterFuncao'          , uiTitle: 'Função'         , required: true, type:'enum', lookup: FuncaoUsuario });
-    static UsuarioCargo        = new Metadata({ key: crypto.randomUUID(), dbColName:'cargoUsuario'  , uiKey:'#cmbFilterCargo'           , uiTitle: 'Cargo'          , required: true, type:'enum', lookup: CargoUsuario });
-    static Especialidade       = new Metadata({ key: crypto.randomUUID(), dbColName:'especialidade' , uiKey:'#cmbFilterEspecialidade'   , uiTitle: 'Especialidade'  , required: true, type:'enum', lookup: Especialiade });
-}
+    static UnidadeFuncao       = new Metadata({ key: crypto.randomUUID(), dbColName:'funcao'        , uiKey:'#cmbFilterFuncao'          , uiTitle: 'Função'         , required: true, type:'enum', lookup: Enum.FuncaoUnidade });
+    static UsuarioFuncao       = new Metadata({ key: crypto.randomUUID(), dbColName:'funcao'        , uiKey:'#cmbFilterFuncao'          , uiTitle: 'Função'         , required: true, type:'enum', lookup: Enum.FuncaoUsuario });
+    static UsuarioCargo        = new Metadata({ key: crypto.randomUUID(), dbColName:'cargo'         , uiKey:'#cmbFilterCargo'           , uiTitle: 'Cargo'          , required: true, type:'enum', lookup: Enum.CargoUsuario });
+    static Especialidade       = new Metadata({ key: crypto.randomUUID(), dbColName:'especialidade' , uiKey:'#cmbFilterEspecialidade'   , uiTitle: 'Especialidade'  , required: true, type:'enum', lookup: Enum.Especialidade });
+};
 
 
 //
@@ -108,7 +109,7 @@ export class UsuariosServidoresSpecs {
             this.command.Update(id, data);
         } 
     }
-}
+};
 
 
 export class Catalog {          // DatabaseTable, dataSource
@@ -144,12 +145,13 @@ export class Catalog {          // DatabaseTable, dataSource
 
     static UsuariosServidores = new Catalog(crypto.randomUUID(), 'UsuariosServidores', '0.1', 'Armazenar dados de servidores',
         [ Metadata.UnidadeID, Metadata.Nome, Metadata.Login, Metadata.Matricula, Metadata.CPF, Metadata.FuncaoUsuario, Metadata.CargoUsuario, Metadata.Especialidade ]);
-}
+};
 
 export class DomainInfo {          
     static All = [];
 
-    constructor(name, api, dto, catalog, schema, lookups = {}) {
+    constructor(key, name, api, dto, catalog, schema, lookups = {}) {
+        this.Key        = key;
         this.Name       = name;
         this.API        = api;
         this.DTO        = dto;
@@ -157,13 +159,13 @@ export class DomainInfo {
         this.Schema     = schema;
         this.Lookups    = lookups;
 
-        if (!DomainInfo.All.some(x => x.Name === name)) {
+        if (!DomainInfo.All.some(x => x.Key === key || x.Name === name)) {
             DomainInfo.All.push(this);
         }
     }
 
-    static async Create(name) => {
-        const info = DomainInfo.All.find(x => x.Name === name);
+    static async Create(key) {
+        const info = DomainInfo.All.find(x => x.Key === key);
         if (!info) return null;
 
         const lookups = Object.values(info.Lookups);
@@ -179,26 +181,17 @@ export class DomainInfo {
         return info;
     }
 
-    static Unidades = new DomainInfo('Unidades', UnidadesAPI, UnidadesDTO, 
+    static Unidades = new DomainInfo('unidades', 'Unidade', API.UnidadesAPI, DTO.CreateUnidadeDTO, 
         Catalog.Unidades, 'unidadeSchema.json');
     
-    static UsuariosServidores = new DomainInfo('UsuariosServidores', UsuariosServidoresAPI, UsuariosServidoresDTO, 
-        Catalog.UsuariosServidores, 'usuarioServidorSchema.json', { unidades: UnidadesAPI });
-}
-
+    static UsuariosServidores = new DomainInfo('usuarios-servidores', 'Usuário Servidor', API.UsuariosServidoresAPI, DTO.CreateUsuarioServidorDTO, 
+        Catalog.UsuariosServidores, 'usuarioServidorSchema.json', { unidades: API.UnidadesAPI });
+};
 
 ///////////////////////////////////
 
-
-//export class Info { // Catalog + API + lookups + ...
-
-export class TipoCriptografia {
+export class TipoCriptografia extends Enum.BaseEnum {
     static All = [];
-
-    static FromKey(key)         { return TipoCriptografia.All.find(x => x.Key === key) ?? null; }
-    static FromValue(value)     { return TipoCriptografia.All.find(x => x.Value === value) ?? null; }
-    static ValueFromKey(key)    { return TipoCriptografia.FromKey(key)?.Value ?? null; }
-    static KeyFromValue(value)  { return TipoCriptografia.FromValue(value)?.Key ?? null; }
 
     static Nenhuma              = new TipoCriptografia('Nenhuma', 'Nenhuma');
     static Repouso              = new TipoCriptografia('repouso', 'Repouso');
@@ -217,16 +210,11 @@ export class TipoCriptografia {
     }
     
     toJSON() { return JSON.stringify(this); }
-}
+};
 Object.freeze(TipoCriptografia.All);
 
-export class TipoAcesso {
+export class TipoAcesso extends Enum.BaseEnum {
     static All = [];
-
-    static FromKey(key)         { return TipoAcesso.All.find(x => x.Key === key) ?? null; }
-    static FromValue(value)     { return TipoAcesso.All.find(x => x.Value === value) ?? null; }
-    static ValueFromKey(key)    { return TipoAcesso.FromKey(key)?.Value ?? null; }
-    static KeyFromValue(value)  { return TipoAcesso.FromValue(value)?.Key ?? null; }
 
     static Interno          = new TipoAcesso('interno', 'Interno');
     static Privado          = new TipoAcesso('privado', 'Privado');
@@ -247,16 +235,11 @@ export class TipoAcesso {
     }
 
     toJSON() { return JSON.stringify(this); }
-}
+};
 Object.freeze(TipoAcesso.All);
 
-export class TipoLog {
+export class TipoLog extends Enum.BaseEnum {
     static All = [];
-
-    static FromKey(key)         { return TipoLog.All.find(x => x.Key === key) ?? null; }
-    static FromValue(value)     { return TipoLog.All.find(x => x.Value === value) ?? null; }
-    static ValueFromKey(key)    { return TipoLog.FromKey(key)?.Value ?? null; }
-    static KeyFromValue(value)  { return TipoLog.FromValue(value)?.Key ?? null; }
 
     static NaoInformado     = new TipoLog('naoInformado', 'Não informado');
     static Erro             = new TipoLog('erro', 'Erro');
@@ -279,6 +262,6 @@ export class TipoLog {
     }
 
     toJSON() { return JSON.stringify(this); }
-}
+};
 Object.freeze(TipoLog.All);
 

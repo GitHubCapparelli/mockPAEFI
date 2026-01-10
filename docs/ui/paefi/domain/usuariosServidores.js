@@ -8,6 +8,7 @@ import {
   FuncaoUsuario, CargoUsuario, Especialidade,
   Dominio, Modulo
 } from '../core/omEnum.js';
+import { DomainInfo } from '../core/omData.js';
 
 const columns = [
   { label: 'Nome', field: 'nome' },
@@ -19,13 +20,13 @@ const columns = [
 ];
 
 class BaseOrchestrator {
-  constructor(modulo, lookups, api)   {
+  constructor(info)   {
     this.modulo     = modulo;
     this.render     = new Renderer(lookups);
-    this.query      = new QueryEngine(api,   (x) => this.render.Rows(x));
-    this.command    = new CommandEngine(api, () => this.query.loadData(this.getFilters()));
-    this.addModal   = new Modal('add-modal',  'Novo Usuário Servidor',      () => this.modalRequested('create'));
-    this.editModal  = new Modal('edit-modal', 'Editando Usuário Servidor',  () => this.modalRequested('update',));
+    this.query      = new QueryEngine(info.api,   (x) => this.render.Rows(x));
+    this.command    = new CommandEngine(info.api, () => this.query.loadData(this.getFilters()));
+    this.addModal   = new Modal('add-modal',  `Novo ${info.Nome}`,      () => this.modalRequested('create'));
+    this.editModal  = new Modal('edit-modal', `Editando ${info.Nome}`,  () => this.modalRequested('update',));
 
     this.init(modulo);
   }
@@ -33,8 +34,11 @@ class BaseOrchestrator {
 };
 
 // instance //
-export class UsuariosServidoresDomain {
+export class UsuariosServidoresDomain extends BaseOrchestrator {
+  
   constructor(modulo, lookups, api)   {
+    super(DomainInfo.Create('usuarios-servidores'));
+
     this.modulo     = modulo;
     this.render     = new Renderer(lookups);
     this.query      = new QueryEngine(api,   (x) => this.render.Rows(x));
