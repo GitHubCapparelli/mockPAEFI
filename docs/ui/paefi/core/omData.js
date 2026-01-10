@@ -4,6 +4,80 @@ import * as API from '../../../services/api/_index.js';
 import * as DTO from '../../../data/factory/_index.js';
 import * as Enum from './omEnum.js';
 
+export class TipoCriptografia extends Enum.BaseEnum {
+    static All = [];
+
+    static Nenhuma              = new TipoCriptografia('nenhuma', 'Nenhuma');
+    static Repouso              = new TipoCriptografia('repouso', 'Repouso');
+    static Transito             = new TipoCriptografia('transito', 'Transito');
+    static Total                = new TipoCriptografia('total', 'Total');
+
+    constructor(key, value) {
+        super();
+        this.Key = key;
+        this.Value = value;
+        this.JQuery = `#${key}`;
+
+        if (!TipoCriptografia.All.some(x => x.Key === key)) {
+            TipoCriptografia.All.push(this);
+        }
+        Object.freeze(this);
+    }
+};
+Object.freeze(TipoCriptografia.All);
+
+export class TipoAcesso extends Enum.BaseEnum {
+    static All = [];
+
+    static Interno          = new TipoAcesso('interno', 'Interno');
+    static Privado          = new TipoAcesso('privado', 'Privado');
+    static Publico          = new TipoAcesso('publico', 'Publico');
+    static Sigiloso         = new TipoAcesso('sigiloso', 'Sigiloso');
+    static Compartilhado    = new TipoAcesso('compartilhado', 'Compartilhado');
+    static RBAC             = new TipoAcesso('rbac', 'RBAC');
+
+    constructor(key, value) {
+        super();
+        this.Key = key;
+        this.Value = value;
+        this.JQuery = `#${key}`;
+
+        if ( TipoAcesso.All.some(x => x.Key === key)) {
+         TipoAcesso.All.push(this);
+        }
+        Object.freeze(this);
+    }
+};
+Object.freeze(TipoAcesso.All);
+
+export class TipoLog extends Enum.BaseEnum {
+    static All = [];
+
+    static NaoInformado     = new TipoLog('naoInformado', 'Não informado');
+    static Erro             = new TipoLog('erro', 'Erro');
+    static Backend          = new TipoLog('backend', 'Backend');
+    static Backend          = new TipoLog('backend', 'Backend');
+    static Frontend         = new TipoLog('frontend', 'Frontend');
+    static Qualidade        = new TipoLog('qualidade', 'Qualidade');
+    static Compliance       = new TipoLog('compliance', 'Compliance');
+    static Desempenho       = new TipoLog('desempenho', 'Desempenho');
+
+    constructor(key, value) {
+        super();
+        this.Key = key;
+        this.Value = value;
+        this.JQuery = `#${key}`;
+
+        if (!TipoLog.All.some(x => x.Key === key)) {
+            TipoLog.All.push(this);
+        }
+        Object.freeze(this);
+    }
+};
+Object.freeze(TipoLog.All);
+
+//////////////////////////
+
 export class Metadata {         // fields, attribs (spec)
     static All = [];
     constructor({ 
@@ -189,76 +263,4 @@ export class DomainInfo {
 };
 
 ///////////////////////////////////
-
-export class TipoCriptografia extends Enum.BaseEnum {
-    static All = [];
-
-    static Nenhuma              = new TipoCriptografia('nenhuma', 'Nenhuma');
-    static Repouso              = new TipoCriptografia('repouso', 'Repouso');
-    static Transito             = new TipoCriptografia('transito', 'Transito');
-    static Total                = new TipoCriptografia('total', 'Total');
-
-    constructor(key, value) {
-        super();
-        this.Key = key;
-        this.Value = value;
-        this.JQuery = `#${key}`;
-
-        if (!TipoCriptografia.All.some(x => x.Key === key)) {
-            TipoCriptografia.All.push(this);
-        }
-        Object.freeze(this);
-    }
-};
-Object.freeze(TipoCriptografia.All);
-
-export class TipoAcesso extends Enum.BaseEnum {
-    static All = [];
-
-    static Interno          = new TipoAcesso('interno', 'Interno');
-    static Privado          = new TipoAcesso('privado', 'Privado');
-    static Publico          = new TipoAcesso('publico', 'Publico');
-    static Sigiloso         = new TipoAcesso('sigiloso', 'Sigiloso');
-    static Compartilhado    = new TipoAcesso('compartilhado', 'Compartilhado');
-    static RBAC             = new TipoAcesso('rbac', 'RBAC');
-
-    constructor(key, value) {
-        super();
-        this.Key = key;
-        this.Value = value;
-        this.JQuery = `#${key}`;
-
-        if ( TipoAcesso.All.some(x => x.Key === key)) {
-         TipoAcesso.All.push(this);
-        }
-        Object.freeze(this);
-    }
-};
-Object.freeze(TipoAcesso.All);
-
-export class TipoLog extends Enum.BaseEnum {
-    static All = [];
-
-    static NaoInformado     = new TipoLog('naoInformado', 'Não informado');
-    static Erro             = new TipoLog('erro', 'Erro');
-    static Backend          = new TipoLog('backend', 'Backend');
-    static Backend          = new TipoLog('backend', 'Backend');
-    static Frontend         = new TipoLog('frontend', 'Frontend');
-    static Qualidade        = new TipoLog('qualidade', 'Qualidade');
-    static Compliance       = new TipoLog('compliance', 'Compliance');
-    static Desempenho       = new TipoLog('desempenho', 'Desempenho');
-
-    constructor(key, value) {
-        super();
-        this.Key = key;
-        this.Value = value;
-        this.JQuery = `#${key}`;
-
-        if (!TipoLog.All.some(x => x.Key === key)) {
-            TipoLog.All.push(this);
-        }
-        Object.freeze(this);
-    }
-};
-Object.freeze(TipoLog.All);
 
