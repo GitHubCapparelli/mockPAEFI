@@ -21,6 +21,7 @@ export class Elemento extends BaseEnum {
     static PageBody            = new Elemento('page-body','');
 
     constructor(key, value) {
+        super();
         this.Key    = key;
         this.Value  = value;
         this.JQuery = `#${key}`;
@@ -42,6 +43,7 @@ export class DocLinks extends BaseEnum {
     static DocUsuario          = new DocLinks('docUsuario','Manual do Usuário');
 
     constructor(key, value) {
+        super();
         this.Key = key;
         this.Value = value;
         this.JQuery = `#${key}`;
@@ -66,6 +68,7 @@ export class Modulo extends BaseEnum {
     static Atender      = new Modulo('atender','Atendimento');
 
     constructor(key, value) {
+        super();
         this.Key = key;
         this.Value = value;
         this.JQuery = `#${key}`;
@@ -105,6 +108,7 @@ export class Dominio extends BaseEnum {
     static Violações            = new Dominio('violacoes','Violações');
 
     constructor(key, value) {
+        super();
         this.Key       = key;
         this.Value     = value;
         this.JQuery    = `#${key}`;
@@ -164,6 +168,7 @@ export class FuncaoUsuario extends BaseEnum {
     static Outra               = new FuncaoUsuario('Outra','Outra');
 
     constructor(key, value) {
+        super();
         this.Key = key;
         this.Value = value;
         this.JQuery = `#${key}`;
@@ -191,6 +196,7 @@ export class CargoUsuario extends BaseEnum {
     static Outro                      = new CargoUsuario('Outro','Outro');
 
     constructor(key, value) {
+        super();
         this.Key = key;
         this.Value = value;
         this.JQuery = `#${key}`;
@@ -229,6 +235,7 @@ export class Especialidade extends BaseEnum {
     static Outra                  = new Especialidade('Outra','Outra');
 
     constructor(key, value) {
+        super();
         this.Key = key;
         this.Value = value;
         this.JQuery = `#${key}`;

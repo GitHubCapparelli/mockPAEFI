@@ -199,6 +199,7 @@ export class TipoCriptografia extends Enum.BaseEnum {
     static Total                = new TipoCriptografia('total', 'Total');
 
     constructor(key, value) {
+        super();
         this.Key = key;
         this.Value = value;
         this.JQuery = `#${key}`;
@@ -222,6 +223,7 @@ export class TipoAcesso extends Enum.BaseEnum {
     static RBAC             = new TipoAcesso('rbac', 'RBAC');
 
     constructor(key, value) {
+        super();
         this.Key = key;
         this.Value = value;
         this.JQuery = `#${key}`;
@@ -247,6 +249,7 @@ export class TipoLog extends Enum.BaseEnum {
     static Desempenho       = new TipoLog('desempenho', 'Desempenho');
 
     constructor(key, value) {
+        super();
         this.Key = key;
         this.Value = value;
         this.JQuery = `#${key}`;
