@@ -2,7 +2,6 @@
 
 import * as API from '../../../services/api/_index.js';
 import * as DTO from '../../../data/factory/_index.js';
-import * as Enum from './omEnum.js';
 
 export class TipoCriptografia extends Enum.BaseEnum {
     static All = [];
@@ -93,8 +92,7 @@ export class Metadata {         // fields, attribs (spec)
         minLen        = null, 
         maxLen        = null,
         cripto        = TipoCriptografia.Nenhuma.Key, 
-        access        = TipoAcesso.Interno.Key,
-        lookup        = null
+        access        = TipoAcesso.Interno.Key
     } ) {                                               // origem?
         this.Key            = key;
         this.DbColName      = dbColName;
@@ -111,9 +109,6 @@ export class Metadata {         // fields, attribs (spec)
         this.MaxLength      = maxLen;
         this.Cripto         = cripto;
         this.Access         = access;
-        
-        this.Dominio        = domain;
-        this.Lookup         = lookup
 
         if (!Metadata.All.some(x => x.Key === key)) {
             Metadata.All.push(this);
@@ -134,19 +129,14 @@ export class Metadata {         // fields, attribs (spec)
     static Versao              = new Metadata({ key: crypto.randomUUID(), dbColName:'versao'        , uiKey:'#txtVersao'         , uiTitle: 'Versão'     , minLen: 1  , maxLen: 10 });
     static Finalidade          = new Metadata({ key: crypto.randomUUID(), dbColName:'finalidade'    , uiKey:'#txtFinalidade'     , uiTitle: 'Finalidade' , minLen: 10 , maxLen: 150 });
     
-    static Hierarquia          = new Metadata({ key: crypto.randomUUID(), dbColName:'hierarquiaID'  , uiKey:'#txtHierarquiaID'   , uiTitle: 'Hierarquia'     , type:'UUID', pfKey:'FK', required: true });
+    static Hierarquia          = new Metadata({ key: crypto.randomUUID(), dbColName:'hierarquiaID'  , uiKey:'#hierarquiaID'      , uiTitle: 'Hierarquia'     , type:'UUID', pfKey:'FK', required: true });
     static Sigla               = new Metadata({ key: crypto.randomUUID(), dbColName:'sigla'         , uiKey:'#txtSigla'          , uiTitle: 'Sigla'          , minLen: 5 , maxLen: 250, required: true     });
     static IbgeId              = new Metadata({ key: crypto.randomUUID(), dbColName:'ibgeId'        , uiKey:'#txtIbgeId'         , uiTitle: 'IBGE'           , minLen: 11, maxLen: 11 });
     
-    static UnidadeID           = new Metadata({ key: crypto.randomUUID(), dbColName:'unidadeID'     , uiKey:'#cmbFilterUnidade'  , uiTitle: 'Unidade'        , required: true   , type:'UUID'       , pfKey:'FK' });
+    static UnidadeID           = new Metadata({ key: crypto.randomUUID(), dbColName:'unidadeID'     , uiKey:'#unidadeID'         , uiTitle: 'Unidade'        , required: true   , type:'UUID'       , pfKey:'FK' });
     static Login               = new Metadata({ key: crypto.randomUUID(), dbColName:'login'         , uiKey:'#txtLogin'          , uiTitle: 'Login'          , required: true   , minLen: 5 , maxLen: 50 });
     static Matricula           = new Metadata({ key: crypto.randomUUID(), dbColName:'matricula'     , uiKey:'#txtMatricula'      , uiTitle: 'Matrícula'      , required: true   , minLen: 8 , maxLen: 8 });
     static CPF                 = new Metadata({ key: crypto.randomUUID(), dbColName:'cpf'           , uiKey:'#txtCPF'            , uiTitle: 'CPF'            , required: true   , minLen: 11, maxLen: 11 });
-    
-    static UnidadeFuncao       = new Metadata({ key: crypto.randomUUID(), dbColName:'funcao'        , uiKey:'#cmbFilterFuncao'          , uiTitle: 'Função'         , required: true, type:'enum', lookup: Enum.FuncaoUnidade });
-    static UsuarioFuncao       = new Metadata({ key: crypto.randomUUID(), dbColName:'funcao'        , uiKey:'#cmbFilterFuncao'          , uiTitle: 'Função'         , required: true, type:'enum', lookup: Enum.FuncaoUsuario });
-    static UsuarioCargo        = new Metadata({ key: crypto.randomUUID(), dbColName:'cargo'         , uiKey:'#cmbFilterCargo'           , uiTitle: 'Cargo'          , required: true, type:'enum', lookup: Enum.CargoUsuario });
-    static Especialidade       = new Metadata({ key: crypto.randomUUID(), dbColName:'especialidade' , uiKey:'#cmbFilterEspecialidade'   , uiTitle: 'Especialidade'  , required: true, type:'enum', lookup: Enum.Especialidade });
 };
 
 
