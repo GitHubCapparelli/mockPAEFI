@@ -193,7 +193,7 @@ export class DomainInfo {
 export class TipoCriptografia extends Enum.BaseEnum {
     static All = [];
 
-    static Nenhuma              = new TipoCriptografia('Nenhuma', 'Nenhuma');
+    static Nenhuma              = new TipoCriptografia('nenhuma', 'Nenhuma');
     static Repouso              = new TipoCriptografia('repouso', 'Repouso');
     static Transito             = new TipoCriptografia('transito', 'Transito');
     static Total                = new TipoCriptografia('total', 'Total');
@@ -208,8 +208,6 @@ export class TipoCriptografia extends Enum.BaseEnum {
         }
         Object.freeze(this);
     }
-    
-    toJSON() { return JSON.stringify(this); }
 };
 Object.freeze(TipoCriptografia.All);
 
@@ -233,8 +231,6 @@ export class TipoAcesso extends Enum.BaseEnum {
         }
         Object.freeze(this);
     }
-
-    toJSON() { return JSON.stringify(this); }
 };
 Object.freeze(TipoAcesso.All);
 
@@ -260,8 +256,6 @@ export class TipoLog extends Enum.BaseEnum {
         }
         Object.freeze(this);
     }
-
-    toJSON() { return JSON.stringify(this); }
 };
 Object.freeze(TipoLog.All);
 
