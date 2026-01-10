@@ -13,7 +13,7 @@ export class QueryEngine {
       api.Init();
   }
 
-  async GetPaginated(filters) {
+  async CallGetPaginated(filters) {
       const response = await this.api.GetPaginated({
           page     : this.page,
           pageSize : this.pageSize,
@@ -23,14 +23,16 @@ export class QueryEngine {
       return response;
   }
 
-  async Apply(filters) {
+  async GetPaginated(filters) {
     this.page = 1;
-    await this.loadData(filters);
+    const response = await this.CallGetPaginated(filters);
+    this.onLoaded(response);
   }
 
   async Clear() {
     this.page = 1;
-    await this.loadData();
+    const response = await this.CallGetPaginated();
+    this.onLoaded(response);
   }
 
   async Navigate(e, page) {
@@ -40,11 +42,7 @@ export class QueryEngine {
     if (!x || x === this.page) return;
 
     this.page = x;
-    await this.loadData();
-  }
-
-  async loadData(filters) {
-    const response = await this.GetPaginated(filters);
+    const response = await this.CallGetPaginated();
     this.onLoaded(response);
   }
 }
