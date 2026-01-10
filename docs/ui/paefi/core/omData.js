@@ -18,8 +18,8 @@ export class Metadata {         // fields, attribs (spec)
         isUnique      = false, 
         minLen        = null, 
         maxLen        = null,
-        cripto        = TipoCriptografia.Nenhuma, 
-        access        = TipoAcesso.Interno,
+        cripto        = Enum.TipoCriptografia.Nenhuma, 
+        access        = Enum.TipoAcesso.Interno,
         lookup        = lookup,
         domain        = domain
     } ) {                                               // origem?
