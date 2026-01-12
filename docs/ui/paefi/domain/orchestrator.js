@@ -137,8 +137,13 @@ export class Orchestrator {
     this.wireAdminEvents();
   }
   static async Create(moduleKey, domainKey) {
-    const info = DomainInfo.Create(domainKey);
-    return new Orchestrator(moduleKey, info);
+    try {
+        const info   = DomainInfo.Create(domainKey);
+        const result = new Orchestrator(moduleKey, info);
+        return result;
+    } catch (err) {
+        alert(`[Orchestrator.Create()] Erro: ${err} [${moduleKey}, ${domainKey}]`)
+    }
   }  
   async view(moduleKey) {
     if (moduleKey === Modulo.Admin.Key) {
