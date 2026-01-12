@@ -148,5 +148,5 @@ export class DomainView {
         //Render.ClearMain();
         Render.FiltersFromCatalog(this.info);
         Render.TableFromCatalog(this.info, this.moduleKey);
-    }    
+    }     
 }
