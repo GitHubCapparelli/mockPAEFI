@@ -1,6 +1,7 @@
 // ui paefi core renderer
 
-import { Modulo, Elemento, DocLinks } from './omEnum.js';
+import { DomainInfo } from './omData.js';
+import { Modulo, Elemento, DocLinks, FuncaoUnidade, FuncaoUsuario, CargoUsuario, Especialidade } from './omEnum.js';
 
 // Layout structure //
 export function PageStructure() {
@@ -252,21 +253,37 @@ export function Enum(selector, enumType) {
 
 export function FiltersFromCatalog(info) {
     const $container = $('#divFilterOptions').empty();
-
-    info.Catalog.Campos
-        .filter(c => c.Filterable)
-        .forEach(c => {
-            if (c.Lookup) {
-                $container.append(
-                    Render.Select(`cmbFilter_${c.UiKey}`, c.UiTitle)
-                );
+    
+    const campos = info.Catalog.Campos.filter(c => c.UiGroupKey);
+    campos.forEach(c => {
+            if (c.PfKey) {
+                $container.append(Render.Select(c.UiGroupKey, c.UiTitle));
             }
-            else if (c.Enum) {
-                $container.append(
-                    Render.EnumSelect(`cmbFilter_${c.UiKey}`, c.UiTitle, c.Enum)
-                );
+            else if (c.Type === 'enum') {
+                $container.append(Render.EnumSelect(c.UiGroupKey, c.UiTitle, getEnumFrom(c.UiGroupKey)));
             }
         });
+}
+
+function getEnumFrom(value) {
+  const  lower = value.toLower();
+  return lower.includes('especialidade') 
+       ? Especialidade
+       : lower.includes('cargo')
+       ? CargoUsuario
+       : lower.includes('funcaounidade')
+       ? FuncaoUnidade
+       : lower.includes('funcaousuario')
+       ? FuncaoUsuario
+       : null;
+}
+
+function getColsFor(key) {
+  return key === DomainInfo.Unidades.Key
+       ? '#funcao|#sigla|#nome|#ibgeId'
+       : key === DomainInfo.UsuariosServidores.Key
+       ? '#nome|#unidade|#especialidade|#funcao|#cargo'
+       : null;
 }
 
 export function TableFromCatalog(info, moduleKey) {
@@ -274,13 +291,11 @@ export function TableFromCatalog(info, moduleKey) {
     const $thead = $('<thead>');
     const $tr    = $('<tr>');
 
-    info.Catalog.Campos
-        .filter(c => c.Visible)
-        .forEach(c => {
-            $tr.append(
-                $('<th>', { text: c.UiTitle })
-            );
-        });
+    const lista  = getColsFor(info.Key);
+    const campos = info.Catalog.Campos.filter(x => lista.includes(x));
+    campos.forEach(c => {
+        $tr.append($('<th>', { text: c.UiTitle }));
+    });
 
     if (moduleKey === Modulo.Admin.Key) {
         $tr.append($('<th>', { text: 'Ações' }));

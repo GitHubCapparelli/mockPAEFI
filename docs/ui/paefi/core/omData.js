@@ -82,7 +82,8 @@ export class Metadata {         // fields, attribs (spec)
     constructor({ 
         key, 
         dbColName,                    // db colName       (record attribute)
-        uiKey,                        // ui control Id    (modal)
+        uiKey,                        // ui rows and modals
+        uiGroupKey,                   // ui filters
         uiTitle,                      // ui labels        (modal), columns (datagrid), ...
         type          = 'string', 
         pfKey         = '', 
@@ -95,10 +96,11 @@ export class Metadata {         // fields, attribs (spec)
         access        = TipoAcesso.Interno.Key
     } ) {                                               // origem?
         this.Key            = key;
+
         this.DbColName      = dbColName;
         this.UiKey          = uiKey;
         this.UiTitle        = uiTitle;
-        this.JQuery         = `#${key}`;
+        this.UiGroupKey     = uiGroupKey;
 
         this.Type           = type;
         this.PfKey          = pfKey;
@@ -115,7 +117,7 @@ export class Metadata {         // fields, attribs (spec)
         }
     }
 
-    static Id                  = new Metadata({ key: crypto.randomUUID(), dbColName:'id'            , uiKey:'id', type:'UUID', pfKey:'PK' });
+    static Id                  = new Metadata({ key: crypto.randomUUID(), dbColName:'id'            , uiKey:'#id'                , type:'UUID', pfKey:'PK' });
     static CriadoPor           = new Metadata({ key: crypto.randomUUID(), dbColName:'criadoPorID'   , uiKey:'#txtCriadoPorID'    , uiTitle: 'Criado Por'         , type:'UUID', pfKey:'FK'   , required: true });
     static AlteradoPor         = new Metadata({ key: crypto.randomUUID(), dbColName:'alteradoPorID' , uiKey:'#txtAlteradoPorID'  , uiTitle: 'Alterado Por'       , type:'UUID', pfKey:'FK'   , required: true });
     static DeletadoPor         = new Metadata({ key: crypto.randomUUID(), dbColName:'deletadoPorID' , uiKey:'#txtDeletadoPorID'  , uiTitle: 'Deletado Por'       , type:'UUID', pfKey:'FK'   , required: true });
@@ -129,14 +131,20 @@ export class Metadata {         // fields, attribs (spec)
     static Versao              = new Metadata({ key: crypto.randomUUID(), dbColName:'versao'        , uiKey:'#txtVersao'         , uiTitle: 'Versão'     , minLen: 1  , maxLen: 10 });
     static Finalidade          = new Metadata({ key: crypto.randomUUID(), dbColName:'finalidade'    , uiKey:'#txtFinalidade'     , uiTitle: 'Finalidade' , minLen: 10 , maxLen: 150 });
     
-    static Hierarquia          = new Metadata({ key: crypto.randomUUID(), dbColName:'hierarquiaID'  , uiKey:'#hierarquiaID'      , uiTitle: 'Hierarquia'     , type:'UUID', pfKey:'FK', required: true });
-    static Sigla               = new Metadata({ key: crypto.randomUUID(), dbColName:'sigla'         , uiKey:'#txtSigla'          , uiTitle: 'Sigla'          , minLen: 5 , maxLen: 250, required: true     });
+    static Sigla               = new Metadata({ key: crypto.randomUUID(), dbColName:'sigla'         , uiKey:'#txtSigla'          , uiTitle: 'Unidade'        , minLen: 5 , maxLen: 250, required: true     });
     static IbgeId              = new Metadata({ key: crypto.randomUUID(), dbColName:'ibgeId'        , uiKey:'#txtIbgeId'         , uiTitle: 'IBGE'           , minLen: 11, maxLen: 11 });
     
-    static UnidadeID           = new Metadata({ key: crypto.randomUUID(), dbColName:'unidadeID'     , uiKey:'#unidadeID'         , uiTitle: 'Unidade'        , required: true   , type:'UUID'       , pfKey:'FK' });
     static Login               = new Metadata({ key: crypto.randomUUID(), dbColName:'login'         , uiKey:'#txtLogin'          , uiTitle: 'Login'          , required: true   , minLen: 5 , maxLen: 50 });
     static Matricula           = new Metadata({ key: crypto.randomUUID(), dbColName:'matricula'     , uiKey:'#txtMatricula'      , uiTitle: 'Matrícula'      , required: true   , minLen: 8 , maxLen: 8 });
     static CPF                 = new Metadata({ key: crypto.randomUUID(), dbColName:'cpf'           , uiKey:'#txtCPF'            , uiTitle: 'CPF'            , required: true   , minLen: 11, maxLen: 11 });
+
+    static Hierarquia          = new Metadata({ key: crypto.randomUUID(), dbColName:'hierarquiaID'  , uiKey:'#hierarquiaID'      , uiTitle: 'Hierarquia'     , required: true   , type:'UUID'   , pfKey:'FK' });
+    static UnidadeID           = new Metadata({ key: crypto.randomUUID(), dbColName:'unidadeID'     , uiKey:'#unidadeID'         , uiTitle: 'Unidade'        , required: true   , type:'UUID'   , pfKey:'FK'   , uiGroupKey:'#cmbFilterUnidade' });
+    
+    static FuncaoUnidade       = new Metadata({ key: crypto.randomUUID(), dbColName:'funcao'        , uiKey:'#funcao'            , uiTitle: 'Função'         , required: true   , type:'enum'   , uiGroupKey:'#cmbFilterFuncaoUnidade' });
+    static FuncaoUsuario       = new Metadata({ key: crypto.randomUUID(), dbColName:'funcao'        , uiKey:'#funcao'            , uiTitle: 'Função'         , required: true   , type:'enum'   , uiGroupKey:'#cmbFilterFuncaoUsuario' });
+    static CargoUsuario        = new Metadata({ key: crypto.randomUUID(), dbColName:'cargo'         , uiKey:'#cargo'             , uiTitle: 'Cargo'          , required: true   , type:'enum'   , uiGroupKey:'#cmbFilterCargo' });
+    static Especialidade       = new Metadata({ key: crypto.randomUUID(), dbColName:'especialidade' , uiKey:'#especialidade'     , uiTitle: 'Especialidade'  , required: true   , type:'enum'   , uiGroupKey:'#cmbFilterEspecialidade' });
 };
 
 export class Catalog {          // DatabaseTable, dataSource
