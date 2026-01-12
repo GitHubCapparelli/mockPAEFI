@@ -1,3 +1,5 @@
+// ui paefi domain orchestrator.js
+
 import { Render }                             from '../core/renderer.js';
 import { QueryEngine, CommandEngine, Modal }  from '../core/omClass.js';
 import { UnidadesAPI }                        from '../../../services/api/unidadesAPI.js';
@@ -45,22 +47,24 @@ export class ApiGate {
 }
 
 class DomainView {
-    constructor(info, namedLists, fnOnModalSubmited) {
-        this.info     = info;
-        this.lookups  = namedLists;
+    constructor(moduleKey, info, namedLists, fnOnModalSubmited) {
+        this.moduleKey  = moduleKey;
+        this.info       = info;
+        this.lookups    = namedLists;
 
         this.addModal   = new Modal('add-modal',  `Novo ${info.Name}`,      fnOnModalSubmited);
         this.editModal  = new Modal('edit-modal', `Editando ${info.Name}`,  fnOnModalSubmited);
-        this.view(moduleKey);
     }
-    static async Create(info) {
+    static async Create(moduleKey, info, fnOnModalSubmited) {
         const apiTasks   = Object.entries(info.Lookups).map(async ([key, api]) => {
-            const data = await api.GetAll(); 
+            const data   = await api.GetAll(); 
             return [key, data];
         });
         const response   = await Promise.all(apiTasks);
         const namedLists = Object.fromEntries(response);
-        return new DomainView(info, namedLists);
+        const instance   = new DomainView(moduleKey, info, namedLists, fnOnModalSubmited);
+        instance.view();
+        return instance;
     }  
     
     Filters() {
@@ -133,15 +137,14 @@ class DomainView {
 
 export class Orchestrator {
   
-  constructor(moduleKey)   {
-    this.moduleKey  = moduleKey;
+  constructor()   {
     this.gate       = null;
     this.info       = null;
     this.render     = null; 
   }
-  async init(domainKey) {
+  async init(moduleKey, domainKey) {
     this.info    = await DomainInfo.Create(domainKey);
-    this.render  = await DomainView.Create(this.info); 
+    this.render  = await DomainView.Create(moduleKey, this.info, this.modalRequested); 
 
     this.gate    = new ApiGate(this.info, (x) => this.render.Rows(x));
     await this.gate.Load();
@@ -149,8 +152,8 @@ export class Orchestrator {
     this.wireAdminEvents();
   }
   static async Create(moduleKey, domainKey) {
-    const instance = new Orchestrator(moduleKey);
-    await instance.init(domainKey);
+    const instance = new Orchestrator();
+    await instance.init(moduleKey, domainKey);
     return instance;
   }  
   //
