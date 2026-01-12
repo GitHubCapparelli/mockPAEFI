@@ -56,7 +56,6 @@ export class TipoLog extends Enum.BaseEnum {
     static NaoInformado     = new TipoLog('naoInformado', 'Não informado');
     static Erro             = new TipoLog('erro', 'Erro');
     static Backend          = new TipoLog('backend', 'Backend');
-    static Backend          = new TipoLog('backend', 'Backend');
     static Frontend         = new TipoLog('frontend', 'Frontend');
     static Qualidade        = new TipoLog('qualidade', 'Qualidade');
     static Compliance       = new TipoLog('compliance', 'Compliance');
@@ -193,20 +192,7 @@ export class DomainInfo {
     }
 
     static async Create(key) {
-        const info    = DomainInfo.All.find(x => x.Key === key);
-//        const lookups = Object.values(info.Lookups);
-//        const allAPIs = [...new Set([info.API, ...lookups])]; // no duplicates
-
-//        await Promise.all(allAPIs.map(x => {
-//            if (typeof x.Init === 'function') {
-//                return x.Init();
-//            }
-//            return Promise.resolve(); // Fallback if Init doesn't exist
-//        }));
-
-//        await Promise.all(allAPIs.forEach(x => x.Init()));
-
-        return info;
+        return DomainInfo.All.find(x => x.Key === key);
     }
 
     static Unidades = new DomainInfo('unidades', 'Unidade', API.UnidadesAPI, DTO.CreateUnidadeDTO, 
