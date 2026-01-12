@@ -192,7 +192,11 @@ export class DomainInfo {
     }
 
     static async Create(key) {
-        return DomainInfo.All.find(x => x.Key === key);
+        const info = DomainInfo.All.find(x => x.Key === key);
+        if (!info) {
+            throw new Error(`DomainInfo not found for key: ${key} [${DomainInfo.All.length}]`);
+        }
+        return info;
     }
 
     static Unidades = new DomainInfo('unidades', 'Unidade', API.UnidadesAPI, DTO.CreateUnidadeDTO, 
