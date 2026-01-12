@@ -98,7 +98,7 @@ export class DomainView {
             return;
         }
 
-        rows.forEach(dto => {
+        rows.forEach(dto => { 
             const $tr = $('<tr>');
 
             this.info.Catalog.Campos
