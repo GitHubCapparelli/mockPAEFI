@@ -52,8 +52,6 @@ export class CommandEngine {
     this.api        = api;
     this.onExecuted = onExecuted;
     this.onError    = onError;
-
-    api.Init();
   }
 
   Create      = async (data)     => this.#exec(() => this.api.Create(data));

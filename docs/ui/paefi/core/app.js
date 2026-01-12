@@ -64,9 +64,9 @@ function SetDomain(domainKey) {
   initCurrentDomain();
 }
 
-function initCurrentDomain() {
+async function initCurrentDomain() {
   $(Elemento.TextoOpcaoAtual.JQuery).text(currentDomain.Value);
-  Orchestrator.Create(currentModule.Key, currentDomain.Key);
+  await Orchestrator.Create(currentModule.Key, currentDomain.Key);
 }
 
 export const App = { SetDomain };

@@ -122,23 +122,24 @@ class DomainView {
 
 export class Orchestrator {
   
-  constructor(moduleKey, info)   {
+  constructor(moduleKey, info, render)   {
     this.moduleKey  = moduleKey;
     this.info       = info;
 
-    this.render     = DomainView.Create(info); 
+    this.render     = render; 
     this.addModal   = new Modal('add-modal',  `Novo ${info.Name}`,      () => this.modalRequested('create'));
     this.editModal  = new Modal('edit-modal', `Editando ${info.Name}`,  () => this.modalRequested('update',));
     this.view(moduleKey);
 
-    this.api        = new ApiGate(info, (x) => this.render.Rows(x));
+    this.gate       = new ApiGate(info, (x) => this.render.Rows(x));
 
     this.wireAdminEvents();
   }
   static async Create(moduleKey, domainKey) {
     try {
-        const info   = DomainInfo.Create(domainKey);
-        const result = new Orchestrator(moduleKey, info);
+        const info   = await DomainInfo.Create(domainKey);
+        const render = await DomainView.Create(info); 
+        const result = await new Orchestrator(moduleKey, info, render);
         return result;
     } catch (err) {
         alert(`[Orchestrator.Create] Erro: ${err} [${moduleKey}, ${domainKey}]`)
