@@ -209,7 +209,7 @@ export function Table(columns) {
   $container.append($table);
 }
 
-export function Select(id, value) {
+export function Select(id, value) { 
   return $('<select>', { id,  class: 'form-select form-select-sm'})
   .append($('<option>', { value: '', text: value }));
 }
