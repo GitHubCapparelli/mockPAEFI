@@ -10,21 +10,22 @@ export const UnidadesAPI = CoreAPI({
   dto: UnidadeDTO,
 
   applyFilters(data, filters) {
-    let result = data;
+      let result = data;
 
-    if (filters.funcao) {
-      result = result.filter(u => u.funcao === filters.funcao);
-    }
-
-    result = result.filter(u => !u.excluidoEm);
-    return result;
+      if(filters) {
+          if (filters.funcao) {
+              result = result.filter(u => u.funcao === filters.funcao);
+          }
+      }
+      result = result.filter(u => !u.excluidoEm);
+      return result;
   },
 
   validateCreate(dto, data) {
-    if (data.some(u => u.sigla === dto.sigla
-      || u.nome === dto.nome
-      || u.IbgeId === dto.IbgeId)) {
-      throw new Error('Já existe servidor(a) com esse nome, sigla ou IBGE Id');
-    }
+      if (data.some(u => u.sigla  === dto.sigla
+                      || u.nome   === dto.nome
+                      || u.IbgeId === dto.IbgeId)) {
+        throw new Error('Já existe servidor(a) com esse nome, sigla ou IBGE Id');
+      }
   }
 });
