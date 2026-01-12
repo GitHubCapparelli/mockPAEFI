@@ -9,7 +9,7 @@ export class DomainView {
     constructor(moduleKey, info, namedLists, fnOnModalSubmited) {
         this.moduleKey  = moduleKey;
         this.info       = info;
-        this.lookups    = namedLists;
+        this.lookups    = namedLists; 
 
         this.addModal   = new Modal('add-modal',  `Novo ${info.Name}`,      fnOnModalSubmited);
         this.editModal  = new Modal('edit-modal', `Editando ${info.Name}`,  fnOnModalSubmited);
