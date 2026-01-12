@@ -7,10 +7,8 @@ import { Session, CurrentUserKey,
          Local, LastModuleKey, LastDomainKey
        } from '../../../services/storage.js';
 
-import { UnidadesDomain }            from '../domain/unidades.js';
-import { UsuariosServidoresDomain }  from '../domain/usuariosServidores.js';
 import { Orchestrator }              from '../domain/orchestrator.js';
-import { AllAPIs }                   from '../../../services/api/_index.js';
+import { AllAPIs }                   from '../../../services/api/coreAPI.js';
 
 let currentDomain;
 let currentModule;

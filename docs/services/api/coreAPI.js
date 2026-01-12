@@ -2,6 +2,16 @@ import { InMemory }              from '../storage.js';
 import { UsuariosServidoresAPI } from './usuariosServidoresAPI.js';
 import { UnidadesAPI }           from './unidadesAPI.js';
 
+export const AllAPIs = {
+    async Init() {
+        await Promise.all([
+            UsuariosServidoresAPI.Init(),
+            UnidadesAPI.Init()
+        ]);
+    }
+};
+
+
 export function CoreAPI({
   entity,
   dataPath,
