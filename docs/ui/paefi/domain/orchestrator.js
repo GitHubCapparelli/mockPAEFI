@@ -16,7 +16,7 @@ export class Orchestrator {
     constructor()   {
         this.gate       = null;
         this.info       = null;
-        this.render     = null; 
+        this.render     = null;  
     }
 
     async init(moduleKey, domainKey) {
