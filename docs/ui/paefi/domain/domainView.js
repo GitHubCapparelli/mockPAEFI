@@ -2,6 +2,7 @@
 
 import { Render }       from '../core/renderer.js';
 import { DomainInfo }   from '../core/omData.js';
+import { Modal }        from '../core/omClass.js';
 import { FuncaoUsuario, CargoUsuario, Especialidade, Modulo } from '../core/omEnum.js'; 
 
 export class DomainView {
