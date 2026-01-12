@@ -74,7 +74,7 @@ export class CommandEngine {
   }
 }
 
-export class Modal {
+export class Modal { 
   constructor(id, title, onSaveRequested) {
     this.id             = id;
     this.title          = title;
