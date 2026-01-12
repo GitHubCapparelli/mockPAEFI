@@ -266,14 +266,13 @@ export function FiltersFromCatalog(info) {
 }
 
 function getEnumFrom(value) {
-  const  lower = value.toLower();
-  return lower.includes('especialidade') 
+  return value === '#cmbFilterEspecialidade' 
        ? Especialidade
-       : lower.includes('cargo')
+       : value === '#cmbFilterCargo'
        ? CargoUsuario
-       : lower.includes('funcaounidade')
+       : value === '#cmbFilterFuncaoUnidade'
        ? FuncaoUnidade
-       : lower.includes('funcaousuario')
+       : value === '#cmbFilterFuncaoUsuario'
        ? FuncaoUsuario
        : null;
 }
