@@ -260,7 +260,8 @@ export function FiltersFromCatalog(info) {
                 $container.append(Render.Select(c.UiGroupKey, c.UiTitle));
             }
             else if (c.Type === 'enum') {
-                $container.append(Render.EnumSelect(c.UiGroupKey, c.UiTitle, getEnumFrom(c.UiGroupKey)));
+                //$container.append(Render.Enum(c.UiGroupKey, c.UiTitle, getEnumFrom(c.UiGroupKey)));
+                Render.Enum(c.UiGroupKey, c.UiTitle, getEnumFrom(c.UiGroupKey));
             }
         });
 }
