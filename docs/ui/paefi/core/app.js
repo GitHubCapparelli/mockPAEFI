@@ -10,6 +10,7 @@ import { Session, CurrentUserKey,
 import { UnidadesDomain }            from '../domain/unidades.js';
 import { UsuariosServidoresDomain }  from '../domain/usuariosServidores.js';
 import { Orchestrator }              from '../domain/orchestrator.js';
+import { AllAPIs }                   from '../../../services/api/_index.js';
 
 let currentDomain;
 let currentModule;
@@ -67,10 +68,6 @@ function SetDomain(domainKey) {
 
 function initCurrentDomain() {
   $(Elemento.TextoOpcaoAtual.JQuery).text(currentDomain.Value);
-//  switch (currentDomain.Key) {
-//    case Dominio.UsuariosServidores.Key  : UsuariosServidoresDomain.Create(currentModule); break;
-//    case Dominio.Unidades.Key            : UnidadesDomain.Create(currentModule); break;
-//  }
   Orchestrator.Create(currentModule.Key, currentDomain.Key);
 }
 
@@ -82,5 +79,6 @@ $(document).ready(async () => {
       window.location.href = '/mockPAEFI/';
       return;
   }
+  await AllAPIs.Init();
   init(); 
 });

@@ -140,42 +140,6 @@ export class Metadata {         // fields, attribs (spec)
     static CPF                 = new Metadata({ key: crypto.randomUUID(), dbColName:'cpf'           , uiKey:'#txtCPF'            , uiTitle: 'CPF'            , required: true   , minLen: 11, maxLen: 11 });
 };
 
-
-//
-export class UsuariosServidoresSpecs {
-    constructor() {
-        this.api            = UsuariosServidoresAPI;
-        this.lookups        = { unidades: UnidadesAPI.GetAll() };
-        this.gridColumns    = [
-            { title: 'Nome',            dto: 'nome' },
-            { title: 'Unidade',         dto: 'unidade' },
-            { title: 'Especialidade',   dto: 'especialidade' },
-            { title: 'Função',          dto: 'funcao' },
-            { title: 'Cargo',           dto: 'cargo' }
-        ];
-        Object.freeze(this);
-    }
-
-    apiFilters() {
-        return {
-        unidadeID      : $('#cmbFilterUnidade').val()       || null,
-        especialidade  : $('#cmbFilterEspecialidade').val() || null,
-        funcao         : $('#cmbFilterFuncao').val()        || null,
-        cargo          : $('#cmbFilterCargo').val()         || null
-        };
-    }
-  
-    modalRequested(action, data, id = null) {
-        if (action === 'create') {
-            this.command.Create(data);
-        } 
-        if (action === 'update') {
-            this.command.Update(id, data);
-        } 
-    }
-};
-
-
 export class Catalog {          // DatabaseTable, dataSource
     static All = [];
 
@@ -230,8 +194,8 @@ export class DomainInfo {
 
     static async Create(key) {
         const info    = DomainInfo.All.find(x => x.Key === key);
-        const lookups = Object.values(info.Lookups);
-        const allAPIs = [...new Set([info.API, ...lookups])]; // no duplicates
+//        const lookups = Object.values(info.Lookups);
+//        const allAPIs = [...new Set([info.API, ...lookups])]; // no duplicates
 
 //        await Promise.all(allAPIs.map(x => {
 //            if (typeof x.Init === 'function') {
@@ -240,7 +204,7 @@ export class DomainInfo {
 //            return Promise.resolve(); // Fallback if Init doesn't exist
 //        }));
 
-        await Promise.all(allAPIs.forEach(x => x.Init()));
+//        await Promise.all(allAPIs.forEach(x => x.Init()));
 
         return info;
     }
