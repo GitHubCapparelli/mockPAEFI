@@ -45,9 +45,8 @@ export class ApiGate {
 }
 
 class DomainView {
-
     constructor(info, namedLists, fnOnModalSubmited) {
-        this.info = info;
+        this.info     = info;
         this.lookups  = namedLists;
 
         this.addModal   = new Modal('add-modal',  `Novo ${info.Name}`,      fnOnModalSubmited);
@@ -118,39 +117,40 @@ class DomainView {
 
         Render.Info(response.pagination);
     }
+
+
+
+  async view() {
+    if (this.moduleKey === Modulo.Admin.Key) {
+      await this.viewAdmin();
+    }
+  }
+  async viewAdmin() {
+    this.Filters();
+    Render.Table(columns);
+  }
 }
 
 export class Orchestrator {
   
-  constructor(moduleKey, info, render)   {
+  constructor(moduleKey)   {
     this.moduleKey  = moduleKey;
-    this.info       = info;
-
-    this.render     = render; 
-    this.addModal   = new Modal('add-modal',  `Novo ${info.Name}`,      () => this.modalRequested('create'));
-    this.editModal  = new Modal('edit-modal', `Editando ${info.Name}`,  () => this.modalRequested('update',));
-    this.view(moduleKey);
-
     this.gate       = new ApiGate(info, (x) => this.render.Rows(x));
+    this.info       = null;
+    this.render     = null; 
+  }
+  async init() {
+    this.info    = await DomainInfo.Create(domainKey);
+    this.render  = await DomainView.Create(info); 
 
+    await this.gate.Load();
     this.wireAdminEvents();
   }
   static async Create(moduleKey, domainKey) {
-    try {
-        const info   = await DomainInfo.Create(domainKey);
-        const render = await DomainView.Create(info); 
-        const result = await new Orchestrator(moduleKey, info, render);
-        return result;
-    } catch (err) {
-        alert(`[Orchestrator.Create] Erro: ${err} [${moduleKey}, ${domainKey}]`)
-    }
+    const instance = new Orchestrator(moduleKey);
+    await instance.init();
+    return instance;
   }  
-  async view(moduleKey) {
-    if (moduleKey === Modulo.Admin.Key) {
-      await this.viewAdmin();
-    }
-  }
-
   //
     
     filters() {
@@ -183,7 +183,7 @@ export class Orchestrator {
   wireAdminEvents() {
     // filters
     $(document).on('change', '.filters-bar select', async () => {
-      await this.gate.Read(filters());
+      await this.gate.Read(this.filters());
     });
 
     $('#btnClearFilter').on('click', async () => {
@@ -200,13 +200,6 @@ export class Orchestrator {
     $(document).on('click', '#btnAddNew', () => {
       this.addModal.open()
     });
-  }
-
-  async viewAdmin() {
-    Render.Table(columns);
-    this.render.Filters();
-
-    await this.gate.Load();
   }
 }
 
