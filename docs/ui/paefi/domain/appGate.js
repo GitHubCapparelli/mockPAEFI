@@ -1,7 +1,6 @@
 // ui paefi domain appGate
 
-import { QueryEngine, CommandEngine, Modal }  from '../core/omClass.js';
-import { DomainInfo }                         from '../core/omData.js';
+import { QueryEngine, CommandEngine }  from '../core/omClass.js';
 
 export class ApiGate {
     constructor(info, fnRows, fnGetFilters) {

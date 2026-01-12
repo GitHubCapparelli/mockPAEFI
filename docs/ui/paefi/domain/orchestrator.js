@@ -8,6 +8,8 @@ import { FuncaoUsuario, CargoUsuario, Especialidade,
          Dominio, Modulo 
        } from '../core/omEnum.js';
 import { DomainInfo } from '../core/omData.js';
+import { DomainView } from './domainView.js';
+import { ApiGate }    from './appGate.js';
 
 export class Orchestrator {
   
