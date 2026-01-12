@@ -174,7 +174,7 @@ export class Catalog {          // DatabaseTable, dataSource
         [ Metadata.UnidadeID, Metadata.Nome, Metadata.Login, Metadata.Matricula, Metadata.CPF, Metadata.FuncaoUsuario, Metadata.CargoUsuario, Metadata.Especialidade ]);
 };
 
-export class DomainInfo {          
+export class DomainInfo {           
     static All = [];
 
     constructor(key, name, api, dto, catalog, schema, lookups = {}) {
