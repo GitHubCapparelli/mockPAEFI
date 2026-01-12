@@ -55,8 +55,7 @@ class DomainView {
         this.view(moduleKey);
     }
     static async Create(info) {
-        const lookupAPIs = info.Lookups;
-        const apiTasks   = Object.entries(lookupAPIs).map(async ([key, api]) => {
+        const apiTasks   = Object.entries(info.Lookups).map(async ([key, api]) => {
             const data = await api.GetAll(); 
             return [key, data];
         });
