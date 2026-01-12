@@ -1,4 +1,4 @@
-// ui.paefi.core.renderer
+// ui paefi core renderer
 
 import { Modulo, Elemento, DocLinks } from './omEnum.js';
 
@@ -293,7 +293,7 @@ export function TableFromCatalog(info, moduleKey) {
     $('#tableContainer').empty().append($table);
 }
 
-static AdminActions(id) {
+export function AdminActions(id) {
     const $td = $('<td>');
 
     $td.append(
@@ -329,5 +329,6 @@ export const Render = {
   Table,
   Info,
   FiltersFromCatalog,
-  TableFromCatalog
+  TableFromCatalog,
+  AdminActions
 };
