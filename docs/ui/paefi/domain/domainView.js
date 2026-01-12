@@ -145,7 +145,7 @@ export class DomainView {
         //this.Filters();
         //Render.Table(columns);
 
-        Render.ClearMain();
+        //Render.ClearMain();
         Render.FiltersFromCatalog(this.info);
         Render.TableFromCatalog(this.info, this.moduleKey);
     }    
