@@ -250,6 +250,73 @@ export function Enum(selector, enumType) {
   enumType.All.forEach(e => $select.append($('<option>', { value: e.Key, text: e.Value })));
 }
 
+export function FiltersFromCatalog(info) {
+    const $container = $('#divFilterOptions').empty();
+
+    info.Catalog.Campos
+        .filter(c => c.Filterable)
+        .forEach(c => {
+            if (c.Lookup) {
+                $container.append(
+                    Render.Select(`cmbFilter_${c.UiKey}`, c.UiTitle)
+                );
+            }
+            else if (c.Enum) {
+                $container.append(
+                    Render.EnumSelect(`cmbFilter_${c.UiKey}`, c.UiTitle, c.Enum)
+                );
+            }
+        });
+}
+
+export function TableFromCatalog(info, moduleKey) {
+    const $table = $('<table>', { class: 'table table-striped' });
+    const $thead = $('<thead>');
+    const $tr    = $('<tr>');
+
+    info.Catalog.Campos
+        .filter(c => c.Visible)
+        .forEach(c => {
+            $tr.append(
+                $('<th>', { text: c.UiTitle })
+            );
+        });
+
+    if (moduleKey === Modulo.Admin.Key) {
+        $tr.append($('<th>', { text: 'Ações' }));
+    }
+
+    $thead.append($tr);
+    $table.append($thead);
+    $table.append($('<tbody>', { id: 'dataRows' }));
+
+    $('#tableContainer').empty().append($table);
+}
+
+static AdminActions(id) {
+    const $td = $('<td>');
+
+    $td.append(
+        $('<button>', {
+            class: 'btn btn-sm btn-primary js-edit',
+            'data-id': id,
+            title: 'Editar'
+        }).append($('<i>', { class: 'fas fa-edit' }))
+    );
+
+    $td.append(
+        $('<button>', {
+            class: 'btn btn-sm btn-danger js-delete',
+            'data-id': id,
+            title: 'Deletar'
+        }).append($('<i>', { class: 'fas fa-trash' }))
+    );
+
+    return $td;
+}
+
+
+
 // Public interface //
 export const Render = {
   PageStructure,
@@ -260,5 +327,7 @@ export const Render = {
   Select,
   Enum,
   Table,
-  Info
+  Info,
+  FiltersFromCatalog,
+  TableFromCatalog
 };

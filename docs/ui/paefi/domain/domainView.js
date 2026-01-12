@@ -15,6 +15,7 @@ class DomainView {
         this.addModal   = new Modal('add-modal',  `Novo ${info.Name}`,      fnOnModalSubmited);
         this.editModal  = new Modal('edit-modal', `Editando ${info.Name}`,  fnOnModalSubmited);
     }
+
     static async Create(moduleKey, info, fnOnModalSubmited) {
         const apiTasks   = Object.entries(info.Lookups).map(async ([key, api]) => {
             const data   = await api.GetAll(); 
@@ -51,7 +52,7 @@ class DomainView {
         Render.Enum('#cmbFilterCargo', CargoUsuario);
     }
 
-    Rows(response) {
+    Rows_old(response) {
         const list  = response.data;
         const tbody = $('#dataRows').empty();
 
@@ -82,6 +83,59 @@ class DomainView {
         Render.Info(response.pagination);
     }
 
+    Rows(response) {
+        const tbody = $('#dataRows').empty();
+        const rows  = response.data;
+
+        if (!rows.length) {
+            tbody.append(
+                $('<tr>').append(
+                    $('<td>', {
+                        colspan: this.info.Catalog.VisibleCount + 1,
+                        text: 'Nenhum registro'
+                    })
+                )
+            );
+            return;
+        }
+
+        rows.forEach(dto => {
+            const $tr = $('<tr>');
+
+            this.info.Catalog.Campos
+                .filter(c => c.Visible)
+                .forEach(c => {
+                    const value = this.resolveCellValue(dto, c);
+                    $tr.append(
+                        $('<td>', { text: value })
+                            .toggleClass('ellipsis25', c.UiKey === 'nome')
+                    );
+                });
+
+            if (this.moduleKey === Modulo.Admin.Key) {
+                $tr.append(Render.AdminActions(dto.id));
+            }
+
+            tbody.append($tr);
+        });
+
+        Render.Info(response.pagination);
+    }
+
+    resolveCellValue(dto, campo) {
+        if (campo.Lookup) {
+            return this.lookups[campo.Lookup]
+                ?.find(x => x.id === dto[campo.Key])?.sigla ?? '';
+        }
+
+        if (campo.Enum) {
+            return campo.Enum.ValueFromKey(dto[campo.Key]) ?? '';
+        }
+
+        return dto[campo.Key] ?? '';
+    }
+
+
     async view() {
         if (this.moduleKey === Modulo.Admin.Key) {
             await this.viewAdmin();
@@ -89,7 +143,11 @@ class DomainView {
     }
 
     async viewAdmin() {
-        this.Filters();
-        Render.Table(columns);
-    }
+        //this.Filters();
+        //Render.Table(columns);
+
+        Render.ClearMain();
+        Render.FiltersFromCatalog(this.info);
+        Render.TableFromCatalog(this.info, this.moduleKey);
+    }    
 }
