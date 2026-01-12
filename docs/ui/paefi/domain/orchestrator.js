@@ -47,7 +47,7 @@ export class ApiGate {
 class DomainView {
 
     constructor(info, namedLists, fnOnModalSubmited) {
-        this.metadata = metadata;
+        this.info = info;
         this.lookups  = namedLists;
 
         this.addModal   = new Modal('add-modal',  `Novo ${info.Name}`,      fnOnModalSubmited);
@@ -67,7 +67,7 @@ class DomainView {
     Filters() {
         const $container = $('#divFilterOptions').empty();
 
-        if (this.metadata.key === DomainInfo.UsuariosServidores.Key) {
+        if (this.info.key === DomainInfo.UsuariosServidores.Key) {
             $container.append(
             Render.Select('cmbFilterUnidade', 'Todas as Unidades'),
             Render.Select('cmbFilterEspecialidade', 'Todas as Especialidades'),
