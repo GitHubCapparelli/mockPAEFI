@@ -1,4 +1,4 @@
-// ui paefi domain orchestrator
+// ui paefi domain orchestrator //
 
 import { Render }                             from '../core/renderer.js';
 import { QueryEngine, CommandEngine, Modal }  from '../core/omClass.js';
