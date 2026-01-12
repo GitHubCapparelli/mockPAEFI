@@ -229,18 +229,18 @@ export class DomainInfo {
     }
 
     static async Create(key) {
-        const info = DomainInfo.All.find(x => x.Key === key);
-        if (!info) return null;
-
+        const info    = DomainInfo.All.find(x => x.Key === key);
         const lookups = Object.values(info.Lookups);
         const allAPIs = [...new Set([info.API, ...lookups])]; // no duplicates
 
-        await Promise.all(allAPIs.map(x => {
-            if (typeof x.Init === 'function') {
-                return x.Init();
-            }
-            return Promise.resolve(); // Fallback if Init doesn't exist
-        }));
+//        await Promise.all(allAPIs.map(x => {
+//            if (typeof x.Init === 'function') {
+//                return x.Init();
+//            }
+//            return Promise.resolve(); // Fallback if Init doesn't exist
+//        }));
+
+        await Promise.all(allAPIs.forEach(x => x.Init()));
 
         return info;
     }

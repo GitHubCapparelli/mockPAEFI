@@ -1,13 +1,13 @@
-import { CreateCoreAPI }    from './coreAPI.js';
-import { CreateUnidadeDTO } from '../../data/factory/unidadeDTO.js';
+import { CoreAPI }    from './coreAPI.js';
+import { UnidadeDTO } from '../../data/factory/unidadeDTO.js';
 
-export const UnidadesAPI = CreateCoreAPI({
+export const UnidadesAPI = CoreAPI({
   entity: 'unidades',
   dataPath: '/mockPAEFI/data/mock/unidades.json',
   jsonRoot: 'unidades',
   defaultOrderBy: 'nome',
 
-  createDTO: CreateUnidadeDTO,
+  dto: UnidadeDTO,
 
   applyFilters(data, filters) {
     let result = data;

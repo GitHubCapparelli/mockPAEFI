@@ -142,7 +142,7 @@ export class Orchestrator {
         const result = new Orchestrator(moduleKey, info);
         return result;
     } catch (err) {
-        alert(`[Orchestrator.Create()] Erro: ${err} [${moduleKey}, ${domainKey}]`)
+        alert(`[Orchestrator.Create] Erro: ${err} [${moduleKey}, ${domainKey}]`)
     }
   }  
   async view(moduleKey) {

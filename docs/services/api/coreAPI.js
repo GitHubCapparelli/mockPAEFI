@@ -11,7 +11,7 @@ export const CoreAPI = {
   }
 };
 
-export function CreateCoreAPI({
+export function CoreAPI({
   entity,
   dataPath,
   jsonRoot,

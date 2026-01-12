@@ -1,13 +1,13 @@
-import { CreateCoreAPI }            from './coreAPI.js';
-import { CreateUsuarioServidorDTO } from '../../data/factory/usuarioServidorDTO.js';
+import { CoreAPI }            from './coreAPI.js';
+import { UsuarioServidorDTO } from '../../data/factory/usuarioServidorDTO.js';
 
-export const UsuariosServidoresAPI = CreateCoreAPI({
+export const UsuariosServidoresAPI = CoreAPI({
   entity         : 'usuariosServidores',
   dataPath       : '/mockPAEFI/data/mock/usuariosServidores.json',
   jsonRoot       : 'usuariosServidores',
   defaultOrderBy : 'nome',
 
-  createDTO: CreateUsuarioServidorDTO,
+  dto: UsuarioServidorDTO,
 
 applyFilters(data, filters) {
     let result = data;

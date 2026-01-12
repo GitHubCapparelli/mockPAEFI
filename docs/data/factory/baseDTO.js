@@ -1,4 +1,4 @@
-export function CreateBaseDTO(overrides = {}) {
+export function BaseDTO(overrides = {}) {
   return {
     id             : crypto.randomUUID(),
     criadoEm       : null,

@@ -1,7 +1,7 @@
-import { CreateBaseDTO } from './baseDTO.js';
+import { BaseDTO } from './baseDTO.js';
 
-export function CreateUsuarioServidorDTO(data) {
-  return CreateBaseDTO({
+export function UsuarioServidorDTO(data) {
+  return BaseDTO({
     unidadeID      : data.unidadeID,
     nome           : data.nome,
     login          : data.login,
