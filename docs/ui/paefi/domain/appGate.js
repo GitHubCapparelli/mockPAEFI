@@ -32,10 +32,6 @@ export class ApiGate {
             await this.command.Delete(id);
         }
     }
-
-    async Load() {
-        await this.query.loadData();
-    }
     
     async Clear() {
         await this.query.Clear();
