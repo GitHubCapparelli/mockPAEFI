@@ -135,20 +135,22 @@ export class Orchestrator {
   
   constructor(moduleKey)   {
     this.moduleKey  = moduleKey;
-    this.gate       = new ApiGate(info, (x) => this.render.Rows(x));
+    this.gate       = null;
     this.info       = null;
     this.render     = null; 
   }
-  async init() {
+  async init(domainKey) {
     this.info    = await DomainInfo.Create(domainKey);
-    this.render  = await DomainView.Create(info); 
+    this.render  = await DomainView.Create(this.info); 
 
+    this.gate    = new ApiGate(this.info, (x) => this.render.Rows(x));
     await this.gate.Load();
+
     this.wireAdminEvents();
   }
   static async Create(moduleKey, domainKey) {
     const instance = new Orchestrator(moduleKey);
-    await instance.init();
+    await instance.init(domainKey);
     return instance;
   }  
   //
