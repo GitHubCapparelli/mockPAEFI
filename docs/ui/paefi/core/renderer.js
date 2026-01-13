@@ -147,13 +147,13 @@ export function OurDocs() {
 }
 
 // filters //
-function divFilters() {
-  return $('<div>', { class: 'filters-bar mx-1' }).append(
-    $('<div>', { id: 'divFilterOptions', class: 'filter-options p-2 d-flex gap-3' }).append(
-      $('<span>', { text: 'Filtros' })
-    )
-  );
-}
+//function divFilters() {
+//  return $('<div>', { class: 'filters-bar mx-1' }).append(
+//    $('<div>', { id: 'divFilterOptions', class: 'filter-options p-2 d-flex gap-3' }).append(
+//      $('<span>', { text: 'Filtros' })
+//    )
+//  );
+//}
 
 export function Select(id, value) { 
   return $('<select>', { id: id,  class: 'form-select form-select-sm'})
