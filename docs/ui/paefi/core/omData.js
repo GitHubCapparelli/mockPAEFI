@@ -136,7 +136,7 @@ export class Metadata {         // fields, attribs (spec)
     
     static Login               = new Metadata({ key: crypto.randomUUID(), dbColName:'login'         , uiKey:'#txtLogin'          , uiTitle: 'Login'          , required: true   , minLen: 5 , maxLen: 50 });
     static Matricula           = new Metadata({ key: crypto.randomUUID(), dbColName:'matricula'     , uiKey:'#txtMatricula'      , uiTitle: 'Matrícula'      , required: true   , minLen: 8 , maxLen: 8 });
-    static CPF                 = new Metadata({ key: crypto.randomUUID(), dbColName:'cpf'           , uiKey:'#txtCPF'            , uiTitle: 'CPF'            , required: true   , minLen: 11, maxLen: 11 });
+    static CpfServidor         = new Metadata({ key: crypto.randomUUID(), dbColName:'cpf'           , uiKey:'#txtCPF'            , uiTitle: 'CPF'            , required: true   , minLen: 11, maxLen: 11 });
 
     static Hierarquia          = new Metadata({ key: crypto.randomUUID(), dbColName:'hierarquiaID'  , uiKey:'#hierarquiaID'      , uiTitle: 'Hierarquia'     , required: true   , type:'UUID'   , pfKey:'FK' });
     static UnidadeID           = new Metadata({ key: crypto.randomUUID(), dbColName:'unidadeID'     , uiKey:'#unidadeID'         , uiTitle: 'Unidade'        , required: true   , type:'UUID'   , pfKey:'FK'   , uiGroupKey:'#cmbFilterUnidade' });
@@ -146,6 +146,50 @@ export class Metadata {         // fields, attribs (spec)
     static CargoUsuario        = new Metadata({ key: crypto.randomUUID(), dbColName:'cargo'         , uiKey:'#cargo'             , uiTitle: 'Cargo'          , required: true   , type:'enum'   , uiGroupKey:'#cmbFilterCargo' });
     static Especialidade       = new Metadata({ key: crypto.randomUUID(), dbColName:'especialidade' , uiKey:'#especialidade'     , uiTitle: 'Especialidade'  , required: true   , type:'enum'   , uiGroupKey:'#cmbFilterEspecialidade' });
 };
+
+export class Binding {
+    static All = [];
+    constructor({ 
+        key,
+        dbInfo,
+        dtoId,
+        uiFieldTitle,
+        uiFilterKey     = null, 
+        uiFilterTitle   = null,
+        lookup          = null,
+        lookupId        = null,
+        displayId       = null,
+        onGrid          = true
+    } ) {                      
+        this.DbInfo         = dbInfo;
+        this.DtoId          = dtoId;
+        this.UiFieldTitle   = uiFieldTitle;
+        this.UiFilterKey    = uiFilterKey;
+        this.UiFilterTitle  = uiFilterTitle;
+        this.Lookup         = lookup;
+        this.LookupId       = lookupId;
+        this.DisplayId      = displayId;
+        this.OnGrid         = onGrid;
+
+        if (!Binding.All.some(x => x.Key === key)) {
+            Binding.All.push(this);
+        }
+    }
+
+    static FuncaoUnidade    = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.FuncaoUnidade,    dtoId:'#funcao',            uiFieldTitle: 'Função',         uiFilterKey:'#cmbFuncao',           uiFilterTitle:'Todas as Funções',           lookup: Enum.FuncaoUnidade });
+    static SiglaUnidade     = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Sigla,            dtoId:'#sigla',             uiFieldTitle: 'Sigla' });
+    static NomeUnidade      = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Nome,             dtoId:'#nome',              uiFieldTitle: 'Nome' });
+    static IbgeId           = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.IbgeId,           dtoId:'#ibgeId',            uiFieldTitle: 'IBGE' });
+    
+    static NomeServidor     = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Nome,             dtoId:'#nome',              uiFieldTitle: 'Nome' });
+    static Unidade          = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Especialidade,    dtoId:'#unidadeID',         uiFieldTitle: 'Unidade',        uiFilterKey:'#cmbUnidades',         uiFilterTitle:'Todas as Unidades',          lookupId:'unidades',           displayId: 'sigla' });
+    static FuncaoUsuario    = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.FuncaoUsuario,    dtoId:'#funcao',            uiFieldTitle: 'Função',         uiFilterKey:'#cmbFuncao',           uiFilterTitle:'Todas as Funções',           lookup: Enum.FuncaoUsuario });
+    static CargoUsuario     = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.CargoUsuario,     dtoId:'#cargo',             uiFieldTitle: 'Cargo',          uiFilterKey:'#cmbCargo',            uiFilterTitle:'Todos os Cargos',            lookup: Enum.CargoUsuario });
+    static Especialidade    = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Especialidade,    dtoId:'#especialidade',     uiFieldTitle: 'Especialidade',  uiFilterKey:'#cmbEspecialidade',    uiFilterTitle:'Todas as Especialidades',    lookup: Enum.Especialidade });
+    static Login            = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Login,            dtoId:'#login',             uiFieldTitle: 'Login',          onGrid:false });
+    static Matricula        = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Matricula,        dtoId:'#matricula',         uiFieldTitle: 'Matrícula',      onGrid:false });
+    static CpfServidor      = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.CpfServidor,      dtoId:'#cpf',               uiFieldTitle: 'CPF',            onGrid:false });
+}
 
 export class Catalog {          // DatabaseTable, dataSource
     static All = [];
@@ -158,7 +202,8 @@ export class Catalog {          // DatabaseTable, dataSource
         AlteradoPor     : Metadata.AlteradoPor,
         DeletadoEm      : Metadata.DeletadoEm,
         DeletadoPor     : Metadata.DeletadoPor,
-        ExclusaoFisica  : Metadata.ExclusaoFisica
+        ExclusaoFisica  : Metadata.ExclusaoFisica,
+        Justificativa   : Metadata.Justificativa
     };
 
     constructor(key, name, versao, finalidade, fields = [] ) {
@@ -170,16 +215,19 @@ export class Catalog {          // DatabaseTable, dataSource
         this.Finalidade = { ...Metadata.Finalidade  , Value: finalidade  };
         this.Campos     = [ ...Object.values(Catalog.SharedFields), ...fields];
 
+        this.Metadata   = this.Campos.filter(campo => campo instanceof Metadata);
+        this.Bindings   = this.Campos.filter(campo => campo instanceof Binding);
+
         if (!Catalog.All.some(x => x.Key === key || x.Name === name)) {
             Catalog.All.push(this);
         }
     }
 
     static Unidades           = new Catalog(crypto.randomUUID(), 'Unidades', '0.1', 'Armazenar dados de unidades organizacionais',
-        [ Metadata.Hierarquia, Metadata.Sigla, Metadata.Nome, Metadata.FuncaoUnidade, Metadata.IbgeId ]);
+        [ Metadata.Hierarquia, Binding.Sigla, Binding.NomeUnidade, Binding.FuncaoUnidade, Binding.IbgeId ]);
 
     static UsuariosServidores = new Catalog(crypto.randomUUID(), 'UsuariosServidores', '0.1', 'Armazenar dados de servidores',
-        [ Metadata.UnidadeID, Metadata.Nome, Metadata.Login, Metadata.Matricula, Metadata.CPF, Metadata.FuncaoUsuario, Metadata.CargoUsuario, Metadata.Especialidade ]);
+        [ Binding.Unidade, Binding.NomeServidor, Binding.FuncaoUsuario, Binding.CargoUsuario, Binding.Especialidade, Binding.Login, Binding.Matricula, Binding.CPF ]);
 };
 
 export class DomainInfo {           
@@ -199,18 +247,18 @@ export class DomainInfo {
         }
     }
 
-    static async Create(key) {
-        const info = DomainInfo.All.find(x => x.Key === key);
-        if (!info) {
-            throw new Error(`DomainInfo not found for key: ${key} [${DomainInfo.All.length}]`);
+    static Create(key) {
+        const instance = DomainInfo.All.find(x => x.Key === key);
+        if (!instance) {
+            throw new Error(`[DomainInfo.Create] Não localizado: key '${key}'`);
         }
-        return info;
+        return instance;
     }
 
-    static Unidades = new DomainInfo('unidades', 'Unidade', API.UnidadesAPI, DTO.CreateUnidadeDTO, 
+    static Unidades = new DomainInfo('unidades', 'Unidade', API.UnidadesAPI, DTO.UnidadeDTO, 
         Catalog.Unidades, 'unidadeSchema.json');
     
-    static UsuariosServidores = new DomainInfo('usuarios-servidores', 'Usuário Servidor', API.UsuariosServidoresAPI, DTO.CreateUsuarioServidorDTO, 
+    static UsuariosServidores = new DomainInfo('usuarios-servidores', 'Usuário Servidor', API.UsuariosServidoresAPI, DTO.UsuarioServidorDTO, 
         Catalog.UsuariosServidores, 'usuarioServidorSchema.json', { unidades: API.UnidadesAPI });
 };
 

@@ -210,7 +210,7 @@ export function Table(columns) {
 }
 
 export function Select(id, value) { 
-  return $('<select>', { id,  class: 'form-select form-select-sm'})
+  return $('<select>', { id: id,  class: 'form-select form-select-sm'})
   .append($('<option>', { value: '', text: value }));
 }
 
@@ -251,6 +251,7 @@ export function Enum(selector, enumType) {
   enumType.All.forEach(e => $select.append($('<option>', { value: e.Key, text: e.Value })));
 }
 
+// DEL
 export function FiltersFromCatalog(info) {
     const $container = $('#divFilterOptions').empty();
     

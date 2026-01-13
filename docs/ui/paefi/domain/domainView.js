@@ -22,10 +22,41 @@ export class DomainView {
         });
         const response   = await Promise.all(apiTasks);
         const namedLists = Object.fromEntries(response);
+
         const instance   = new DomainView(moduleKey, info, namedLists, fnOnModalSubmited);
         instance.view();
         return instance;
     }  
+
+    getLookup(name) {
+        return this.lookups[name] || [];
+    }
+
+    Filtros() {
+        const $container = $('#divFilterOptions').empty();
+        const campos = this.info.Catalog.Bindings.filter(x => x.Lookup || x.LookupId);
+
+        campos.forEach(c => {
+            const filtroId = c.uiFilterKey.startsWith('#') ? c.UiFilterKey.substring(1) : c.UiFilterKey;
+            const filtro   = Render.Select(filtroId, c.UiFilterTitle);
+            $container.append(filtro);
+
+            if (c.Lookup) {
+                Render.Enum(c.UiFilterKey, c.Lookup);
+
+            } else if (c.LookupId) {
+                const list = this.getLookup(c.LookupId);
+                list.forEach(row => {
+                    const txt = row[c.DisplayId] || '---'; 
+                    filtro.append($('<option>', { 
+                        value: row.id || row.Id, 
+                        text: txt 
+                    }));
+                });
+            }
+        });
+    }
+
     
     Filters() {
         const $container = $('#divFilterOptions').empty();
@@ -38,7 +69,6 @@ export class DomainView {
             Render.Select('cmbFilterCargo', 'Todos os Cargos')
             );
         }
-        // Unidades...
         this.FiltersItems();
     }
 
@@ -146,7 +176,10 @@ export class DomainView {
         //Render.Table(columns);
 
         //Render.ClearMain();
-        Render.FiltersFromCatalog(this.info);
-        Render.TableFromCatalog(this.info, this.moduleKey);
+        //Render.FiltersFromCatalog(this.info);
+        //Render.TableFromCatalog(this.info, this.moduleKey);
+
+        this.Filtros();
+        //... HERE
     }     
 }
