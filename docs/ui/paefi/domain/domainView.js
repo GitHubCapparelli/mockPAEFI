@@ -177,16 +177,15 @@ export class DomainView {
 
     resolveCellValue(dto, campo) {
         if (campo.LookupId) {
-            const result = this.lookups[campo.LookupId]?.find(x => x.id === dto[campo.Key])?.sigla ?? '';
-            // sigla ???
-            return result;
+            const  row = this.lookups[campo.LookupId]?.find(x => x.id === dto[campo.DtoId]);
+            return row[campo.DisplayId] ?? '---';
         }
 
         if (campo.Lookup) {
-            return campo.Lookup.ValueFromKey(dto[campo.Key]) ?? '';
+            return campo.Lookup.ValueFromKey(dto[campo.DtoId]) ?? '';
         }
 
-        return dto[campo.Key] ?? '';
+        return dto[campo.DtoId] ?? '';
     }
 
     //

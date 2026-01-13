@@ -176,19 +176,19 @@ export class Binding {
         }
     }
 
-    static FuncaoUnidade    = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.FuncaoUnidade,    dtoId:'#funcao',            uiFieldTitle: 'Função',         uiFilterKey:'#cmbFuncao',           uiFilterTitle:'Todas as Funções',           lookup: Enum.FuncaoUnidade });
-    static SiglaUnidade     = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Sigla,            dtoId:'#sigla',             uiFieldTitle: 'Sigla' });
-    static NomeUnidade      = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Nome,             dtoId:'#nome',              uiFieldTitle: 'Nome' });
-    static IbgeId           = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.IbgeId,           dtoId:'#ibgeId',            uiFieldTitle: 'IBGE' });
+    static FuncaoUnidade    = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.FuncaoUnidade,    dtoId:'funcao',            uiFieldTitle: 'Função',         uiFilterKey:'#cmbFuncao',           uiFilterTitle:'Todas as Funções',           lookup: Enum.FuncaoUnidade });
+    static SiglaUnidade     = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Sigla,            dtoId:'sigla',             uiFieldTitle: 'Sigla' });
+    static NomeUnidade      = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Nome,             dtoId:'nome',              uiFieldTitle: 'Nome' });
+    static IbgeId           = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.IbgeId,           dtoId:'ibgeId',            uiFieldTitle: 'IBGE' });
     
-    static NomeServidor     = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Nome,             dtoId:'#nome',              uiFieldTitle: 'Nome' });
-    static Unidade          = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Especialidade,    dtoId:'#unidadeID',         uiFieldTitle: 'Unidade',        uiFilterKey:'#cmbUnidades',         uiFilterTitle:'Todas as Unidades',          lookupId:'unidades',           displayId: 'sigla' });
-    static FuncaoUsuario    = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.FuncaoUsuario,    dtoId:'#funcao',            uiFieldTitle: 'Função',         uiFilterKey:'#cmbFuncao',           uiFilterTitle:'Todas as Funções',           lookup: Enum.FuncaoUsuario });
-    static CargoUsuario     = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.CargoUsuario,     dtoId:'#cargo',             uiFieldTitle: 'Cargo',          uiFilterKey:'#cmbCargo',            uiFilterTitle:'Todos os Cargos',            lookup: Enum.CargoUsuario });
-    static Especialidade    = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Especialidade,    dtoId:'#especialidade',     uiFieldTitle: 'Especialidade',  uiFilterKey:'#cmbEspecialidade',    uiFilterTitle:'Todas as Especialidades',    lookup: Enum.Especialidade });
-    static Login            = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Login,            dtoId:'#login',             uiFieldTitle: 'Login',          onGrid:false });
-    static Matricula        = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Matricula,        dtoId:'#matricula',         uiFieldTitle: 'Matrícula',      onGrid:false });
-    static CpfServidor      = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.CpfServidor,      dtoId:'#cpf',               uiFieldTitle: 'CPF',            onGrid:false });
+    static NomeServidor     = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Nome,             dtoId:'nome',              uiFieldTitle: 'Nome' });
+    static Unidade          = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Especialidade,    dtoId:'unidadeID',         uiFieldTitle: 'Unidade',        uiFilterKey:'#cmbUnidades',         uiFilterTitle:'Todas as Unidades',          lookupId:'unidades',           displayId: 'sigla' });
+    static FuncaoUsuario    = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.FuncaoUsuario,    dtoId:'funcao',            uiFieldTitle: 'Função',         uiFilterKey:'#cmbFuncao',           uiFilterTitle:'Todas as Funções',           lookup: Enum.FuncaoUsuario });
+    static CargoUsuario     = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.CargoUsuario,     dtoId:'cargo',             uiFieldTitle: 'Cargo',          uiFilterKey:'#cmbCargo',            uiFilterTitle:'Todos os Cargos',            lookup: Enum.CargoUsuario });
+    static Especialidade    = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Especialidade,    dtoId:'especialidade',     uiFieldTitle: 'Especialidade',  uiFilterKey:'#cmbEspecialidade',    uiFilterTitle:'Todas as Especialidades',    lookup: Enum.Especialidade });
+    static Login            = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Login,            dtoId:'login',             uiFieldTitle: 'Login',          onGrid:false });
+    static Matricula        = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Matricula,        dtoId:'matricula',         uiFieldTitle: 'Matrícula',      onGrid:false });
+    static CpfServidor      = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.CpfServidor,      dtoId:'cpf',               uiFieldTitle: 'CPF',            onGrid:false });
 }
 
 export class Catalog {          // DatabaseTable, dataSource
