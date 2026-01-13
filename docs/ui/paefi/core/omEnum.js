@@ -1,3 +1,5 @@
+// ui paefi core omEnum
+
 export class BaseEnum {
     static All = [];
 
