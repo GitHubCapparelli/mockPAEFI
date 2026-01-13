@@ -7,10 +7,11 @@ import { UsuariosServidoresAPI }              from '../../../services/api/usuari
 import { FuncaoUsuario, CargoUsuario, Especialidade,
          Dominio, Modulo 
        } from '../core/omEnum.js';
-import { DomainInfo } from '../core/omData.js';
-import { DomainView } from './domainView.js';
-import { ApiGate }    from './appGate.js';
 
+import { DomainInfo }                    from '../core/omData.js';
+import { DomainView }                    from './domainView.js';
+import { ApiGate }                       from './appGate.js';
+import { ModalShell, ModalFormBuilder }  from '../core/modal.js';
 
 export class Orchestrator {
   
@@ -18,6 +19,7 @@ export class Orchestrator {
         this.gate       = null;
         this.info       = null;
         this.render     = null;  
+        this.modal      = new ModalShell(); 
     }
 
     async init(moduleKey, domainKey) {
@@ -75,8 +77,48 @@ export class Orchestrator {
         });
 
         // modals
-        $(document).on('click', '#btnAddNew', () => {
-           this.render.addModal.open()
+        //$(document).on('click', '#btnAddNew', () => { this.render.addModal.open() });
+
+        $('#btnAddNew').on('click', async () => {
+            const builder = new ModalFormBuilder({ 
+                title   : `Novo ${this.info.Name}`,
+                catalog : this.info.Catalog,
+                dto     : null
+            });
+
+            const result = await this.modal.open(builder);
+            if (result.action !== 'save')           return;
+
+            await this.gate.Create(result.payload);
         });
+
+        $(document).on('click', '.js-edit', async e => {
+            const id      = $(e.currentTarget).data('id');
+            const dto     = await this.info.API.GetById(id);
+            const builder = new ModalFormBuilder({
+                title   : `Editar ${this.info.Name}`,
+                catalog : this.info.Catalog,
+                dto
+            });
+
+            const result = await this.modal.open(builder);
+            if (result.action !== 'save')           return;
+            if (!Object.keys(result.dirty).length)  return;
+
+            await this.gate.Update(id, result.payload);
+        });
+
+        $(document).on('click', '.js-delete', async e => {
+            const builder = new ModalMessageBuilder({
+                title   : 'Confirmação',
+                message : 'Deseja realmente excluir este registro?'
+            });
+
+            const result = await modal.open(builder);
+            if (result.action === 'confirm' && result.value) {
+                await this.gate.Delete(id);
+            }
+        });
+
     }
 }
