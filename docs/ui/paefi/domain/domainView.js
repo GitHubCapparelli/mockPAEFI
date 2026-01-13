@@ -91,17 +91,16 @@ export class DomainView {
     Table(container) {
         const columns = this.info.Catalog.Bindings.filter(x => x.OnGrid);
         
-        const thead   = columns.map(c => `<th>${c.UiFieldTitle}</th>`).join('');
+        const header  = columns.map(c => `<th>${c.UiFieldTitle}</th>`);
         if (this.moduleKey === Modulo.Admin.Key) {
-            thead.push('<th>Ações</th>');
+            header.push('<th>Ações</th>');
         }
-        const colSpan = columns.length;
 
         const $table  = $('<table>', { class: 'table table-striped table-hover' }).append(
-            $('<thead>').append(thead),
+            $('<thead>').append(header.join('')),
             $('<tbody>', { id: 'dataRows' }).append(
                 $('<tr>').append($('<td>', {
-                    colspan: colSpan,
+                    colspan: header.length,
                     class: 'text-center text-muted', text: 'Carregando...'
                 }))
             )
