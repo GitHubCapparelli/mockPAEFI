@@ -60,7 +60,7 @@ function SetDomain(domainKey) {
   currentDomain = Dominio.FromKey(domainKey);
   Local.Set(LastDomainKey, currentDomain.Key);
   
-  Render.DomainStructure(currentModule.Key);
+  //Render.DomainStructure(currentModule.Key);
   initCurrentDomain();
 }
 
