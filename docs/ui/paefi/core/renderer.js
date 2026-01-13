@@ -201,7 +201,6 @@ export function Enum(selector, enumType) {
 // Public interface //
 export const Render = {
   PageStructure,
-  DomainStructure,
   Options,
   Preferences,
   OurDocs,
