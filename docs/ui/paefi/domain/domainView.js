@@ -57,30 +57,60 @@ export class DomainView {
         });
     }
 
-    
-    Filters() {
-        const $container = $('#divFilterOptions').empty();
+    Grid(container) {
+        const $actions = $('<div>', { id: 'divDataActionButtons', class: 'mt-4 ms-2 divDataActionButtons d-flex justify-content-between align-items-center gap-3' }).append(
+            $('<div>', { id: 'divDataActionButtons-left', class: 'action-buttons-left d-flex align-items-center gap-3' }).append(
+                $('<button>', { id: 'btnAddNew', class: 'btn btn-primary' }).append(
+                    $('<i>', { class: 'fas fa-plus' }), ' Incluir')
+            ),
+            $('<div>', { id: 'divDataActionButtons-right', class: 'action-buttons-right d-flex align-items-center gap-3' }).append(
+                $('<button>', { class: 'btn btn-terciary', id: 'btnExport' }).append(
+                    $('<i>', { class: 'fas fa-download' }), ' Exportar')
+            ));
 
-        if (this.info.Key === DomainInfo.UsuariosServidores.Key) {
-            $container.append(
-            Render.Select('cmbFilterUnidade', 'Todas as Unidades'),
-            Render.Select('cmbFilterEspecialidade', 'Todas as Especialidades'),
-            Render.Select('cmbFilterFuncao', 'Todas as Funções'),
-            Render.Select('cmbFilterCargo', 'Todos os Cargos')
-            );
-        }
-        this.FiltersItems();
+        const $table = $('<div>', { id: 'divdataTable', class: 'divdataTable mt-2 ms-2 table-responsive' }).append(
+            $('<span>', { text: 'Dados' })
+        );
+
+        const $nav = $('<div>', { id: 'divPagination-section', class: 'pagination-section d-flex justify-content-between align-items-center' }).append(
+            $('<div>', { id: 'divPagination-info', class: 'pagination-info' }).append(
+                $('<span>', { id: 'navInfo', text: 'nav info' })
+            ),
+            $('<nav>').append(
+                $('<ul>', { id: 'navControls', class: 'pagination mb-0' })
+            ));
+
+        const $section = $('<section>', { id: 'dataSection', class: 'data-section mx-2' })
+            .append($actions, $table, $nav);
+
+        container.append($section);
+        
+        this.Table($table);
     }
 
-    FiltersItems() {
-        const $el  = $('#cmbFilterUnidade');
-        this.lookups.unidades.forEach(u => $el.append($('<option>', { value: u.id, text: u.sigla })));
+    Table(container) {
+        const columns = this.info.Catalog.Bindings.filter(x => x.OnGrid);
+        
+        const thead   = columns.map(c => `<th>${c.UiFieldTitle}</th>`).join('');
+        const colSpan = columns.length;
 
-        Render.Enum('#cmbFilterEspecialidade', Especialidade);
-        Render.Enum('#cmbFilterFuncao', FuncaoUsuario);
-        Render.Enum('#cmbFilterCargo', CargoUsuario);
+        const $table  = $('<table>', { class: 'table table-striped table-hover' }).append(
+            $('<thead>').append(thead),
+            $('<tbody>', { id: 'dataRows' }).append(
+                $('<tr>').append($('<td>', {
+                    colspan: colSpan,
+                    class: 'text-center text-muted', text: 'Carregando...'
+                }))
+            )
+        );
+
+        container.empty();
+        container.append($table);
     }
 
+
+    //
+ 
     Rows_old(response) {
         const list  = response.data;
         const tbody = $('#dataRows').empty();
@@ -112,34 +142,28 @@ export class DomainView {
         Render.Info(response.pagination);
     }
 
+    
+
     Rows(response) {
-        const tbody = $('#dataRows').empty();
-        const rows  = response.data;
+        const tbody   = $('#dataRows').empty();
+        const rows    = response.data;
+
+        const columns = this.info.Catalog.Bindings.filter(x => x.OnGrid);
 
         if (!rows.length) {
-            tbody.append(
-                $('<tr>').append(
-                    $('<td>', {
-                        colspan: this.info.Catalog.VisibleCount + 1,
-                        text: 'Nenhum registro'
-                    })
-                )
-            );
+            tbody.append($('<tr>')
+                 .append($('<td>', { colspan: columns.length + 1, text: 'Nenhum registro' })));
             return;
         }
 
         rows.forEach(dto => { 
             const $tr = $('<tr>');
 
-            this.info.Catalog.Campos
-                .filter(c => c.Visible)
-                .forEach(c => {
-                    const value = this.resolveCellValue(dto, c);
-                    $tr.append(
-                        $('<td>', { text: value })
-                            .toggleClass('ellipsis25', c.UiKey === 'nome')
-                    );
-                });
+            columns.forEach(c => {
+                const value = this.resolveCellValue(dto, c);
+                $tr.append($('<td>', { text: value })
+                   .toggleClass('ellipsis25', c.DtoId === '#nome'));
+            });
 
             if (this.moduleKey === Modulo.Admin.Key) {
                 $tr.append(Render.AdminActions(dto.id));
@@ -152,18 +176,20 @@ export class DomainView {
     }
 
     resolveCellValue(dto, campo) {
-        if (campo.Lookup) {
-            return this.lookups[campo.Lookup]
-                ?.find(x => x.id === dto[campo.Key])?.sigla ?? '';
+        if (campo.LookupId) {
+            const result = this.lookups[campo.LookupId]?.find(x => x.id === dto[campo.Key])?.sigla ?? '';
+            // sigla ???
+            return result;
         }
 
-        if (campo.Enum) {
-            return campo.Enum.ValueFromKey(dto[campo.Key]) ?? '';
+        if (campo.Lookup) {
+            return campo.Lookup.ValueFromKey(dto[campo.Key]) ?? '';
         }
 
         return dto[campo.Key] ?? '';
     }
 
+    //
 
     async view() {
         if (this.moduleKey === Modulo.Admin.Key) {
@@ -179,7 +205,10 @@ export class DomainView {
         //Render.FiltersFromCatalog(this.info);
         //Render.TableFromCatalog(this.info, this.moduleKey);
 
+        const $pageBody = $('#page-body').empty();
         this.Filtros();
+        this.Grid($pageBody);
+
         // AQUI...
-    }     
+    }    
 }
