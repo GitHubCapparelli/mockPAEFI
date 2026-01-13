@@ -32,20 +32,20 @@ export class DomainView {
         return this.lookups[name] || [];
     }
 
-    assureCleanDivContainer(divID, parentID) {
-        let $div = $(divID);
+    assureCleanFilterOptions() {
+        let $div = $('#divFilterOptions');
         if ($div.length === 0) {
-            const name = divID.substring(1);
-            $div = $('<div>', { id: name, class: name });
-            $(parentID).append($div);
+            $('#page-body')
+                .append($('<div>', { class: 'filters-bar mx-1' })
+                .append($('<div>', { id: 'divFilterOptions', class: 'filter-options p-2 d-flex gap-3' })));
         } else {
             $div.empty();
         }
-        return $div;
+        return $('#divFilterOptions');
     }
 
     Filtros() {
-        const $divFiltros = this.assureCleanDivContainer('#divFilterOptions', '#page-body');
+        const $divFiltros = this.assureCleanFilterOptions();
         const campos      = this.info.Catalog.Bindings.filter(x => x.Lookup || x.LookupId);
 
         campos.forEach(c => {
