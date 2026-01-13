@@ -33,13 +33,13 @@ export class DomainView {
     }
 
     Filtros() {
-        const $container = $('#divFilterOptions').empty();
+        const $divFiltros = $('#divFilterOptions').empty();
         const campos = this.info.Catalog.Bindings.filter(x => x.Lookup || x.LookupId);
 
         campos.forEach(c => {
             const filtroId = c.UiFilterKey.startsWith('#') ? c.UiFilterKey.substring(1) : c.UiFilterKey;
             const filtro   = Render.Select(filtroId, c.UiFilterTitle);
-            $container.append(filtro);
+            $divFiltros.append(filtro);
 
             if (c.Lookup) {
                 Render.Enum(c.UiFilterKey, c.Lookup);
@@ -55,6 +55,8 @@ export class DomainView {
                 });
             }
         });
+
+        $('#page-body').append($divFiltros);
     }
 
     Grid() {
@@ -83,8 +85,7 @@ export class DomainView {
         const $section = $('<section>', { id: 'dataSection', class: 'data-section mx-2' })
             .append($actions, $table, $nav);
 
-        const $pageBody = $('#page-body');
-        $pageBody.append($section);
+        $('#page-body').append($section);
         
         this.Table();
     }
@@ -179,6 +180,6 @@ export class DomainView {
 
     async viewAdmin() {
         this.Filtros();
-        //this.Grid();
+        this.Grid();
     }    
 }
