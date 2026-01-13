@@ -92,6 +92,9 @@ export class DomainView {
         const columns = this.info.Catalog.Bindings.filter(x => x.OnGrid);
         
         const thead   = columns.map(c => `<th>${c.UiFieldTitle}</th>`).join('');
+        if (this.moduleKey === Modulo.Admin.Key) {
+            thead.push('<th>Ações</th>');
+        }
         const colSpan = columns.length;
 
         const $table  = $('<table>', { class: 'table table-striped table-hover' }).append(
@@ -162,7 +165,7 @@ export class DomainView {
             columns.forEach(c => {
                 const value = this.resolveCellValue(dto, c);
                 $tr.append($('<td>', { text: value })
-                   .toggleClass('ellipsis25', c.DtoId === '#nome'));
+                   .toggleClass('ellipsis25', c.DtoId === 'nome'));
             });
 
             if (this.moduleKey === Modulo.Admin.Key) {
