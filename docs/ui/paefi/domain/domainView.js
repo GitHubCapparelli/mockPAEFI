@@ -33,9 +33,10 @@ export class DomainView {
     }
 
     assureCleanDivContainer(divID, parentID) {
-        const $div = $(divID);
+        let $div = $(divID);
         if ($div.length === 0) {
-            $div = $('<div>', { id: divID.substring(1) });
+            const name = divID.substring(1);
+            $div = $('<div>', { id: name, class: name });
             $(parentID).append($div);
         } else {
             $div.empty();
