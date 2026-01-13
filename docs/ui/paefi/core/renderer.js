@@ -156,58 +156,7 @@ export function OurDocs() {
   });
 }
 
-// filters and tables (admin) //
-function divFilters() {
-  return $('<div>', { class: 'filters-bar mx-1' }).append(
-    $('<div>', { id: 'divFilterOptions', class: 'filter-options p-2 d-flex gap-3' }).append(
-      $('<span>', { text: 'Filtros' })
-    )
-  );
-}
-
-function datagrid() {
-  const $actions = $('<div>', { id: 'divDataActionButtons', class: 'mt-4 ms-2 divDataActionButtons d-flex justify-content-between align-items-center gap-3' }).append(
-    $('<div>', { id: 'divDataActionButtons-left', class: 'action-buttons-left d-flex align-items-center gap-3' }).append(
-      $('<button>', { id: 'btnAddNew', class: 'btn btn-primary' }).append(
-        $('<i>', { class: 'fas fa-plus' }), ' Incluir')
-    ),
-    $('<div>', { id: 'divDataActionButtons-right', class: 'action-buttons-right d-flex align-items-center gap-3' }).append(
-      $('<button>', { class: 'btn btn-terciary', id: 'btnExport' }).append(
-        $('<i>', { class: 'fas fa-download' }), ' Exportar')
-    ));
-
-  const $table = $('<div>', { id: 'divdataTable', class: 'divdataTable mt-2 ms-2 table-responsive' }).append(
-    $('<span>', { text: 'Dados' })
-  );
-
-  const $nav = $('<div>', { id: 'divPagination-section', class: 'pagination-section d-flex justify-content-between align-items-center' }).append(
-    $('<div>', { id: 'divPagination-info', class: 'pagination-info' }).append(
-      $('<span>', { id: 'navInfo', text: 'nav info' })
-    ),
-    $('<nav>').append(
-      $('<ul>', { id: 'navControls', class: 'pagination mb-0' })
-    ));
-
-  return $('<section>', { id: 'dataSection', class: 'data-section mx-2' })
-    .append($actions, $table, $nav);
-}
-
-export function Table(columns) {
-  const thead = columns.map(c => `<th>${c.label}</th>`).join('');
-  const colSpan = columns.length;
-
-  const $table = $('<table>', { class: 'table table-striped table-hover' }).append(
-    $('<thead>').append(thead),
-    $('<tbody>', { id: 'dataRows' }).append(
-      $('<tr>').append($('<td>', {
-        colspan: colSpan,
-        class: 'text-center text-muted', text: 'Carregando...'
-      }))
-    )
-  );
-  const $container = $('#divdataTable').empty();
-  $container.append($table);
-}
+// 
 
 export function Select(id, value) { 
   return $('<select>', { id: id,  class: 'form-select form-select-sm'})
@@ -251,89 +200,6 @@ export function Enum(selector, enumType) {
   enumType.All.forEach(e => $select.append($('<option>', { value: e.Key, text: e.Value })));
 }
 
-// DEL
-export function FiltersFromCatalog(info) {
-    const $container = $('#divFilterOptions').empty();
-    
-    const campos = info.Catalog.Campos.filter(c => c.UiGroupKey);
-    campos.forEach(c => {
-            if (c.PfKey) {
-                $container.append(Render.Select(c.UiGroupKey, c.UiTitle));
-            }
-            else if (c.Type === 'enum') {
-                //$container.append(Render.Enum(c.UiGroupKey, c.UiTitle, getEnumFrom(c.UiGroupKey)));
-                //Render.Enum(c.UiGroupKey, c.UiTitle, getEnumFrom(c.UiGroupKey));
-                Render.Enum(c.UiGroupKey, getEnumFrom(c.UiGroupKey));
-            }
-        });
-}
-
-function getEnumFrom(value) {
-  return value === '#cmbFilterEspecialidade' 
-       ? Especialidade
-       : value === '#cmbFilterCargo'
-       ? CargoUsuario
-       : value === '#cmbFilterFuncaoUnidade'
-       ? FuncaoUnidade
-       : value === '#cmbFilterFuncaoUsuario'
-       ? FuncaoUsuario
-       : null;
-}
-
-function getColsFor(key) {
-  return key === DomainInfo.Unidades.Key
-       ? '#funcao|#sigla|#nome|#ibgeId'
-       : key === DomainInfo.UsuariosServidores.Key
-       ? '#nome|#unidade|#especialidade|#funcao|#cargo'
-       : null;
-}
-
-export function TableFromCatalog(info, moduleKey) {
-    const $table = $('<table>', { class: 'table table-striped' });
-    const $thead = $('<thead>');
-    const $tr    = $('<tr>');
-
-    const lista  = getColsFor(info.Key);
-    const campos = info.Catalog.Campos.filter(x => lista.includes(x));
-    campos.forEach(c => {
-        $tr.append($('<th>', { text: c.UiTitle }));
-    });
-
-    if (moduleKey === Modulo.Admin.Key) {
-        $tr.append($('<th>', { text: 'Ações' }));
-    }
-
-    $thead.append($tr);
-    $table.append($thead);
-    $table.append($('<tbody>', { id: 'dataRows' }));
-
-    $('#tableContainer').empty().append($table);
-}
-
-export function AdminActions(id) {
-    const $td = $('<td>');
-
-    $td.append(
-        $('<button>', {
-            class: 'btn btn-sm btn-primary js-edit',
-            'data-id': id,
-            title: 'Editar'
-        }).append($('<i>', { class: 'fas fa-edit' }))
-    );
-
-    $td.append(
-        $('<button>', {
-            class: 'btn btn-sm btn-danger js-delete',
-            'data-id': id,
-            title: 'Deletar'
-        }).append($('<i>', { class: 'fas fa-trash' }))
-    );
-
-    return $td;
-}
-
-
-
 // Public interface //
 export const Render = {
   PageStructure,
@@ -343,9 +209,6 @@ export const Render = {
   OurDocs,
   Select,
   Enum,
-  Table,
   Info,
-  FiltersFromCatalog,
-  TableFromCatalog,
-  AdminActions
+  AdminRowActions
 };

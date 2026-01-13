@@ -57,7 +57,7 @@ export class DomainView {
         });
     }
 
-    Grid(container) {
+    Grid() {
         const $actions = $('<div>', { id: 'divDataActionButtons', class: 'mt-4 ms-2 divDataActionButtons d-flex justify-content-between align-items-center gap-3' }).append(
             $('<div>', { id: 'divDataActionButtons-left', class: 'action-buttons-left d-flex align-items-center gap-3' }).append(
                 $('<button>', { id: 'btnAddNew', class: 'btn btn-primary' }).append(
@@ -83,14 +83,14 @@ export class DomainView {
         const $section = $('<section>', { id: 'dataSection', class: 'data-section mx-2' })
             .append($actions, $table, $nav);
 
-        container.append($section);
+        const $pageBody = $('#page-body');
+        $pageBody.append($section);
         
-        this.Table($table);
+        this.Table();
     }
 
-    Table(container) {
+    Table() {
         const columns = this.info.Catalog.Bindings.filter(x => x.OnGrid);
-        
         const header  = columns.map(c => `<th>${c.UiFieldTitle}</th>`);
         if (this.moduleKey === Modulo.Admin.Key) {
             header.push('<th>Ações</th>');
@@ -106,45 +106,9 @@ export class DomainView {
             )
         );
 
-        container.empty();
-        container.append($table);
+        const $container = $('#divdataTable').empty();
+        $container.append($table);
     }
-
-
-    //
- 
-    Rows_old(response) {
-        const list  = response.data;
-        const tbody = $('#dataRows').empty();
-
-        if (!list.length) {
-        tbody.append(`<tr><td colspan="${columns.length}">Nenhum registro</td></tr>`);
-        return;
-        }
-
-        list.forEach(u => {
-        tbody.append(`<tr>
-            <td class="ellipsis25" title="${u.nome}">${u.nome}</td>
-            <td>${this.lookups.unidades?.find(un => un.id === u.unidadeID)?.sigla ?? ''}</td>
-            <td>${u.especialidade === Especialidade.NaoInformada.Key ? '' : Especialidade.ValueFromKey(u.especialidade)}</td>
-            <td>${u.funcao === FuncaoUsuario.NaoInformada.Key ? '' : FuncaoUsuario.ValueFromKey(u.funcao)}</td>
-            <td>${u.cargo === CargoUsuario.NaoInformado.Key ? '' : CargoUsuario.ValueFromKey(u.cargo)}</td>
-            <td>
-                <button class="btn btn-sm btn-primary js-edit" data-id="${u.id}" title="Editar">
-                <i class="fas fa-edit"></i>
-                </button>
-                <button class="btn btn-sm btn-danger js-delete" data-id="${u.id}" title="Deletar">
-                <i class="fas fa-trash"></i>
-                </button>
-            </td>
-            </tr>
-        `);
-        });
-
-        Render.Info(response.pagination);
-    }
-
-    
 
     Rows(response) {
         const tbody   = $('#dataRows').empty();
@@ -162,13 +126,15 @@ export class DomainView {
             const $tr = $('<tr>');
 
             columns.forEach(c => {
-                const value = this.resolveCellValue(dto, c);
-                $tr.append($('<td>', { text: value })
-                   .toggleClass('ellipsis25', c.DtoId === 'nome'));
+                const val = this.resolveCellValue(dto, c);
+                $('<td>', { text: val })
+                    .toggleClass('ellipsis25', c.DtoId === 'nome')
+                    .appendTo($tr);
             });
 
             if (this.moduleKey === Modulo.Admin.Key) {
-                $tr.append(Render.AdminActions(dto.id));
+                const actions = this.actionsButtonsCell(dto.id);
+                $tr.append(actions);
             }
 
             tbody.append($tr);
@@ -190,6 +156,19 @@ export class DomainView {
         return dto[campo.DtoId] ?? '';
     }
 
+    actionsButtonsCell(id) {
+        const $td = $('<td>', { class: 'd-flex gap-1' });
+        $td.append(
+            $('<button>', { class: 'btn btn-sm btn-primary js-edit', 'data-id': id, title: 'Editar' })
+                .append($('<i>', { class: 'fas fa-edit' }))
+        );
+        $td.append(
+            $('<button>', { class: 'btn btn-sm btn-danger js-delete', 'data-id': id, title: 'Deletar' })
+                .append($('<i>', { class: 'fas fa-trash' }))
+        );
+        return $td;
+    }
+    
     //
 
     async view() {
@@ -206,9 +185,8 @@ export class DomainView {
         //Render.FiltersFromCatalog(this.info);
         //Render.TableFromCatalog(this.info, this.moduleKey);
 
-        const $pageBody = $('#page-body').empty();
         this.Filtros();
-        this.Grid($pageBody);
+        this.Grid();
 
         // AQUI...
     }    
