@@ -253,3 +253,32 @@ export class Especialidade extends BaseEnum {
     }
 }
 Object.freeze(Especialidade.All);
+
+
+
+
+export class TipoRegistro extends BaseEnum {
+    static All = [];
+
+    static NaoInformada     = new TipoRegistro('NaoInformado','Não Informado', true);
+    static Erro             = new TipoRegistro('Erro','Erro');
+    static Backend          = new TipoRegistro('Backend','Backend');
+    static Frontend         = new TipoRegistro('Frontend','Frontend');
+    static Qualidade        = new TipoRegistro('Qualidade','Qualidade');
+    static Desempenho       = new TipoRegistro('Desempenho','Desempenho');
+    static Compliance       = new TipoRegistro('Compliance','Compliance');
+
+    constructor(key, value, isDefault = false) {
+        super();
+        this.Key = key;
+        this.Value = value;
+        this.JQuery = `#${key}`;
+        this.IsDefault = isDefault;
+
+        if (!TipoRegistro.All.some(x => x.Key === key)) {
+            TipoRegistro.All.push(this);
+        }
+        Object.freeze(this);
+    }
+}
+Object.freeze(TipoRegistro.All);
