@@ -42,8 +42,8 @@ export class TipoAcesso extends Enum.BaseEnum {
         this.Value = value;
         this.JQuery = `#${key}`;
 
-        if ( TipoAcesso.All.some(x => x.Key === key)) {
-         TipoAcesso.All.push(this);
+        if (!TipoAcesso.All.some(x => x.Key === key)) {
+            TipoAcesso.All.push(this);
         }
         Object.freeze(this);
     }
@@ -227,7 +227,7 @@ export class Catalog {          // DatabaseTable, dataSource
         [ Metadata.Hierarquia, Binding.Sigla, Binding.NomeUnidade, Binding.FuncaoUnidade, Binding.IbgeId ]);
 
     static UsuariosServidores = new Catalog(crypto.randomUUID(), 'UsuariosServidores', '0.1', 'Armazenar dados de servidores',
-        [ Binding.Unidade, Binding.NomeServidor, Binding.FuncaoUsuario, Binding.CargoUsuario, Binding.Especialidade, Binding.Login, Binding.Matricula, Binding.CPF ]);
+        [ Binding.Unidade, Binding.NomeServidor, Binding.FuncaoUsuario, Binding.CargoUsuario, Binding.Especialidade, Binding.Login, Binding.Matricula, Binding.CpfServidor ]);
 };
 
 export class DomainInfo {           

@@ -39,19 +39,26 @@ export class Orchestrator {
     }  
       
     filters() {
-        if (this.info.Key === DomainInfo.Unidades.Key) {
-            return {
-                funcao         : $('#cmbFilterFuncao').val() || null
-            };
-        }
-        if (this.info.Key === DomainInfo.UsuariosServidores.Key) {
-            return {
-                unidadeID      : $('#cmbFilterUnidade').val() || null,
-                especialidade  : $('#cmbFilterEspecialidade').val() || null,
-                funcao         : $('#cmbFilterFuncao').val() || null,
-                cargo          : $('#cmbFilterCargo').val() || null
-            };
-        }
+        const campos = this.info.Catalog.Bindings.filter(x => x.Lookup || x.LookupId);
+        const filtro = campos.reduce((acc, binding) => {
+            acc[binding.DtoId] = $(binding.UiFilterKey).val() || null;
+            return acc;
+        }, {});
+        console.log(filtro);
+        
+//       if (this.info.Key === DomainInfo.Unidades.Key) {
+//           return {
+//               funcao         : $('#cmbFilterFuncao').val() || null
+//           };
+//       }
+//       if (this.info.Key === DomainInfo.UsuariosServidores.Key) {
+//           return {
+//               unidadeID      : $('#cmbFilterUnidade').val() || null,
+//               especialidade  : $('#cmbFilterEspecialidade').val() || null,
+//               funcao         : $('#cmbFilterFuncao').val() || null,
+//               cargo          : $('#cmbFilterCargo').val() || null
+//           };
+//        }
         return null;
     }
 
