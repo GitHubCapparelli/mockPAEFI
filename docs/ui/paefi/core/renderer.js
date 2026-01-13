@@ -14,16 +14,6 @@ export function PageStructure() {
   $('#app-shell').append($appHeader, $appBody);
 }
 
-export function DomainStructure(moduleKey) {
-  const $pageBody = $('#page-body').empty();
-  if (moduleKey == Modulo.Admin.Key) {
-    $pageBody.append(
-      divFilters(),
-      datagrid()
-    );
-  }
-}
-
 function navbar() {
   // --- SIDS Top Navbar ---
   return $('<div>', { id: 'top-navbar', class: 'top-navbar d-flex justify-content-between align-items-center' }).append(

@@ -20,8 +20,6 @@ function init() {
   resolvecurrentDomain();
 
   Render.PageStructure();
-  //Render.DomainStructure(currentModule.Key);
-
   $(Elemento.TextoLogin.JQuery).text(currentUser.login);
   $(Elemento.TextoTituloPagina.JQuery).text(currentModule.Value);
   $(Elemento.TextoOpcaoAtual.JQuery).text(currentDomain.Value);
@@ -59,13 +57,14 @@ function SetDomain(domainKey) {
 
   currentDomain = Dominio.FromKey(domainKey);
   Local.Set(LastDomainKey, currentDomain.Key);
-  
-  //Render.DomainStructure(currentModule.Key);
+
   initCurrentDomain();
 }
 
 async function initCurrentDomain() {
+  $('#page-body').empty();
   $(Elemento.TextoOpcaoAtual.JQuery).text(currentDomain.Value);
+  
   await Orchestrator.Create(currentModule.Key, currentDomain.Key);
 }
 
