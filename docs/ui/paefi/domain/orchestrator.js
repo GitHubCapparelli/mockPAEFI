@@ -45,7 +45,8 @@ export class Orchestrator {
             return acc;
         }, {});
         console.log(filtro);
-        
+        return filtro;
+              
 //       if (this.info.Key === DomainInfo.Unidades.Key) {
 //           return {
 //               funcao         : $('#cmbFilterFuncao').val() || null
@@ -59,7 +60,7 @@ export class Orchestrator {
 //               cargo          : $('#cmbFilterCargo').val() || null
 //           };
 //        }
-        return null;
+//        return null;
     }
 
     modalRequested(mode, data, id = null) {
