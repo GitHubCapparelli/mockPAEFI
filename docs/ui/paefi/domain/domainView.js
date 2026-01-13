@@ -157,11 +157,12 @@ export class DomainView {
     resolveCellValue(dto, campo) {
         if (campo.LookupId) {
             const  row = this.lookups[campo.LookupId]?.find(x => x.id === dto[campo.DtoId]);
-            return row[campo.DisplayId] ?? '---';
+            return row[campo.DisplayId] ?? '';
         }
 
         if (campo.Lookup) {
-            return campo.Lookup.ValueFromKey(dto[campo.DtoId]) ?? '';
+            const  x = campo.Lookup.FromKey(dto[campo.DtoId]);
+            return x.IsDefault ? '' : x.Value;
         }
 
         return dto[campo.DtoId] ?? '';

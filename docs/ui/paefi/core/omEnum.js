@@ -125,7 +125,7 @@ Object.freeze(Dominio.All);
 export class FuncaoUnidade extends BaseEnum {
     static All = [];
 
-    static NaoInformada        = new FuncaoUnidade('NaoInformada','Não Informada');
+    static NaoInformada        = new FuncaoUnidade('NaoInformada','Não Informada', true);
     static Direcao             = new FuncaoUnidade('Direcao','Direção');
     static Coordenacao         = new FuncaoUnidade('Coordenacao','Coordenação');
     static Gestao              = new FuncaoUnidade('Gestao','Gestão');
@@ -133,11 +133,12 @@ export class FuncaoUnidade extends BaseEnum {
     static AssistenciaSocial   = new FuncaoUnidade('AssistenciaSocial','Assistencia Social');
     static Outra               = new FuncaoUnidade('Outra','Outra');
 
-    constructor(key, value) {
+    constructor(key, value, isDefault = false) {
         super();
         this.Key = key;
         this.Value = value;
         this.JQuery = `#${key}`;
+        this.IsDefault = isDefault;
 
         if (!FuncaoUnidade.All.some(x => x.Key === key)) {
             FuncaoUnidade.All.push(this);
@@ -151,7 +152,7 @@ Object.freeze(FuncaoUnidade.All);
 export class FuncaoUsuario extends BaseEnum {
     static All = [];
 
-    static NaoInformada        = new FuncaoUsuario('NaoInformada','Não Informada');
+    static NaoInformada        = new FuncaoUsuario('NaoInformada','Não Informada', true);
     static Assessor            = new FuncaoUsuario('Assessor','Assessor');
     static AssessorEspecial    = new FuncaoUsuario('AssessorEspecial','Assessor Especial');
     static AssessorTecnico     = new FuncaoUsuario('AssessorTecnico','Assessor Técnico');
@@ -167,11 +168,12 @@ export class FuncaoUsuario extends BaseEnum {
     static SubSecretario       = new FuncaoUsuario('SubSecretario','Sub-Secretário');
     static Outra               = new FuncaoUsuario('Outra','Outra');
 
-    constructor(key, value) {
+    constructor(key, value, isDefault = false) {
         super();
         this.Key = key;
         this.Value = value;
         this.JQuery = `#${key}`;
+        this.IsDefault = isDefault;
 
         if (!FuncaoUsuario.All.some(x => x.Key === key)) {
             FuncaoUsuario.All.push(this);
@@ -185,7 +187,7 @@ Object.freeze(FuncaoUsuario.All);
 export class CargoUsuario extends BaseEnum {
     static All = [];
 
-    static NaoInformado               = new CargoUsuario('NaoInformado','Não Informado');
+    static NaoInformado               = new CargoUsuario('NaoInformado','Não Informado', true);
     static AnalistaPlanejamento       = new CargoUsuario('AnalistaPlanejamento','Analista de Planejamento');
     static AnalistaPoliticasPublicas  = new CargoUsuario('AnalistaPoliticasPublicas','Analista de Políticas Públicas');
     static GestorPoliticasPublicas    = new CargoUsuario('GestorPoliticasPublicas','Gestor de Políticas Públicas');
@@ -195,11 +197,12 @@ export class CargoUsuario extends BaseEnum {
     static Tecnico                    = new CargoUsuario('Tecnico','Técnico');
     static Outro                      = new CargoUsuario('Outro','Outro');
 
-    constructor(key, value) {
+    constructor(key, value, isDefault = false) {
         super();
         this.Key = key;
         this.Value = value;
         this.JQuery = `#${key}`;
+        this.IsDefault = isDefault;
 
         if (!CargoUsuario.All.some(x => x.Key === key)) {
             CargoUsuario.All.push(this);
@@ -213,7 +216,7 @@ Object.freeze(CargoUsuario.All);
 export class Especialidade extends BaseEnum {
     static All = [];
 
-    static NaoInformada           = new Especialidade('NaoInformada','Não Informada');
+    static NaoInformada           = new Especialidade('NaoInformada','Não Informada', true);
     static Administrador          = new Especialidade('Administrador','Administrador');
     static AgenteAdministrativo   = new Especialidade('AgenteAdministrativo','Agente Administrativo');
     static AgenteSocial           = new Especialidade('AgenteSocial','Agente Social');
@@ -234,11 +237,12 @@ export class Especialidade extends BaseEnum {
     static TecnicoEducacional     = new Especialidade('TecnicoEducacional','Técnico Educacional');
     static Outra                  = new Especialidade('Outra','Outra');
 
-    constructor(key, value) {
+    constructor(key, value, isDefault = false) {
         super();
         this.Key = key;
         this.Value = value;
         this.JQuery = `#${key}`;
+        this.IsDefault = isDefault;
 
         if (!Especialidade.All.some(x => x.Key === key)) {
             Especialidade.All.push(this);
