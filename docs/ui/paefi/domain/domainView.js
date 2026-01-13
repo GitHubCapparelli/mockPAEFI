@@ -32,9 +32,20 @@ export class DomainView {
         return this.lookups[name] || [];
     }
 
+    assureCleanDivContainer(divID, parentID) {
+        const $div = $(divID);
+        if ($div.length === 0) {
+            $div = $('<div>', { id: divID.substring(1) });
+            $(parentID).append($div);
+        } else {
+            $div.empty();
+        }
+        return $div;
+    }
+
     Filtros() {
-        const $divFiltros = $('#divFilterOptions').empty();
-        const campos = this.info.Catalog.Bindings.filter(x => x.Lookup || x.LookupId);
+        const $divFiltros = this.assureCleanDivContainer('#divFilterOptions', '#page-body');
+        const campos      = this.info.Catalog.Bindings.filter(x => x.Lookup || x.LookupId);
 
         campos.forEach(c => {
             const filtroId = c.UiFilterKey.startsWith('#') ? c.UiFilterKey.substring(1) : c.UiFilterKey;
@@ -55,8 +66,6 @@ export class DomainView {
                 });
             }
         });
-
-        $('#page-body').append($divFiltros);
     }
 
     Grid() {
@@ -107,8 +116,8 @@ export class DomainView {
             )
         );
 
-        const $container = $('#divdataTable').empty();
-        $container.append($table);
+        const $div = $('#divdataTable').empty();
+        $div.append($table);
     }
 
     Rows(response) {
