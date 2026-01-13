@@ -46,7 +46,7 @@ export class Orchestrator {
         }, {});
         console.log(filtro);
         return filtro;
-              
+//              
 //       if (this.info.Key === DomainInfo.Unidades.Key) {
 //           return {
 //               funcao         : $('#cmbFilterFuncao').val() || null
