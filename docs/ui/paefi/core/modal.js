@@ -1,4 +1,4 @@
-// ui paefi core modal
+// ui paefi core modal 
 
 export class ModalShell {
     constructor(rootSelector = '#modal-root') {
