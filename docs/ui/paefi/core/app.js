@@ -20,7 +20,7 @@ function init() {
   resolvecurrentDomain();
 
   Render.PageStructure();
-  Render.DomainStructure(currentModule.Key);
+  //Render.DomainStructure(currentModule.Key);
 
   $(Elemento.TextoLogin.JQuery).text(currentUser.login);
   $(Elemento.TextoTituloPagina.JQuery).text(currentModule.Value);
