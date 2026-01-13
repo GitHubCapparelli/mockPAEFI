@@ -209,6 +209,5 @@ export const Render = {
   OurDocs,
   Select,
   Enum,
-  Info,
-  AdminRowActions
+  Info
 };
