@@ -178,16 +178,7 @@ export class DomainView {
     }
 
     async viewAdmin() {
-        //this.Filters();
-        //Render.Table(columns);
-
-        //Render.ClearMain();
-        //Render.FiltersFromCatalog(this.info);
-        //Render.TableFromCatalog(this.info, this.moduleKey);
-
         this.Filtros();
-        this.Grid();
-
-        // AQUI...
+        //this.Grid();
     }    
 }

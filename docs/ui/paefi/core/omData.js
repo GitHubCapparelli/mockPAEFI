@@ -250,7 +250,7 @@ export class DomainInfo {
     static Create(key) {
         const instance = DomainInfo.All.find(x => x.Key === key);
         if (!instance) {
-            throw new Error(`[DomainInfo.Create] Não localizado: key '${key}'`);
+            console.warn(`[DomainInfo.Create] Não localizado: key '${key}'`);
         }
         return instance;
     }
