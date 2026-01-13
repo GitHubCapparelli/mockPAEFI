@@ -37,7 +37,7 @@ export class DomainView {
         const campos = this.info.Catalog.Bindings.filter(x => x.Lookup || x.LookupId);
 
         campos.forEach(c => {
-            const filtroId = c.uiFilterKey.startsWith('#') ? c.UiFilterKey.substring(1) : c.UiFilterKey;
+            const filtroId = c.UiFilterKey.startsWith('#') ? c.UiFilterKey.substring(1) : c.UiFilterKey;
             const filtro   = Render.Select(filtroId, c.UiFilterTitle);
             $container.append(filtro);
 
@@ -180,6 +180,6 @@ export class DomainView {
         //Render.TableFromCatalog(this.info, this.moduleKey);
 
         this.Filtros();
-        //... HERE
+        // AQUI...
     }     
 }
