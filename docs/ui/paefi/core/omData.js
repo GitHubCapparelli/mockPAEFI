@@ -118,18 +118,19 @@ export class Metadata {         // fields, attribs (spec)
     }
 
     static Id                  = new Metadata({ key: crypto.randomUUID(), dbColName:'id'            , uiKey:'#id'                , type:'UUID', pfKey:'PK' });
-    static CriadoPor           = new Metadata({ key: crypto.randomUUID(), dbColName:'criadoPorID'   , uiKey:'#txtCriadoPorID'    , uiTitle: 'Criado Por'         , type:'UUID', pfKey:'FK'   , required: true });
-    static AlteradoPor         = new Metadata({ key: crypto.randomUUID(), dbColName:'alteradoPorID' , uiKey:'#txtAlteradoPorID'  , uiTitle: 'Alterado Por'       , type:'UUID', pfKey:'FK'   , required: true });
-    static DeletadoPor         = new Metadata({ key: crypto.randomUUID(), dbColName:'deletadoPorID' , uiKey:'#txtDeletadoPorID'  , uiTitle: 'Deletado Por'       , type:'UUID', pfKey:'FK'   , required: true });
-    static CriadoEm            = new Metadata({ key: crypto.randomUUID(), dbColName:'criadoEm'      , uiKey:'#txtCriadoEm'       , uiTitle: 'Criado Em'          , type:'datetime UTC'       , required: true, defaultValue:'now' });
-    static AlteradoEm          = new Metadata({ key: crypto.randomUUID(), dbColName:'alteradoEm'    , uiKey:'#txtAlteradoEm'     , uiTitle: 'Alterado Em'        , type:'datetime UTC' });
-    static DeletadoEm          = new Metadata({ key: crypto.randomUUID(), dbColName:'deletadoEm'    , uiKey:'#txtDeletadoEm'     , uiTitle: 'Deletado Em'        , type:'datetime UTC' });
-    static ExclusaoFisica      = new Metadata({ key: crypto.randomUUID(), dbColName:'excFisica'     , uiKey:'#chkExcFisica'      , uiTitle: 'Exclusão Física'    , type:'bool' });
+    static CriadoPor           = new Metadata({ key: crypto.randomUUID(), dbColName:'criadoPorID'   , uiKey:'#txtCriadoPorID'    , uiTitle: 'Criado Por'        , type:'UUID', pfKey:'FK'   , required: true });
+    static AlteradoPor         = new Metadata({ key: crypto.randomUUID(), dbColName:'alteradoPorID' , uiKey:'#txtAlteradoPorID'  , uiTitle: 'Alterado Por'      , type:'UUID', pfKey:'FK'   , required: true });
+    static DeletadoPor         = new Metadata({ key: crypto.randomUUID(), dbColName:'deletadoPorID' , uiKey:'#txtDeletadoPorID'  , uiTitle: 'Deletado Por'      , type:'UUID', pfKey:'FK'   , required: true });
+    static CriadoEm            = new Metadata({ key: crypto.randomUUID(), dbColName:'criadoEm'      , uiKey:'#txtCriadoEm'       , uiTitle: 'Criado Em'         , type:'datetime UTC'       , required: true, defaultValue:'now' });
+    static AlteradoEm          = new Metadata({ key: crypto.randomUUID(), dbColName:'alteradoEm'    , uiKey:'#txtAlteradoEm'     , uiTitle: 'Alterado Em'       , type:'datetime UTC' });
+    static DeletadoEm          = new Metadata({ key: crypto.randomUUID(), dbColName:'deletadoEm'    , uiKey:'#txtDeletadoEm'     , uiTitle: 'Deletado Em'       , type:'datetime UTC' });
+    static ExclusaoFisica      = new Metadata({ key: crypto.randomUUID(), dbColName:'excFisica'     , uiKey:'#chkExcFisica'      , uiTitle: 'Exclusão Física'   , type:'bool' });
+    static Justificativa       = new Metadata({ key: crypto.randomUUID(), dbColName:'justificativa' , uiKey:'#txtJustificativa'  , uiTitle: 'Justificativa'     , type:'text' });
     
-    static Nome                = new Metadata({ key: crypto.randomUUID(), dbColName:'nome'          , uiKey:'#txtNome'           , uiTitle: 'Nome'       , minLen: 15 , maxLen: 250 });
-    static Descricao           = new Metadata({ key: crypto.randomUUID(), dbColName:'descricao'     , uiKey:'#txtDescricao'      , uiTitle: 'Descrição'  , minLen: 10 });
-    static Versao              = new Metadata({ key: crypto.randomUUID(), dbColName:'versao'        , uiKey:'#txtVersao'         , uiTitle: 'Versão'     , minLen: 1  , maxLen: 10 });
-    static Finalidade          = new Metadata({ key: crypto.randomUUID(), dbColName:'finalidade'    , uiKey:'#txtFinalidade'     , uiTitle: 'Finalidade' , minLen: 10 , maxLen: 150 });
+    static Nome                = new Metadata({ key: crypto.randomUUID(), dbColName:'nome'          , uiKey:'#txtNome'           , uiTitle: 'Nome'           , minLen: 15 , maxLen: 250 });
+    static Descricao           = new Metadata({ key: crypto.randomUUID(), dbColName:'descricao'     , uiKey:'#txtDescricao'      , uiTitle: 'Descrição'      , minLen: 10 });
+    static Versao              = new Metadata({ key: crypto.randomUUID(), dbColName:'versao'        , uiKey:'#txtVersao'         , uiTitle: 'Versão'         , minLen: 1  , maxLen: 10 });
+    static Finalidade          = new Metadata({ key: crypto.randomUUID(), dbColName:'finalidade'    , uiKey:'#txtFinalidade'     , uiTitle: 'Finalidade'     , minLen: 10 , maxLen: 150 });
     
     static Sigla               = new Metadata({ key: crypto.randomUUID(), dbColName:'sigla'         , uiKey:'#txtSigla'          , uiTitle: 'Unidade'        , minLen: 5 , maxLen: 250, required: true     });
     static IbgeId              = new Metadata({ key: crypto.randomUUID(), dbColName:'ibgeId'        , uiKey:'#txtIbgeId'         , uiTitle: 'IBGE'           , minLen: 11, maxLen: 11 });

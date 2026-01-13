@@ -122,50 +122,39 @@ export class DomainView {
     }
 
     Rows(response) {
-        const tbody   = $('#dataRows').empty();
-        const rows    = response.data;
-
-        const columns = this.info.Catalog.Bindings.filter(x => x.OnGrid);
-
-        if (!rows.length) {
-            tbody.append($('<tr>')
-                 .append($('<td>', { colspan: columns.length + 1, text: 'Nenhum registro' })));
+        const cols = this.info.Catalog.Bindings.filter(x => x.OnGrid);
+        if (!response.data.length) {
+            tbody.append($('<tr>').append($('<td>', { colspan: cols.length + 1, text: 'Nenhum registro' })));
             return;
         }
 
-        rows.forEach(dto => { 
+        const tbody = $('#dataRows').empty();
+        response.data.forEach(dto => { 
             const $tr = $('<tr>');
-
-            columns.forEach(c => {
-                const val = this.resolveCellValue(dto, c);
-                $('<td>', { text: val })
-                    .toggleClass('ellipsis25', c.DtoId === 'nome')
-                    .appendTo($tr);
-            });
+            cols.forEach(c => $tr.append(this.getCell(dto, c)));
 
             if (this.moduleKey === Modulo.Admin.Key) {
-                const actions = this.actionsButtonsCell(dto.id);
-                $tr.append(actions);
+                $tr.append(this.actionsButtonsCell(dto.id));
             }
-
             tbody.append($tr);
         });
-
         Render.Info(response.pagination);
     }
 
-    resolveCellValue(dto, campo) {
+    getCell(dto, campo) {
+        let val = null;
         if (campo.LookupId) {
             const  row = this.lookups[campo.LookupId]?.find(x => x.id === dto[campo.DtoId]);
-            return row[campo.DisplayId] ?? '';
-        }
-
-        if (campo.Lookup) {
+            val = row[campo.DisplayId] ?? '';
+        
+        } else if (campo.Lookup) {
             const  x = campo.Lookup.FromKey(dto[campo.DtoId]);
-            return x.IsDefault ? '' : x.Value;
+            val = x.IsDefault ? '' : x.Value;
+        } else {
+            val = dto[campo.DtoId] ?? '';
         }
-
-        return dto[campo.DtoId] ?? '';
+        const  result = $('<td>', { text: val }).toggleClass('ellipsis25', c.DtoId === 'nome');
+        return result;
     }
 
     actionsButtonsCell(id) {
