@@ -167,7 +167,7 @@ export class ModalMessageBuilder {
 
     renderBody($container) {
         $container.empty();
-        const $message = $('<p>', { class: 'mb-0', text: this.message }));
+        const $message = $('<p>', { class: 'mb-0', text: this.message });
         $container.append($message);
     }
 
