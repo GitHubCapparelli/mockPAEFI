@@ -98,9 +98,7 @@ export class DomainView {
 
     Table() {
         const columns = this.info.Catalog.Bindings.filter(x => x.OnGrid);
-        const header = columns.map(c => 
-//            `<th class="${c.DtoId === 'nome' ? 'ellipsis25' : ''}">${c.UiFieldTitle}</th>`);
-            `<th>${c.UiFieldTitle}</th>`);
+        const header  = columns.map(c => `<th>${c.UiFieldTitle}</th>`);
 
         if (this.moduleKey === Modulo.Admin.Key) {
             header.push('<th>Ações</th>');

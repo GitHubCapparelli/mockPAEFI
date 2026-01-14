@@ -185,7 +185,7 @@ export class Binding {
     static FuncaoUnidade    = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.FuncaoUnidade,    dtoId:'funcao',            uiFieldTitle: 'Função',         uiFilterKey:'#cmbFuncao',           uiFilterTitle:'Todas as Funções',           lookup: Enum.FuncaoUnidade });
     static SiglaUnidade     = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Sigla,            dtoId:'sigla',             uiFieldTitle: 'Sigla' });
     static NomeUnidade      = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Nome.Mandatory(), dtoId:'nome',              uiFieldTitle: 'Nome' });
-    static IbgeId           = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.IbgeId,           dtoId:'ibgeId',            uiFieldTitle: 'IBGE' });
+    static IbgeId           = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.IbgeId,           dtoId:'ibgeId',            uiFieldTitle: 'Cod. IBGE' });
     
     static NomeServidor     = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Nome.Mandatory(), dtoId:'nome',              uiFieldTitle: 'Nome' });
     static Unidade          = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Especialidade,    dtoId:'unidadeID',         uiFieldTitle: 'Unidade',        uiFilterKey:'#cmbUnidades',         uiFilterTitle:'Todas as Unidades',          lookupId:'unidades',           displayId: 'sigla' });
