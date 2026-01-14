@@ -141,7 +141,7 @@ export class DomainView {
         Render.Info(response.pagination);
     }
 
-    getCell(dto, campo) {
+    getCell(dto, campo) { 
         let val = null;
         if (campo.LookupId) {
             const  row = this.lookups[campo.LookupId]?.find(x => x.id === dto[campo.DtoId]);
