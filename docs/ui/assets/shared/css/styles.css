@@ -242,7 +242,7 @@ table td {
 }
 
 .modal-body {
-    height: calc(100vh - 100px);
+    height: calc(100vh - 200px);
     overflow-y: auto;
 }
 
@@ -494,3 +494,21 @@ table td {
 }
 
 /* ---- */
+
+/* Hide scrollbars for the entire page */
+html,
+body {
+    /* For Modern Chrome, Edge, and Firefox (Standardized) */
+    scrollbar-width: none;
+
+    /* For Safari and older WebKit-based browsers */
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* For Legacy Internet Explorer and non-Chromium Edge */
+    -ms-overflow-style: none;
+
+    /* Ensure scrolling is still enabled */
+    overflow: auto;
+}
