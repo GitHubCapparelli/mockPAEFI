@@ -107,7 +107,7 @@ export class DomainView {
             header.push('<th>Ações</th>');
         }
 
-        const $table  = $('<table>', { class: 'table table-striped table-hover' }).append(
+        const $table  = $('<table>', { class: 'w-100 table table-striped table-hover' }).append(
             $('<thead>').append(header.join('')),
             $('<tbody>', { id: 'dataRows' }).append(
                 $('<tr>').append($('<td>', {

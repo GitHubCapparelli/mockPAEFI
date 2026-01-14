@@ -393,7 +393,7 @@ table td {
 }
 
 .ellipsis25 {
-    max-width: 25%;
+    width: 25%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
