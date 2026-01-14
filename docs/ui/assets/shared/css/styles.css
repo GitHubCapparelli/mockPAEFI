@@ -399,13 +399,8 @@ table td {
 }
 
 .leftSidebar * {
-  color: var(--bs-body-color);  
   background-color: transparent !important;
-  /*background-color: var(--bs-tertiary-bg);*/
   border: none;
-}
-.leftSidebar a:hover {
-    color: var(--bs-body-color);
 }
 
 /*btnSidebarToggle*/
@@ -461,4 +456,9 @@ table td {
 *::-webkit-scrollbar {
     width: 0 !important;
     height: 0 !important;
+}
+
+.btn-outline-primary,
+.btn-outline-primary:hover {
+    color: var(--bs-body-color);
 }

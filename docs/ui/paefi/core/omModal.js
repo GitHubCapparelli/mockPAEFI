@@ -48,6 +48,7 @@ export class ModalShell {
 
         this.$modal = $modal;
         $modal.modal({ backdrop: 'static', keyboard: false });
+        $modal.modal('show');
     }
 
     close() {
