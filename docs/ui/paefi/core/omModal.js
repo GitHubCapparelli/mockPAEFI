@@ -1,7 +1,6 @@
 // ui paefi core modal 
 
-import { TipoAcesso, TipoCriptografia } from "./omData";
-import * as Enum from './omEnum.js';
+import { TipoAcesso, TipoCriptografia } from "./omData.js";
 
 export class ModalShell {
     constructor(rootSelector = '#modal-root') {
