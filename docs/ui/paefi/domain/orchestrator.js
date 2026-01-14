@@ -11,7 +11,7 @@ import { FuncaoUsuario, CargoUsuario, Especialidade,
 import { DomainInfo }                    from '../core/omData.js';
 import { DomainView }                    from './domainView.js';
 import { ApiGate }                       from './appGate.js';
-import { ModalShell, ModalFormBuilder }  from '../core/modal.js';
+import { ModalShell, ModalFormBuilder, ModalMessageBuilder }  from '../core/omModal.js';
 
 export class Orchestrator {
   
@@ -114,7 +114,7 @@ export class Orchestrator {
                 message : 'Deseja realmente excluir este registro?'
             });
 
-            const result = await modal.open(builder);
+            const result = await this.modal.open(builder);
             if (result.action === 'confirm' && result.value) {
                 await this.gate.Delete(id);
             }

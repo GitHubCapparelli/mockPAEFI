@@ -193,6 +193,7 @@ table td {
 
 .table td:last-child,
 .table th:last-child {
+    width: 1%;
     text-align: center;
     white-space: nowrap;
 }

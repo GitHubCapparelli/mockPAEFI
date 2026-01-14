@@ -1,7 +1,7 @@
 // ui.paefi.core.app
 
 import { Render }                    from './renderer.js';
-import { LeftSidebar }               from './leftSidebar.js';
+import { LeftSidebar }               from './sidebarLeft.js';
 import { Modulo, Dominio, Elemento } from './omEnum.js';
 import { Session, CurrentUserKey,
          Local, LastModuleKey, LastDomainKey

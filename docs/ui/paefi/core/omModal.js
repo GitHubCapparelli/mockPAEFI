@@ -162,3 +162,50 @@ export class ModalFormBuilder {
 }
 
 
+export class ModalMessageBuilder {
+
+    constructor({ title, message, confirmText = 'Confirmar', cancelText = 'Cancelar' }) {
+        this.title        = title;
+        this.message      = message;
+        this.confirmText  = confirmText;
+        this.cancelText   = cancelText;
+    }
+
+    getTitle() {
+        return this.title;
+    }
+
+    buildBody() {
+        const $body = $('<div>', { class: 'modal-body' });
+
+        $body.append(
+            $('<p>', {
+                class: 'mb-0',
+                text: this.message
+            })
+        );
+
+        return $body;
+    }
+
+    buildFooter({ resolve }) {
+        const $footer = $('<div>', { class: 'modal-footer' });
+
+        const $btnCancel = $('<button>', {
+            class: 'btn btn-secondary',
+            text: this.cancelText
+        }).on('click', () => {
+            resolve({ action: 'confirm', value: false });
+        });
+
+        const $btnConfirm = $('<button>', {
+            class: 'btn btn-danger',
+            text: this.confirmText
+        }).on('click', () => {
+            resolve({ action: 'confirm', value: true });
+        });
+
+        $footer.append($btnCancel, $btnConfirm);
+        return $footer;
+    }
+}
