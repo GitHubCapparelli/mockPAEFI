@@ -2,20 +2,16 @@
 
 import { Render }       from '../core/renderer.js';
 import { DomainInfo }   from '../core/omData.js';
-import { Modal }        from '../core/omClass.js';
 import { FuncaoUsuario, CargoUsuario, Especialidade, Modulo } from '../core/omEnum.js'; 
 
 export class DomainView {
-    constructor(moduleKey, info, namedLists, fnOnModalSubmited) {
+    constructor(moduleKey, info, namedLists) { //, fnOnModalSubmited) {
         this.moduleKey  = moduleKey;
         this.info       = info;
         this.lookups    = namedLists; 
-
-        this.addModal   = new Modal('add-modal',  `Novo ${info.Name}`,      fnOnModalSubmited);
-        this.editModal  = new Modal('edit-modal', `Editando ${info.Name}`,  fnOnModalSubmited);
     }
 
-    static async Create(moduleKey, info, fnOnModalSubmited) {
+    static async Create(moduleKey, info) { //, fnOnModalSubmited) {
         const apiTasks   = Object.entries(info.Lookups).map(async ([key, api]) => {
             const data   = await api.GetAll(); 
             return [key, data];
@@ -23,7 +19,7 @@ export class DomainView {
         const response   = await Promise.all(apiTasks);
         const namedLists = Object.fromEntries(response);
 
-        const instance   = new DomainView(moduleKey, info, namedLists, fnOnModalSubmited);
+        const instance   = new DomainView(moduleKey, info, namedLists); //, fnOnModalSubmited);
         instance.view();
         return instance;
     }  

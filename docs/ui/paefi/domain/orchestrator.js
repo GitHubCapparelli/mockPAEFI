@@ -27,7 +27,7 @@ export class Orchestrator {
         this.info = DomainInfo.Create(domainKey);
 
         this.modalRequested = this.modalRequested.bind(this);
-        this.render         = await DomainView.Create(moduleKey, this.info, this.modalRequested); 
+        this.render         = await DomainView.Create(moduleKey, this.info); //, this.modalRequested); 
 
         this.gate = new ApiGate(this.info, (x) => this.render.Rows(x), () => this.filters());
         await this.gate.Read();
