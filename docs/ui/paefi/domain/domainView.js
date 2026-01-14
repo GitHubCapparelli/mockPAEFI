@@ -153,7 +153,7 @@ export class DomainView {
         } else {
             val = dto[campo.DtoId] ?? '';
         }
-        const  result = $('<td>', { text: val }).toggleClass('ellipsis25', c.DtoId === 'nome');
+        const  result = $('<td>', { text: val }).toggleClass('ellipsis25', campo.DtoId === 'nome');
         return result;
     }
 
