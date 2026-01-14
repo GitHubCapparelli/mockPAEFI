@@ -5,7 +5,7 @@ import { QueryEngine, CommandEngine }  from '../core/omClass.js';
 export class ApiGate {
     constructor(info, fnRows, fnGetFilters) {
         this.query      = new QueryEngine(info.API, fnRows);
-        this.command    = new CommandEngine(info.API, () => this.query.loadData(fnGetFilters()));
+        this.command    = new CommandEngine(info.API, () => this.query.GetPaginated(fnGetFilters()));
     }
 
     async Create(data) {  
