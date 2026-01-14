@@ -25,20 +25,21 @@ export class ModalShell {
     #render(builder) {
         this.$root.empty();
 
-        const $modal = $('<div>', { class: 'modal fade', tabindex: -1 });
-        const $dialog = $('<div>', { class: 'modal-dialog modal-lg' });
+        this.$cancel   = $('<button>', { class: 'btn btn-secondary', text: 'Cancelar',
+            'data-bs-dismiss': 'modal' });
+
+        const $modal   = $('<div>', { class: 'modal fade', tabindex: -1 });
+        const $dialog  = $('<div>', { class: 'modal-dialog modal-lg' });
         const $content = $('<div>', { class: 'modal-content' });
 
-        const $header = $('<div>', { class: 'modal-header' })
+        const $header  = $('<div>', { class: 'modal-header' })
             .append($('<h5>', { class: 'modal-title', text: builder.title }));
 
-        const $body = $('<div>', { class: 'modal-body' });
+        const $body    = $('<div>', { class: 'modal-body' });
         builder.renderBody($body);
 
-        this.$cancel  = $('<button>', { class: 'btn btn-secondary', text: 'Cancelar',
-            'data-bs-dismiss': 'modal' });
-        const $footer = $('<div>', { class: 'modal-footer' });
-        builder.renderFooter($footer);
+        const $footer  = $('<div>', { class: 'modal-footer' });
+        builder.renderFooter($footer, this.$cancel);
 
         $content.append($header, $body, $footer);
         $dialog.append($content);
@@ -112,9 +113,9 @@ export class ModalFormBuilder {
         return $group.append($label, $control);
     }
 
-    renderFooter($container) {
+    renderFooter($container, $btnCancel) {
         const $btnSave = $('<button>', { class: 'btn btn-primary', text: 'Salvar' });
-        $container.append(this.$cancel, $btnSave);
+        $container.append($btnCancel, $btnSave);
     }
 
     /* Data collection & diff */
@@ -169,10 +170,10 @@ export class ModalMessageBuilder {
         $container.append($body);
     }
 
-    renderFooter($container) {
+    renderFooter($container, $btnCancel) {
         const btnClass    = this.danger ? 'btn btn-danger' : 'btn btn-primary';
         const $btnConfirm = $('<button>', { class: btnClass, text: 'Confirmar' });
-        $container.append(this.$cancel, $btnConfirm);
+        $container.append($btnCancel, $btnConfirm);
     }
 
     /* Modal contract */
