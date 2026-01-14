@@ -14,13 +14,13 @@ import { ApiGate }                       from './appGate.js';
 import { ModalShell, ModalFormBuilder, ModalMessageBuilder }  from '../core/omModal.js';
 
 export class Orchestrator {
+    static NS = '.orch-domain';
   
     constructor()   {
         this.gate       = null;
         this.info       = null;
         this.render     = null;  
         this.modal      = null; 
-        this.ns         = `.orch-${crypto.randomUUID()}`;
     }
 
     async init(moduleKey, domainKey) {
@@ -63,30 +63,30 @@ export class Orchestrator {
     }
 
     wireAdminEvents() {
-        $(document).off(this.ns);
-        $('#btnAddNew').off(this.ns);
-        $('#btnClearFilter').off(this.ns);
-        $('#navControls').off(this.ns);
+        $(document).off(Orchestrator.NS);
+        $('#btnAddNew').off(Orchestrator.NS);
+        $('#btnClearFilter').off(Orchestrator.NS);
+        $('#navControls').off(Orchestrator.NS);
 
         // filters
-        $(document).on(`change${this.ns}`, '.filters-bar select', async () => {
+        $(document).on(`change${Orchestrator.NS}`, '.filters-bar select', async () => {
            await this.gate.Read(this.filters());
         });
 
-        $('#btnClearFilter').on(`click${this.ns}`, async () => {
+        $('#btnClearFilter').on(`click${Orchestrator.NS}`, async () => {
             $('.filters-bar select').val('');
             await this.gate.Clear();
         });
 
-        $('#navControls').on(`click${this.ns}`, 'a.page-link', async e => {
+        $('#navControls').on(`click${Orchestrator.NS}`, 'a.page-link', async e => {
             const page = $(e.currentTarget).data('page');
             await this.gate.ReadPage(e, page);
         });
 
         // modals
-        $('#btnAddNew').on(`click${this.ns}`,           async e => await this.onCreate_clicked(e));
-        $(document).on(`click${this.ns}`, '.js-edit',   async e => await this.onUpdate_clicked(e));
-        $(document).on(`click${this.ns}`, '.js-delete', async e => await this.onDelete_clicked(e));
+        $('#btnAddNew').on(`click${Orchestrator.NS}`,           async e => await this.onCreate_clicked(e));
+        $(document).on(`click${Orchestrator.NS}`, '.js-edit',   async e => await this.onUpdate_clicked(e));
+        $(document).on(`click${Orchestrator.NS}`, '.js-delete', async e => await this.onDelete_clicked(e));
     }
 
 //    wireAdminEvents() {
