@@ -126,7 +126,7 @@ export class Orchestrator {
 
         const builder = new ModalMessageBuilder({
             title: title,
-            message: 'Deseja realmente excluir este registro.'
+            message: 'Deseja realmente excluir este registro ?'
         });
 
         const result = await this.modal.open(builder);

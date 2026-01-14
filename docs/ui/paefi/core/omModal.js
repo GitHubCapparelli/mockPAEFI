@@ -47,7 +47,7 @@ export class ModalShell {
         this.$root.append($modal);
 
         this.$modal = $modal;
-        $modal.modal('show');
+        $modal.modal({ backdrop: 'static', keyboard: false });
     }
 
     close() {
@@ -58,12 +58,12 @@ export class ModalShell {
 export class ModalFormBuilder {
 
     constructor({ title, catalog, dto = null }) {
-        this.title = title;
-        this.catalog = catalog;
-        this.dto = dto ?? {};
-        this.original = structuredClone(this.dto);
-        this.bindings = catalog.Bindings;
-        this.controls = {};
+        this.title      = title;
+        this.catalog    = catalog;
+        this.dto        = dto ?? {};
+        this.original   = structuredClone(this.dto);
+        this.bindings   = catalog.Bindings;
+        this.controls   = {};
     }
 
     /* Rendering */
@@ -73,50 +73,49 @@ export class ModalFormBuilder {
             const $field = this.#renderField(binding);
             $container.append($field);
         });
+
+        Object.values(this.controls).forEach($el => {
+            $el.on('input change', () => {
+                this.$btnSave.prop('disabled', !(this.isValid() && this.isDirty()));
+            });
+        });
     }
 
     #renderField(binding) {
-        const $group = $('<div>', { class: 'mb-3' });
+        const $group = $('<div>',   { class: 'mb-3' });
 
-        const $label = $('<label>', {
-            class: 'form-label',
-            text: binding.UiFieldTitle
-        });
+        const $labelRow = $('<div>', { class: 'd-flex justify-content-between align-items-center' });
+        const $label    = $('<label>', { class: 'form-label mb-0', text: binding.UiFieldTitle });
+        const meta      = [];
+
+        if (binding.Required)  meta.push('obrigatório');
+        if (binding.MaxLength) meta.push(`máx ${binding.MaxLength}`);
+
+        const $meta = $('<small>', { class: 'text-muted', text: meta.join(' · ') });
+        $labelRow.append($label, $meta);
 
         let $control;
-
         if (binding.Lookup) {
             $control = $('<select>', { class: 'form-select' });
 
             binding.Lookup.All.forEach(item => {
-                $control.append(
-                    $('<option>', {
-                        value: item.Key,
-                        text: item.Value
-                    })
-                );
+                $control.append( $('<option>', { value: item.Key, text: item.Value }));
             });
 
         } else {
-            $control = $('<input>', {
-                class: 'form-control',
-                type: 'text'
-            });
+            $control = $('<input>', { class: 'form-control', type: 'text' });
         }
 
         const value = this.dto[binding.DtoId];
-        if (value !== undefined && value !== null) {
-            $control.val(value);
-        }
+        if (value !== undefined && value !== null) { $control.val(value);}
 
         this.controls[binding.DtoId] = $control;
-
-        return $group.append($label, $control);
+        return $group.append($labelRow, $control);
     }
 
     renderFooter($container, $btnCancel) {
-        const $btnSave = $('<button>', { class: 'btn btn-primary', text: 'Salvar' });
-        $container.append($btnCancel, $btnSave);
+        this.$btnSave = $('<button>', { class: 'btn btn-primary', text: 'Salvar', disabled: true });
+        $container.append($btnCancel, this.$btnSave);
     }
 
     /* Data collection & diff */
@@ -144,6 +143,18 @@ export class ModalFormBuilder {
         return String(a).trim() === String(b).trim();
     }
 
+    isDirty() {
+        return Object.keys(this.diff()).length > 0;
+    }
+
+    isValid() {
+        return this.bindings.every(b => {
+            if (!b.Required) return true;
+            const val = this.controls[b.DtoId]?.val();
+            return val !== null && val !== '';
+        });
+    }
+
     /* Modal contract */
     async result() {
         const dirty = this.diff();
@@ -156,7 +167,6 @@ export class ModalFormBuilder {
     }
 }
 
-
 export class ModalMessageBuilder {
 
     constructor({ title, message, danger = false }) {
@@ -166,8 +176,8 @@ export class ModalMessageBuilder {
     }
 
     renderBody($container) {
-        $container.empty();
-        const $message = $('<p>', { class: 'mb-0', text: this.message });
+        $container.empty().addClass('d-flex align-items-center justify-content-center text-center');
+        const $message = $('<p>', { class: 'mb-0 fs-5', text: this.message });
         $container.append($message);
     }
 

@@ -399,7 +399,9 @@ table td {
 }
 
 .leftSidebar * {
-  background-color: transparent !important;
+  /*background-color: transparent !important;*/
+  color: var(--bs-body-color);  
+  background-color: var(--bs-tertiary-bg);
   border: none;
 }
 
