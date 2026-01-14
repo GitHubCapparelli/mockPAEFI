@@ -1,16 +1,8 @@
 // ui paefi domain orchestrator //
 
-import { Render }                             from '../core/renderer.js';
-import { QueryEngine, CommandEngine, Modal }  from '../core/omClass.js';
-import { UnidadesAPI }                        from '../../../services/api/unidadesAPI.js';
-import { UsuariosServidoresAPI }              from '../../../services/api/usuariosServidoresAPI.js';
-import { FuncaoUsuario, CargoUsuario, Especialidade,
-         Dominio, Modulo 
-       } from '../core/omEnum.js';
-
-import { DomainInfo }                    from '../core/omData.js';
-import { DomainView }                    from './domainView.js';
-import { ApiGate }                       from './appGate.js';
+import { DomainInfo }                                         from '../core/omData.js';
+import { DomainView }                                         from './domainView.js';
+import { ApiGate }                                            from './appGate.js';
 import { ModalShell, ModalFormBuilder, ModalMessageBuilder }  from '../core/omModal.js';
 
 export class Orchestrator {
