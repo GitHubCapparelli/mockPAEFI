@@ -458,7 +458,9 @@ table td {
     height: 0 !important;
 }
 
-.btn-outline-primary,
+.btn-outline-primary {
+    color: var(--bs-primary);
+}
 .btn-outline-primary:hover {
-    color: var(--bs-body-color);
+    color: var(--bs-secondary);
 }

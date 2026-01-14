@@ -86,11 +86,11 @@ export class ModalFormBuilder {
         const $group = $('<div>',   { class: 'mb-3' });
 
         const $labelRow = $('<div>', { class: 'd-flex justify-content-between align-items-center' });
-        const $label    = $('<label>', { class: 'form-label mb-0', text: binding.UiFieldTitle });
+        const $label    = $('<label>', { class: 'form-label mb-1', text: binding.UiFieldTitle });
         const meta      = [];
 
-        if (binding.Required)  meta.push('obrigatório');
-        if (binding.MaxLength) meta.push(`máx ${binding.MaxLength}`);
+        if (binding.DbInfo.Required)  meta.push('obrigatório');
+        if (binding.DbInfo.MaxLength) meta.push(`máx ${binding.MaxLength}`);
 
         const $meta = $('<small>', { class: 'text-muted', text: meta.join(' · ') });
         $labelRow.append($label, $meta);
