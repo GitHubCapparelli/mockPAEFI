@@ -112,7 +112,7 @@ export class Orchestrator {
 
         await this.gate.Update(id, result.payload);
     }
-    
+
     async onDelete_clicked(e) {
         e.preventDefault();
         const id = $(e.currentTarget).data('id');
@@ -126,7 +126,7 @@ export class Orchestrator {
 
         const builder = new ModalMessageBuilder({
             title: title,
-            message: 'Deseja realmente excluir este registro ?'
+            message: 'Deseja realmente excluir este registro.'
         });
 
         const result = await this.modal.open(builder);
