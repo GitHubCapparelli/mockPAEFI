@@ -404,7 +404,7 @@ table td {
     background-color: var(--bs-tertiary-bg);
 }
 
-.ellipsis25 {
+.ellipsis25 { 
     max-width: 25%;
     white-space: nowrap;
     overflow: hidden;
