@@ -104,7 +104,7 @@ export function CoreAPI({
     ensureInitialized();
 
     const data = InMemory.GetAll(entity);
-    const dto  = createDTO(rawData);
+    const dto  = dto(rawData);
 
     if (validateCreate) {
       validateCreate(dto, data);
