@@ -429,7 +429,7 @@ table td {
 }
 
 .col-actions {
-    width: 1%;
+    width: auto;
     white-space: nowrap;
     text-align: center;
 }

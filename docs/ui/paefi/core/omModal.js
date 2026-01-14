@@ -35,15 +35,10 @@ export class ModalShell {
         const $body = $('<div>', { class: 'modal-body' });
         builder.renderBody($body);
 
+        this.$cancel  = $('<button>', { class: 'btn btn-secondary', text: 'Cancelar',
+            'data-bs-dismiss': 'modal' });
         const $footer = $('<div>', { class: 'modal-footer' });
-        this.$confirm = builder.renderActionButtons();
-        this.$cancel = $('<button>', {
-            class: 'btn btn-secondary',
-            text: 'Cancelar',
-            'data-bs-dismiss': 'modal'
-        });
-
-        $footer.append(this.$cancel, this.$confirm);
+        builder.renderFooter($footer);
 
         $content.append($header, $body, $footer);
         $dialog.append($content);
@@ -117,11 +112,9 @@ export class ModalFormBuilder {
         return $group.append($label, $control);
     }
 
-    renderActionButtons() {
-        return $('<button>', {
-            class: 'btn btn-primary',
-            text: 'Salvar'
-        });
+    renderFooter($container) {
+        const $btnSave = $('<button>', { class: 'btn btn-primary', text: 'Salvar' });
+        $container.append(this.$cancel, $btnSave);
     }
 
     /* Data collection & diff */
@@ -170,15 +163,16 @@ export class ModalMessageBuilder {
         this.danger     = danger;
     }
 
-    renderBody() {
+    renderBody($container) {
         const $body = $('<div>', { class: 'modal-body' });
         $body.append($('<p>', { class: 'mb-0', text: this.message }));
-        return $body;
+        $container.append($body);
     }
 
-    renderActionButtons() {
-        const btnClass = this.danger ? 'btn btn-danger' : 'btn btn-primary';
-        return $('<button>', { class: btnClass, text: 'Confirmar' });
+    renderFooter($container) {
+        const btnClass    = this.danger ? 'btn btn-danger' : 'btn btn-primary';
+        const $btnConfirm = $('<button>', { class: btnClass, text: 'Confirmar' });
+        $container.append(this.$cancel, $btnConfirm);
     }
 
     /* Modal contract */
