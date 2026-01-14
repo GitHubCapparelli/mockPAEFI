@@ -459,8 +459,8 @@ table td {
 }
 
 .btn-outline-primary {
-    color: var(--bs-primary);
+    color: var(--bs-secondary);
 }
 .btn-outline-primary:hover {
-    color: var(--bs-secondary);
+    color: var(--bs-primary);
 }

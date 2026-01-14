@@ -47,7 +47,7 @@ export class ModalShell {
         this.$root.append($modal);
 
         this.$modal = $modal;
-        $modal.modal({ backdrop: 'static', keyboard: false });
+        $modal.modal({ backdrop: 'static' }); //, keyboard: false });
         $modal.modal('show');
     }
 
@@ -90,7 +90,7 @@ export class ModalFormBuilder {
         const meta      = [];
 
         if (binding.DbInfo.Required)  meta.push('obrigatório');
-        if (binding.DbInfo.MaxLength) meta.push(`máx ${binding.MaxLength}`);
+        if (binding.DbInfo.MaxLength) meta.push(`máx ${binding.DbInfo.MaxLength}`);
 
         const $meta = $('<small>', { class: 'text-muted', text: meta.join(' · ') });
         $labelRow.append($label, $meta);
