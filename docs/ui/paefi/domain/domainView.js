@@ -102,12 +102,14 @@ export class DomainView {
 
     Table() {
         const columns = this.info.Catalog.Bindings.filter(x => x.OnGrid);
-        const header  = columns.map(c => `<th>${c.UiFieldTitle}</th>`);
+        const header = columns.map(c => 
+            `<th class="${c.DtoId === 'nome' ? 'ellipsis25' : ''}">${c.UiFieldTitle}</th>`);
+
         if (this.moduleKey === Modulo.Admin.Key) {
             header.push('<th>Ações</th>');
         }
 
-        const $table  = $('<table>', { class: 'w-100 table table-striped table-hover' }).append(
+        const $table  = $('<table>', { class: 'table table-striped table-hover' }).append(
             $('<thead>').append(header.join('')),
             $('<tbody>', { id: 'dataRows' }).append(
                 $('<tr>').append($('<td>', {

@@ -165,12 +165,23 @@ body {
 table {
     width: 100%;
     margin-bottom: 1.5rem;
+    table-layout: fixed;
 }
 
 table th {
     background-color: var(--bs-tertiary-bg);
     font-weight: 600;
+}
+
+/*.col-nome {
+    width: 25%;
+}*/
+
+td.ellipsis25 {
+    max-width: 100%;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 table th,
@@ -393,7 +404,7 @@ table td {
 }
 
 .ellipsis25 {
-    width: 25%;
+    max-width: 25%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
