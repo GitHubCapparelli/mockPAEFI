@@ -179,7 +179,7 @@ export class ModalMessageBuilder {
         }
         else {
             $btnCancel.text('OK');
-            $btnCancel.class('btn btn-primary');
+            $btnCancel.attr('class', 'btn btn-primary');
             $container.append($btnCancel);
         }
     }
