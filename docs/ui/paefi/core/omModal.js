@@ -92,9 +92,9 @@ export class ModalFormBuilder {
         if (info.Required)  meta.push('obrigatório');
         if (info.MaxLength) {
             if (info.MaxLength === info.MinLength) {
-                meta.push(`[${info.MaxLength}]`);
+                meta.push(`${info.MaxLength}`);
             } else {
-                meta.push(`[${info.MinLength}-${info.MaxLength}]`);
+                meta.push(`${info.MinLength} - ${info.MaxLength}`);
             }
         }
         if (info.Cripto !== TipoCriptografia.Nenhuma.Key) {
