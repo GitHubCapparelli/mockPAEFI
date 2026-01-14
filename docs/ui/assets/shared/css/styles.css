@@ -435,19 +435,14 @@ table td {
 }
 
 /* Thin, modern scrollbars */
-/* Apply to the specific containers */
 .leftSidebar-body,
 .app-main,
 .page-contents {
-    /* 1. Standard Theme-Awareness (Firefox & 2026 Chrome/Safari) */
-    color-scheme: light dark; /* Automatically switches scrollbar UI based on theme */
+    color-scheme: light dark;
     scrollbar-width: thin;
-    
-    /* Dynamic color: uses a semi-transparent gray that works on both light/dark */
     scrollbar-color: rgba(128, 128, 128, 0.4) transparent;
 }
 
-/* 2. WebKit/Chromium Specifics (Chrome, Edge, Safari) */
 .leftSidebar-body::-webkit-scrollbar,
 .app-main::-webkit-scrollbar,
 .page-contents::-webkit-scrollbar {
@@ -462,6 +457,8 @@ table td {
     display: none;
     width: 0;
     height: 0;
+    color: transparent;
+    background: transparent;
 }
 
 .leftSidebar-body::-webkit-scrollbar-track,
