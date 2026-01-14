@@ -63,8 +63,11 @@ function SetDomain(domainKey) {
 
 async function initCurrentDomain() {
   $('#page-body').empty();
-  $(Elemento.TextoOpcaoAtual.JQuery).text(currentDomain.Value);
+
+  $('#modal-root').remove();
+  $('body').append($('<div', { id:'modal-root', class:'modal-root' }));
   
+  $(Elemento.TextoOpcaoAtual.JQuery).text(currentDomain.Value);
   await Orchestrator.Create(currentModule.Key, currentDomain.Key);
 }
 

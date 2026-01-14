@@ -19,7 +19,7 @@ export class Orchestrator {
         this.gate       = null;
         this.info       = null;
         this.render     = null;  
-        this.modal      = new ModalShell(); 
+        this.modal      = null; 
     }
 
     async init(moduleKey, domainKey) {
@@ -31,6 +31,7 @@ export class Orchestrator {
         this.gate = new ApiGate(this.info, (x) => this.render.Rows(x), () => this.filters());
         await this.gate.Read();
 
+        this.modal = new ModalShell(); 
         this.wireAdminEvents();
     }
 

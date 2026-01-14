@@ -1,8 +1,10 @@
-// ui paefi core modal 
+// ui paefi core modal
 
 import { TipoAcesso, TipoCriptografia } from "./omData.js";
 
+/* Modal shell ===== */
 export class ModalShell {
+
     constructor(rootSelector = '#modal-root') {
         this.$root = $(rootSelector);
     }
@@ -11,11 +13,14 @@ export class ModalShell {
         this.#render(builder);
 
         return new Promise(resolve => {
-            this.$confirm.on('click', async () => {
-                const result = await builder.result();
-                this.close();
-                resolve(result);
-            });
+
+            if (this.$confirm) {
+                this.$confirm.on('click', async () => {
+                    const result = await builder.result();
+                    this.close();
+                    resolve(result);
+                });
+            }
 
             this.$cancel.on('click', () => {
                 this.close();
@@ -27,21 +32,17 @@ export class ModalShell {
     #render(builder) {
         this.$root.empty();
 
-        this.$cancel   = $('<button>', { class: 'btn btn-secondary', text: 'Cancelar',
-            'data-bs-dismiss': 'modal' });
-
         const $modal   = $('<div>', { class: 'modal fade', tabindex: -1 });
         const $dialog  = $('<div>', { class: 'modal-dialog modal-lg' });
         const $content = $('<div>', { class: 'modal-content' });
 
-        const $header  = $('<div>', { class: 'modal-header' })
-            .append($('<h5>', { class: 'modal-title', text: builder.title }));
-
+        const $header  = $('<div>', { class: 'modal-header' }).append($('<h5>', { class: 'modal-title', text: builder.title }));
         const $body    = $('<div>', { class: 'modal-body' });
         builder.renderBody($body);
 
         const $footer  = $('<div>', { class: 'modal-footer' });
-        this.$confirm = builder.renderFooter($footer, this.$cancel);
+        this.$cancel   = $('<button>', { class: 'btn btn-secondary', text: 'Cancelar', 'data-bs-dismiss': 'modal' });
+        this.$confirm  = builder.renderFooter($footer, this.$cancel);
 
         $content.append($header, $body, $footer);
         $dialog.append($content);
@@ -49,34 +50,36 @@ export class ModalShell {
         this.$root.append($modal);
 
         this.$modal = $modal;
-        $modal.modal({ backdrop: 'static' }); //, keyboard: false });
+        $modal.modal({
+            backdrop: 'static',
+            keyboard: true
+        });
         $modal.modal('show');
     }
 
     close() {
-        this.$modal.modal('hide');
+        if (this.$modal) {
+            this.$modal.modal('hide');
+        }
     }
 }
 
+/* Form builder ============ */
 export class ModalFormBuilder {
 
     constructor({ title, catalog, lookups, dto = null }) {
         this.title      = title;
         this.catalog    = catalog;
+        this.lookups    = lookups;
         this.dto        = dto ?? {};
         this.original   = structuredClone(this.dto);
         this.bindings   = catalog.Bindings;
-        this.lookups    = lookups;
         this.controls   = {};
     }
 
-    /* Rendering */
     renderBody($container) {
         $container.empty();
-        this.bindings.forEach(binding => {
-            const $field = this.#renderField(binding);
-            $container.append($field);
-        });
+        this.bindings.forEach(binding => { $container.append(this.#renderField(binding)); });
 
         Object.values(this.controls).forEach($el => {
             $el.on('input change', () => {
@@ -89,52 +92,56 @@ export class ModalFormBuilder {
         const meta = [];
         const info = binding.DbInfo;
 
-        if (info.Required)  meta.push('obrigatório');
+        if (info.Required) meta.push('obrigatório');
+
         if (info.MaxLength) {
-            if (info.MaxLength === info.MinLength) {
-                meta.push(`${info.MaxLength}`);
-            } else {
-                meta.push(`${info.MinLength} - ${info.MaxLength}`);
-            }
+            meta.push(info.MinLength === info.MaxLength
+                        ? `${info.MaxLength}`
+                        : `${info.MinLength}..${info.MaxLength}`
+            );
         }
+
         if (info.Cripto !== TipoCriptografia.Nenhuma.Key) {
             meta.push(`Proteção: ${info.Cripto}`);
         }
         if (info.Access !== TipoAcesso.Interno.Key) {
             meta.push(`Acesso ${info.Access}`);
         }
+
         return $('<small>', { class: 'text-muted', text: meta.join(' · ') });
     }
 
     #renderField(binding) {
-        const $group = $('<div>',   { class: 'mb-3' });
-
+        const $group    = $('<div>', { class: 'mb-3' });
         const $labelRow = $('<div>', { class: 'd-flex justify-content-between align-items-center' });
+
         const $label    = $('<label>', { class: 'form-label mb-1', text: binding.UiFieldTitle });
-        const $meta     = this.#getInfoFrom(binding);
-        $labelRow.append($label, $meta);
+        $labelRow.append($label, this.#getInfoFrom(binding));
 
         let $control;
         if (binding.Lookup) {
             $control = $('<select>', { class: 'form-select' });
-
             binding.Lookup.All.forEach(item => {
                 $control.append( $('<option>', { value: item.Key, text: item.Value }));
             });
 
         } else if (binding.LookupId) {
             $control = $('<select>', { class: 'form-select' });
-            const list = this.lookups[binding.LookupId] || [];
-            list.forEach(row => {
-                const txt = row[binding.DisplayId] || '---';
-                $control.append($('<option>', { value: row.id || row.Id, text: txt }));
+            (this.lookups[binding.LookupId] || []).forEach(row => {
+                $control.append(
+                    $('<option>', {
+                        value: row.id ?? row.Id,
+                        text: row[binding.DisplayId] ?? '---'
+                    })
+                );
             });
+
         } else {
             $control = $('<input>', { class: 'form-control', type: 'text' });
         }
 
         const value = this.dto[binding.DtoId];
-        if (value !== undefined && value !== null) { $control.val(value);}
+        if (value != null) $control.val(value);
 
         this.controls[binding.DtoId] = $control;
         return $group.append($labelRow, $control);
@@ -146,14 +153,17 @@ export class ModalFormBuilder {
         return this.$btnSave;
     }
 
-
-    /* Data collection & diff */
     collect() {
-        return Object.entries(this.controls).reduce((acc, [key, $el]) => {
-            acc[key] = $el.val() || null;
-            return acc;
-        }, {});
+        return Object.fromEntries(
+            Object.entries(this.controls).map(([k, $el]) => [k, $el.val() || null])
+        );
     }
+//    collect() {
+//        return Object.entries(this.controls).reduce((acc, [key, $el]) => {
+//            acc[key] = $el.val() || null;
+//            return acc;
+//        }, {});
+//    }
 
     diff() {
         const current = this.collect();
@@ -184,51 +194,48 @@ export class ModalFormBuilder {
         });
     }
 
-    /* Modal contract */
     async result() {
         const dirty = this.diff();
-
         return {
-            action: 'save',
+            action: 'proceed',
             payload: Object.keys(this.original).length ? dirty : this.collect(),
             dirty
         };
     }
 }
 
+/* Message builder ========== */
 export class ModalMessageBuilder {
 
     constructor({ title, message, danger = false }) {
-        this.title      = title;
-        this.message    = message;
-        this.danger     = danger;
+        this.title = title;
+        this.message = message;
+        this.danger = danger;
     }
 
     renderBody($container) {
-        $container.empty().addClass('d-flex align-items-center justify-content-center text-center');
-        const $message = $('<p>', { class: 'mb-0 fs-5', text: this.message });
-        $container.append($message);
+        $container
+            .empty()
+            .addClass('d-flex align-items-center justify-content-center text-center')
+            .append($('<p>', { class: 'mb-0 fs-5', text: this.message })
+        );
     }
 
     renderFooter($container, $btnCancel) {
-        if (this.message.endsWith('?')) {
-            const btnClass    = this.danger ? 'btn btn-danger' : 'btn btn-primary';
-            const $btnConfirm = $('<button>', { class: btnClass, text: 'Confirmar' });
-            $container.append($btnCancel, $btnConfirm);
-            return $btnConfirm;
+
+        if (this.message.trim().endsWith('?')) {
+
+            const $confirm = $('<button>', { class: this.danger ? 'btn btn-danger' : 'btn btn-primary', text: 'Confirmar' });
+            $container.append($btnCancel, $confirm);
+            return $confirm;
         }
-        else {
-            $btnCancel.text('OK');
-            $btnCancel.attr('class', 'btn btn-primary');
-            $container.append($btnCancel);
-            return null;
-        }
+
+        $btnCancel.text('OK').removeClass('btn-secondary').addClass('btn-primary');
+        $container.append($btnCancel);
+        return null;
     }
 
-    /* Modal contract */
     async result() {
-        return {
-            action: 'confirm' 
-        };
+        return { action: 'proceed' };
     }
 }
