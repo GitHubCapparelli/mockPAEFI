@@ -158,12 +158,6 @@ export class ModalFormBuilder {
             Object.entries(this.controls).map(([k, $el]) => [k, $el.val() || null])
         );
     }
-//    collect() {
-//        return Object.entries(this.controls).reduce((acc, [key, $el]) => {
-//            acc[key] = $el.val() || null;
-//            return acc;
-//        }, {});
-//    }
 
     diff() {
         const current = this.collect();

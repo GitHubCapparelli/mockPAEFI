@@ -89,27 +89,6 @@ export class Orchestrator {
         $(document).on(`click${Orchestrator.NS}`, '.js-delete', async e => await this.onDelete_clicked(e));
     }
 
-//    wireAdminEvents() {
-//        $(document).on('change', '.filters-bar select', async () => {
-//            await this.gate.Read(this.filters());
-//        });
-//
-//        $('#btnClearFilter').on('click', async () => {
-//            $('.filters-bar select').val('');
-//            await this.gate.Clear();
-//        });
-//
-//        $('#navControls').on('click', 'a.page-link', async e => {
-//            const page = $(e.currentTarget).data('page');
-//            await this.gate.ReadPage(e, page);
-//        });
-//
-//        // modals
-//        $('#btnAddNew').on('click', async e => await this.onCreate_clicked(e));
-//        $(document).on('click', '.js-edit', async e => await this.onUpdate_clicked(e));
-//        $(document).on('click', '.js-delete', async e => await this.onDelete_clicked(e));
-//    }
-
     async onCreate_clicked(e) {
         e.preventDefault();
         const builder = new ModalFormBuilder({
@@ -120,7 +99,7 @@ export class Orchestrator {
         });
 
         const result = await this.modal.open(builder);
-        if (result.action !== 'save') return;
+        if (result.action !== 'proceed') return;
 
         await this.gate.Create(result.payload);
     }
@@ -137,7 +116,7 @@ export class Orchestrator {
         });
 
         const result = await this.modal.open(builder);
-        if (result.action !== 'save') return;
+        if (result.action !== 'proceed') return;
         if (!Object.keys(result.dirty).length) return;
 
         await this.gate.Update(id, result.payload);
@@ -160,7 +139,7 @@ export class Orchestrator {
         });
 
         const result = await this.modal.open(builder);
-        if (result.action !== 'confirm') return;
+        if (result.action !== 'proceed') return;
 
         await this.gate.Delete(id, dto);
     }
