@@ -39,7 +39,7 @@ export class ModalShell {
         builder.renderBody($body);
 
         const $footer  = $('<div>', { class: 'modal-footer' });
-        builder.renderFooter($footer, this.$cancel);
+        this.$confirm = builder.renderFooter($footer, this.$cancel);
 
         $content.append($header, $body, $footer);
         $dialog.append($content);
@@ -116,7 +116,9 @@ export class ModalFormBuilder {
     renderFooter($container, $btnCancel) {
         this.$btnSave = $('<button>', { class: 'btn btn-primary', text: 'Salvar', disabled: true });
         $container.append($btnCancel, this.$btnSave);
+        return this.$btnSave;
     }
+
 
     /* Data collection & diff */
     collect() {
@@ -186,11 +188,13 @@ export class ModalMessageBuilder {
             const btnClass    = this.danger ? 'btn btn-danger' : 'btn btn-primary';
             const $btnConfirm = $('<button>', { class: btnClass, text: 'Confirmar' });
             $container.append($btnCancel, $btnConfirm);
+            return $btnConfirm;
         }
         else {
             $btnCancel.text('OK');
             $btnCancel.attr('class', 'btn btn-primary');
             $container.append($btnCancel);
+            return null;
         }
     }
 

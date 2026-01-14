@@ -399,10 +399,13 @@ table td {
 }
 
 .leftSidebar * {
-  /*background-color: transparent !important;*/
   color: var(--bs-body-color);  
-  background-color: var(--bs-tertiary-bg);
+  background-color: transparent !important;
+  /*background-color: var(--bs-tertiary-bg);*/
   border: none;
+}
+.leftSidebar a:hover {
+    color: var(--bs-body-color);
 }
 
 /*btnSidebarToggle*/
