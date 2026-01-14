@@ -6,8 +6,7 @@ export const UsuariosServidoresAPI = CoreAPI({
   dataPath       : '/mockPAEFI/data/mock/usuariosServidores.json',
   jsonRoot       : 'usuariosServidores',
   defaultOrderBy : 'nome',
-
-  dto: UsuarioServidorDTO,
+  createDTO      : UsuarioServidorDTO,
 
 applyFilters(data, filters) {
     let result = data;

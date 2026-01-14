@@ -104,7 +104,7 @@ export function CoreAPI({
     ensureInitialized();
 
     const data = InMemory.GetAll(entity);
-    const dto  = dto(rawData);
+    const dto  = createDTO(rawData);
 
     if (validateCreate) {
       validateCreate(dto, data);
@@ -128,9 +128,13 @@ export function CoreAPI({
     return next[idx];
   }
 
-  function SoftDelete(id, rawData) {
-    return Update(id, data);
-  }
+function SoftDelete(id, rawData = {}) {
+  return Update(id, { ...rawData, deletedAt: new Date().toISOString() });
+}
+
+//  function SoftDelete(id, rawData) {
+//    return Update(id, data);
+//  }
 
   function HardDelete(id) {
     ensureInitialized();
