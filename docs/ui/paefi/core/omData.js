@@ -230,7 +230,7 @@ export class Catalog {          // DatabaseTable, dataSource
     }
 
     static Unidades           = new Catalog(crypto.randomUUID(), 'Unidades', '0.1', 'Armazenar dados de unidades organizacionais',
-        [ Metadata.Hierarquia, Binding.Sigla, Binding.NomeUnidade, Binding.FuncaoUnidade, Binding.IbgeId ]);
+        [Metadata.Hierarquia, Binding.SiglaUnidade, Binding.NomeUnidade, Binding.FuncaoUnidade, Binding.IbgeId ]);
 
     static UsuariosServidores = new Catalog(crypto.randomUUID(), 'UsuariosServidores', '0.1', 'Armazenar dados de servidores',
         [ Binding.Unidade, Binding.NomeServidor, Binding.FuncaoUsuario, Binding.CargoUsuario, Binding.Especialidade, Binding.Login, Binding.Matricula, Binding.CpfServidor ]);
