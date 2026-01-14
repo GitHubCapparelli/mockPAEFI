@@ -433,3 +433,43 @@ table td {
     white-space: nowrap;
     text-align: center;
 }
+
+/* Thin, modern scrollbars */
+/* Firefox */
+.leftSidebar-body,
+.app-main,
+.page-contents {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.35) transparent;
+}
+
+/* Chromium / WebKit */
+.leftSidebar-body::-webkit-scrollbar,
+.app-main::-webkit-scrollbar,
+.page-contents::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.leftSidebar-body::-webkit-scrollbar-track,
+.app-main::-webkit-scrollbar-track,
+.page-contents::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.leftSidebar-body::-webkit-scrollbar-thumb,
+.app-main::-webkit-scrollbar-thumb,
+.page-contents::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.35);
+    border-radius: 6px;
+}
+
+.leftSidebar-body::-webkit-scrollbar-button,
+.app-main::-webkit-scrollbar-button,
+.page-contents::-webkit-scrollbar-button {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+/* ---- */
