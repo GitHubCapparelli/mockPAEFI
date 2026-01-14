@@ -126,7 +126,7 @@ export class ModalFormBuilder {
             $control = $('<select>', { class: 'form-select' });
             const list = this.lookups[binding.LookupId] || [];
             list.forEach(row => {
-                const txt = row[c.DisplayId] || '---';
+                const txt = row[binding.DisplayId] || '---';
                 $control.append($('<option>', { value: row.id || row.Id, text: txt }));
             });
         } else {
