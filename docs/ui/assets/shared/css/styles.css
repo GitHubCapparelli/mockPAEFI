@@ -435,15 +435,17 @@ table td {
 }
 
 /* Thin, modern scrollbars */
-/* Firefox */
+/* ---------- Firefox ---------- */
 .leftSidebar-body,
 .app-main,
 .page-contents {
     scrollbar-width: thin;
-    scrollbar-color: rgba(0, 0, 0, 0.35) transparent;
+    scrollbar-color:
+        var(--bs-secondary-color)
+        transparent;
 }
 
-/* Chromium / WebKit */
+/* ---------- Chromium / WebKit ---------- */
 .leftSidebar-body::-webkit-scrollbar,
 .app-main::-webkit-scrollbar,
 .page-contents::-webkit-scrollbar {
@@ -460,16 +462,26 @@ table td {
 .leftSidebar-body::-webkit-scrollbar-thumb,
 .app-main::-webkit-scrollbar-thumb,
 .page-contents::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.35);
+    background-color: var(--bs-secondary-color);
     border-radius: 6px;
 }
 
+/* ---------- REMOVE ALL SCROLLBAR ARROWS (Chromium) ---------- */
 .leftSidebar-body::-webkit-scrollbar-button,
 .app-main::-webkit-scrollbar-button,
-.page-contents::-webkit-scrollbar-button {
+.page-contents::-webkit-scrollbar-button,
+.leftSidebar-body::-webkit-scrollbar-button:single-button,
+.app-main::-webkit-scrollbar-button:single-button,
+.page-contents::-webkit-scrollbar-button:single-button,
+.leftSidebar-body::-webkit-scrollbar-button:increment,
+.app-main::-webkit-scrollbar-button:increment,
+.page-contents::-webkit-scrollbar-button:increment,
+.leftSidebar-body::-webkit-scrollbar-button:decrement,
+.app-main::-webkit-scrollbar-button:decrement,
+.page-contents::-webkit-scrollbar-button:decrement {
     display: none;
     width: 0;
     height: 0;
+    background: transparent;
 }
-
 /* ---- */
