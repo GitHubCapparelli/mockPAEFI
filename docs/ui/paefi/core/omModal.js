@@ -1,5 +1,7 @@
 // ui paefi core modal 
 
+import { TipoAcesso, TipoCriptografia } from "./omData";
+
 export class ModalShell {
     constructor(rootSelector = '#modal-root') {
         this.$root = $(rootSelector);
@@ -58,12 +60,13 @@ export class ModalShell {
 
 export class ModalFormBuilder {
 
-    constructor({ title, catalog, dto = null }) {
+    constructor({ title, catalog, lookups, dto = null }) {
         this.title      = title;
         this.catalog    = catalog;
         this.dto        = dto ?? {};
         this.original   = structuredClone(this.dto);
         this.bindings   = catalog.Bindings;
+        this.lookups    = lookups;
         this.controls   = {};
     }
 
@@ -82,17 +85,33 @@ export class ModalFormBuilder {
         });
     }
 
+    #getInfoFrom(binding) {
+        const meta = [];
+        const info = binding.DbInfo;
+
+        if (info.Required)  meta.push('obrigatório');
+        if (info.MaxLength) {
+            if (info.MaxLength === info.MinLength) {
+                meta.push(`[${info.MaxLength}]`);
+            } else {
+                meta.push(`[${info.MinLength}-${info.MaxLength}]`);
+            }
+        }
+        if (info.Cripto !== TipoCriptografia.Nenhuma.Key) {
+            meta.push(`Proteção: ${info.Cripto}`);
+        }
+        if (info.Access !== TipoAcesso.Interno.Key) {
+            meta.push(`Acesso ${info.Access}`);
+        }
+        return $('<small>', { class: 'text-muted', text: meta.join(' · ') });
+    }
+
     #renderField(binding) {
         const $group = $('<div>',   { class: 'mb-3' });
 
         const $labelRow = $('<div>', { class: 'd-flex justify-content-between align-items-center' });
         const $label    = $('<label>', { class: 'form-label mb-1', text: binding.UiFieldTitle });
-        const meta      = [];
-
-        if (binding.DbInfo.Required)  meta.push('obrigatório');
-        if (binding.DbInfo.MaxLength) meta.push(`máx ${binding.DbInfo.MaxLength}`);
-
-        const $meta = $('<small>', { class: 'text-muted', text: meta.join(' · ') });
+        const $meta     = this.#getInfoFrom(binding);
         $labelRow.append($label, $meta);
 
         let $control;
@@ -103,6 +122,13 @@ export class ModalFormBuilder {
                 $control.append( $('<option>', { value: item.Key, text: item.Value }));
             });
 
+        } else if (binding.LookupId) {
+            $control = $('<select>', { class: 'form-select' });
+            const list = this.lookups[binding.LookupId] || [];
+            list.forEach(row => {
+                const txt = row[c.DisplayId] || '---';
+                $control.append($('<option>', { value: row.id || row.Id, text: txt }));
+            });
         } else {
             $control = $('<input>', { class: 'form-control', type: 'text' });
         }

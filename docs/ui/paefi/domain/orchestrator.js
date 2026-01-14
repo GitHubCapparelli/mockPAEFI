@@ -87,6 +87,7 @@ export class Orchestrator {
         const builder = new ModalFormBuilder({
             title: `Incluindo ${this.info.Name}`,
             catalog: this.info.Catalog,
+            lookups: this.render.lookups,
             dto: null
         });
 
@@ -103,6 +104,7 @@ export class Orchestrator {
         const builder = new ModalFormBuilder({
             title: `Editando ${this.info.Name}`,
             catalog: this.info.Catalog,
+            lookups: this.render.lookups,
             dto
         });
 

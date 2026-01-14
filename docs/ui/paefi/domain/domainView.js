@@ -28,10 +28,6 @@ export class DomainView {
         return instance;
     }  
 
-    getLookup(name) {
-        return this.lookups[name] || [];
-    }
-
     assureCleanFilterOptions() {
         let $div = $('#divFilterOptions');
         if ($div.length === 0) {
@@ -57,7 +53,7 @@ export class DomainView {
                 Render.Enum(c.UiFilterKey, c.Lookup);
 
             } else if (c.LookupId) {
-                const list = this.getLookup(c.LookupId);
+                const list = this.lookups[c.LookupId] || [];
                 list.forEach(row => {
                     const txt = row[c.DisplayId] || '---'; 
                     filtro.append($('<option>', { 
