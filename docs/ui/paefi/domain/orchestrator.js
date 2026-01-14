@@ -77,51 +77,61 @@ export class Orchestrator {
         });
 
         // modals
-        //$(document).on('click', '#btnAddNew', () => { this.render.addModal.open() });
+        $('#btnAddNew').on('click',           async e => await this.onCreate_clicked(e));
+        $(document).on('click', '.js-edit',   async e => await this.onUpdate_clicked(e));
+        $(document).on('click', '.js-delete', async e => await this.onDelete_clicked(e));
+    }
 
-        $('#btnAddNew').on('click', async () => {
-            const builder = new ModalFormBuilder({ 
-                title   : `Novo ${this.info.Name}`,
-                catalog : this.info.Catalog,
-                dto     : null
-            });
-
-            const result = await this.modal.open(builder);
-            if (result.action !== 'save')           return;
-
-            await this.gate.Create(result.payload);
+    async onCreate_clicked(e) {
+        e.preventDefault();
+        const builder = new ModalFormBuilder({
+            title: `Incluindo ${this.info.Name}`,
+            catalog: this.info.Catalog,
+            dto: null
         });
 
-        $(document).on('click', '.js-edit', async e => {
-            const id      = $(e.currentTarget).data('id');
-            const dto     = await this.info.API.GetById(id);
-            const builder = new ModalFormBuilder({
-                title   : `Editar ${this.info.Name}`,
-                catalog : this.info.Catalog,
-                dto
-            });
+        const result = await this.modal.open(builder);
+        if (result.action !== 'save') return;
 
-            const result = await this.modal.open(builder);
-            if (result.action !== 'save')           return;
-            if (!Object.keys(result.dirty).length)  return;
+        await this.gate.Create(result.payload);
+    }
 
-            await this.gate.Update(id, result.payload);
+    async onUpdate_clicked(e) {
+        e.preventDefault();
+        const id = $(e.currentTarget).data('id');
+        const dto = await this.info.API.GetById(id);
+        const builder = new ModalFormBuilder({
+            title: `Editando ${this.info.Name}`,
+            catalog: this.info.Catalog,
+            dto
         });
 
-        $(document).on('click', '.js-delete', async e => {
-            const id      = $(e.currentTarget).data('id');
-            const dto     = await this.info.API.GetById(id);
-            const title   = dto.nome ?? 'Confirmação';
-            const builder = new ModalMessageBuilder({
-                title   : title,
-                message : 'Deseja realmente excluir este registro?'
-            });
+        const result = await this.modal.open(builder);
+        if (result.action !== 'save') return;
+        if (!Object.keys(result.dirty).length) return;
 
-            const result = await this.modal.open(builder);
-            if (result.action !== 'confirm')         return;
+        await this.gate.Update(id, result.payload);
+    }
+    
+    async onDelete_clicked(e) {
+        e.preventDefault();
+        const id = $(e.currentTarget).data('id');
 
-            await this.gate.Delete(id, dto);
+        const dto = await this.info.API.GetById(id);
+        const title = dto.nome 
+                    ? dto.nome
+                    : dto.sigla
+                    ? dto.sigla
+                    : 'Confirmação';
+
+        const builder = new ModalMessageBuilder({
+            title: title,
+            message: 'Deseja realmente excluir este registro ?'
         });
 
+        const result = await this.modal.open(builder);
+        if (result.action !== 'confirm') return;
+
+        await this.gate.Delete(id, dto);
     }
 }

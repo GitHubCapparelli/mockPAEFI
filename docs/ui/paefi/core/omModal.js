@@ -68,6 +68,7 @@ export class ModalFormBuilder {
 
     /* Rendering */
     renderBody($container) {
+        $container.empty();
         this.bindings.forEach(binding => {
             const $field = this.#renderField(binding);
             $container.append($field);
@@ -165,15 +166,22 @@ export class ModalMessageBuilder {
     }
 
     renderBody($container) {
-        const $body = $('<div>', { class: 'modal-body' });
-        $body.append($('<p>', { class: 'mb-0', text: this.message }));
-        $container.append($body);
+        $container.empty();
+        const $message = $('<p>', { class: 'mb-0', text: this.message }));
+        $container.append($message);
     }
 
     renderFooter($container, $btnCancel) {
-        const btnClass    = this.danger ? 'btn btn-danger' : 'btn btn-primary';
-        const $btnConfirm = $('<button>', { class: btnClass, text: 'Confirmar' });
-        $container.append($btnCancel, $btnConfirm);
+        if (this.message.endsWith('?')) {
+            const btnClass    = this.danger ? 'btn btn-danger' : 'btn btn-primary';
+            const $btnConfirm = $('<button>', { class: btnClass, text: 'Confirmar' });
+            $container.append($btnCancel, $btnConfirm);
+        }
+        else {
+            $btnCancel.text('OK');
+            $btnCancel.class('btn btn-primary');
+            $container.append($btnCancel);
+        }
     }
 
     /* Modal contract */

@@ -226,6 +226,12 @@ table td {
 /* =========================================================
    Modals
    ========================================================= */
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
 .modal-header {
     background-color: var(--primary-color);
     color: var(--bs-light);
@@ -233,6 +239,11 @@ table td {
 
 .modal-header .btn-close {
     filter: invert(1);
+}
+
+.modal-body {
+    height: calc(100vh - 100px);
+    overflow-y: auto;
 }
 
 /* =========================================================
