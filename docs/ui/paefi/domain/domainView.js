@@ -160,7 +160,7 @@ export class DomainView {
     }
 
     actionsButtonsCell(id) {
-        const $td = $('<td>', { class: 'd-flex gap-1' });
+        const $td = $('<td>', { class: 'col-actions d-flex gap-1 justify-content-center' });
         $td.append(
             $('<button>', { class: 'btn btn-sm btn-primary js-edit', 'data-id': id, title: 'Editar' })
                 .append($('<i>', { class: 'fas fa-edit' }))

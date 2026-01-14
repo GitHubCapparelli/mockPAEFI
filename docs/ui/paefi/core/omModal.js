@@ -36,7 +36,7 @@ export class ModalShell {
         builder.renderBody($body);
 
         const $footer = $('<div>', { class: 'modal-footer' });
-        this.$confirm = builder.renderConfirmButton();
+        this.$confirm = builder.renderActionButtons();
         this.$cancel = $('<button>', {
             class: 'btn btn-secondary',
             text: 'Cancelar',
@@ -117,7 +117,7 @@ export class ModalFormBuilder {
         return $group.append($label, $control);
     }
 
-    renderConfirmButton() {
+    renderActionButtons() {
         return $('<button>', {
             class: 'btn btn-primary',
             text: 'Salvar'
@@ -164,48 +164,27 @@ export class ModalFormBuilder {
 
 export class ModalMessageBuilder {
 
-    constructor({ title, message, confirmText = 'Confirmar', cancelText = 'Cancelar' }) {
-        this.title        = title;
-        this.message      = message;
-        this.confirmText  = confirmText;
-        this.cancelText   = cancelText;
+    constructor({ title, message, danger = false }) {
+        this.title      = title;
+        this.message    = message;
+        this.danger     = danger;
     }
 
-    getTitle() {
-        return this.title;
-    }
-
-    buildBody() {
+    renderBody() {
         const $body = $('<div>', { class: 'modal-body' });
-
-        $body.append(
-            $('<p>', {
-                class: 'mb-0',
-                text: this.message
-            })
-        );
-
+        $body.append($('<p>', { class: 'mb-0', text: this.message }));
         return $body;
     }
 
-    buildFooter({ resolve }) {
-        const $footer = $('<div>', { class: 'modal-footer' });
+    renderActionButtons() {
+        const btnClass = this.danger ? 'btn btn-danger' : 'btn btn-primary';
+        return $('<button>', { class: btnClass, text: 'Confirmar' });
+    }
 
-        const $btnCancel = $('<button>', {
-            class: 'btn btn-secondary',
-            text: this.cancelText
-        }).on('click', () => {
-            resolve({ action: 'confirm', value: false });
-        });
-
-        const $btnConfirm = $('<button>', {
-            class: 'btn btn-danger',
-            text: this.confirmText
-        }).on('click', () => {
-            resolve({ action: 'confirm', value: true });
-        });
-
-        $footer.append($btnCancel, $btnConfirm);
-        return $footer;
+    /* Modal contract */
+    async result() {
+        return {
+            action: 'confirm' 
+        };
     }
 }

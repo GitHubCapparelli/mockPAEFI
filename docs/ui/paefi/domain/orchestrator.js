@@ -109,15 +109,18 @@ export class Orchestrator {
         });
 
         $(document).on('click', '.js-delete', async e => {
+            const id      = $(e.currentTarget).data('id');
+            const dto     = await this.info.API.GetById(id);
+            const title   = dto.nome ?? 'Confirmação';
             const builder = new ModalMessageBuilder({
-                title   : 'Confirmação',
+                title   : title,
                 message : 'Deseja realmente excluir este registro?'
             });
 
             const result = await this.modal.open(builder);
-            if (result.action === 'confirm' && result.value) {
-                await this.gate.Delete(id);
-            }
+            if (result.action !== 'confirm')         return;
+
+            await this.gate.Delete(id, dto);
         });
 
     }

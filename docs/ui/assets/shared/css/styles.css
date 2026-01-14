@@ -193,7 +193,6 @@ table td {
 
 .table td:last-child,
 .table th:last-child {
-    width: 1%;
     text-align: center;
     white-space: nowrap;
 }
@@ -429,3 +428,8 @@ table td {
     background-color: var(--bs-secondary-bg);
 }
 
+.col-actions {
+    width: 1%;
+    white-space: nowrap;
+    text-align: center;
+}
