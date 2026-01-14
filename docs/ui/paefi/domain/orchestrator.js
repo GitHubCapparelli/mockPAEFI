@@ -20,6 +20,7 @@ export class Orchestrator {
         this.info       = null;
         this.render     = null;  
         this.modal      = null; 
+        this.ns         = `.orch-${crypto.randomUUID()}`;
     }
 
     async init(moduleKey, domainKey) {
@@ -62,26 +63,52 @@ export class Orchestrator {
     }
 
     wireAdminEvents() {
+        $(document).off(this.ns);
+        $('#btnAddNew').off(this.ns);
+        $('#btnClearFilter').off(this.ns);
+        $('#navControls').off(this.ns);
+
         // filters
-        $(document).on('change', '.filters-bar select', async () => {
+        $(document).on(`change${this.ns}`, '.filters-bar select', async () => {
            await this.gate.Read(this.filters());
         });
 
-        $('#btnClearFilter').on('click', async () => {
+        $('#btnClearFilter').on(`click${this.ns}`, async () => {
             $('.filters-bar select').val('');
             await this.gate.Clear();
         });
 
-        $('#navControls').on('click', 'a.page-link', async e => {
+        $('#navControls').on(`click${this.ns}`, 'a.page-link', async e => {
             const page = $(e.currentTarget).data('page');
             await this.gate.ReadPage(e, page);
         });
 
         // modals
-        $('#btnAddNew').on('click',           async e => await this.onCreate_clicked(e));
-        $(document).on('click', '.js-edit',   async e => await this.onUpdate_clicked(e));
-        $(document).on('click', '.js-delete', async e => await this.onDelete_clicked(e));
+        $('#btnAddNew').on(`click${this.ns}`,           async e => await this.onCreate_clicked(e));
+        $(document).on(`click${this.ns}`, '.js-edit',   async e => await this.onUpdate_clicked(e));
+        $(document).on(`click${this.ns}`, '.js-delete', async e => await this.onDelete_clicked(e));
     }
+
+//    wireAdminEvents() {
+//        $(document).on('change', '.filters-bar select', async () => {
+//            await this.gate.Read(this.filters());
+//        });
+//
+//        $('#btnClearFilter').on('click', async () => {
+//            $('.filters-bar select').val('');
+//            await this.gate.Clear();
+//        });
+//
+//        $('#navControls').on('click', 'a.page-link', async e => {
+//            const page = $(e.currentTarget).data('page');
+//            await this.gate.ReadPage(e, page);
+//        });
+//
+//        // modals
+//        $('#btnAddNew').on('click', async e => await this.onCreate_clicked(e));
+//        $(document).on('click', '.js-edit', async e => await this.onUpdate_clicked(e));
+//        $(document).on('click', '.js-delete', async e => await this.onDelete_clicked(e));
+//    }
 
     async onCreate_clicked(e) {
         e.preventDefault();
