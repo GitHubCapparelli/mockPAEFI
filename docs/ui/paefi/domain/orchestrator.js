@@ -4,6 +4,7 @@ import { DomainInfo }                                         from '../core/omDa
 import { DomainView }                                         from './domainView.js';
 import { ApiGate }                                            from './appGate.js';
 import { ModalShell, ModalFormBuilder, ModalMessageBuilder }  from '../core/omModal.js';
+import { Session, CurrentUserKey }                            from '../../../services/storage.js';
 
 export class Orchestrator {
     static NS = '.orch-domain';
@@ -12,7 +13,8 @@ export class Orchestrator {
         this.gate       = null;
         this.info       = null;
         this.render     = null;  
-        this.modal      = null; 
+        this.modal      = null;
+        this.userID     = Session.Get(CurrentUserKey).id;
     }
 
     async init(moduleKey, domainKey) {
@@ -93,6 +95,9 @@ export class Orchestrator {
         const result = await this.modal.open(builder);
         if (result.action !== 'proceed') return;
 
+        result.payload.criadoEm  = new Date().toISOString();
+        result.payload.criadoPor = this.userID;
+
         await this.gate.Create(result.payload);
     }
 
@@ -110,6 +115,9 @@ export class Orchestrator {
         const result = await this.modal.open(builder);
         if (result.action !== 'proceed') return;
         if (!Object.keys(result.dirty).length) return;
+
+        result.payload.alteradoEm  = new Date().toISOString();
+        result.payload.aleradoPor = this.userID;
 
         await this.gate.Update(id, result.payload);
     }
@@ -129,9 +137,11 @@ export class Orchestrator {
             title: title,
             message: 'Deseja realmente excluir este registro ?'
         });
-
         const result = await this.modal.open(builder);
         if (result.action !== 'proceed') return;
+
+        dto.excluidoEm  = new Date().toISOString();
+        dto.excluidoPor = this.userID;
 
         await this.gate.Delete(id, dto);
     }

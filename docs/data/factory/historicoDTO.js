@@ -1,16 +1,13 @@
-import { BaseDTO } from './baseDTO.js';
-
-export function HistoricoDTO(data, audit = {}) {
-  return BaseDTO({
+export function HistoricoDTO(data) {
+  return {
     userID         : data.userID,
     catalogoID     : data.catalogoID,
     sessionId      : data.sessionId,
+    dataHora       : data.dataHora,
     tipo           : data.tipo,
-    nome           : data.nome,
     acao           : data.acao,
-    diff           : data.diff,
     descricao      : data.descricao ?? null,
     justificativa  : data.justificativa ?? null,
-    ...audit
-  });
+    diff           : data.diff
+  };
 }

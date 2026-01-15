@@ -1,16 +1,15 @@
-import { InMemory }              from '../storage.js';
+import { InMemory } from '../storage.js';
 import { UsuariosServidoresAPI } from './usuariosServidoresAPI.js';
-import { UnidadesAPI }           from './unidadesAPI.js';
+import { UnidadesAPI } from './unidadesAPI.js';
 
 export const AllAPIs = {
-    async Init() {
-        await Promise.all([
-            UsuariosServidoresAPI.Init(),
-            UnidadesAPI.Init()
-        ]);
-    }
+  async Init() {
+    await Promise.all([
+      UsuariosServidoresAPI.Init(),
+      UnidadesAPI.Init()
+    ]);
+  }
 };
-
 
 export function CoreAPI({
   entity,
@@ -92,7 +91,7 @@ export function CoreAPI({
     const currentPage = Math.min(Math.max(page, 1), totalPages);
 
     const start = (currentPage - 1) * pageSize;
-    const end   = start + pageSize;
+    const end = start + pageSize;
 
     return {
       data: data.slice(start, end),
@@ -104,7 +103,7 @@ export function CoreAPI({
     ensureInitialized();
 
     const data = InMemory.GetAll(entity);
-    const dto  = createDTO(rawData);
+    const dto = createDTO(rawData);
 
     if (validateCreate) {
       validateCreate(dto, data);
@@ -118,23 +117,19 @@ export function CoreAPI({
     ensureInitialized();
 
     const data = InMemory.GetAll(entity);
-    const idx  = data.findIndex(x => x.id === id);
+    const idx = data.findIndex(x => x.id === id);
     if (idx === -1) return null;
 
     const next = [...data];
-    next[idx]  = { ...next[idx], ...rawData };
+    next[idx] = { ...next[idx], ...rawData };
 
     InMemory.SetAll(entity, next);
     return next[idx];
   }
 
-function SoftDelete(id, rawData = {}) {
-  return Update(id, { ...rawData, deletedAt: new Date().toISOString() });
-}
-
-//  function SoftDelete(id, rawData) {
-//    return Update(id, data);
-//  }
+  function SoftDelete(id, data) {
+    return Update(id, data);
+  }
 
   function HardDelete(id) {
     ensureInitialized();
@@ -150,7 +145,6 @@ function SoftDelete(id, rawData = {}) {
     return true;
   }
 
-  
   return {
     Init,
     GetAll,
