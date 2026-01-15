@@ -1,5 +1,5 @@
-import { CoreAPI }            from './coreAPI.js';
-import { HistoricoDTO } from '../../data/factory/usuarioServidorDTO.js';
+import { CoreAPI }          from './coreAPI.js';
+import { HistoricoDTO }     from '../../data/factory/historicoDTO.js';
 
 export const HistoricoAPI = CoreAPI({
     entity         : 'historico',
