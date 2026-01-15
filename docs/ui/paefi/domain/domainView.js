@@ -5,22 +5,25 @@ import { DomainInfo }   from '../core/omData.js';
 import { FuncaoUsuario, CargoUsuario, Especialidade, Modulo } from '../core/omEnum.js'; 
 
 export class DomainView {
-    constructor(moduleKey, info, namedLists) { //, fnOnModalSubmited) {
+    constructor(moduleKey, info, namedLists) { /
         this.moduleKey  = moduleKey;
         this.info       = info;
         this.lookups    = namedLists; 
     }
 
-    static async Create(moduleKey, info) { //, fnOnModalSubmited) {
-        const apiTasks   = Object.entries(info.Lookups).map(async ([key, api]) => {
-            const data   = await api.GetAll(); 
-            return [key, data];
-        });
-        const response   = await Promise.all(apiTasks);
-        const namedLists = Object.fromEntries(response);
-
-        const instance   = new DomainView(moduleKey, info, namedLists); //, fnOnModalSubmited);
+    static async Create(moduleKey, info) { 
+        let namedLists = null;
+        if (info.Lookups) {
+            const apiTasks   = Object.entries(info.Lookups).map(async ([key, api]) => {
+                const data   = await api.GetAll(); 
+                return [key, data];
+            });
+            const response  = await Promise.all(apiTasks);
+            namedLists      = Object.fromEntries(response);
+        }
+        const instance   = new DomainView(moduleKey, info, namedLists); 
         instance.view();
+
         return instance;
     }  
 
