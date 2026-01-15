@@ -117,13 +117,14 @@ export class DomainView {
     }
 
     Rows(response) {
-        const cols = this.info.Catalog.Bindings.filter(x => x.OnGrid);
+        const cols   = this.info.Catalog.Bindings.filter(x => x.OnGrid);
+        const $tbody = $('#dataRows').empty();
+
         if (!response.data.length) {
-            tbody.append($('<tr>').append($('<td>', { colspan: cols.length + 1, text: 'Nenhum registro' })));
+            $tbody.append($('<tr>').append($('<td>', { colspan: cols.length + 1, text: 'Nenhum registro' })));
             return;
         }
 
-        const tbody = $('#dataRows').empty();
         response.data.forEach(dto => { 
             const $tr = $('<tr>');
             cols.forEach(c => $tr.append(this.getCell(dto, c)));
@@ -131,7 +132,7 @@ export class DomainView {
             if (this.moduleKey === Modulo.Admin.Key) {
                 $tr.append(this.actionsButtonsCell(dto.id));
             }
-            tbody.append($tr);
+            $tbody.append($tr);
         });
         Render.Info(response.pagination);
     }
