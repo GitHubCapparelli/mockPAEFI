@@ -38,7 +38,7 @@ export class DomainView {
         return $('#divFilterOptions');
     }
 
-    Filtros() {
+    Filtros() { 
         const $divFiltros = this.assureCleanFilterOptions();
         const campos      = this.info.Catalog.Bindings.filter(x => x.Lookup || x.LookupId);
 
