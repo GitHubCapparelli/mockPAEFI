@@ -258,7 +258,7 @@ export class ModalJustificativaBuilder {
         return new ModalJustificativaBuilder(fieldNames);
     }
 
-    renderBody($container) {
+    renderBody($container) { 
         $container.empty();
         const $group    = $('<div>', { class: 'mb-3' });
         const $labelRow = $('<div>', { class: 'd-flex justify-content-between align-items-center' });
