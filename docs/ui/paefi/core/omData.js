@@ -125,15 +125,20 @@ export class Metadata {         // fields, attribs (spec)
     static AlteradoEm          = new Metadata({ key: crypto.randomUUID(), dbColName:'alteradoEm'    , type:'datetime UTC' });
     static DeletadoEm          = new Metadata({ key: crypto.randomUUID(), dbColName:'deletadoEm'    , type:'datetime UTC' });
     static ExclusaoFisica      = new Metadata({ key: crypto.randomUUID(), dbColName:'excFisica'     , type:'bool' });
-    static Justificativa       = new Metadata({ key: crypto.randomUUID(), dbColName:'justificativa' , type:'text' });
     
     static Nome                = new Metadata({ key: crypto.randomUUID(), dbColName:'nome'          , minLen: 15 , maxLen: 250 });
     static Descricao           = new Metadata({ key: crypto.randomUUID(), dbColName:'descricao'     , minLen: 10 });
+    static Acao                = new Metadata({ key: crypto.randomUUID(), dbColName:'acao'          , minLen: 1  , maxLen: 10 });
     static Versao              = new Metadata({ key: crypto.randomUUID(), dbColName:'versao'        , minLen: 1  , maxLen: 10 });
     static Finalidade          = new Metadata({ key: crypto.randomUUID(), dbColName:'finalidade'    , minLen: 10 , maxLen: 150 });
+
+    static DataHora            = new Metadata({ key: crypto.randomUUID(), dbColName:'dataHora '     , type: 'datetime UTC' }); // text [20-20] 2025-12-01T00:00:00Z
+    static Justificativa       = new Metadata({ key: crypto.randomUUID(), dbColName:'justificativa' , type:'text' });
+    static Diff                = new Metadata({ key: crypto.randomUUID(), dbColName:'diff'          , type:'text' });
     
     static Sigla               = new Metadata({ key: crypto.randomUUID(), dbColName:'sigla'         , minLen: 5 , maxLen: 250, required: true     });
     static IbgeId              = new Metadata({ key: crypto.randomUUID(), dbColName:'ibgeId'        , minLen: 11, maxLen: 11 });
+    static SessionId           = new Metadata({ key: crypto.randomUUID(), dbColName:'sessionId'     , minLen: 36, maxLen: 36 });
     
     static Login               = new Metadata({ key: crypto.randomUUID(), dbColName:'login'         , required: true   , minLen: 5 , maxLen: 50        , isSensitive: true });
     static Matricula           = new Metadata({ key: crypto.randomUUID(), dbColName:'matricula'     , required: true   , minLen: 8 , maxLen: 8         , isSensitive: true });
@@ -142,11 +147,14 @@ export class Metadata {         // fields, attribs (spec)
     static Hierarquia          = new Metadata({ key: crypto.randomUUID(), dbColName:'hierarquiaID'  , required: true   , type:'UUID'   , pfKey:'FK' });
     static UnidadeID           = new Metadata({ key: crypto.randomUUID(), dbColName:'unidadeID'     , required: true   , type:'UUID'   , pfKey:'FK' });
     static CatalogoID          = new Metadata({ key: crypto.randomUUID(), dbColName:'catalogoID'    , required: true   , type:'UUID'   , pfKey:'FK' });
+    static UsuarioID           = new Metadata({ key: crypto.randomUUID(), dbColName:'userID'        , required: true   , type:'UUID'   , pfKey:'FK' });
     
     static FuncaoUnidade       = new Metadata({ key: crypto.randomUUID(), dbColName:'funcao'        , required: true   , type:'enum' });
     static FuncaoUsuario       = new Metadata({ key: crypto.randomUUID(), dbColName:'funcao'        , required: true   , type:'enum' });
     static CargoUsuario        = new Metadata({ key: crypto.randomUUID(), dbColName:'cargo'         , required: true   , type:'enum' });
     static Especialidade       = new Metadata({ key: crypto.randomUUID(), dbColName:'especialidade' , required: true   , type:'enum' });
+
+    static TipoRegistro        = new Metadata({ key: crypto.randomUUID(), dbColName:'tipo'          , required: true   , type:'enum' });
 };
 
 export class Binding {
@@ -177,7 +185,19 @@ export class Binding {
             Binding.All.push(this);
         }
     }
-    static Catalogo         = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.CatalogoID,       dtoId:'catalogoID',        uiFieldTitle: 'Tabela',         uiFilterKey:'#cmbCatalogos',        uiFilterTitle:'Todas as tabelas',           lookupId:'tabelas',           displayId: 'nome' });
+    static NomeCatalogo     = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Nome.Mandatory(),    dtoId:'nome',           uiFieldTitle: 'Nome' });
+    static VersaoCatalogo   = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Versao.Mandatory(),  dtoId:'versao',         uiFieldTitle: 'Versão' });
+    static FuncaoCatalogo   = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Nome.Mandatory(),    dtoId:'finalidade',     uiFieldTitle: 'Finalidade' });
+
+    static Catalogo         = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.CatalogoID,       dtoId:'catalogoID',        uiFieldTitle: 'Tabela',         uiFilterKey:'#cmbCatalogos',        uiFilterTitle:'Todas as tabelas',           lookupId:'tabelas',             displayId: 'nome' });
+    static Usuario          = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.UsuarioID,        dtoId:'userID',            uiFieldTitle: 'Usuario',        uiFilterKey:'#cmbUsuarios',         uiFilterTitle:'Todos os usuários',          lookupId:'usuarios',            displayId: 'login' });
+    static SessionId        = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.SessionId,        dtoId:'sessionId',         uiFieldTitle: 'Session',        onGrid:false });
+    static TipoRegistro     = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.TipoRegistro,     dtoId:'tipo',              uiFieldTitle: 'Tipo',           uiFilterKey:'#cmbTipoRegistro',     uiFilterTitle:'Todos os tipos',             lookup: Enum.TipoRegistro });
+    static DataHora         = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.DataHora,         dtoId:'dataHora',          uiFieldTitle: 'Data Hora' });
+    static Acao             = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Acao.Mandatory(), dtoId:'acao',              uiFieldTitle: 'Ação' });
+    static Justificativa    = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Justificativa,    dtoId:'justificativa',     uiFieldTitle: 'Justificativa' });
+    static Descricao        = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Descricao,        dtoId:'descricao',         uiFieldTitle: 'Descrição',      onGrid:false });
+    static Diff             = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Diff,             dtoId:'diff',              uiFieldTitle: 'Diff',           onGrid:false });
 
     static FuncaoUnidade    = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.FuncaoUnidade,    dtoId:'funcao',            uiFieldTitle: 'Função',         uiFilterKey:'#cmbFuncao',           uiFilterTitle:'Todas as Funções',           lookup: Enum.FuncaoUnidade });
     static SiglaUnidade     = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Sigla,            dtoId:'sigla',             uiFieldTitle: 'Sigla' });
@@ -226,8 +246,14 @@ export class Catalog {          // DatabaseTable, dataSource
         }
     }
 
+    static Catalogos = new Catalog(crypto.randomUUID(), 'Catalogos', '0.1', 'Armazenar metadados das tabelas (data sources)',
+        [ Binding.NomeCatalogo, Binding.FuncaoCatalogo, Binding.VersaoCatalogo ]);
+
+    static Historico = new Catalog(crypto.randomUUID(), 'Historico', '0.1', 'Armazenar dados de eventos operacionais',
+        [ Binding.DataHora, Binding.Usuário, Binding.Catalogo, Binding.Acao, Binding.Justificativa, Binding.TipoRegistro, Binding.Descricao, Binding.SessionId, Binding.Diff ]);
+
     static Unidades           = new Catalog(crypto.randomUUID(), 'Unidades', '0.1', 'Armazenar dados de unidades organizacionais',
-        [Metadata.Hierarquia, Binding.SiglaUnidade, Binding.NomeUnidade, Binding.FuncaoUnidade, Binding.IbgeId ]);
+        [ Metadata.Hierarquia, Binding.SiglaUnidade, Binding.NomeUnidade, Binding.FuncaoUnidade, Binding.IbgeId ]);
 
     static UsuariosServidores = new Catalog(crypto.randomUUID(), 'UsuariosServidores', '0.1', 'Armazenar dados de servidores',
         [ Binding.Unidade, Binding.NomeServidor, Binding.FuncaoUsuario, Binding.CargoUsuario, Binding.Especialidade, Binding.Login, Binding.Matricula, Binding.CpfServidor ]);
