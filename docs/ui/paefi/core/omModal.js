@@ -219,7 +219,7 @@ export class ModalMessageBuilder {
 
     renderFooter($container, $btnCancel) {
 
-        if (this.message.trim().endsWith('?')) {
+        if (this.message.trim().includes('?')) {
 
             const $confirm = $('<button>', { class: this.danger ? 'btn btn-danger' : 'btn btn-primary', text: 'Confirmar' });
             $container.append($btnCancel, $confirm);
