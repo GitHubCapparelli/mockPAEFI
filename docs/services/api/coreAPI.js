@@ -1,12 +1,16 @@
-import { InMemory } from '../storage.js';
-import { UsuariosServidoresAPI } from './usuariosServidoresAPI.js';
-import { UnidadesAPI } from './unidadesAPI.js';
+import { InMemory }               from '../storage.js';
+import { CatalogosAPI }           from './catalogosAPI.js';
+import { HistoricoAPI }           from './historicoAPI.js';
+import { UnidadesAPI }            from './unidadesAPI.js';
+import { UsuariosServidoresAPI }  from './usuariosServidoresAPI.js';
 
 export const AllAPIs = {
   async Init() {
     await Promise.all([
       UsuariosServidoresAPI.Init(),
-      UnidadesAPI.Init()
+      UnidadesAPI.Init(),
+      CatalogosAPI.Init(),
+      HistoricoAPI.Init()
     ]);
   }
 };
