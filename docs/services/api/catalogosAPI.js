@@ -3,7 +3,7 @@ import { CatalogoDTO } from '../../data/factory/catalogoDTO.js';
 
 export const CatalogosAPI = CoreAPI({
   entity            : 'catalogos',
-  dataPath          : '/mockPAEFI/data/mock/catalogos.json',
+  dataPath          : '/mockPAEFI/data/seed/catalogos.json',
   jsonRoot          : 'catalogos',
   defaultOrderBy    : 'nome',
   createDTO         : CatalogoDTO,
