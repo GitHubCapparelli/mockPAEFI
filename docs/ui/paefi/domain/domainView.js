@@ -86,11 +86,14 @@ export class DomainView {
                 $('<ul>', { id: 'navControls', class: 'pagination mb-0' })
             ));
 
-        const $section = $('<section>', { id: 'dataSection', class: 'data-section mx-2' })
-            .append($actions, $table, $nav);
+        const $section = $('<section>', { id: 'dataSection', class: 'data-section mx-2' });
 
+        if (this.info.Key !== DomainInfo.Historico.Key) {
+            $section.append($actions);
+        }
+        $section.append($table, $nav);
+ 
         $('#page-body').append($section);
-        
         this.Table();
     }
 
@@ -154,16 +157,23 @@ export class DomainView {
     }
 
     actionsButtonsCell(id) {
-        const $td = $('<td>', { class: 'col-actions d-flex gap-1 justify-content-center' });
-        $td.append(
-            $('<button>', { class: 'btn btn-sm btn-primary js-edit', 'data-id': id, title: 'Editar' })
-                .append($('<i>', { class: 'fas fa-edit' }))
-        );
-        $td.append(
-            $('<button>', { class: 'btn btn-sm btn-danger js-delete', 'data-id': id, title: 'Deletar' })
-                .append($('<i>', { class: 'fas fa-trash' }))
-        );
-        return $td;
+        if (this.info.Key == DomainInfo.Historico.Key) {
+            const $td = $('<td>', { class: 'col-actions d-flex gap-1 justify-content-center' });
+            $td.append($('<span>', { text: '...' }));
+            return $td;
+            
+        } else {
+            const $td = $('<td>', { class: 'col-actions d-flex gap-1 justify-content-center' });
+            $td.append(
+                $('<button>', { class: 'btn btn-sm btn-primary js-edit', 'data-id': id, title: 'Editar' })
+                    .append($('<i>', { class: 'fas fa-edit' }))
+            );
+            $td.append(
+                $('<button>', { class: 'btn btn-sm btn-danger js-delete', 'data-id': id, title: 'Deletar' })
+                    .append($('<i>', { class: 'fas fa-trash' }))
+            );
+            return $td;
+        }
     }
     
     //

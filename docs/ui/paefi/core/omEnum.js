@@ -92,13 +92,13 @@ export class Dominio extends BaseEnum {
     static Atendimentos         = new Dominio('atendimentos', 'Atendimentos');
     static Atividades           = new Dominio('atividades', 'Atividades');
     static CasosDeUso           = new Dominio('casos-de-uso', 'Casos de Uso');
-    static Catalogos            = new Dominio('catalogos', 'Catálogos');
     static Compromissos         = new Dominio('compromissos', 'Compromissos');
+    static Database             = new Dominio('catalogos', 'Database (tabelas)');
     static Demandas             = new Dominio('demandas','Demandas');
     static Denuncias            = new Dominio('denuncias', 'Denuncias');
     static Documentos           = new Dominio('documentos','Documentos');
     static Enderecos            = new Dominio('enderecos', 'Endereços');
-    static Historico            = new Dominio('historico', 'Histórico de Operacoes');
+    static Historico            = new Dominio('historico', 'Histórico de eventos');
     static Interfaces           = new Dominio('interfaces', 'Interfaces (wireframes)');
     static Objetivos            = new Dominio('objetivos', 'Objetivos');
     static Processos            = new Dominio('processos', 'Processos');
