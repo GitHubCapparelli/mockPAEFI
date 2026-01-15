@@ -1,10 +1,10 @@
 // ui paefi domain orchestrator //
 
-import { DomainInfo, TipoLog }                                         from '../core/omData.js';
+import { Session, CurrentUserKey }                            from '../../../services/storage.js';
+import { DomainInfo, TipoLog }                                from '../core/omData.js';
 import { DomainView }                                         from './domainView.js';
 import { ApiGate }                                            from './appGate.js';
 import { ModalShell, ModalFormBuilder, ModalMessageBuilder, ModalJustificativaBuilder }  from '../core/omModal.js';
-import { Session, CurrentUserKey }                            from '../../../services/storage.js';
 
 export class Orchestrator {
     static NS = '.orch-domain';
@@ -21,7 +21,7 @@ export class Orchestrator {
         this.info = DomainInfo.Create(domainKey);
 
         this.modalRequested = this.modalRequested.bind(this);
-        this.render         = await DomainView.Create(moduleKey, this.info); //, this.modalRequested); 
+        this.render         = await DomainView.Create(moduleKey, this.info); 
 
         this.gate = new ApiGate(this.info, (x) => this.render.Rows(x), () => this.filters());
         await this.gate.Read();

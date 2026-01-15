@@ -113,9 +113,20 @@ export function CoreAPI({
     return dto;
   }
 
-  function Update(id, rawData) {
+  function Update(id, data) {
     ensureInitialized();
 
+    // these must be atomic !!!
+    AddHistory(data);
+    UpdateEntity(id, data.payload);
+  }
+
+  function AddHistory(data) {
+    // set data.metadata.dataHora, data.metadata.sessionId (?), and data.metadata.diff
+    // add to histórico (call historicoAPI.Create...)
+  }
+
+  function UpdateEntity(id, rawData) {
     const data = InMemory.GetAll(entity);
     const idx = data.findIndex(x => x.id === id);
     if (idx === -1) return null;
