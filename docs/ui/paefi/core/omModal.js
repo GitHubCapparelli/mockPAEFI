@@ -76,6 +76,14 @@ export class ModalFormBuilder {
         this.bindings   = catalog.Bindings;
         this.controls   = {};
     }
+    static Create(prefix, info, lookups, dto = null) {
+        return new ModalFormBuilder({
+            title: `${prefix} ${info.Name}`,
+            catalog: info.Catalog,
+            lookups: lookups,
+            dto: dto
+        });
+    }
 
     renderBody($container) {
         $container.empty();
@@ -205,6 +213,9 @@ export class ModalMessageBuilder {
         this.title = title;
         this.message = message;
         this.danger = danger;
+    }
+    static Create(title, message) {
+        return new ModalMessageBuilder({ title: title, message: message });
     }
 
     renderBody($container) {

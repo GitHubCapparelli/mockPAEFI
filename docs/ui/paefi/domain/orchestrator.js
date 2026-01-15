@@ -85,41 +85,30 @@ export class Orchestrator {
 
     async onCreate_clicked(e) {
         e.preventDefault();
-        const builder = new ModalFormBuilder({
-            title: `Incluindo ${this.info.Name}`,
-            catalog: this.info.Catalog,
-            lookups: this.render.lookups,
-            dto: null
-        });
-
-        const result = await this.modal.open(builder);
-        if (result.action !== 'proceed') return;
-
-        result.payload.criadoEm  = new Date().toISOString();
-        result.payload.criadoPor = this.userID;
-
-        await this.gate.Create(result.payload);
+        const builder   = ModalFormBuilder.Create('Incluindo', this.info, this.render.lookups);
+        const result    = await this.modal.open(builder);
+        
+        if (result.action === 'proceed') {
+            result.payload.criadoEm  = new Date().toISOString();
+            result.payload.criadoPor = this.userID;
+            await this.gate.Create(result.payload);
+        }
     }
 
     async onUpdate_clicked(e) {
         e.preventDefault();
-        const id = $(e.currentTarget).data('id');
-        const dto = await this.info.API.GetById(id);
-        const builder = new ModalFormBuilder({
-            title: `Editando ${this.info.Name}`,
-            catalog: this.info.Catalog,
-            lookups: this.render.lookups,
-            dto
-        });
+        const id        = $(e.currentTarget).data('id');
+        const dto       = await this.info.API.GetById(id);
 
-        const result = await this.modal.open(builder);
-        if (result.action !== 'proceed') return;
+        const builder   = ModalFormBuilder.Create('Editando', this.info, this.render.lookups, dto);
+        const result    = await this.modal.open(builder);
         if (!Object.keys(result.dirty).length) return;
 
-        result.payload.alteradoEm  = new Date().toISOString();
-        result.payload.aleradoPor = this.userID;
-
-        await this.gate.Update(id, result.payload);
+        if (result.action === 'proceed') {
+            result.payload.alteradoEm  = new Date().toISOString();
+            result.payload.aleradoPor  = this.userID
+            await this.gate.Update(id, result.payload);
+        }
     }
 
     async onDelete_clicked(e) {
@@ -133,17 +122,13 @@ export class Orchestrator {
                     ? dto.sigla
                     : 'Confirmação';
 
-        const builder = new ModalMessageBuilder({
-            title: title,
-//            message: 'Deseja realmente excluir este registro ?'
-            message: `<p>Deseja realmente excluir este registro ?</p><br><br><p>${dto.nome}</p>`
-        });
-        const result = await this.modal.open(builder);
-        if (result.action !== 'proceed') return;
-
-        dto.excluidoEm  = new Date().toISOString();
-        dto.excluidoPor = this.userID;
-
-        await this.gate.Delete(id, dto);
+        const builder = ModalMessageBuilder.Create(title, 'Deseja realmente excluir este registro ?');
+        const result  = await this.modal.open(builder);
+        
+        if (result.action === 'proceed') {
+            dto.excluidoEm  = new Date().toISOString();
+            dto.excluidoPor = this.userID;
+            await this.gate.Delete(id, dto);
+        }
     }
 }
