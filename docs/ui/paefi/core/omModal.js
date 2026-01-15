@@ -208,11 +208,13 @@ export class ModalMessageBuilder {
     }
 
     renderBody($container) {
-        $container
-            .empty()
-            .addClass('d-flex align-items-center justify-content-center text-center')
-            .append($('<p>', { class: 'mb-0 fs-5', text: this.message })
-        );
+        $container.empty().addClass('d-flex align-items-center justify-content-center text-center');
+        if (this.message.startsWith('<')) {
+            const $msgBody = $('div', {id: 'msg-body', class: 'msg-body' }).html(this.message);
+            $container.append($msgBody);
+        } else {
+            $container.append($('<p>', { class: 'mb-0 fs-5', text: this.message }));
+        }
     }
 
     renderFooter($container, $btnCancel) {
