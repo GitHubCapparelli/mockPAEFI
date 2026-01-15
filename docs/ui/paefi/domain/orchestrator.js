@@ -105,7 +105,7 @@ export class Orchestrator {
         if (!Object.keys(result.dirty).length) return;
 
         if (result.action === 'proceed') {
-            const request = this.getRequest('update', result, dto);
+            const request = await this.getRequest('update', result, dto);
             if (request) {
                 request.payload.alteradoEm  = new Date().toISOString();
                 request.payload.alteradoPor = this.userID
