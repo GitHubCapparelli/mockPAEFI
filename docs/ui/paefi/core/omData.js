@@ -189,7 +189,7 @@ export class Binding {
     static VersaoCatalogo   = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Versao.Mandatory(),  dtoId:'versao',         uiFieldTitle: 'Versão' });
     static FuncaoCatalogo   = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.Nome.Mandatory(),    dtoId:'finalidade',     uiFieldTitle: 'Finalidade' });
 
-    static Catalogo         = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.CatalogoID,       dtoId:'catalogoID',        uiFieldTitle: 'Tabela',         uiFilterKey:'#cmbCatalogos',        uiFilterTitle:'Todas as tabelas',           lookupId:'tabelas',             displayId: 'nome' });
+    static Catalogo         = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.CatalogoID,       dtoId:'catalogoID',        uiFieldTitle: 'Tabela',         uiFilterKey:'#cmbCatalogos',        uiFilterTitle:'Todas as tabelas',           lookupId:'catalogos',           displayId: 'nome' });
     static Usuario          = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.UsuarioID,        dtoId:'userID',            uiFieldTitle: 'Usuario',        uiFilterKey:'#cmbUsuarios',         uiFilterTitle:'Todos os usuários',          lookupId:'usuarios',            displayId: 'login' });
     static SessionId        = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.SessionId,        dtoId:'sessionId',         uiFieldTitle: 'Session',        onGrid:false });
     static TipoRegistro     = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.TipoRegistro,     dtoId:'tipo',              uiFieldTitle: 'Tipo',           uiFilterKey:'#cmbTipoRegistro',     uiFilterTitle:'Todos os tipos',             lookup: Enum.TipoRegistro });
@@ -250,7 +250,7 @@ export class Catalog {          // DatabaseTable, dataSource
         [ Binding.NomeCatalogo, Binding.FuncaoCatalogo, Binding.VersaoCatalogo ]);
 
     static Historico = new Catalog(crypto.randomUUID(), 'Historico', '0.1', 'Armazenar dados de eventos operacionais',
-        [ Binding.DataHora, Binding.Usuário, Binding.Catalogo, Binding.Acao, Binding.Justificativa, Binding.TipoRegistro, Binding.Descricao, Binding.SessionId, Binding.Diff ]);
+        [ Binding.DataHora, Binding.Usuario, Binding.Catalogo, Binding.Acao, Binding.Justificativa, Binding.TipoRegistro, Binding.Descricao, Binding.SessionId, Binding.Diff ]);
 
     static Unidades           = new Catalog(crypto.randomUUID(), 'Unidades', '0.1', 'Armazenar dados de unidades organizacionais',
         [ Metadata.Hierarquia, Binding.SiglaUnidade, Binding.NomeUnidade, Binding.FuncaoUnidade, Binding.IbgeId ]);
