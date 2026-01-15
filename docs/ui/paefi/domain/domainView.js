@@ -5,7 +5,7 @@ import { DomainInfo }   from '../core/omData.js';
 import { FuncaoUsuario, CargoUsuario, Especialidade, Modulo } from '../core/omEnum.js'; 
 
 export class DomainView {
-    constructor(moduleKey, info, namedLists) { /
+    constructor(moduleKey, info, namedLists) { 
         this.moduleKey  = moduleKey;
         this.info       = info;
         this.lookups    = namedLists; 
