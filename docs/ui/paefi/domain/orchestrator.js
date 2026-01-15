@@ -109,7 +109,9 @@ export class Orchestrator {
             if (request) {
                 request.payload.alteradoEm  = new Date().toISOString();
                 request.payload.alteradoPor = this.userID
-                await this.gate.Update(id, request);
+
+                // tem que ser request (payload & metadata)
+                await this.gate.Update(id, request.payload);
             }
         }
     }
