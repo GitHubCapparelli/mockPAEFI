@@ -15,7 +15,7 @@ export const CatalogosAPI = CoreAPI({
   },
 
   validateCreate(dto, data) {
-      if (data.some(u => u.nome === dto.nome) {
+      if (data.some(u => u.nome === dto.nome)) {
         throw new Error('Já existe tabela com esse nome');
       }
   }
