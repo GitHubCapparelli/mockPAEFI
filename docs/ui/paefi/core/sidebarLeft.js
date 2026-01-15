@@ -15,6 +15,35 @@ function renderOpcoes(moduleKey) {
     const domains = Dominio.All.filter(x => x.Key !== Dominio.Nenhum.Key);
     Render.Options(domains);
   }
+  if (moduleKey === Modulo.Atender.Key) {
+    const domains = [
+      Dominio.Atendimentos,
+      Dominio.Compromissos,
+      Dominio.Demandas,
+      Dominio.Denuncias,
+      Dominio.Tarefas,
+      Dominio.UsuariosCidadaos,
+      Dominio.Violações,
+    ];
+    Render.Options(domains);
+  }
+  if (moduleKey === Modulo.Monitor.Key) {
+    const domains = [
+      Dominio.Atendimentos,
+      Dominio.Atividades,
+      Dominio.CasosDeUso,
+      Dominio.Compromissos,
+      Dominio.Demandas,
+      Dominio.Denuncias,
+      Dominio.Documentos,
+      Dominio.Historico,
+      Dominio.Tarefas,
+      Dominio.UsuariosCidadaos,
+      Dominio.UsuariosServidores,
+      Dominio.Violações,
+    ];
+    Render.Options(domains);
+  }
 }
 
 function renderPreferences() {
