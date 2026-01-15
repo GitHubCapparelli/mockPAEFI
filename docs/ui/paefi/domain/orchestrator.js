@@ -147,6 +147,7 @@ export class Orchestrator {
                 
                 if (result.action === 'proceed') {
                     metadata.justificativa = result.justificativa
+                    ok = true;
                 }
             }
             if (ok) {
