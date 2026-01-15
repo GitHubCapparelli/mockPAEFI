@@ -1,6 +1,6 @@
 import { BaseDTO } from './baseDTO.js';
 
-export function CatalogoDados(data, audit = {}) {
+export function CatalogoDTO(data, audit = {}) {
   return BaseDTO({
     nome         : data.nome,
     versao       : data.versao,
