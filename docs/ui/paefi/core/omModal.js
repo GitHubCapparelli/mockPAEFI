@@ -266,7 +266,7 @@ export class ModalJustificativaBuilder {
         const $label    = $('<label>', { class: 'form-label mb-1', text: 'Justificativa' });
         $labelRow.append($label, this.fieldNames.join(' . '));
 
-        const $control  = $('<input>', { id:'txtJustificativa', class: 'form-control', type: 'text-area' });
+        const $control  = $('<textarea>', { id:'txtJustificativa', class: 'form-control', rows: 5 });
 
         $group.append($labelRow, $control);
         $container.append($group);
