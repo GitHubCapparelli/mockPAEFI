@@ -115,6 +115,9 @@ export class ModalFormBuilder {
         if (info.Access !== TipoAcesso.Interno.Key) {
             meta.push(`Acesso ${info.Access}`);
         }
+        if (info.IsSensitive) {
+            meta.push('Sensível');
+        }
 
         return $('<small>', { class: 'text-muted', text: meta.join(' · ') });
     }
@@ -251,11 +254,12 @@ export class ModalMessageBuilder {
 /* Justificativa builder     ======= */
 export class ModalJustificativaBuilder {
 
-    constructor(fieldNames) {
+    constructor(title, fieldNames) {
+        this.title      = title;
         this.fieldNames = fieldNames;
     }
-    static Create(fieldNames) {
-        return new ModalJustificativaBuilder(fieldNames);
+    static Create(title, fieldNames) {
+        return new ModalJustificativaBuilder(title, fieldNames);
     }
 
     renderBody($container) { 

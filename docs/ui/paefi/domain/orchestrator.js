@@ -129,7 +129,7 @@ export class Orchestrator {
         Object.entries(instance).forEach(([key, value]) => {
             const binding = this.info.Catalog.Bindings.find(x => x.DtoId === key);
             if (binding.DbInfo.IsSensitive) {
-                fields.push(key);
+                fields.push(binding.UiFieldTitle);
             }
         });
         return fields;
@@ -141,8 +141,9 @@ export class Orchestrator {
             let fields  = this.#getSensitiveFields(result.dirty);
             let ok      = (fields.length === 0);
             if (!ok) {
-                const builder = ModalJustificativaBuilder.Create(fields);
-                const result = await this.modal.open(builder);
+                const title   = `Editando dados de ${dto.nome}`;
+                const builder = ModalJustificativaBuilder.Create(title, fields);
+                const result  = await this.modal.open(builder);
                 
                 if (result.action === 'proceed') {
                     metadata.justificativa = result.justificativa

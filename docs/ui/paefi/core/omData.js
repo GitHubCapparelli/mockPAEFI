@@ -142,9 +142,9 @@ export class Metadata {         // fields, attribs (spec)
     static Sigla               = new Metadata({ key: crypto.randomUUID(), dbColName:'sigla'         , uiKey:'#txtSigla'          , uiTitle: 'Unidade'        , minLen: 5 , maxLen: 250, required: true     });
     static IbgeId              = new Metadata({ key: crypto.randomUUID(), dbColName:'ibgeId'        , uiKey:'#txtIbgeId'         , uiTitle: 'IBGE'           , minLen: 11, maxLen: 11 });
     
-    static Login               = new Metadata({ key: crypto.randomUUID(), dbColName:'login'         , uiKey:'#txtLogin'          , uiTitle: 'Login'          , required: true   , minLen: 5 , maxLen: 50 });
-    static Matricula           = new Metadata({ key: crypto.randomUUID(), dbColName:'matricula'     , uiKey:'#txtMatricula'      , uiTitle: 'Matrícula'      , required: true   , minLen: 8 , maxLen: 8 });
-    static CpfServidor         = new Metadata({ key: crypto.randomUUID(), dbColName:'cpf'           , uiKey:'#txtCPF'            , uiTitle: 'CPF'            , required: true   , minLen: 11, maxLen: 11        , cripto: TipoCriptografia.Total, access: TipoAcesso.Sigiloso, isSensitive: true });
+    static Login               = new Metadata({ key: crypto.randomUUID(), dbColName:'login'         , uiKey:'#txtLogin'          , uiTitle: 'Login'          , required: true   , minLen: 5 , maxLen: 50        , isSensitive: true });
+    static Matricula           = new Metadata({ key: crypto.randomUUID(), dbColName:'matricula'     , uiKey:'#txtMatricula'      , uiTitle: 'Matrícula'      , required: true   , minLen: 8 , maxLen: 8         , isSensitive: true });
+    static CpfServidor         = new Metadata({ key: crypto.randomUUID(), dbColName:'cpf'           , uiKey:'#txtCPF'            , uiTitle: 'CPF'            , required: true   , minLen: 11, maxLen: 11        , isSensitive: true , cripto: TipoCriptografia.Total, access: TipoAcesso.Sigiloso });
 
     static Hierarquia          = new Metadata({ key: crypto.randomUUID(), dbColName:'hierarquiaID'  , uiKey:'#hierarquiaID'      , uiTitle: 'Hierarquia'     , required: true   , type:'UUID'   , pfKey:'FK' });
     static UnidadeID           = new Metadata({ key: crypto.randomUUID(), dbColName:'unidadeID'     , uiKey:'#unidadeID'         , uiTitle: 'Unidade'        , required: true   , type:'UUID'   , pfKey:'FK'    , uiGroupKey:'#cmbFilterUnidade' });
