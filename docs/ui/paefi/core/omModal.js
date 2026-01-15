@@ -210,9 +210,9 @@ export class ModalFormBuilder {
 export class ModalMessageBuilder {
 
     constructor({ title, message, danger = false }) {
-        this.title = title;
+        this.title   = title;
         this.message = message;
-        this.danger = danger;
+        this.danger  = danger;
     }
     static Create(title, message) {
         return new ModalMessageBuilder({ title: title, message: message });
@@ -244,5 +244,49 @@ export class ModalMessageBuilder {
 
     async result() {
         return { action: 'proceed' };
+    }
+}
+
+
+/* Justificativa builder     ======= */
+export class ModalJustificativaBuilder {
+
+    constructor(fieldNames) {
+        this.fieldNames = fieldNames;
+    }
+    static Create(fieldNames) {
+        return new ModalJustificativaBuilder(fieldNames);
+    }
+
+    renderBody($container) {
+        $container.empty();
+        const $group    = $('<div>', { class: 'mb-3' });
+        const $labelRow = $('<div>', { class: 'd-flex justify-content-between align-items-center' });
+        
+        const $label    = $('<label>', { class: 'form-label mb-1', text: 'Justificativa' });
+        $labelRow.append($label, this.fieldNames.join(' . '));
+
+        const $control  = $('<input>', { id:'txtJustificativa', class: 'form-control', type: 'text-area' });
+
+        $group.append($labelRow, $control);
+        $container.append($group);
+
+        $control.on('input change', (e) => {
+            const isValid = $(e.currentTarget).val().length >= 10;
+            this.$btnSave.prop('disabled', !isValid);
+        });
+    }
+
+    renderFooter($container, $btnCancel) {
+        this.$btnSave = $('<button>', { class: 'btn btn-primary', text: 'Salvar', disabled: true });
+        $container.append($btnCancel, this.$btnSave);
+        return this.$btnSave;
+    }
+
+    async result() {
+        return {
+            action        : 'proceed',
+            justificativa : $('#txtJustificativa').val()
+        };
     }
 }

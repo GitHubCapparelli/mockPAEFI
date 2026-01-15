@@ -1,9 +1,9 @@
 // ui paefi domain orchestrator //
 
-import { DomainInfo }                                         from '../core/omData.js';
+import { DomainInfo, TipoLog }                                         from '../core/omData.js';
 import { DomainView }                                         from './domainView.js';
 import { ApiGate }                                            from './appGate.js';
-import { ModalShell, ModalFormBuilder, ModalMessageBuilder }  from '../core/omModal.js';
+import { ModalShell, ModalFormBuilder, ModalMessageBuilder, ModalJustificativaBuilder }  from '../core/omModal.js';
 import { Session, CurrentUserKey }                            from '../../../services/storage.js';
 
 export class Orchestrator {
@@ -105,16 +105,62 @@ export class Orchestrator {
         if (!Object.keys(result.dirty).length) return;
 
         if (result.action === 'proceed') {
-            result.payload.alteradoEm  = new Date().toISOString();
-            result.payload.aleradoPor  = this.userID
-            await this.gate.Update(id, result.payload);
+            const request = this.getRequest('update', result, dto);
+            if (request) {
+                request.payload.alteradoEm  = new Date().toISOString();
+                request.payload.alteradoPor = this.userID
+                await this.gate.Update(id, request);
+            }
         }
+    }
+
+    #getMetadata(acao) {
+        return {
+            userID     : this.userID,
+            catalogID  : this.info.Catalog.Key,
+            sessionID  : '???', // how do I get this ?
+            tipo       : TipoLog.Frontend.Key,
+            acao       : acao
+        }
+    } 
+
+    #getSensitiveFields(instance) {
+        let fields = [];
+        Object.entries(instance).forEach(([key, value]) => {
+            const binding = this.info.Catalog.Bindings.find(x => x.DtoId === key);
+            if (binding.DbInfo.IsSensitive) {
+                fields.push(key);
+            }
+        });
+        return fields;
+    }
+
+    async getRequest(acao, result, dto = null) {
+        const metadata = this.#getMetadata(acao);
+        if (acao === 'update'){
+            let fields  = this.#getSensitiveFields(result.dirty);
+            let ok      = (fields.length === 0);
+            if (!ok) {
+                const builder = ModalJustificativaBuilder.Create(fields);
+                const result = await this.modal.open(builder);
+                
+                if (result.action === 'proceed') {
+                    metadata.justificativa = result.justificativa
+                }
+            }
+            if (ok) {
+                return {
+                    metadata : metadata,
+                    payload  : result.payload
+                }
+            }
+        }
+        return null;
     }
 
     async onDelete_clicked(e) {
         e.preventDefault();
         const id = $(e.currentTarget).data('id');
-
         const dto = await this.info.API.GetById(id);
         const title = dto.nome 
                     ? dto.nome

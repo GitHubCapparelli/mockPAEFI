@@ -93,7 +93,8 @@ export class Metadata {         // fields, attribs (spec)
         minLen        = null, 
         maxLen        = null,
         cripto        = TipoCriptografia.Nenhuma, 
-        access        = TipoAcesso.Interno
+        access        = TipoAcesso.Interno,
+        isSensitive   = false
     } ) {                                               // origem?
         this.Key            = key;
 
@@ -111,6 +112,7 @@ export class Metadata {         // fields, attribs (spec)
         this.MaxLength      = maxLen;
         this.Cripto         = cripto.Key;
         this.Access         = access.Key;
+        this.IsSensitive    = isSensitive;
 
         if (!Metadata.All.some(x => x.Key === key)) {
             Metadata.All.push(this);
@@ -142,7 +144,7 @@ export class Metadata {         // fields, attribs (spec)
     
     static Login               = new Metadata({ key: crypto.randomUUID(), dbColName:'login'         , uiKey:'#txtLogin'          , uiTitle: 'Login'          , required: true   , minLen: 5 , maxLen: 50 });
     static Matricula           = new Metadata({ key: crypto.randomUUID(), dbColName:'matricula'     , uiKey:'#txtMatricula'      , uiTitle: 'Matrícula'      , required: true   , minLen: 8 , maxLen: 8 });
-    static CpfServidor         = new Metadata({ key: crypto.randomUUID(), dbColName:'cpf'           , uiKey:'#txtCPF'            , uiTitle: 'CPF'            , required: true   , minLen: 11, maxLen: 11        , cripto: TipoCriptografia.Total });
+    static CpfServidor         = new Metadata({ key: crypto.randomUUID(), dbColName:'cpf'           , uiKey:'#txtCPF'            , uiTitle: 'CPF'            , required: true   , minLen: 11, maxLen: 11        , cripto: TipoCriptografia.Total, access: TipoAcesso.Sigiloso, isSensitive: true });
 
     static Hierarquia          = new Metadata({ key: crypto.randomUUID(), dbColName:'hierarquiaID'  , uiKey:'#hierarquiaID'      , uiTitle: 'Hierarquia'     , required: true   , type:'UUID'   , pfKey:'FK' });
     static UnidadeID           = new Metadata({ key: crypto.randomUUID(), dbColName:'unidadeID'     , uiKey:'#unidadeID'         , uiTitle: 'Unidade'        , required: true   , type:'UUID'   , pfKey:'FK'    , uiGroupKey:'#cmbFilterUnidade' });
