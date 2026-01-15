@@ -287,6 +287,9 @@ export class DomainInfo {
     static Historico = new DomainInfo('historico', 'Histórico', API.HistoricoAPI, DTO.HistoricoDTO, 
         Catalog.Historico, 'historicoSchema.json', { usuarios: API.UsuariosServidoresAPI, catalogos: API.CatalogosAPI });
 
+    static Catalogos = new DomainInfo('catalogos', 'Catálogo', API.CatalogosAPI, DTO.CatalogoDTO,
+        Catalog.Catalogos, 'catalogoSchema.json');
+
     static Unidades = new DomainInfo('unidades', 'Unidade', API.UnidadesAPI, DTO.UnidadeDTO, 
         Catalog.Unidades, 'unidadeSchema.json');
     
