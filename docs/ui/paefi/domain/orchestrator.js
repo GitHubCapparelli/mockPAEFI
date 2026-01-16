@@ -1,9 +1,8 @@
 // ui paefi domain orchestrator //
 
-import { Session, CurrentUserKey }                            from '../../../services/storage.js';
-import { DomainInfo, TipoLog }                                from '../core/omData.js';
-import { DomainView }                                         from './domainView.js';
-import { ApiGate }                                            from './appGate.js';
+import { DomainInfo }                                from '../core/omData.js';
+import { DomainView }                                from './domainView.js';
+import { ApiGate }                                   from './appGate.js';
 import { ModalShell, ModalFormBuilder, ModalMessageBuilder, ModalJustificativaBuilder }  from '../core/omModal.js';
 
 export class Orchestrator {
@@ -14,7 +13,6 @@ export class Orchestrator {
         this.info       = null;
         this.render     = null;  
         this.modal      = null;
-        this.userID     = Session.Get(CurrentUserKey).id;
     }
 
     async init(moduleKey, domainKey) {
@@ -89,9 +87,8 @@ export class Orchestrator {
         const result    = await this.modal.open(builder);
         
         if (result.action === 'proceed') {
-            result.payload.criadoEm  = new Date().toISOString();
-            result.payload.criadoPor = this.userID;
-            await this.gate.Create(result.payload);
+            const response = await this.gate.Create(result.payload);
+            await this.#messageOnError(response, 'ERRO ao incluir novos dados');
         }
     }
 
@@ -105,61 +102,10 @@ export class Orchestrator {
         if (!Object.keys(result.dirty).length) return;
 
         if (result.action === 'proceed') {
-            const request = await this.getRequest('update', result, dto);
-            if (request) {
-                request.payload.alteradoEm  = new Date().toISOString();
-                request.payload.alteradoPor = this.userID
-
-                // tem que ser request (payload & metadata)
-                await this.gate.Update(id, request.payload);
-            }
+            const justificativa = await this.#assureJustificativa('update', result, dto);
+            const response      = await this.gate.Update(id, request.payload, justificativa);
+            await this.#messageOnError(response, 'ERRO ao atualizar dados');
         }
-    }
-
-    #getMetadata(acao) {
-        return {
-            userID     : this.userID,
-            catalogID  : this.info.Catalog.Key,
-            sessionID  : '???', // how do I get this ?
-            tipo       : TipoLog.Frontend.Key,
-            acao       : acao
-        }
-    } 
-
-    #getSensitiveFields(instance) {
-        let fields = [];
-        Object.entries(instance).forEach(([key, value]) => {
-            const binding = this.info.Catalog.Bindings.find(x => x.DtoId === key);
-            if (binding.DbInfo.IsSensitive) {
-                fields.push(binding.UiFieldTitle);
-            }
-        });
-        return fields;
-    }
-
-    async getRequest(acao, result, dto = null) {
-        const metadata = this.#getMetadata(acao);
-        if (acao === 'update'){
-            let fields  = this.#getSensitiveFields(result.dirty);
-            let ok      = (fields.length === 0);
-            if (!ok) {
-                const title   = `Editando dados de ${dto.nome}`;
-                const builder = ModalJustificativaBuilder.Create(title, fields);
-                const result  = await this.modal.open(builder);
-                
-                if (result.action === 'proceed') {
-                    metadata.justificativa = result.justificativa
-                    ok = true;
-                }
-            }
-            if (ok) {
-                return {
-                    metadata : metadata,
-                    payload  : result.payload
-                }
-            }
-        }
-        return null;
     }
 
     async onDelete_clicked(e) {
@@ -176,9 +122,42 @@ export class Orchestrator {
         const result  = await this.modal.open(builder);
         
         if (result.action === 'proceed') {
-            dto.excluidoEm  = new Date().toISOString();
-            dto.excluidoPor = this.userID;
-            await this.gate.Delete(id, dto);
+            const response = await this.gate.Delete(id, dto);
+            await this.#messageOnError(response, 'ERRO ao excluir registro');
         }
     }
+
+    async #assureJustificativa(acao, result, dto = null) {
+        if (acao === 'update') {
+            let fields = this.#getSensitiveFields(result.dirty);
+            if (fields.length > 0) {
+                const title   = `Editando dados de ${dto.nome}`;
+                const builder = ModalJustificativaBuilder.Create(title, fields);
+                const result  = await this.modal.open(builder);
+
+                if (result.action === 'proceed' && result.justificativa) {
+                    return result.justificativa
+                }
+            }
+        }
+        return null;
+    }
+
+    #getSensitiveFields(instance) {
+        let fields = [];
+        Object.entries(instance).forEach(key => {
+            const binding = this.info.Catalog.Bindings.find(x => x.DtoId === key);
+            if (binding.DbInfo.IsSensitive) {
+                fields.push(binding.UiFieldTitle);
+            }
+        });
+        return fields;
+    }
+
+    async #messageOnError(response, title) {
+        if (response?.error) {
+            const builder = ModalMessageBuilder.Create(title, response.error);
+            await this.modal.open(builder);
+        }
+   }
 }

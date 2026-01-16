@@ -1,19 +1,15 @@
 // ui paefi core omClass.js
 
 export class QueryEngine {
-  constructor(api, onLoaded) {
+  constructor(api) {
       this.api        = api;
       this.page       = 1;
       this.pageSize   = 5;
       this.totalItems = 0;
       this.totalPages = 0;
       
-      this.lastResult = null;
+      this.lastResult  = null;
       this.lastFilters = null;
-
-      this.onLoaded   = onLoaded;
-
-      api.Init();
   }
 
   async CallGetPaginated(filters = this.lastFilters) {
@@ -26,16 +22,9 @@ export class QueryEngine {
       return response;
   }
 
-  async GetPaginated(filters) {
+  async GetPaginated(filters = null) {
     this.page = 1;
-    const response = await this.CallGetPaginated(filters);
-    this.onLoaded(response);
-  }
-
-  async Clear() {
-    this.page = 1;
-    const response = await this.CallGetPaginated();
-    this.onLoaded(response);
+    return await this.CallGetPaginated(filters);
   }
 
   async Navigate(e, page) {
@@ -45,16 +34,16 @@ export class QueryEngine {
     if (!x || x === this.page) return;
 
     this.page = x;
-    const response = await this.CallGetPaginated();
-    this.onLoaded(response);
+    return await this.CallGetPaginated();
   }
 }
 
+
+
+
 export class CommandEngine {
-  constructor(api, onExecuted, onError = null) {
+  constructor(api) {
     this.api        = api;
-    this.onExecuted = onExecuted;
-    this.onError    = onError;
   }
 
   Create      = async (data)     => this.#exec(() => this.api.Create(data));
@@ -64,13 +53,10 @@ export class CommandEngine {
 
   async #exec(fn) {
     try {
-      await fn();
-      this.onExecuted?.();
-      return true;
+      return await fn();
     } catch (e) {
-      this.onError?.(e);
       console.error(e);
-      return false;
+      return e;
     }
   }
 }

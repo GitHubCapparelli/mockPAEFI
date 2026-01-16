@@ -1,19 +1,7 @@
-import { InMemory }               from '../storage.js';
-import { CatalogosAPI }           from './catalogosAPI.js';
-import { HistoricoAPI }           from './historicoAPI.js';
-import { UnidadesAPI }            from './unidadesAPI.js';
-import { UsuariosServidoresAPI }  from './usuariosServidoresAPI.js';
+// docs services api coreAPI
 
-export const AllAPIs = {
-  async Init() {
-    await Promise.all([
-      UsuariosServidoresAPI.Init(),
-      UnidadesAPI.Init(),
-      CatalogosAPI.Init(),
-      HistoricoAPI.Init()
-    ]);
-  }
-};
+import { InMemory }   from '../storage.js';
+import * as API       from './_index.js';
 
 export function CoreAPI({
   entity,
@@ -103,43 +91,57 @@ export function CoreAPI({
     };
   }
 
-  function Create(rawData) {
+  function Create(data) {
     ensureInitialized();
 
-    const data = InMemory.GetAll(entity);
-    const dto = createDTO(rawData);
+    const request = enforceOnRequest(data);
+    if (request?.error)     return request;
 
-    if (validateCreate) {
-      validateCreate(dto, data);
+    const tx = beginTransaction();
+    try {
+      const dto = EntityCreate(request.payload);  // validated 
+      AddHistory(request.metadata)                // enriched and validated
+
+      commit(tx);
+      return dto;
+
+    } catch (e) {
+      rollback(tx);
+      return { error: e.toString() }; // or e.message?
     }
+  }
 
-    InMemory.SetAll(entity, [...data, dto]);
-    return dto;
+  function enforceOnRequest(data, acao) {
+    // validate data.payload against the schema
+    // if valid 
+    data.metadata.dataHora = new Date().toISOString();
+    data.metadata.diff = JSON.stringify(data.payload);
+
+    // validate dta.metadata against the Historico (event) schema
+    // if valid, return something meaningful;
+    
+    return { error: 'Not implemented (yet)...' };
+  }
+
+  function AddHistory(metadata) {
+    // set metadata.dataHora, metadata.sessionId (?), and metadata.diff
+    // add to histórico (call historicoAPI.Create...)
   }
 
   function Update(id, data) {
     ensureInitialized();
 
-    // these must be atomic !!!
-    AddHistory(data);
-    UpdateEntity(id, data.payload);
-  }
+    // validate request (ensure contracts [schemas]...)
+    // data.metadata & data.payload
 
-  function AddHistory(data) {
-    // set data.metadata.dataHora, data.metadata.sessionId (?), and data.metadata.diff
-    // add to histórico (call historicoAPI.Create...)
-  }
+    // these must be atomic (ACID) !!!
+    //{
+    AddHistory(data.metadata);
+    EntityUpdate(id, data.payload);
+    //}
 
-  function UpdateEntity(id, rawData) {
-    const data = InMemory.GetAll(entity);
-    const idx = data.findIndex(x => x.id === id);
-    if (idx === -1) return null;
+    // return response to the UI
 
-    const next = [...data];
-    next[idx] = { ...next[idx], ...rawData };
-
-    InMemory.SetAll(entity, next);
-    return next[idx];
   }
 
   function SoftDelete(id, data) {
@@ -157,7 +159,35 @@ export function CoreAPI({
     }
 
     InMemory.SetAll(entity, next);
+
+    // AddHistory(data)  <--- is this it ? doesn't feel so...
     return true;
+  }
+
+  function EntityCreate(rawData) {
+    ensureInitialized();
+
+    const data = InMemory.GetAll(entity);
+    const dto = createDTO(rawData);
+
+    if (validateCreate) {
+      validateCreate(dto, data);
+    }
+
+    InMemory.SetAll(entity, [...data, dto]);
+    return dto;
+  }
+
+  function EntityUpdate(id, rawData) {
+    const data = InMemory.GetAll(entity);
+    const idx = data.findIndex(x => x.id === id);
+    if (idx === -1) return null;
+
+    const next = [...data];
+    next[idx] = { ...next[idx], ...rawData };
+
+    InMemory.SetAll(entity, next);
+    return next[idx];
   }
 
   return {
@@ -172,3 +202,14 @@ export function CoreAPI({
   };
 }
 
+
+export const AllAPIs = {
+  async Init() {
+    await Promise.all([
+      API.UsuariosServidoresAPI.Init(),
+      API.UnidadesAPI.Init(),
+      API.CatalogosAPI.Init(),
+      API.HistoricoAPI.Init()
+    ]);
+  }
+};
