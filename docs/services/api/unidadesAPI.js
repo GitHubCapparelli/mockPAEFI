@@ -1,12 +1,14 @@
-import { CoreAPI }    from './coreAPI.js';
-import { UnidadeDTO } from '../../data/factory/unidadeDTO.js';
+import { CoreAPI }          from './coreAPI.js';
+import { UnidadeDTO }       from '../../data/factory/unidadeDTO.js';
+import { HistoricoAPI}      from './historicoAPI';
 
 export const UnidadesAPI = CoreAPI({
   entity            : 'unidades',
   dataPath          : '/mockPAEFI/data/mock/unidades.json',
   jsonRoot          : 'unidades',
   defaultOrderBy    : 'nome',
-  createDTO         : UnidadeDTO,
+  DTO               : UnidadeDTO,
+  historicoAPI      : HistoricoAPI,
 
   applyFilters(data, filters) {
       let result = data;

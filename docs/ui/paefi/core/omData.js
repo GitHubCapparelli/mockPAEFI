@@ -1,161 +1,8 @@
 // ui paefi core omData
 
-import * as API from '../../../services/api/_index.js';
-import * as DTO from '../../../data/factory/_index.js';
-import * as Enum from './omEnum.js';
-
-export class TipoCriptografia extends Enum.BaseEnum {
-    static All = [];
-
-    static Nenhuma              = new TipoCriptografia('nenhuma', 'Nenhuma');
-    static Repouso              = new TipoCriptografia('repouso', 'Repouso');
-    static Transito             = new TipoCriptografia('transito', 'Transito');
-    static Total                = new TipoCriptografia('total', 'Total');
-
-    constructor(key, value) {
-        super();
-        this.Key = key;
-        this.Value = value;
-        this.JQuery = `#${key}`;
-
-        if (!TipoCriptografia.All.some(x => x.Key === key)) {
-            TipoCriptografia.All.push(this);
-        }
-        Object.freeze(this);
-    }
-};
-Object.freeze(TipoCriptografia.All);
-
-export class TipoAcesso extends Enum.BaseEnum {
-    static All = [];
-
-    static Interno          = new TipoAcesso('interno', 'Interno');
-    static Privado          = new TipoAcesso('privado', 'Privado');
-    static Publico          = new TipoAcesso('publico', 'Publico');
-    static Sigiloso         = new TipoAcesso('sigiloso', 'Sigiloso');
-    static Compartilhado    = new TipoAcesso('compartilhado', 'Compartilhado');
-    static RBAC             = new TipoAcesso('rbac', 'RBAC');
-
-    constructor(key, value) {
-        super();
-        this.Key = key;
-        this.Value = value;
-        this.JQuery = `#${key}`;
-
-        if (!TipoAcesso.All.some(x => x.Key === key)) {
-            TipoAcesso.All.push(this);
-        }
-        Object.freeze(this);
-    }
-};
-Object.freeze(TipoAcesso.All);
-
-export class TipoLog extends Enum.BaseEnum {
-    static All = [];
-
-    static NaoInformado     = new TipoLog('naoInformado', 'Não informado');
-    static Erro             = new TipoLog('erro', 'Erro');
-    static Backend          = new TipoLog('backend', 'Backend');
-    static Frontend         = new TipoLog('frontend', 'Frontend');
-    static Qualidade        = new TipoLog('qualidade', 'Qualidade');
-    static Compliance       = new TipoLog('compliance', 'Compliance');
-    static Desempenho       = new TipoLog('desempenho', 'Desempenho');
-
-    constructor(key, value) {
-        super();
-        this.Key = key;
-        this.Value = value;
-        this.JQuery = `#${key}`;
-
-        if (!TipoLog.All.some(x => x.Key === key)) {
-            TipoLog.All.push(this);
-        }
-        Object.freeze(this);
-    }
-};
-Object.freeze(TipoLog.All);
-
-//////////////////////////
-
-export class Metadata {         // fields, attribs (spec)
-    static All = [];
-    constructor({ 
-        key, 
-        dbColName,                    // db colName       (record attribute)
-        type          = 'string', 
-        pfKey         = '', 
-        required      = false, 
-        defaultValue  = null, 
-        isUnique      = false, 
-        minLen        = null, 
-        maxLen        = null,
-        cripto        = TipoCriptografia.Nenhuma, 
-        access        = TipoAcesso.Interno,
-        isSensitive   = false
-    } ) {                                               // origem?
-        this.Key            = key;
-
-        this.DbColName      = dbColName;
-        this.Type           = type;
-        this.PfKey          = pfKey;
-        this.Required       = required;
-        this.Value          = defaultValue;
-        this.IsUnique       = isUnique;
-        this.MinLength      = minLen;
-        this.MaxLength      = maxLen;
-        this.Cripto         = cripto.Key;
-        this.Access         = access.Key;
-        this.IsSensitive    = isSensitive;
-
-        if (!Metadata.All.some(x => x.Key === key)) {
-            Metadata.All.push(this);
-        }
-    }
-
-    Mandatory() {
-        this.Required = true;
-        return this;
-    }
-
-    static Id                  = new Metadata({ key: crypto.randomUUID(), dbColName:'id'            , type:'UUID'               , pfKey:'PK' });
-    static CriadoPor           = new Metadata({ key: crypto.randomUUID(), dbColName:'criadoPorID'   , type:'UUID'               , pfKey:'FK'   , required: true });
-    static AlteradoPor         = new Metadata({ key: crypto.randomUUID(), dbColName:'alteradoPorID' , type:'UUID'               , pfKey:'FK'   , required: true });
-    static DeletadoPor         = new Metadata({ key: crypto.randomUUID(), dbColName:'deletadoPorID' , type:'UUID'               , pfKey:'FK'   , required: true });
-    static CriadoEm            = new Metadata({ key: crypto.randomUUID(), dbColName:'criadoEm'      , type:'datetime UTC'       , required: true, defaultValue:'now' });
-    static AlteradoEm          = new Metadata({ key: crypto.randomUUID(), dbColName:'alteradoEm'    , type:'datetime UTC' });
-    static DeletadoEm          = new Metadata({ key: crypto.randomUUID(), dbColName:'deletadoEm'    , type:'datetime UTC' });
-    static ExclusaoFisica      = new Metadata({ key: crypto.randomUUID(), dbColName:'excFisica'     , type:'bool' });
-    
-    static Nome                = new Metadata({ key: crypto.randomUUID(), dbColName:'nome'          , minLen: 15 , maxLen: 250 });
-    static Descricao           = new Metadata({ key: crypto.randomUUID(), dbColName:'descricao'     , minLen: 10 });
-    static Acao                = new Metadata({ key: crypto.randomUUID(), dbColName:'acao'          , minLen: 1  , maxLen: 10 });
-    static Versao              = new Metadata({ key: crypto.randomUUID(), dbColName:'versao'        , minLen: 1  , maxLen: 10 });
-    static Finalidade          = new Metadata({ key: crypto.randomUUID(), dbColName:'finalidade'    , minLen: 10 , maxLen: 150 });
-
-    static DataHora            = new Metadata({ key: crypto.randomUUID(), dbColName:'dataHora '     , type: 'datetime UTC' }); // text [20-20] 2025-12-01T00:00:00Z
-    static Justificativa       = new Metadata({ key: crypto.randomUUID(), dbColName:'justificativa' , type:'text' });
-    static Diff                = new Metadata({ key: crypto.randomUUID(), dbColName:'diff'          , type:'text' });
-    
-    static Sigla               = new Metadata({ key: crypto.randomUUID(), dbColName:'sigla'         , minLen: 5 , maxLen: 250, required: true     });
-    static IbgeId              = new Metadata({ key: crypto.randomUUID(), dbColName:'ibgeId'        , minLen: 11, maxLen: 11 });
-    static SessionId           = new Metadata({ key: crypto.randomUUID(), dbColName:'sessionId'     , minLen: 36, maxLen: 36 });
-    
-    static Login               = new Metadata({ key: crypto.randomUUID(), dbColName:'login'         , required: true   , minLen: 5 , maxLen: 50        , isSensitive: true });
-    static Matricula           = new Metadata({ key: crypto.randomUUID(), dbColName:'matricula'     , required: true   , minLen: 8 , maxLen: 8         , isSensitive: true });
-    static CpfServidor         = new Metadata({ key: crypto.randomUUID(), dbColName:'cpf'           , required: true   , minLen: 11, maxLen: 11        , isSensitive: true , cripto: TipoCriptografia.Total, access: TipoAcesso.Sigiloso });
-
-    static Hierarquia          = new Metadata({ key: crypto.randomUUID(), dbColName:'hierarquiaID'  , required: true   , type:'UUID'   , pfKey:'FK' });
-    static UnidadeID           = new Metadata({ key: crypto.randomUUID(), dbColName:'unidadeID'     , required: true   , type:'UUID'   , pfKey:'FK' });
-    static CatalogoID          = new Metadata({ key: crypto.randomUUID(), dbColName:'catalogoID'    , required: true   , type:'UUID'   , pfKey:'FK' });
-    static UsuarioID           = new Metadata({ key: crypto.randomUUID(), dbColName:'userID'        , required: true   , type:'UUID'   , pfKey:'FK' });
-    
-    static FuncaoUnidade       = new Metadata({ key: crypto.randomUUID(), dbColName:'funcao'        , required: true   , type:'enum' });
-    static FuncaoUsuario       = new Metadata({ key: crypto.randomUUID(), dbColName:'funcao'        , required: true   , type:'enum' });
-    static CargoUsuario        = new Metadata({ key: crypto.randomUUID(), dbColName:'cargo'         , required: true   , type:'enum' });
-    static Especialidade       = new Metadata({ key: crypto.randomUUID(), dbColName:'especialidade' , required: true   , type:'enum' });
-
-    static TipoRegistro        = new Metadata({ key: crypto.randomUUID(), dbColName:'tipo'          , required: true   , type:'enum' });
-};
+import * as API     from '../../../services/api/_index.js';
+import * as Dados   from '../../../data/factory/_index.js';
+import * as Enum    from './omEnum.js';
 
 export class Binding {
     static All = [];
@@ -214,51 +61,6 @@ export class Binding {
     static CpfServidor      = new Binding({ key: crypto.randomUUID(), dbInfo: Metadata.CpfServidor,      dtoId:'cpf',               uiFieldTitle: 'CPF',            onGrid:false });
 }
 
-export class Catalog {          // DatabaseTable, dataSource
-    static All = [];
-
-    static SharedFields = {
-        Id              : Metadata.Id,
-        CriadoEm        : Metadata.CriadoEm,
-        CriadoPor       : Metadata.CriadoPor,
-        AlteradoEm      : Metadata.AlteradoEm,
-        AlteradoPor     : Metadata.AlteradoPor,
-        DeletadoEm      : Metadata.DeletadoEm,
-        DeletadoPor     : Metadata.DeletadoPor,
-        ExclusaoFisica  : Metadata.ExclusaoFisica,
-        Justificativa   : Metadata.Justificativa
-    };
-
-    constructor(key, name, versao, finalidade, fields = [] ) {
-        this.Key    = key;
-        this.Name   = name;
-        this.JQuery = `#${key}`;
-
-        this.Versao     = { ...Metadata.Versao      , Value: versao };
-        this.Finalidade = { ...Metadata.Finalidade  , Value: finalidade  };
-        this.Campos     = [ ...Object.values(Catalog.SharedFields), ...fields];
-
-        this.Metadata   = this.Campos.filter(campo => campo instanceof Metadata);
-        this.Bindings   = this.Campos.filter(campo => campo instanceof Binding);
-
-        if (!Catalog.All.some(x => x.Key === key || x.Name === name)) {
-            Catalog.All.push(this);
-        }
-    }
-
-    static Catalogos = new Catalog(crypto.randomUUID(), 'Catalogos', '0.1', 'Armazenar metadados das tabelas (data sources)',
-        [ Binding.NomeCatalogo, Binding.FuncaoCatalogo, Binding.VersaoCatalogo ]);
-
-    static Historico = new Catalog(crypto.randomUUID(), 'Historico', '0.1', 'Armazenar dados de eventos operacionais',
-        [ Binding.DataHora, Binding.Usuario, Binding.Catalogo, Binding.Acao, Binding.Justificativa, Binding.TipoRegistro, Binding.Descricao, Binding.SessionId, Binding.Diff ]);
-
-    static Unidades           = new Catalog(crypto.randomUUID(), 'Unidades', '0.1', 'Armazenar dados de unidades organizacionais',
-        [ Metadata.Hierarquia, Binding.SiglaUnidade, Binding.NomeUnidade, Binding.FuncaoUnidade, Binding.IbgeId ]);
-
-    static UsuariosServidores = new Catalog(crypto.randomUUID(), 'UsuariosServidores', '0.1', 'Armazenar dados de servidores',
-        [ Binding.Unidade, Binding.NomeServidor, Binding.FuncaoUsuario, Binding.CargoUsuario, Binding.Especialidade, Binding.Login, Binding.Matricula, Binding.CpfServidor ]);
-};
-
 export class DomainInfo {           
     static All = [];
 
@@ -284,17 +86,17 @@ export class DomainInfo {
         return instance;
     }
 
-    static Historico = new DomainInfo('historico', 'Histórico', API.HistoricoAPI, DTO.HistoricoDTO, 
-        Catalog.Historico, 'historicoSchema.json', { usuarios: API.UsuariosServidoresAPI, catalogos: API.CatalogosAPI });
+    static Historico = new DomainInfo('historico', 'Histórico', API.HistoricoAPI, Dados.HistoricoDTO, 
+        Dados.Tabela.Historico, 'historicoSchema.json', { usuarios: API.UsuariosServidoresAPI, catalogos: API.CatalogosAPI });
 
-    static Catalogos = new DomainInfo('catalogos', 'Catálogo', API.CatalogosAPI, DTO.CatalogoDTO,
-        Catalog.Catalogos, 'catalogoSchema.json');
+    static Catalogos = new DomainInfo('catalogos', 'Catálogo', API.CatalogosAPI, Dados.CatalogoDTO,
+        Dados.Tabela.Catalogos, 'catalogoSchema.json');
 
-    static Unidades = new DomainInfo('unidades', 'Unidade', API.UnidadesAPI, DTO.UnidadeDTO, 
-        Catalog.Unidades, 'unidadeSchema.json');
+    static Unidades = new DomainInfo('unidades', 'Unidade', API.UnidadesAPI, Dados.UnidadeDTO, 
+        Dados.Tabela.Unidades, 'unidadeSchema.json');
     
-    static UsuariosServidores = new DomainInfo('usuarios-servidores', 'Usuário Servidor', API.UsuariosServidoresAPI, DTO.UsuarioServidorDTO, 
-        Catalog.UsuariosServidores, 'usuarioServidorSchema.json', { unidades: API.UnidadesAPI });
+    static UsuariosServidores = new DomainInfo('usuarios-servidores', 'Usuário Servidor', API.UsuariosServidoresAPI, Dados.UsuarioServidorDTO, 
+        Dados.Tabela.UsuariosServidores, 'usuarioServidorSchema.json', { unidades: API.UnidadesAPI });
 };
 
 ///////////////////////////////////

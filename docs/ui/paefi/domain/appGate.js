@@ -3,8 +3,6 @@
 import { QueryEngine, CommandEngine }   from '../core/omClass.js';
 import { Session, CurrentUserKey }      from '../../../services/storage.js';
 import * as App                         from '../core/omData.js';
-import * as DTO                         from '../../../data/factory/_index.js'; // ???
-// ??? contracts (json schemas....)
 
 export class ApiGate {
     #query   = null;

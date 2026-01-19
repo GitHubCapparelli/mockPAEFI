@@ -8,8 +8,9 @@ export function CoreAPI({
   dataPath,
   jsonRoot,
   defaultOrderBy,
-  createDTO,
+  DTO,
   validateCreate,
+  historicoAPI,
   applyFilters = (data, filters) => data
 }) {
 
@@ -32,8 +33,8 @@ export function CoreAPI({
 
   async function loadInitialData() {
     try {
-      const response = await fetch(dataPath);
-      const json = await response.json();
+      const response  = await fetch(dataPath);
+      const json      = await response.json();
 
       if (Array.isArray(json)) return json;
       if (jsonRoot && Array.isArray(json[jsonRoot])) return json[jsonRoot];
@@ -95,37 +96,35 @@ export function CoreAPI({
     ensureInitialized();
 
     const request = enforceOnRequest(data);
-    if (request?.error)     return request;
+    if (request.error)     return request;
 
     const tx = beginTransaction();
     try {
-      const dto = EntityCreate(request.payload);  // validated 
-      AddHistory(request.metadata)                // enriched and validated
+      const dto = EntityCreate(request.payload);   
+      AddHistory(request.metadata)                
 
       commit(tx);
       return dto;
 
     } catch (e) {
       rollback(tx);
-      return { error: e.toString() }; // or e.message?
+      return { error: e.message }; 
     }
   }
 
-  function enforceOnRequest(data, acao) {
-    // validate data.payload against the schema
-    // if valid 
-    data.metadata.dataHora = new Date().toISOString();
-    data.metadata.diff = JSON.stringify(data.payload);
+  function enforceOnRequest(data) {
+    if (!data || !data.payload || !data.metadata) {
+      return { error: 'Invalid request structure' };
+    }
 
-    // validate dta.metadata against the Historico (event) schema
-    // if valid, return something meaningful;
-    
-    return { error: 'Not implemented (yet)...' };
+    return {
+      payload  : data.payload,
+      metadata : data.metadata
+    };
   }
 
   function AddHistory(metadata) {
-    // set metadata.dataHora, metadata.sessionId (?), and metadata.diff
-    // add to histórico (call historicoAPI.Create...)
+    historicoAPI.Create(metadata);
   }
 
   function Update(id, data) {
@@ -168,7 +167,7 @@ export function CoreAPI({
     ensureInitialized();
 
     const data = InMemory.GetAll(entity);
-    const dto = createDTO(rawData);
+    const dto  = DTO.Create(rawData);
 
     if (validateCreate) {
       validateCreate(dto, data);

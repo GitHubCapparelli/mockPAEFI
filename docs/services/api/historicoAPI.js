@@ -2,11 +2,11 @@ import { CoreAPI }          from './coreAPI.js';
 import { HistoricoDTO }     from '../../data/factory/historicoDTO.js';
 
 export const HistoricoAPI = CoreAPI({
-    entity         : 'historico',
-    dataPath       : '/mockPAEFI/data/mock/historico.json',
-    jsonRoot       : 'historico',
-    defaultOrderBy : 'dataHora',
-    createDTO      : HistoricoDTO,
+    entity          : 'historico',
+    dataPath        : '/mockPAEFI/data/mock/historico.json',
+    jsonRoot        : 'historico',
+    defaultOrderBy  : 'dataHora',
+    DTO             : HistoricoDTO,
 
     applyFilters(data, filters) {
         let result = data;

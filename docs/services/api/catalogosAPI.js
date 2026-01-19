@@ -1,12 +1,14 @@
-import { CoreAPI }     from './coreAPI.js';
-import { CatalogoDTO } from '../../data/factory/catalogoDTO.js';
+import { CoreAPI }        from './coreAPI.js';
+import { CatalogoDTO }    from '../../data/factory/catalogoDTO.js';
+import { HistoricoAPI}    from './historicoAPI';
 
 export const CatalogosAPI = CoreAPI({
   entity            : 'catalogos',
   dataPath          : '/mockPAEFI/data/seed/catalogos.json',
   jsonRoot          : 'catalogos',
   defaultOrderBy    : 'nome',
-  createDTO         : CatalogoDTO,
+  DTO               : CatalogoDTO,
+  historicoAPI      : HistoricoAPI,
 
   applyFilters(data, filters) {
       let result = data;
