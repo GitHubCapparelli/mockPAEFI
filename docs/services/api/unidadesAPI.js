@@ -6,7 +6,7 @@ import { HistoricoAPI}      from './historicoAPI';
 const _token = Symbol('UnidadesAPI');
 
 export class UnidadesAPI extends CoreAPI {
-  constructor(token) {
+  constructor(token, historicoAPI) {
     if (token !== _token) throw new Error('Use UnidadesAPI.CreateInstance() para criar instâncias');
     
     super({
@@ -15,11 +15,12 @@ export class UnidadesAPI extends CoreAPI {
       jsonRoot        : 'unidades',
       defaultOrderBy  : 'nome',
       DTO             : UnidadeDTO,
-      historicoAPI    : HistoricoAPI
+      historicoAPI
     });    
   }
   static async CreateInstance() {
-    const result = new UnidadesAPI(_token);
+    const historico = await HistoricoAPI.CreateInstance();
+    const result    = new UnidadesAPI(_token, historico);
     await result.Init();
     return result;
   }

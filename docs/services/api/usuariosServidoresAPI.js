@@ -6,7 +6,7 @@ import { HistoricoAPI }         from './historicoAPI.js';
 const _token = Symbol('UsuariosServidoresAPI');
 
 export class UsuariosServidoresAPI extends CoreAPI {
-  constructor(token) {
+  constructor(token, historicoAPI) {
     if (token !== _token) throw new Error('Use UsuariosServidoresAPI.CreateInstance() para criar instâncias');
     
     super({
@@ -15,11 +15,12 @@ export class UsuariosServidoresAPI extends CoreAPI {
       jsonRoot        : 'usuariosServidores',
       defaultOrderBy  : 'nome',
       DTO             : UsuarioServidorDTO,
-      historicoAPI    : HistoricoAPI
+      historicoAPI
     });    
   }
   static async CreateInstance() {
-    const result = new UsuariosServidoresAPI(_token);
+    const historico = await HistoricoAPI.CreateInstance();
+    const result    = new UsuariosServidoresAPI(_token, historico);
     await result.Init();
     return result;
   }

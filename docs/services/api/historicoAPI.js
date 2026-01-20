@@ -59,9 +59,3 @@ export class HistoricoAPI extends CoreAPI {
     return true;
   }
 }
-
-//    validateCreate(dto, data) {
-//        if (!dto.userID || !dto.catalogoID || !dto.sessionId || !dto.dataHora || !dto.tipo || !dto.acao || !dto.diff) {
-//            throw new Error('Campos obrigatórios ausentes.');
-//        }
-//    }

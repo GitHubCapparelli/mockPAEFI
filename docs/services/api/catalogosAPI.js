@@ -6,7 +6,7 @@ import { HistoricoAPI}    from './historicoAPI';
 const _token = Symbol('CatalogosAPI');
 
 export class CatalogosAPI extends CoreAPI {
-  constructor(token) {
+  constructor(token, historicoAPI) {
     if (token !== _token) throw new Error('Use CatalogosAPI.CreateInstance() para criar instâncias');
     
     super({
@@ -15,11 +15,12 @@ export class CatalogosAPI extends CoreAPI {
       jsonRoot        : 'catalogos',
       defaultOrderBy  : 'nome',
       DTO             : CatalogoDTO,
-      historicoAPI    : HistoricoAPI
+      historicoAPI
     });    
   }
   static async CreateInstance() {
-    const result = new CatalogosAPI(_token);
+    const historico = await HistoricoAPI.CreateInstance();
+    const result    = new CatalogosAPI(_token, historico);
     await result.Init();
     return result;
   }
