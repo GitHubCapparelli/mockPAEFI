@@ -1,5 +1,5 @@
 // docs/data/factory/baseDTO.js 
-import Ajv from 'ajv';
+import Ajv from 'https://cdn.jsdelivr.net/npm/ajv@8/dist/ajv.min.js';
 
 export class BaseDTO { 
   static ajv = new Ajv({ allErrors: true });
