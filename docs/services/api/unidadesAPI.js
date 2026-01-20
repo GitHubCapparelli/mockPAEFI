@@ -1,7 +1,7 @@
 // docs/services/api/unidadesAPI.js
 import { CoreAPI }          from './coreAPI.js';
 import { UnidadeDTO }       from '../../data/factory/unidadeDTO.js';
-import { HistoricoAPI}      from './historicoAPI';
+import { HistoricoAPI}      from './historicoAPI.js';
 
 const _token = Symbol('UnidadesAPI');
 

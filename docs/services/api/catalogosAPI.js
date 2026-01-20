@@ -1,7 +1,7 @@
 // docs/services/api/catalogosAPI.js
 import { CoreAPI }        from './coreAPI.js';
 import { CatalogoDTO }    from '../../data/factory/catalogoDTO.js';
-import { HistoricoAPI}    from './historicoAPI';
+import { HistoricoAPI}    from './historicoAPI.js';
 
 const _token = Symbol('CatalogosAPI');
 
