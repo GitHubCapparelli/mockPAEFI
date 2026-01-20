@@ -1,4 +1,4 @@
-// docs/services/api/coreAPI.js
+// docs/services/api/coreAPI.js 
 
 import { InMemory, Session, CurrentUserKey }  from '../storage.js';
 import { HistoricoDTO }                       from '../../data/factory/historicoDTO.js';
