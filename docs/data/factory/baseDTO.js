@@ -2,7 +2,7 @@
 import Ajv from 'https://cdn.jsdelivr.net/npm/ajv@8/dist/ajv.min.js';
 
 export class BaseDTO { 
-  static ajv = new Ajv({ allErrors: true });
+  static ajv = new Ajv({ allErrors: true, strict: false });
 
   #_schema;
   #_validate;
