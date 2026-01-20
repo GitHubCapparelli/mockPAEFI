@@ -1,214 +1,142 @@
-// docs services api coreAPI
+// docs/services/api/coreAPI.js
 
-import { InMemory }   from '../storage.js';
-import * as API       from './_index.js';
+import { InMemory, Session, CurrentUserKey } from '../storage.js';
 
-export function CoreAPI({
-  entity,
-  dataPath,
-  jsonRoot,
-  defaultOrderBy,
-  DTO,
-  validateCreate,
-  historicoAPI,
-  applyFilters = (data, filters) => data
-}) {
+export class CoreAPI {
+  initialized = false;
+  initPromise = null;
 
-  // Init
-  let initialized = false;
-  let initPromise = null;
+  constructor(config) {
+    this.user = Session.Get(CurrentUserKey);
 
-  async function Init() {
-    if (initialized) return;
-    if (initPromise) return initPromise;
+    Object.assign(this, config);
 
-    initPromise = (async () => {
-      const data = await loadInitialData();
-      InMemory.InitStore({ [entity]: data });
-      initialized = true;
-    })();
-
-    return initPromise;
-  }
-
-  async function loadInitialData() {
-    try {
-      const response  = await fetch(dataPath);
-      const json      = await response.json();
-
-      if (Array.isArray(json)) return json;
-      if (jsonRoot && Array.isArray(json[jsonRoot])) return json[jsonRoot];
-      if (Array.isArray(json.list)) return json.list;
-
-      return [];
-    } catch (err) {
-      console.error(`Error loading ${entity}:`, err);
-      return [];
+    if (typeof this.historicoAPI === 'function') {
+      this.historicoAPI = new this.historicoAPI();
     }
   }
 
-  function ensureInitialized() {
-    if (!initialized) {
-      throw new Error(`${entity} API used before init()`);
-    }
-  }
-
-  // CRUD
-  function GetAll({ orderBy = defaultOrderBy, order = 'asc' } = {}) {
-    ensureInitialized();
-
-    const response = [...InMemory.GetAll(entity)];
-
-    if (orderBy) {
-      response.sort((a, b) =>
-        order === 'asc'
-          ? String(a[orderBy]).localeCompare(String(b[orderBy]), 'pt-BR', { sensitivity: 'base' })
-          : String(b[orderBy]).localeCompare(String(a[orderBy]), 'pt-BR', { sensitivity: 'base' })
-      );
-    }
-    return response;
-  }
-
-  function GetById(id) {
-    ensureInitialized();
-    return InMemory.GetAll(entity).find(x => x.id === id) ?? null;
-  }
-
-  function GetPaginated({ page = 1, pageSize = 10, filters = {} }) {
-    ensureInitialized();
-
-    let data = applyFilters(GetAll(), filters);
-
-    const totalRecords = data.length;
-    const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
-    const currentPage = Math.min(Math.max(page, 1), totalPages);
-
-    const start = (currentPage - 1) * pageSize;
-    const end = start + pageSize;
-
-    return {
-      data: data.slice(start, end),
-      pagination: { page: currentPage, pageSize, totalRecords, totalPages }
-    };
-  }
-
-  function Create(data) {
-    ensureInitialized();
-
-    const request = enforceOnRequest(data);
-    if (request.error)     return request;
-
-    const tx = beginTransaction();
-    try {
-      const dto = EntityCreate(request.payload);   
-      AddHistory(request.metadata)                
-
-      commit(tx);
-      return dto;
-
-    } catch (e) {
-      rollback(tx);
-      return { error: e.message }; 
-    }
-  }
-
-  function enforceOnRequest(data) {
-    if (!data || !data.payload || !data.metadata) {
-      return { error: 'Invalid request structure' };
-    }
-
-    return {
-      payload  : data.payload,
-      metadata : data.metadata
-    };
-  }
-
-  function AddHistory(metadata) {
-    historicoAPI.Create(metadata);
-  }
-
-  function Update(id, data) {
-    ensureInitialized();
-
-    // validate request (ensure contracts [schemas]...)
-    // data.metadata & data.payload
-
-    // these must be atomic (ACID) !!!
-    //{
-    AddHistory(data.metadata);
-    EntityUpdate(id, data.payload);
-    //}
-
-    // return response to the UI
-
-  }
-
-  function SoftDelete(id, data) {
-    return Update(id, data);
-  }
-
-  function HardDelete(id) {
-    ensureInitialized();
-
-    const data = InMemory.GetAll(entity);
-    const next = data.filter(x => x.id !== id);
-
-    if (next.length === data.length) {
-      return null; // not found
-    }
-
-    InMemory.SetAll(entity, next);
-
-    // AddHistory(data)  <--- is this it ? doesn't feel so...
-    return true;
-  }
-
-  function EntityCreate(rawData) {
-    ensureInitialized();
-
-    const data = InMemory.GetAll(entity);
-    const dto  = DTO.Create(rawData);
-
-    if (validateCreate) {
-      validateCreate(dto, data);
-    }
-
-    InMemory.SetAll(entity, [...data, dto]);
-    return dto;
-  }
-
-  function EntityUpdate(id, rawData) {
-    const data = InMemory.GetAll(entity);
-    const idx = data.findIndex(x => x.id === id);
-    if (idx === -1) return null;
-
-    const next = [...data];
-    next[idx] = { ...next[idx], ...rawData };
-
-    InMemory.SetAll(entity, next);
-    return next[idx];
-  }
-
-  return {
-    Init,
-    GetAll,
-    GetById,
-    GetPaginated,
-    Create,
-    Update,
-    SoftDelete,
-    HardDelete
-  };
-}
-
-
-export const AllAPIs = {
   async Init() {
-    await Promise.all([
-      API.UsuariosServidoresAPI.Init(),
-      API.UnidadesAPI.Init(),
-      API.CatalogosAPI.Init(),
-      API.HistoricoAPI.Init()
-    ]);
+    if (this.initialized) return;
+
+    if (!this.initPromise) {
+      this.initPromise = fetch(this.dataPath)
+        .then(r => r.json())
+        .then(json => {
+          const data = Array.isArray(json) ? json : (json[this.jsonRoot] || json.list || []);
+
+          InMemory.InitStore({ [this.entity]: data });
+          this.initialized = true;
+        });
+    }
+    return this.initPromise;
   }
-};
+
+  get store() {
+    if (!this.initialized) throw new Error(`${this.entity} not initialized`);
+    return InMemory.GetAll(this.entity);
+  }
+
+  #validateAction(acao) {
+    if (!['create', 'update', 'delete'].includes(acao)) {
+      throw new Error(`[CoreAPI] Ação inválida: ${acao}`);
+    }
+  }
+
+  #validateDTO(acao, dto, state) {
+    this.#validateAction(acao);
+
+    dto.prepare(acao, this.user.id);
+
+    if (!dto.validateDTO()) {
+      throw new Error(dto.errors.join('; '));
+    }
+
+    const validator = acao === 'create' 
+                    ? this.validateCreate 
+                    : acao === 'update' 
+                    ? this.validateUpdate 
+                    : this.validateDelete;
+
+    if (validator && !validator.call(this, dto, state)) {
+      throw new Error(dto.errors.join('; ') || 'Validação de domínio falhou');
+    }
+  }
+
+  Create(payload, metadata) {
+    if (!this.historicoAPI) throw new Error('HistoricoAPI não configurada');
+    
+    const previous = [...this.store];
+    try {
+      const dto = this.DTO.CreateInstance(payload);
+      this.#validateDTO('create', dto, previous);
+
+      const next = [...previous, Object.freeze(dto.toJSON())];
+
+      InMemory.SetAll(this.entity, next);
+      this.historicoAPI.Create(metadata);
+
+      return dto;
+    } catch (err) {
+      InMemory.SetAll(this.entity, previous);
+      throw err;
+    }
+  }
+
+  Update(id, payload, metadata) {
+    if (!this.historicoAPI) throw new Error('HistoricoAPI não configurada');
+
+    const previous = [...this.store];
+    try {
+      const idx = previous.findIndex(x => x.id === id);
+      if (idx === -1) throw new Error('Registro não encontrado');
+
+      const dto = this.DTO.CreateInstance(payload);
+      dto.id = id;
+
+      this.#validateDTO('update', dto, previous);
+
+      const next = [...previous];
+      next[idx] = Object.freeze({ ...next[idx], ...dto });
+
+      InMemory.SetAll(this.entity, next);
+      this.historicoAPI.Create(metadata);
+
+      return next[idx];
+    } catch (err) {
+      InMemory.SetAll(this.entity, previous);
+      throw err;
+    }
+  }
+
+  Delete(id, metadata, payload = null) {
+    if (!this.historicoAPI) throw new Error('HistoricoAPI não configurada');
+
+    const previous = [...this.store];
+    try {
+      if (payload) {
+        const idx = previous.findIndex(x => x.id === id);
+        if (idx === -1) throw new Error('Registro não encontrado');
+
+        const dto = this.DTO.CreateInstance(payload);
+        dto.id = id;
+
+        this.#validateDTO('delete', dto, previous);
+
+        const next = [...previous];
+        next[idx] = Object.freeze({ ...next[idx], ...dto });
+
+        InMemory.SetAll(this.entity, next);
+      } else {
+        InMemory.SetAll(this.entity, previous.filter(x => x.id !== id));
+      }
+
+      this.historicoAPI.Create(metadata);
+      return true;
+
+    } catch (err) {
+      InMemory.SetAll(this.entity, previous);
+      throw err;
+    }
+  }
+}

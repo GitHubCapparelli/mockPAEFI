@@ -33,7 +33,7 @@ export class HistoricoDTO extends BaseDTO {
     const ok = super.validate(this.toJSON());
     if (!ok) return false;
 
-    if (acao !=== 'create') return false;
+    if (acao !== 'create') return false;
 
     const spec = Spec.Tabela.Unidades.Campos;
     if (spec.userID.Required && !this.userID) return false;

@@ -1,43 +1,60 @@
-// docs services api usuariosServidoresAPI
+// docs/services/api/usuariosServidoresAPI.js
+import { CoreAPI }              from './coreAPI.js';
+import { UsuarioServidorDTO }   from '../../data/factory/usuarioServidorDTO.js';
+import { HistoricoAPI }         from './historicoAPI.js';
 
-import { CoreAPI }            from './coreAPI.js';
-import { UsuarioServidorDTO } from '../../data/factory/usuarioServidorDTO.js';
-import { HistoricoAPI}        from './historicoAPI';
+const _token = Symbol('UsuariosServidoresAPI');
 
-export const UsuariosServidoresAPI = CoreAPI({
-  entity         : 'usuariosServidores',
-  dataPath       : '/mockPAEFI/data/mock/usuariosServidores.json',
-  jsonRoot       : 'usuariosServidores',
-  defaultOrderBy : 'nome',
-  DTO            : UsuarioServidorDTO,
-  historicoAPI   : HistoricoAPI,
-
-  applyFilters(data, filters) {
-      let result = data;
-      if (filters) {
-          if (filters.unidadeID) {
-            result = result.filter(u => u.unidadeID === filters.unidadeID);
-          }
-          if (filters.especialidade) {
-            result = result.filter(u => u.especialidade === filters.especialidade);
-          }
-          if (filters.funcao) {
-            result = result.filter(u => u.funcao === filters.funcao);
-          }
-          if (filters.cargo) {
-            result = result.filter(u => u.cargo === filters.cargo);
-          }
-      }
-      result = result.filter(u => !u.excluidoEm);
-      return result;
-    },
-
-    validateCreate(dto, data) {
-      if (data.some(u => u.cpf       === dto.cpf
-                      || u.login     === dto.login 
-                      || u.matricula === dto.matricula)) {
-        throw new Error('Já existe servidor(a) com esse login, matrícula ou CPF');
-      }
-    }
+export class UsuariosServidoresAPI extends CoreAPI {
+  constructor(token) {
+    if (token !== _token) throw new Error('Use UsuariosServidoresAPI.CreateInstance() para criar instâncias');
+    
+    super({
+      entity          : 'usuariosServidores',
+      dataPath        : '/mockPAEFI/data/mock/usuariosServidores.json',
+      jsonRoot        : 'usuariosServidores',
+      defaultOrderBy  : 'nome',
+      DTO             : UsuarioServidorDTO,
+      historicoAPI    : HistoricoAPI
+    });    
   }
-);
+  static async CreateInstance() {
+    const result = new UsuariosServidoresAPI(_token);
+    await result.Init();
+    return result;
+  }
+
+  applyFilters(data, f) {
+    return data.filter(u => {
+      if (u.excluidoEm) return false;
+      if (f.unidadeID && u.unidadeID !== f.unidadeID) return false;
+      if (f.especialidade && u.especialidade !== f.especialidade) return false;
+      if (f.funcao && u.funcao !== f.funcao) return false;
+      return true;
+    });
+  }
+
+  validateCreate(dto, data) {
+    return this.#unique(dto, data);
+  }
+
+  validateUpdate(dto, data) {
+    return this.#unique(dto, data);
+  }
+
+  validateDelete() {
+    return true;
+  }
+
+  #unique(dto, data) {
+    const conflict = data.find(u =>
+      u.id !== dto.id &&
+      (u.cpf === dto.cpf || u.login === dto.login || u.matricula === dto.matricula));
+
+    if (conflict) {
+      dto.errors.push('Dados duplicados (CPF/Login/Matrícula)');
+      return false;
+    }
+    return true;
+  }
+}

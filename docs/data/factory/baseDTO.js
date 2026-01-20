@@ -1,31 +1,31 @@
-// docs data factory baseDTO
-
-import Ajv from 'ajv'; 
+// docs/data/factory/BaseDTO.js
+import Ajv from 'ajv';
 
 export class BaseDTO {
-  #_ajv      = null;
-  #_schema   = null;
-  #_validate = null;
+  static ajv = new Ajv({ allErrors: true });
+
+  #_schema;
+  #_validate;
 
   constructor(schema) {
     this.#_schema   = schema;
-    this.#_ajv      = new Ajv({allErrors: true});
-    this.#_validate = this.#_ajv.compile(this.#_schema);
-    this.errors     = null;
+    this.#_validate = BaseDTO.ajv.compile(this.#_schema);
+    this.errors     = [];
   }
 
   validate(data) {
+    this.errors = [];
     const valid = this.#_validate(data);
-    this.errors = this.#_validate.errors
-      ? this.#_ajv.errorsText(this.#_validate.errors)
-      : null;
+    if (!valid && this.#_validate.errors) {
+      this.errors.push(...this.#_validate.errors.map(e => `${e.instancePath || '/'} ${e.message}`));
+    }
     return valid;
   }
 }
 
 export class AuditDTO extends BaseDTO {
-  constructor(schemaPath, overrides = {}) {
-    super(schemaPath);
+  constructor(schema, overrides = {}) {
+    super(schema);
 
     this.id             = null;
     this.criadoEm       = null;
@@ -39,17 +39,19 @@ export class AuditDTO extends BaseDTO {
     Object.assign(this, overrides);
   }
 
-  assign(acao, userID) {
+  prepare(acao, userID) {
+    const now = new Date().toISOString();
     if (acao === 'create') {
-      this.criadoEm     = new Date().toISOString();
+      this.criadoEm     = now;
       this.criadoPor    = userID;
-    } else if (acao === 'update') {
-      this.alteradoEm   = new Date().toISOString();
+    }
+    if (acao === 'update') {
+      this.alteradoEm   = now;
       this.alteradoPor  = userID;
-    } else if (acao === 'delete') {
-      this.excluidoEm   = new Date().toISOString();
+    }
+    if (acao === 'delete') {
+      this.excluidoEm   = now;
       this.excluidoPor  = userID;
     }
   }
 }
-

@@ -1,9 +1,15 @@
-import { AuditDTO } from './BaseDTO.js';
-import * as Spec    from './_omSpec.js';
+// docs/data/factory/usuarioServidorDTO.js
+import { AuditDTO }   from './BaseDTO.js';
+import * as Spec      from './_omSpec.js';
+import schema         from '../contracts/usuarioServidorSchema.json' assert { type: 'json' };
+
+const _token = Symbol('UsuarioServidorDTO');
 
 export class UsuarioServidorDTO extends AuditDTO {
-  constructor(data, audit = {}) {
-    super('../contracts/usuarioServidorSchema.json', audit);
+  constructor(token, data = {}, audit = {}) {
+    if (token !== _token) throw new Error('Use UsuarioServidorDTO.CreateInstance() para criar instâncias');
+
+    super(schema, audit);
 
     this.unidadeID      = data.unidadeID;
     this.nome           = data.nome;
@@ -14,8 +20,9 @@ export class UsuarioServidorDTO extends AuditDTO {
     this.cargo          = data.cargo;
     this.especialidade  = data.especialidade;
   }
-  static Create(data, audit = {}) {
-    return new UsuarioServidorDTO(data, audit)
+
+  static CreateInstance(data, audit = {}) {
+    return new UsuarioServidorDTO(_token, data, audit);
   }
 
   toJSON() {
@@ -39,27 +46,20 @@ export class UsuarioServidorDTO extends AuditDTO {
     };
   }
 
-  validate(acao, userID) {
-    this.assign(acao, userID);
-    const ok = super.validate(this.toJSON());
-    if (!ok) return false;
+  validateDTO() {
+    const schemaOk  = super.validate(this.toJSON());
+    const spec      = Spec.Tabela.UsuariosServidores.Campos;
 
-    const spec = Spec.Tabela.UsuariosServidores.Campos;
-    let result = true;
-    result = result || isValidCPF(spec.CPF, this.cpf);
-    // validate other fields
-    return result;
-  }
-
-  isValidCPF(spec, value) {
-    if (!value && spec.Required) {
+    if (!this.cpf && spec.CPF.Required) {
       this.errors.push('CPF obrigatório');
       return false;
     }
-    if (value && (value.length < spec.MinLength || value.length > spec.MaxLength)) {
-      this.errors.push(`CPF inválido []: ${value.length}`);
+
+    if (this.cpf && (this.cpf.length < spec.CPF.MinLength || this.cpf.length > spec.CPF.MaxLength)) {
+      this.errors.push(`CPF inválido: tamanho ${this.cpf.length}`);
       return false;
     }
-    return true;
+
+    return schemaOk;
   }
 }
