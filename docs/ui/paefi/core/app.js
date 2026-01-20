@@ -1,4 +1,4 @@
-// ui.paefi.core.app
+// ui.paefi.core.app.js
 
 import { Render }                    from './renderer.js';
 import { LeftSidebar }               from './sidebarLeft.js';
@@ -8,7 +8,6 @@ import { Session, CurrentUserKey,
        } from '../../../services/storage.js';
 
 import { Orchestrator }              from '../domain/orchestrator.js';
-import { AllAPIs }                   from '../../../services/api/coreAPI.js';
 
 let currentDomain;
 let currentModule;
@@ -79,6 +78,5 @@ $(document).ready(async () => {
       window.location.href = '/mockPAEFI/';
       return;
   }
-  await AllAPIs.Init();
   init(); 
 });
