@@ -24,14 +24,16 @@ export class UsuariosServidoresAPI extends CoreAPI {
     return result;
   }
 
-  applyFilters(data, f) {
-    return data.filter(u => {
-      if (u.excluidoEm) return false;
-      if (f.unidadeID && u.unidadeID !== f.unidadeID) return false;
-      if (f.especialidade && u.especialidade !== f.especialidade) return false;
-      if (f.funcao && u.funcao !== f.funcao) return false;
-      return true;
-    });
+  applyFilters(data, filters) {
+    let result = data;
+    if (filters) {
+      if (filters.unidadeID)      result = result.filter(x => x.unidadeID === filters.unidadeID);
+      if (filters.funcao)         result = result.filter(x => x.funcao === filters.funcao);
+      if (filters.cargo)          result = result.filter(x => x.cargo === filters.cargo);
+      if (filters.especialidade)  result = result.filter(x => x.especialidade === filters.especialidade);
+    }
+    result = result.filter(x => !x.excluidoEm);
+    return result;
   }
 
   validateCreate(dto, data) {

@@ -54,11 +54,11 @@ export class UsuarioServidorDTO extends AuditDTO {
       this.errors.push('CPF obrigatório');
       return false;
     }
-
     if (this.cpf && (this.cpf.length < spec.CPF.MinLength || this.cpf.length > spec.CPF.MaxLength)) {
       this.errors.push(`CPF inválido: tamanho ${this.cpf.length}`);
       return false;
     }
+    // TODO: Validate other fields
 
     return schemaOk;
   }

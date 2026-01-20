@@ -1,8 +1,15 @@
-import { BaseDTO } from './BaseDTO.js';
+// docs/data/factory/historicoDTO.js
+import { BaseDTO }    from './BaseDTO.js';
+import * as Spec      from './_omSpec.js';
+import schema         from '../contracts/historicoSchema.json' assert { type: 'json' };
+
+const _token = Symbol('HistoricoDTO');
 
 export class HistoricoDTO extends BaseDTO {
-  constructor(data) {
-    super('../contracts/historicoSchema.json');
+  constructor(token, data) {
+    if (token !== _token) throw new Error('Use HistoricoDTO.CreateInstance() para criar instâncias');
+
+    super(schema, audit);
 
     this.userID         = data.userID;
     this.catalogoID     = data.catalogoID;
@@ -12,6 +19,9 @@ export class HistoricoDTO extends BaseDTO {
     this.descricao      = data.descricao      ?? null;
     this.justificativa  = data.justificativa  ?? null;
     this.diff           = data.diff;
+  }
+  static CreateInstance(data) {
+    return new HistoricoDTO(_token, data)
   }
 
   toJSON() {
@@ -28,19 +38,20 @@ export class HistoricoDTO extends BaseDTO {
     };
   }
 
-  validate(acao, userID) {
-    this.assign(acao, userID);
-    const ok = super.validate(this.toJSON());
-    if (!ok) return false;
+  validateDTO() {
+    const schemaOk  = super.validate(this.toJSON());
+    const spec      = Spec.Tabela.Historico.Campos;
 
-    if (acao !== 'create') return false;
+    if (!this.acao && spec.Acao.Required) {
+      this.errors.push('Ação obrigatória');
+      return false;
+    }
+    if (this.acao && (this.acao.length < spec.Acao.MinLength || this.acao.length > spec.Acao.MaxLength)) {
+      this.errors.push(`Ação inválida: tamanho ${this.acao.length}`);
+      return false;
+    }
+    // TODO: Validate other fields
 
-    const spec = Spec.Tabela.Unidades.Campos;
-    if (spec.userID.Required && !this.userID) return false;
-    return true;
-  }
-
-  validate() {
-    return super.validate(this.toJSON());
+    return schemaOk;
   }
 }

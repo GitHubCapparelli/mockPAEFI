@@ -1,26 +1,54 @@
-import { BaseDTO } from './BaseDTO.js';
+// docs/data/factory/catalogoDTO.js
+import { AuditDTO }   from './BaseDTO.js';
+import * as Spec      from './_omSpec.js';
+import schema         from '../contracts/catalogoSchema.json' assert { type: 'json' };
+
+const _token = Symbol('CatalogoDTO');
 
 export class CatalogoDTO extends AuditDTO {
-  constructor(data, audit = {}) {
-    super('../contracts/catalogoSchema.json', audit);
+  constructor(token, data, audit = {}) {
+    if (token !== _token) throw new Error('Use CatalogoDTO.CreateInstance() para criar instâncias');
+
+    super(schema, audit);
 
     this.nome       = data.nome;
     this.versao     = data.versao;
     this.finalidade = data.finalidade ?? null;
   }
-  static Create(data, audit = {}) {
-    return new CatalogoDTO(data, audit)
+  static CreateInstance(data, audit = {}) {
+    return new CatalogoDTO(_token, data, audit)
   }
 
-  validate(acao, userID) {
-    this.assign(acao, userID);
-    const ok = super.validate(this.toJSON());
-    if (!ok) return false;
+  toJSON() {
+    return {
+      id              : this.id,
+      nome            : this.nome,
+      versao          : this.versao,
+      finalidade      : this.finalidade,
+      criadoEm        : this.criadoEm,
+      criadoPor       : this.criadoPor,
+      alteradoEm      : this.alteradoEm,
+      alteradoPor     : this.alteradoPor,
+      excluidoEm      : this.excluidoEm,
+      excluidoPor     : this.excluidoPor,
+      exclusaoFisica  : this.exclusaoFisica
+    };
+  }
 
-    const spec = Spec.Tabela.Catalogos.Campos;
-    if (spec.Nome.Required && !this.nome) return false;
-    if (spec.Versao.Required && !this.versao) return false;
-    if (spec.Finalidade.Required && !this.finalidade) return false;
-    return true;
+  validateDTO() {
+    const schemaOk  = super.validate(this.toJSON());
+    const spec      = Spec.Tabela.Catalogos.Campos;
+
+    if (!this.nome && spec.Nome.Required) {
+      this.errors.push('Nome obrigatório');
+      return false;
+    }
+    if (this.nome && (this.nome.length < spec.Nome.MinLength || this.nome.length > spec.Nome.MaxLength)) {
+      this.errors.push(`Nome inválido: tamanho ${this.nome.length}`);
+      return false;
+    }
+    // TODO: Validate other fields
+
+    return schemaOk;
   }
 }
