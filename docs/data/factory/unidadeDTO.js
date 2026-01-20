@@ -1,7 +1,7 @@
 // docs/data/factory/unidadeDTO.js
 import { AuditDTO }   from './BaseDTO.js';
 import * as Spec      from './_omSpec.js';
-import schema         from '../contracts/unidadeSchema.json' assert { type: 'json' };
+import schema         from '../contracts/js/unidadeSchema.js';
 
 const _token = Symbol('UnidadeDTO');
 

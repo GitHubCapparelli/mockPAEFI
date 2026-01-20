@@ -1,7 +1,7 @@
 // docs/data/factory/usuarioServidorDTO.js
 import { AuditDTO }   from './BaseDTO.js';
 import * as Spec      from './_omSpec.js';
-import schema         from '../contracts/usuarioServidorSchema.json' assert { type: 'json' };
+import schema         from '../contracts/js/usuarioServidorSchema.js';
 
 const _token = Symbol('UsuarioServidorDTO');
 

@@ -1,7 +1,7 @@
 // docs/data/factory/historicoDTO.js
 import { BaseDTO }    from './BaseDTO.js';
 import * as Spec      from './_omSpec.js';
-import schema         from '../contracts/historicoSchema.json' assert { type: 'json' };
+import schema         from '../contracts/js/historicoSchema.js';
 
 const _token = Symbol('HistoricoDTO');
 

@@ -1,7 +1,7 @@
 // docs/data/factory/catalogoDTO.js
 import { AuditDTO }   from './BaseDTO.js';
 import * as Spec      from './_omSpec.js';
-import schema         from '../contracts/catalogoSchema.json' assert { type: 'json' };
+import schema         from '../contracts/js/catalogoSchema.js';
 
 const _token = Symbol('CatalogoDTO');
 
