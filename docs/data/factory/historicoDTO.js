@@ -1,5 +1,5 @@
 // docs/data/factory/historicoDTO.js
-import { BaseDTO }    from './BaseDTO.js';
+import { BaseDTO }    from './baseDTO.js';
 import * as Spec      from './_omSpec.js';
 import schema         from '../contracts/js/historicoSchema.js';
 

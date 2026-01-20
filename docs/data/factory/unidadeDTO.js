@@ -1,5 +1,5 @@
 // docs/data/factory/unidadeDTO.js
-import { AuditDTO }   from './BaseDTO.js';
+import { AuditDTO }   from './baseDTO.js';
 import * as Spec      from './_omSpec.js';
 import schema         from '../contracts/js/unidadeSchema.js';
 

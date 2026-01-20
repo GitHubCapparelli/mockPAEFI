@@ -1,4 +1,4 @@
-// docs/data/factory/BaseDTO.js
+// docs/data/factory/baseDTO.js
 import Ajv from 'ajv';
 
 export class BaseDTO {
