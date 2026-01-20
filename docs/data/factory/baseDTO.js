@@ -1,7 +1,7 @@
 // docs/data/factory/baseDTO.js 
 import Ajv from 'ajv';
 
-export class BaseDTO {
+export class BaseDTO { 
   static ajv = new Ajv({ allErrors: true });
 
   #_schema;
