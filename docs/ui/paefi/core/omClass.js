@@ -38,25 +38,21 @@ export class QueryEngine {
   }
 }
 
-
-
-
 export class CommandEngine {
   constructor(api) {
     this.api        = api;
   }
 
-  Create      = async (data)     => this.#exec(() => this.api.Create(data));
-  Update      = async (id, data) => this.#exec(() => this.api.Update(id, data));
-  Delete      = async (id)       => this.#exec(() => this.api.Delete(id));
-  SoftDelete  = async (id, data) => this.#exec(() => this.api.SoftDelete(id, data));
-
+  Create  = async (request) => this.#exec(() => this.api.Create(request));
+  Update  = async (request) => this.#exec(() => this.api.Update(request));
+  Delete  = async (request) => this.#exec(() => this.api.Delete(request));
+  
   async #exec(fn) {
     try {
       return await fn();
     } catch (e) {
       console.error(e);
-      return e;
+      return { error: e.message ?? String(e), exception: e };
     }
   }
 }

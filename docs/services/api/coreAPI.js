@@ -69,11 +69,11 @@ export class CoreAPI {
   #buildHistoricoDTO({ acao, before, after, metadata }) {
     const historico   = HistoricoDTO.CreateInstance({
       userID          : this.user.id,
-      catalogoID      : this.entity,
+      catalogoID      : metadata.catalogoID,
       dataHora        : new Date().toISOString(),
-      tipo            : metadata?.tipo ?? this.entity,
+      tipo            : metadata.tipo,
       acao,
-      descricao       : metadata?.descricao ?? null,
+      descricao       : metadata?.descricao     ?? null,
       justificativa   : metadata?.justificativa ?? null,
       diff            : JSON.stringify({ before, after })
     });
@@ -83,13 +83,15 @@ export class CoreAPI {
     return historico;
   }
 
-  Create(payload, metadata) {
+  Create(request) {
     if (!this.historicoAPI) throw new Error('HistoricoAPI não configurada');
 
     const previous = [...this.store];
     try {
-      const dto = this.DTO.CreateInstance(payload);
+      const dto = this.DTO.CreateInstance(request.payload);
       this.#validateDTO('create', dto, previous);
+
+      if (previous.some(x => x.id === dto.id)) throw new Error('ID duplicado');
 
       const persisted = Object.freeze(dto.toJSON());
       const next      = [...previous, persisted];
@@ -98,13 +100,13 @@ export class CoreAPI {
         acao      : 'create',
         before    : null,
         after     : persisted,
-        metadata
+        metadata  : request.metadata
       });
-
+      
       InMemory.SetAll(this.entity, next);
       this.historicoAPI.Create(historico.toJSON());
 
-      return dto;
+      return persisted;
 
     } catch (err) {
       InMemory.SetAll(this.entity, previous);
@@ -112,12 +114,12 @@ export class CoreAPI {
     }
   }
 
-  Update(payload, metadata) {
+  Update(request) {
     if (!this.historicoAPI)   throw new Error('HistoricoAPI não configurada');
 
     const previous = [...this.store];
     try {
-      const id = payload?.id;
+      const id = request.payload?.id;
       if (!id)                throw new Error('ID obrigatório para update');
 
       const idx = previous.findIndex(x => x.id === id);
@@ -125,7 +127,7 @@ export class CoreAPI {
 
       const before  = previous[idx];
 
-      const dto     = this.DTO.CreateInstance(payload);
+      const dto     = this.DTO.CreateInstance(request.payload);
       dto.id        = id;
 
       this.#validateDTO('update', dto, previous);
@@ -138,7 +140,7 @@ export class CoreAPI {
         acao: 'update',
         before,
         after,
-        metadata
+        metadata: request.metadata
       });
 
       InMemory.SetAll(this.entity, next);
@@ -152,11 +154,12 @@ export class CoreAPI {
     }
   }
 
-  Delete({ id, payload = null }, metadata) {
+  Delete(request) {
     if (!this.historicoAPI)   throw new Error('HistoricoAPI não configurada');
 
     const previous = [...this.store];
     try {
+      const id  = request.payload.data ? request.payload.data.id : request.payload.id;
       const idx = previous.findIndex(x => x.id === id);
       if (idx === -1)         throw new Error('Registro não encontrado');
 
@@ -164,8 +167,8 @@ export class CoreAPI {
       let after = null;
       let next;
 
-      if (payload) {
-        const dto = this.DTO.CreateInstance(payload);
+      if (request.payload.data) {         // soft delete
+        const dto = this.DTO.CreateInstance(request.payload.data);
         dto.id    = id;
 
         this.#validateDTO('delete', dto, previous);
@@ -174,15 +177,18 @@ export class CoreAPI {
         next      = [...previous];
         next[idx] = after;
         
+      } else if (request.payload.id) {    // hard delete
+        next      = previous.filter(x => x.id !== request.payload.id);
+
       } else {
-        next      = previous.filter(x => x.id !== id);
+        throw new Error('Delete request should have either data or id on the payload');
       }
 
       const historico = this.#buildHistoricoDTO({
         acao: 'delete',
         before,
         after,
-        metadata
+        metadata : request.metadata
       });
 
       InMemory.SetAll(this.entity, next);

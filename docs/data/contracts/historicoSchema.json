@@ -6,6 +6,7 @@
   "properties": {
     "id"             : { "type": "string", "format": "uuid" },
     "userID"         : { "type": "string", "format": "uuid" },
+    "catalogoID"     : { "type": "string", "format": "uuid" },
     "dataHora"       : { "type": "string", "format": "date-time" },
     "tipo"           : { "type": "string" },
     "acao"           : { "type": "string" },

@@ -37,23 +37,25 @@ export class ApiGate {
     }
 
     async Create(data) {
-        const request  = this.#enforceOnRequest(data, 'create');
-        if (request.error) {
-            return request;
-        }
-        const response = await this.#command.Create(request);
-        const result   = this.#assureOnResponse(response);
+        const request   = this.#enforceOnRequest(data);
+        if (request.error) return request;
+
+        const response  = await this.#command.Create(request);
+        const result    = this.#assureOnResponse(response);
+
         if (!result?.error) {
             await this.Read(this.onFilter_hook());
         }
         return result;
     }
 
-    async Update(id, data, justificativa = null) {
-        const request  = this.#enforceOnRequest(data, 'update', justificativa);
-        const response = await this.#command.Update(id, request);
-        
-        const result   = this.#assureOnResponse(response);
+    async Update(data, justificativa = null) {
+        const request   = this.#enforceOnRequest(data, justificativa);
+        if (request.error) return request;
+
+        const response  = await this.#command.Update(request);
+        const result    = this.#assureOnResponse(response);
+
         if (!result?.error) {
             await this.Read(this.onFilter_hook());
         }
@@ -61,12 +63,12 @@ export class ApiGate {
     }
 
     async Delete(id, data = null) {
-        const request  = this.#enforceOnRequest(data, 'delete')
-        const response = (data) 
-                       ? await this.#command.SoftDelete(id, request)
-                       : await this.#command.Delete(id);
+        const request   = this.#enforceOnRequest(data ? { data } : { id })
+        if (request.error) return request;
 
-        const result = this.#assureOnResponse(response);
+        const response  = await this.#command.Delete(request);
+        const result    = this.#assureOnResponse(response);
+
         if (!result?.error) {
             await this.Read(this.onFilter_hook());
         }
@@ -77,53 +79,30 @@ export class ApiGate {
         return await this.Read();
     }
 
-    #getMetadata(acao, justificativa = null) {
-        const result  = {
-            userID    : this.user.id,
-            catalogID : this.info.Catalog.Key,
-            tipo      : App.TipoLog.Frontend.Key,
-            acao      : acao
-        }
+    #getMetadata(justificativa = null) {
+        const result = {
+            catalogoID  : this.info.Catalogo.Key,
+            tipo        : App.TipoLog.Frontend.Key
+        };
         if (justificativa) {
             result.justificativa = justificativa;
         }
-    }
-
-    #enforceOnRequest(data, acao, justificativa = null) {
-        let result   = {
-            metadata : this.#getMetadata(acao, justificativa),
-            payload  : this.#enrich(data, acao)
-        };
-
-        if (this.info.Catalog.Key === App.Catalog.UsuariosServidores.Key) {
-            // validate data (result.payload) ...
-            // data can be null [only on (hard)deletion (acao === 'delete')...]
-        }
-        //return result; // or something else... (null?, an error?, {}? ) like..
-        
-        result.error = 'Not implemented (yet)...';
         return result;
     }
 
-    #enrich(data, acao) {
-        if (acao == 'create') {
-            data.criadoEm = new Date().toISOString();
-            data.criadoPor = this.user.id;
-        } else if (acao == 'update') {
-            data.alteradoEm = new Date().toISOString();
-            data.alteradoPor = this.user.id;
-        } else if (acao == 'delete') {
-            data.excluidoEm = new Date().toISOString();
-            data.excluidoPor = this.user.id;
-        } else {
-            throw new Error(`Ação não implementada: ${acao}`)
-        }
-        return data;
+
+    #enforceOnRequest(data, justificativa = null) {
+        let result   = {
+            metadata : this.#getMetadata(justificativa),
+            payload  : data 
+        };
+        return result;
     }
 
     #assureOnResponse(response) {
-        // validate response [always a DTO, or a bunch of them, or an error. ]
-        // Right ? If so, validates schema when DTO(s)...
-    }
+        if (!response)          return { error: 'Resposta vazia' };
+        if (response.error)     return response;
 
+        return { data: response };
+    }
 }
