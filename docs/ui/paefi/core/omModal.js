@@ -1,6 +1,6 @@
 // ui paefi core modal
 
-import { TipoAcesso, TipoCriptografia } from "./omData.js";
+import { TipoAcesso, TipoCriptografia } from "../../../data/factory/_omSpec.js";
 
 /* Modal shell ===== */
 export class ModalShell {
