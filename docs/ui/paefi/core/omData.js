@@ -37,7 +37,7 @@ export class Bindings {
         }
     }
 
-    static FromDatatable    = (tableKey) => Bindings.All.find(x => x.DbKey === tableKey);
+    static FromDatatable    = (tableKey) => Bindings.All.filter(x => x.DbKey === tableKey);
 
     static NomeCatalogo     = new Bindings({ key: crypto.randomUUID(), dbKey: Tabela.Catalogos.Key, dbInfo: Tabela.Catalogos.Campos.Nome,                     dtoId:'nome',               uiFieldTitle: 'Nome' });
     static VersaoCatalogo   = new Bindings({ key: crypto.randomUUID(), dbKey: Tabela.Catalogos.Key, dbInfo: Tabela.Catalogos.Campos.Versao,                   dtoId:'versao',             uiFieldTitle: 'Versão' });
