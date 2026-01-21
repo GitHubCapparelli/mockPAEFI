@@ -33,9 +33,9 @@ export class Binding {
             Binding.All.push(this);
         }
     }
-    static NomeCatalogo     = new Binding({ key: crypto.randomUUID(), dbInfo: Tabela.Catalogo.Campos.Nome,                      dtoId:'nome',               uiFieldTitle: 'Nome' });
-    static VersaoCatalogo   = new Binding({ key: crypto.randomUUID(), dbInfo: Tabela.Catalogo.Campos.Versao,                    dtoId:'versao',             uiFieldTitle: 'Versão' });
-    static FuncaoCatalogo   = new Binding({ key: crypto.randomUUID(), dbInfo: Tabela.Catalogo.Campos.Finalidade,                dtoId:'finalidade',         uiFieldTitle: 'Finalidade' });
+    static NomeCatalogo     = new Binding({ key: crypto.randomUUID(), dbInfo: Tabela.Catalogos.Campos.Nome,                     dtoId:'nome',               uiFieldTitle: 'Nome' });
+    static VersaoCatalogo   = new Binding({ key: crypto.randomUUID(), dbInfo: Tabela.Catalogos.Campos.Versao,                   dtoId:'versao',             uiFieldTitle: 'Versão' });
+    static FuncaoCatalogo   = new Binding({ key: crypto.randomUUID(), dbInfo: Tabela.Catalogos.Campos.Finalidade,               dtoId:'finalidade',         uiFieldTitle: 'Finalidade' });
 
     static Catalogo         = new Binding({ key: crypto.randomUUID(), dbInfo: Tabela.Historico.Campos.CatalogoID,               dtoId:'catalogoID',         uiFieldTitle: 'Tabela',             uiFilterKey:'#cmbCatalogos',        uiFilterTitle:'Todas as tabelas',           lookupId:'catalogos',           displayId: 'nome' });
     static Usuario          = new Binding({ key: crypto.randomUUID(), dbInfo: Tabela.Historico.Campos.UsuarioID,                dtoId:'userID',             uiFieldTitle: 'Usuario',            uiFilterKey:'#cmbUsuarios',         uiFilterTitle:'Todos os usuários',          lookupId:'usuarios',            displayId: 'login' });
