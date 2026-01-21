@@ -99,7 +99,7 @@ export class ModalFormBuilder {
 
     #getInfoFrom(binding) {
         const meta = [];
-        const info = binding.DbInfo;
+        const info = this.catalog.FieldByName(binding.DtoId); //binding.DbInfo;
 
         if (info.Required) meta.push('obrigatório');
 

@@ -215,6 +215,8 @@ export class Tabela {
         }
     }
 
+    FieldByName = (name) => this.Campos.find(x => x.DbColName === name);
+
     static Catalogos = new Tabela(crypto.randomUUID(), 'Catalogos', '0.1', 'Armazenar metadados das tabelas (data sources)',
         [ Campo.Nome.Mandatory(), Campo.Versao.Mandatory(), Campo.Finalidade ]);
 
