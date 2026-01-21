@@ -8,13 +8,14 @@ import { Session, CurrentUserKey,
        } from '../../../services/storage.js';
 
 import { Orchestrator }              from '../domain/orchestrator.js';
+import { DomainInfo }                from './omData.js';
 
 let currentDomain;
 let currentModule;
 
 const currentUser = Session.Get(CurrentUserKey);
 
-function init() {
+async function init() {
   resolvecurrentModule();
   resolvecurrentDomain();
 
@@ -24,6 +25,8 @@ function init() {
   $(Elemento.TextoOpcaoAtual.JQuery).text(currentDomain.Value);
 
   LeftSidebar.Init(currentModule.Key);
+
+  await DomainInfo.Setup(); 
   initCurrentDomain();
 }
 
@@ -67,7 +70,7 @@ async function initCurrentDomain() {
   $('body').append($('<div', { id:'modal-root', class:'modal-root' }));
   
   $(Elemento.TextoOpcaoAtual.JQuery).text(currentDomain.Value);
-  await Orchestrator.Create(currentModule.Key, currentDomain.Key);
+  await Orchestrator.CreateInstance(currentModule.Key, currentDomain.Key);
 }
 
 export const App = { SetDomain };
@@ -78,5 +81,5 @@ $(document).ready(async () => {
       window.location.href = '/mockPAEFI/';
       return;
   }
-  init(); 
+  await init(); 
 });

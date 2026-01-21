@@ -63,42 +63,86 @@ export class Binding {
 }
 
 export class DomainInfo {           
-    static All = [];
+    static All  = [];
+    
+    static Keys = {
+        Historico           : 'historico',
+        Catalogos           : 'catalogos',
+        Unidades            : 'unidades',
+        UsuariosServidores  : 'usuarios-servidores'
+    };
+
+    static Historico;
+    static Catalogos;
+    static Unidades;
+    static UsuariosServidores;
 
     constructor(key, name, api, dto, catalog, schema, lookups = {}) {
         this.Key        = key;
         this.Name       = name;
-        this.API        = api;
-        this.DTO        = dto;
         this.Catalog    = catalog;
         this.Schema     = schema;
+        this.API        = api;
+        this.DTO        = dto;
         this.Lookups    = lookups;
 
-        if (!DomainInfo.All.some(x => x.Key === key || x.Name === name)) {
+        if (!DomainInfo.All.some(x => x.Key === key)) {
             DomainInfo.All.push(this);
         }
     }
-
-    static Create(key) {
-        const instance = DomainInfo.All.find(x => x.Key === key);
-        if (!instance) {
-            console.warn(`[DomainInfo.Create] Não localizado: key '${key}'`);
-        }
-        return instance;
+    static async CreateInstance(key, name, api, dto, catalog, schema, lookups = {}) {
+        const [resolvedApi, resolvedDto] = await Promise.all([
+            Registry.getAPI(api),
+            Registry.getDTO(dto)
+        ]);
+        const resolvedLookups = DomainInfo.resolveLookups(lookups);
+        return new DomainInfo(key, name, resolvedApi, resolvedDto, catalog, schema, resolvedLookups);
+    }
+    static async resolveLookups(lookups) {
+        const entries = await Promise.all(
+            Object.entries(lookups).map(async ([k, x]) => [k, await Registry.get(x)])
+        );
+        return Object.fromEntries(entries);
     }
 
-    static Historico = new DomainInfo('historico', 'Histórico', API.HistoricoAPI.CreateInstance(), Dados.HistoricoDTO, 
-        Dados.Tabela.Historico, 'historicoSchema.json', { usuarios: API.UsuariosServidoresAPI.CreateInstance(), catalogos: API.CatalogosAPI.CreateInstance() });
+    static async Setup() {
+        if (DomainInfo.All.length > 0) return; // Prevent double init
+        const [h, c, u, us] = await Promise.all([
+            DomainInfo.CreateInstance(DomainInfo.Keys.Historico, 'Histórico', API.HistoricoAPI, Dados.HistoricoDTO, Dados.Tabela.Historico, 'historicoSchema.json', { usuarios: API.UsuariosServidoresAPI, catalogos: API.CatalogosAPI }),
+            DomainInfo.CreateInstance(DomainInfo.Keys.Catalogos, 'Catálogo', API.CatalogosAPI, Dados.CatalogoDTO, Dados.Tabela.Catalogos, 'catalogoSchema.json'),
+            DomainInfo.CreateInstance(DomainInfo.Keys.Unidades, 'Unidade', API.UnidadesAPI, Dados.UnidadeDTO, Dados.Tabela.Unidades, 'unidadeSchema.json'),
+            DomainInfo.CreateInstance(DomainInfo.Keys.UsuariosServidores, 'Usuário Servidor', API.UsuariosServidoresAPI, Dados.UsuarioServidorDTO, Dados.Tabela.UsuariosServidores, 'usuarioServidorSchema.json', { unidades: API.UnidadesAPI })
+        ]);
+        DomainInfo.Historico            = h;
+        DomainInfo.Catalogos            = c;
+        DomainInfo.Unidades             = u;
+        DomainInfo.UsuariosServidores   = us;
+    }
 
-    static Catalogos = new DomainInfo('catalogos', 'Catálogo', API.CatalogosAPI.CreateInstance(), Dados.CatalogoDTO,
-        Dados.Tabela.Catalogos, 'catalogoSchema.json');
-
-    static Unidades = new DomainInfo('unidades', 'Unidade', API.UnidadesAPI.CreateInstance(), Dados.UnidadeDTO, 
-        Dados.Tabela.Unidades, 'unidadeSchema.json');
-    
-    static UsuariosServidores = new DomainInfo('usuarios-servidores', 'Usuário Servidor', API.UsuariosServidoresAPI, Dados.UsuarioServidorDTO, 
-        Dados.Tabela.UsuariosServidores, 'usuarioServidorSchema.json', { unidades: API.UnidadesAPI.CreateInstance() });
+    static Find(key) {
+        return DomainInfo.All.find(x => x.Key === key);
+    }
 };
 
 ///////////////////////////////////
 
+export class Registry {
+    static #apis = new Map();
+    static #dtos = new Map();
+
+    static async getAPI(x) {
+        if (!this.#apis.has(x)) {
+            const instance = await x.CreateInstance();
+            this.#apis.set(x, instance);
+        }
+        return this.#apis.get(x);
+    }
+
+    static async getDTO(x) {
+        if (!this.#dtos.has(x)) {
+            const instance = await x.CreateInstance();
+            this.#dtos.set(x, instance);
+        }
+        return this.#dtos.get(x);
+    }
+}

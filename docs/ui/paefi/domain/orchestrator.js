@@ -16,19 +16,18 @@ export class Orchestrator {
     }
 
     async init(moduleKey, domainKey) {
-        this.info = DomainInfo.Create(domainKey);
+        this.info           = DomainInfo.Find(domainKey);
+        this.render         = await DomainView.Create(moduleKey, this.info); 
+        this.gate           = new ApiGate(this.info, (x) => this.render.Rows(x), () => this.filters());
+        this.modal          = new ModalShell(); 
 
         this.modalRequested = this.modalRequested.bind(this);
-        this.render         = await DomainView.Create(moduleKey, this.info); 
 
-        this.gate = new ApiGate(this.info, (x) => this.render.Rows(x), () => this.filters());
         await this.gate.Read();
-
-        this.modal = new ModalShell(); 
         this.wireAdminEvents();
     }
 
-    static async Create(moduleKey, domainKey) {
+    async static CreateInstance(moduleKey, domainKey) {
         const instance = new Orchestrator();
         await instance.init(moduleKey, domainKey);
         return instance;
