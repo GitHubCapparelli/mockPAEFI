@@ -35,52 +35,42 @@ export class CoreAPI {
     return this.initPromise;
   }
 
-  get store() {
-    if (!this.initialized) {
-      throw new Error(`${this.entity} not initialized`);
+  GetAll(request) {
+    const result  = [...InMemory.GetAll(entity)];
+    const orderBy = this.defaultOrderBy;
+    const order   = 'asc';
+
+    if (orderBy) {
+      result.sort((a, b) =>
+        order === 'asc'
+          ? String(a[orderBy]).localeCompare(String(b[orderBy]), 'pt-BR', { sensitivity: 'base' })
+          : String(b[orderBy]).localeCompare(String(a[orderBy]), 'pt-BR', { sensitivity: 'base' })
+      );
     }
-    return InMemory.GetAll(this.entity);
+    return result;
   }
 
-  #validateAction(acao) {
-    if (!['create', 'update', 'delete'].includes(acao)) {
-      throw new Error(`[CoreAPI] Ação inválida: ${acao}`);
-    }
+  GetById(request) {
+    const id = request.payload?.id;
+    if (!id)   throw new Error('ID obrigatório');
+
+    return InMemory.GetAll(entity).find(x => x.id === id) ?? null;
   }
 
-  #validateDTO(acao, dto, state) {
-    this.#validateAction(acao);
+  GetPaginated(request) {
+    let data = this.applyFilters(GetAll(request), filters);
 
-    dto.prepare(acao, this.user.id);
+    const totalRecords  = data.length;
+    const totalPages    = Math.max(1, Math.ceil(totalRecords / pageSize));
+    const currentPage   = Math.min(Math.max(page, 1), totalPages);
 
-    if (!dto.validateDTO()) {
-      throw new Error(dto.errors.join('; '));
-    }
+    const start = (currentPage - 1) * pageSize;
+    const end   = start + pageSize;
 
-    const validator = acao === 'create' ? this.validateCreate :
-                      acao === 'update' ? this.validateUpdate :
-                                          this.validateDelete;
-
-    if (validator && !validator.call(this, dto, state)) {
-      throw new Error(dto.errors.join('; ') || 'Validação de domínio falhou');
-    }
-  }
-
-  #buildHistoricoDTO({ acao, before, after, metadata }) {
-    const historico   = HistoricoDTO.CreateInstance({
-      userID          : this.user.id,
-      catalogoID      : metadata.catalogoID,
-      dataHora        : new Date().toISOString(),
-      tipo            : metadata.tipo,
-      acao,
-      descricao       : metadata?.descricao     ?? null,
-      justificativa   : metadata?.justificativa ?? null,
-      diff            : JSON.stringify({ before, after })
-    });
-
-    if (!historico.validateDTO()) throw new Error(historico.errors.join('; '));
-
-    return historico;
+    return {
+      data        : data.slice(start, end),
+      pagination  : { page: currentPage, pageSize, totalRecords, totalPages }
+    };
   }
 
   Create(request) {
@@ -120,7 +110,7 @@ export class CoreAPI {
     const previous = [...this.store];
     try {
       const id = request.payload?.id;
-      if (!id)                throw new Error('ID obrigatório para update');
+      if (!id)                throw new Error('ID obrigatório');
 
       const idx = previous.findIndex(x => x.id === id);
       if (idx === -1)         throw new Error('Registro não encontrado');
@@ -200,5 +190,53 @@ export class CoreAPI {
       InMemory.SetAll(this.entity, previous);
       throw err;
     }
+  }
+
+  get store() {
+    if (!this.initialized) {
+      throw new Error(`${this.entity} not initialized`);
+    }
+    return InMemory.GetAll(this.entity);
+  }
+
+  #validateAction(acao) {
+    if (!['create', 'update', 'delete'].includes(acao)) {
+      throw new Error(`[CoreAPI] Ação inválida: ${acao}`);
+    }
+  }
+
+  #validateDTO(acao, dto, state) {
+    this.#validateAction(acao);
+
+    dto.prepare(acao, this.user.id);
+
+    if (!dto.validateDTO()) {
+      throw new Error(dto.errors.join('; '));
+    }
+
+    const validator = acao === 'create' ? this.validateCreate :
+                      acao === 'update' ? this.validateUpdate :
+                                          this.validateDelete;
+
+    if (validator && !validator.call(this, dto, state)) {
+      throw new Error(dto.errors.join('; ') || 'Validação de domínio falhou');
+    }
+  }
+
+  #buildHistoricoDTO({ acao, before, after, metadata }) {
+    const historico   = HistoricoDTO.CreateInstance({
+      userID          : this.user.id,
+      catalogoID      : metadata.catalogoID,
+      dataHora        : new Date().toISOString(),
+      tipo            : metadata.tipo,
+      acao,
+      descricao       : metadata?.descricao     ?? null,
+      justificativa   : metadata?.justificativa ?? null,
+      diff            : JSON.stringify({ before, after })
+    });
+
+    if (!historico.validateDTO()) throw new Error(historico.errors.join('; '));
+
+    return historico;
   }
 }
