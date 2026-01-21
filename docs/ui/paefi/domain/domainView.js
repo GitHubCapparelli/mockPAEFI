@@ -40,7 +40,7 @@ export class DomainView {
 
     Filtros() { 
         const $divFiltros = this.assureCleanFilterOptions();
-        const campos      = this.info.Catalog.Bindings.filter(x => x.Lookup || x.LookupId);
+        const campos      = this.info.Catalog.Campos.filter(x => x.Lookup || x.LookupId);
 
         campos.forEach(c => {
             const filtroId = c.UiFilterKey.startsWith('#') ? c.UiFilterKey.substring(1) : c.UiFilterKey;
