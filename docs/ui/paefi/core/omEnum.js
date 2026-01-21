@@ -1,13 +1,6 @@
-// ui paefi core omEnum
+// ui paefi core omEnum.js
 
-export class BaseEnum {
-    static All = [];
-
-    static FromKey(key)        { return this.All.find(x => x.Key === key) ?? null; }
-    static FromValue(value)    { return this.All.find(x => x.Value === value) ?? null; }
-    static ValueFromKey(key)   { return this.FromKey(key)?.Value ?? null; }
-    static KeyFromValue(value) { return this.FromValue(value)?.Key ?? null; }
-}
+import { BaseEnum } from "../../../data/factory/_omSpec";
 
 export class Elemento extends BaseEnum {
     static All = [];
