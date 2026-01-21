@@ -36,7 +36,7 @@ export class CoreAPI {
   }
 
   GetAll(request) {
-    const result  = [...InMemory.GetAll(entity)];
+    const result  = [...InMemory.GetAll(this.entity)];
     const orderBy = this.defaultOrderBy;
     const order   = 'asc';
 
@@ -54,7 +54,7 @@ export class CoreAPI {
     const id = request.payload?.id;
     if (!id)   throw new Error('ID obrigatório');
 
-    return InMemory.GetAll(entity).find(x => x.id === id) ?? null;
+    return InMemory.GetAll(this.entity).find(x => x.id === id) ?? null;
   }
 
   GetPaginated(request) {
