@@ -98,7 +98,7 @@ export class DomainView {
     }
 
     Table() {
-        const columns = this.info.Catalog.Bindings.filter(x => x.OnGrid);
+        const columns = this.info.Catalog.Campos.filter(x => x.OnGrid);
         const header  = columns.map(c => `<th>${c.UiFieldTitle}</th>`);
 
         if (this.moduleKey === Modulo.Admin.Key) {
@@ -120,7 +120,7 @@ export class DomainView {
     }
 
     Rows(response) {
-        const cols   = this.info.Catalog.Bindings.filter(x => x.OnGrid);
+        const cols   = this.info.Catalog.Campos.filter(x => x.OnGrid);
         const $tbody = $('#dataRows').empty();
 
         if (!response.data.length) {
