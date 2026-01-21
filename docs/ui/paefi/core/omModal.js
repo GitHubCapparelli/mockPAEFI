@@ -73,7 +73,7 @@ export class ModalFormBuilder {
         this.lookups    = lookups;
         this.dto        = dto ?? {};
         this.original   = structuredClone(this.dto);
-        this.bindings   = catalog.Bindings;
+        this.bindings   = Bindings.FromDatatable(catalog.Key);
         this.controls   = {};
     }
     static Create(prefix, info, lookups, dto = null) {

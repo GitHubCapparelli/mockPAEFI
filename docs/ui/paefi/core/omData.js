@@ -91,6 +91,7 @@ export class DomainInfo {
         this.DTO        = dto;
         this.API        = api;
         this.Lookups    = lookups;
+        this.Bindings   = Bindings.FromDatatable(catalog.Key);
 
         if (!DomainInfo.All.some(x => x.Key === key)) {
             DomainInfo.All.push(this);
