@@ -1,14 +1,15 @@
 // ui paefi domain domainView
 
-import { Render }       from '../core/renderer.js';
-import { DomainInfo }   from '../core/omData.js';
-import { FuncaoUsuario, CargoUsuario, Especialidade, Modulo } from '../core/omEnum.js'; 
+import { Render }                                               from '../core/renderer.js';
+import { Bindings, DomainInfo }                                 from '../core/omData.js';
+import { FuncaoUsuario, CargoUsuario, Especialidade, Modulo }   from '../core/omEnum.js'; 
 
 export class DomainView {
     constructor(moduleKey, info, namedLists) { 
         this.moduleKey  = moduleKey;
         this.info       = info;
         this.lookups    = namedLists; 
+        this.bindings   = Bindings.FromDatatable(info.Catalog.Key);
     }
 
     static async Create(moduleKey, info) { 
@@ -40,7 +41,7 @@ export class DomainView {
 
     Filtros() { 
         const $divFiltros = this.assureCleanFilterOptions();
-        const campos      = this.info.Catalog.Campos.filter(x => x.Lookup || x.LookupId);
+        const campos      = this.bindings.filter(x => x.Lookup || x.LookupId);
 
         campos.forEach(c => {
             const filtroId = c.UiFilterKey.startsWith('#') ? c.UiFilterKey.substring(1) : c.UiFilterKey;
@@ -98,7 +99,8 @@ export class DomainView {
     }
 
     Table() {
-        const columns = this.info.Catalog.Campos.filter(x => x.OnGrid);
+        const columns     = this.bindings.filter(x => x.OnGrid);
+        //const columns = this.info.Catalog.Campos.filter(x => x.OnGrid);
         const header  = columns.map(c => `<th>${c.UiFieldTitle}</th>`);
 
         if (this.moduleKey === Modulo.Admin.Key) {
@@ -120,7 +122,8 @@ export class DomainView {
     }
 
     Rows(response) {
-        const cols   = this.info.Catalog.Campos.filter(x => x.OnGrid);
+        const cols   = this.bindings.filter(x => x.OnGrid);
+        //const cols   = this.info.Catalog.Campos.filter(x => x.OnGrid);
         const $tbody = $('#dataRows').empty();
 
         if (!response.data.length) {
