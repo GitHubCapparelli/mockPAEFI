@@ -1,6 +1,6 @@
 // ui paefi core omEnum.js
 
-import { BaseEnum } from "../../../data/factory/_omSpec";
+import { BaseEnum } from "../../../data/factory/_omSpec.js";
 
 export class Elemento extends BaseEnum {
     static All = [];
