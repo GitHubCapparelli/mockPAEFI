@@ -60,7 +60,9 @@ export class CoreAPI {
   GetPaginated(request) {
     let data = this.applyFilters(this.GetAll(request), request.filters);
 
+    const page          = request.page;
     const pageSize      = request.pageSize;
+    
     const totalRecords  = data.length;
     const totalPages    = Math.max(1, Math.ceil(totalRecords / pageSize));
     const currentPage   = Math.min(Math.max(page, 1), totalPages);
