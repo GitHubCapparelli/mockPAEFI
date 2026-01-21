@@ -134,6 +134,7 @@ export class Campo {
         this.Cripto         = cripto.Key;
         this.Access         = access.Key;
         this.IsSensitive    = isSensitive;
+        this.Required       = required;
 
         if (!Campo.All.some(x => x.Key === key)) {
             Campo.All.push(this);
