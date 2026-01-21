@@ -87,17 +87,17 @@ export class DomainInfo {
         return instance;
     }
 
-    static Historico = new DomainInfo('historico', 'Histórico', API.HistoricoAPI, Dados.HistoricoDTO, 
-        Dados.Tabela.Historico, 'historicoSchema.json', { usuarios: API.UsuariosServidoresAPI, catalogos: API.CatalogosAPI });
+    static Historico = new DomainInfo('historico', 'Histórico', API.HistoricoAPI.CreateInstance(), Dados.HistoricoDTO, 
+        Dados.Tabela.Historico, 'historicoSchema.json', { usuarios: API.UsuariosServidoresAPI.CreateInstance(), catalogos: API.CatalogosAPI.CreateInstance() });
 
-    static Catalogos = new DomainInfo('catalogos', 'Catálogo', API.CatalogosAPI, Dados.CatalogoDTO,
+    static Catalogos = new DomainInfo('catalogos', 'Catálogo', API.CatalogosAPI.CreateInstance(), Dados.CatalogoDTO,
         Dados.Tabela.Catalogos, 'catalogoSchema.json');
 
-    static Unidades = new DomainInfo('unidades', 'Unidade', API.UnidadesAPI, Dados.UnidadeDTO, 
+    static Unidades = new DomainInfo('unidades', 'Unidade', API.UnidadesAPI.CreateInstance(), Dados.UnidadeDTO, 
         Dados.Tabela.Unidades, 'unidadeSchema.json');
     
     static UsuariosServidores = new DomainInfo('usuarios-servidores', 'Usuário Servidor', API.UsuariosServidoresAPI, Dados.UsuarioServidorDTO, 
-        Dados.Tabela.UsuariosServidores, 'usuarioServidorSchema.json', { unidades: API.UnidadesAPI });
+        Dados.Tabela.UsuariosServidores, 'usuarioServidorSchema.json', { unidades: API.UnidadesAPI.CreateInstance() });
 };
 
 ///////////////////////////////////
