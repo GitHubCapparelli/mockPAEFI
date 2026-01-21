@@ -2,7 +2,7 @@
 
 import { QueryEngine, CommandEngine }   from '../core/omClass.js';
 import { Session, CurrentUserKey }      from '../../../services/storage.js';
-import { TipoLog }                      from '../../../dados/factory/_omSpec.js';
+import { TipoLog }                      from '../../../data/factory/_omSpec.js';
 
 export class ApiGate {
     #query   = null;
