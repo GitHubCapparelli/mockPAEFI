@@ -144,7 +144,7 @@ export class Orchestrator {
     #getSensitiveFields(instance) {
         let fields = [];
         Object.entries(instance).forEach(key => {
-            const binding = this.info.Catalog.Bindings.find(x => x.DtoId === key);
+            const binding = this.info.Bindings.find(x => x.DtoId === key);
             if (binding.DbInfo.IsSensitive) {
                 fields.push(binding.UiFieldTitle);
             }

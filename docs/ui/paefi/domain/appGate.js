@@ -81,7 +81,7 @@ export class ApiGate {
 
     #getMetadata(justificativa = null) {
         const result = {
-            catalogoID  : this.info.Catalogo.Key,
+            catalogoID  : this.info.Catalog.Key,
             tipo        : App.TipoLog.Frontend.Key
         };
         if (justificativa) {
