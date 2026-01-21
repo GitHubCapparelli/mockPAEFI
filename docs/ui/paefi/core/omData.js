@@ -82,8 +82,8 @@ export class DomainInfo {
         this.Name       = name;
         this.Catalog    = catalog;
         this.Schema     = schema;
-        this.API        = api;
         this.DTO        = dto;
+        this.API        = api;
         this.Lookups    = lookups;
 
         if (!DomainInfo.All.some(x => x.Key === key)) {
@@ -91,12 +91,10 @@ export class DomainInfo {
         }
     }
     static async CreateInstance(key, name, api, dto, catalog, schema, lookups = {}) {
-        const [resolvedApi, resolvedDto] = await Promise.all([
-            Registry.getAPI(api),
-            Registry.getDTO(dto)
-        ]);
-        const resolvedLookups = DomainInfo.resolveLookups(lookups);
-        return new DomainInfo(key, name, resolvedApi, resolvedDto, catalog, schema, resolvedLookups);
+        const xAPI       = await Registry.getAPI(api);
+        const xLookups   = await DomainInfo.resolveLookups(lookups);
+
+        return new DomainInfo(key, name, xAPI, dto, catalog, schema, xLookups);
     }
     static async resolveLookups(lookups) {
         const entries = await Promise.all(
@@ -128,21 +126,11 @@ export class DomainInfo {
 
 export class Registry {
     static #apis = new Map();
-    static #dtos = new Map();
-
     static async getAPI(x) {
         if (!this.#apis.has(x)) {
             const instance = await x.CreateInstance();
             this.#apis.set(x, instance);
         }
         return this.#apis.get(x);
-    }
-
-    static async getDTO(x) {
-        if (!this.#dtos.has(x)) {
-            const instance = await x.CreateInstance();
-            this.#dtos.set(x, instance);
-        }
-        return this.#dtos.get(x);
     }
 }
