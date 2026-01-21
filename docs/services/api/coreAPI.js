@@ -51,10 +51,7 @@ export class CoreAPI {
   }
 
   GetById(request) {
-    const id = request.payload?.id;
-    if (!id)   throw new Error('ID obrigatório');
-
-    return InMemory.GetAll(this.entity).find(x => x.id === id) ?? null;
+    return InMemory.GetAll(this.entity).find(x => x.id === request) ?? null;
   }
 
   GetPaginated(request) {
