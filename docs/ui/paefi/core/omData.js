@@ -32,11 +32,11 @@ export class Bindings {
         this.DisplayId      = displayId;
         this.OnGrid         = onGrid;
 
-        if (!Binding.All.some(x => x.Key === key)) {
-            Binding.All.push(this);
+        if (!Bindings.All.some(x => x.Key === key)) {
+            Bindings.All.push(this);
         }
     }
-    
+
     static FromDatatable    = (tableKey) => Bindings.All.find(x => x.DbKey === tableKey);
 
     static NomeCatalogo     = new Bindings({ key: crypto.randomUUID(), dbKey: Tabela.Catalogos.Key, dbInfo: Tabela.Catalogos.Campos.Nome,                     dtoId:'nome',               uiFieldTitle: 'Nome' });
