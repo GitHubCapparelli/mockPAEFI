@@ -2,7 +2,7 @@
 
 import { QueryEngine, CommandEngine }   from '../core/omClass.js';
 import { Session, CurrentUserKey }      from '../../../services/storage.js';
-import * as App                         from '../core/omData.js';
+import { TipoLog }                      from '../../../dados/factory/_omSpec.js';
 
 export class ApiGate {
     #query   = null;
@@ -82,7 +82,7 @@ export class ApiGate {
     #getMetadata(justificativa = null) {
         const result = {
             catalogoID  : this.info.Catalog.Key,
-            tipo        : App.TipoLog.Frontend.Key
+            tipo        : TipoLog.Frontend.Key
         };
         if (justificativa) {
             result.justificativa = justificativa;
