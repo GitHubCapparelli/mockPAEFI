@@ -11,7 +11,7 @@ export class CatalogosAPI extends CoreAPI {
     
     super({
       entity          : 'catalogos',
-      dataPath        : '/mockPAEFI/data/mock/catalogos.json',
+      dataPath        : '/mockPAEFI/data/seed/catalogos.json',
       jsonRoot        : 'catalogos',
       defaultOrderBy  : 'nome',
       DTO             : CatalogoDTO,

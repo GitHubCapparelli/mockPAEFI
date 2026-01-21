@@ -9,7 +9,7 @@ export class HistoricoDTO extends BaseDTO {
   constructor(token, data) {
     if (token !== _token) throw new Error('Use HistoricoDTO.CreateInstance() para criar instâncias');
 
-    super(schema, audit);
+    super(schema);
 
     this.userID         = data.userID;
     this.catalogoID     = data.catalogoID;

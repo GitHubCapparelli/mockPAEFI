@@ -100,7 +100,7 @@ export class DomainInfo {
     }
     static async resolveLookups(lookups) {
         const entries = await Promise.all(
-            Object.entries(lookups).map(async ([k, x]) => [k, await Registry.get(x)])
+            Object.entries(lookups).map(async ([k, x]) => [k, await Registry.getAPI(x)])
         );
         return Object.fromEntries(entries);
     }
