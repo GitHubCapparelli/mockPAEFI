@@ -27,7 +27,7 @@ export class Orchestrator {
         this.wireAdminEvents();
     }
 
-    async static CreateInstance(moduleKey, domainKey) {
+    static async CreateInstance(moduleKey, domainKey) {
         const instance = new Orchestrator();
         await instance.init(moduleKey, domainKey);
         return instance;
