@@ -60,16 +60,17 @@ export class CoreAPI {
   GetPaginated(request) {
     let data = this.applyFilters(this.GetAll(request), request.filters);
 
+    const pageSize      = request.pageSize;
     const totalRecords  = data.length;
-    const totalPages    = Math.max(1, Math.ceil(totalRecords / request.pageSize));
+    const totalPages    = Math.max(1, Math.ceil(totalRecords / pageSize));
     const currentPage   = Math.min(Math.max(page, 1), totalPages);
 
-    const start = (currentPage - 1) * request.pageSize;
+    const start = (currentPage - 1) * pageSize;
     const end   = start + pageSize;
 
     return {
       data        : data.slice(start, end),
-      pagination  : { page: currentPage, request.pageSize, totalRecords, totalPages }
+      pagination  : { page: currentPage, pageSize, totalRecords, totalPages }
     };
   }
 
