@@ -215,7 +215,7 @@ export class Tabela {
     }
 
     static Catalogos = new Tabela(crypto.randomUUID(), 'Catalogos', '0.1', 'Armazenar metadados das tabelas (data sources)',
-        [ Campo.Nome.Mandatory(), Campo.Funcao.Mandatory(), Campo.Versao.Mandatory() ]);
+        [ Campo.Nome.Mandatory(), Campo.Versao.Mandatory(), Campo.Finalidade ]);
 
     static Historico = new Tabela(crypto.randomUUID(), 'Historico', '0.1', 'Armazenar dados de eventos operacionais',
         [ Campo.DataHora.Mandatory(), Campo.UsuarioID.Mandatory(), Campo.CatalogoID.Mandatory(), Campo.Acao.Mandatory(), Campo.Justificativa, Campo.TipoRegistro.Mandatory(), Campo.Descricao, Campo.SessionId.Mandatory(), Campo.Diff.Mandatory() ]);
