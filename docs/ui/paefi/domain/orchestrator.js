@@ -34,8 +34,7 @@ export class Orchestrator {
     }  
       
     filters() {
-        //const campos = this.info.Catalog.Bindings.filter(x => x.Lookup || x.LookupId);
-        const campos = this.info.Catalog.Bindings.filter(x => (x.Lookup || x.LookupId) && x.UiFilterKey);
+        const campos = this.info.Bindings.filter(x => (x.Lookup || x.LookupId) && x.UiFilterKey);
         const filtro = campos.reduce((acc, binding) => {
             acc[binding.DtoId] = $(binding.UiFilterKey).val() || null;
             return acc;
