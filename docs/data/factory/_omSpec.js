@@ -3,13 +3,14 @@
 export class BaseEnum {
     static All = [];
 
-    static FromKey(key) { return this.All.find(x => x.Key === key) ?? null; }
-    static FromValue(value) { return this.All.find(x => x.Value === value) ?? null; }
-    static ValueFromKey(key) { return this.FromKey(key)?.Value ?? null; }
-    static KeyFromValue(value) { return this.FromValue(value)?.Key ?? null; }
+    static FromKey(key)         { return this.All.find(x => x.Key === key) ?? null; }
+    static FromValue(value)     { return this.All.find(x => x.Value === value) ?? null; }
+
+    static ValueFromKey(key)    { return this.FromKey(key)?.Value ?? null; }
+    static KeyFromValue(value)  { return this.FromValue(value)?.Key ?? null; }
 }
 
-export class TipoCriptografia extends Enum.BaseEnum {
+export class TipoCriptografia extends BaseEnum {
     static All = [];
 
     static Nenhuma              = new TipoCriptografia('nenhuma', 'Nenhuma');
@@ -31,7 +32,7 @@ export class TipoCriptografia extends Enum.BaseEnum {
 };
 Object.freeze(TipoCriptografia.All);
 
-export class TipoAcesso extends Enum.BaseEnum {
+export class TipoAcesso extends BaseEnum {
     static All = [];
 
     static Interno          = new TipoAcesso('interno', 'Interno');
@@ -55,7 +56,7 @@ export class TipoAcesso extends Enum.BaseEnum {
 };
 Object.freeze(TipoAcesso.All);
 
-export class TipoLog extends Enum.BaseEnum {
+export class TipoLog extends BaseEnum {
     static All = [];
 
     static NaoInformado     = new TipoLog('naoInformado', 'Não informado');
@@ -79,6 +80,29 @@ export class TipoLog extends Enum.BaseEnum {
     }
 };
 Object.freeze(TipoLog.All);
+
+export class GrauImpacto extends BaseEnum {
+    static All = [];
+
+    static Nenhum   = new GrauImpacto('nenhum', 'Nenhum');
+    static Baixo    = new GrauImpacto('baixo', 'Baixo');
+    static Moderado = new GrauImpacto('moderado', 'Moderado');
+    static Alto     = new GrauImpacto('alto', 'Alto');
+    static Critico  = new GrauImpacto('critico', 'Crítico');
+
+    constructor(key, value) {
+        super();
+        this.Key = key;
+        this.Value = value;
+        this.JQuery = `#${key}`;
+
+        if (!GrauImpacto.All.some(x => x.Key === key)) {
+            GrauImpacto.All.push(this);
+        }
+        Object.freeze(this);
+    }
+};
+Object.freeze(GrauImpacto.All);
 
 //////////////////////////
 
