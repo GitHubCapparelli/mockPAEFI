@@ -10,18 +10,11 @@ export class CoreAPI {
 
   constructor(config) {
     this.user = Session.Get(CurrentUserKey);
-
     Object.assign(this, config);
-
-    if (!this.historicoAPI) {
-      throw new Error('HistoricoAPI inválida ou não inicializada');
-    }
   }
 
   async Init() {
     if (this.initialized) return;
-
-    this.historicoAPI = await HistoricoAPI.CreateInstance();
 
     if (!this.initPromise) {
       this.initPromise = fetch(this.dataPath)

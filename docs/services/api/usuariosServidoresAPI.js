@@ -8,6 +8,7 @@ const _token = Symbol('UsuariosServidoresAPI');
 export class UsuariosServidoresAPI extends CoreAPI {
   constructor(token, historicoAPI) {
     if (token !== _token) throw new Error('Use UsuariosServidoresAPI.CreateInstance() para criar instâncias');
+    if (!historicoAPI)    throw new Error('HistoricoAPI obrigatório');
     
     super({
       entity          : 'usuariosServidores',
@@ -15,7 +16,7 @@ export class UsuariosServidoresAPI extends CoreAPI {
       jsonRoot        : 'usuariosServidores',
       defaultOrderBy  : 'nome',
       DTO             : UsuarioServidorDTO,
-      historicoAPI
+      historicoAPI    : historicoAPI
     });    
   }
   static async CreateInstance() {
