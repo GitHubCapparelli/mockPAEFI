@@ -2,6 +2,7 @@
 
 import { InMemory, Session, CurrentUserKey }  from '../storage.js';
 import { HistoricoDTO }                       from '../../data/factory/historicoDTO.js';
+import { HistoricoAPI }                       from './historicoAPI.js';
 
 export class CoreAPI {
   initialized = false;
@@ -12,13 +13,15 @@ export class CoreAPI {
 
     Object.assign(this, config);
 
-    if (this.historicoAPI && typeof this.historicoAPI.Create !== 'function') {
+    if (!this.historicoAPI) {
       throw new Error('HistoricoAPI inválida ou não inicializada');
     }
   }
 
   async Init() {
     if (this.initialized) return;
+
+    this.historicoAPI = await HistoricoAPI.CreateInstance();
 
     if (!this.initPromise) {
       this.initPromise = fetch(this.dataPath)
