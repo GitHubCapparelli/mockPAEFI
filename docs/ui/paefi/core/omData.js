@@ -1,9 +1,10 @@
 // ui paefi core omData
 
-import * as API     from '../../../services/api/_index.js';
-import * as Dados   from '../../../data/factory/_index.js';
-import * as Enum    from './omEnum.js';
-import { Tabela, Campo }   from '../../../data/factory/_omSpec.js'; 
+import * as API             from '../../../services/api/_index.js';
+import * as Dados           from '../../../data/factory/_index.js';
+import * as Enum            from './omEnum.js';
+import { Registry }         from '../../../services/storage.js';
+import { Tabela, Campo }    from '../../../data/factory/_omSpec.js'; 
 
 export class Bindings {
     static All = [];
@@ -98,14 +99,14 @@ export class DomainInfo {
         }
     }
     static async CreateInstance(key, name, api, dto, catalog, schema, lookups = {}) {
-        const xAPI       = await Registry.getAPI(api);
+        const xAPI       = await Registry.API(api);
         const xLookups   = await DomainInfo.resolveLookups(lookups);
 
         return new DomainInfo(key, name, xAPI, dto, catalog, schema, xLookups);
     }
     static async resolveLookups(lookups) {
         const entries = await Promise.all(
-            Object.entries(lookups).map(async ([k, x]) => [k, await Registry.getAPI(x)])
+            Object.entries(lookups).map(async ([k, x]) => [k, await Registry.API(x)])
         );
         return Object.fromEntries(entries);
     }
@@ -141,13 +142,3 @@ export class DomainInfo {
 
 ///////////////////////////////////
 
-export class Registry {
-    static #apis = new Map();
-    static async getAPI(x) {
-        if (!this.#apis.has(x)) {
-            const instance = await x.CreateInstance();
-            this.#apis.set(x, instance);
-        }
-        return this.#apis.get(x);
-    }
-}

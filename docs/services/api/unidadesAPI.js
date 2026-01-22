@@ -1,7 +1,8 @@
 // docs/services/api/unidadesAPI.js
 import { CoreAPI }          from './coreAPI.js';
 import { UnidadeDTO }       from '../../data/factory/unidadeDTO.js';
-import { HistoricoAPI}      from './historicoAPI.js';
+import { HistoricoAPI }     from './historicoAPI.js';
+import { Registry }         from '../storage.js';
 
 const _token = Symbol('UnidadesAPI');
 
@@ -15,11 +16,11 @@ export class UnidadesAPI extends CoreAPI {
       jsonRoot        : 'unidades',
       defaultOrderBy  : 'nome',
       DTO             : UnidadeDTO,
-      historicoAPI
+      historicoAPI    : historicoAPI;
     });    
   }
   static async CreateInstance() {
-    const historico = await HistoricoAPI.CreateInstance();
+    const historico = await Registry.API(HistoricoAPI);
     const result    = new UnidadesAPI(_token, historico);
     await result.Init();
     return result;

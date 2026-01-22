@@ -52,3 +52,15 @@ export const InMemory = {
     store[entity] = data;
   }
 };
+
+/* ---------- Registry ---------- */
+export class Registry {
+    static #apis = new Map();
+    static async API(x) {
+        if (!this.#apis.has(x)) {
+            const instance = await x.CreateInstance();
+            this.#apis.set(x, instance);
+        }
+        return this.#apis.get(x);
+    }
+}

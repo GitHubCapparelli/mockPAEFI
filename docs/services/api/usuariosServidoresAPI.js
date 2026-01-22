@@ -2,6 +2,7 @@
 import { CoreAPI }              from './coreAPI.js';
 import { UsuarioServidorDTO }   from '../../data/factory/usuarioServidorDTO.js';
 import { HistoricoAPI }         from './historicoAPI.js';
+import { Registry }             from '../storage.js';
 
 const _token = Symbol('UsuariosServidoresAPI');
 
@@ -16,11 +17,11 @@ export class UsuariosServidoresAPI extends CoreAPI {
       jsonRoot        : 'usuariosServidores',
       defaultOrderBy  : 'nome',
       DTO             : UsuarioServidorDTO,
-      historicoAPI    : historicoAPI
+      historicoAPI    : historicoAPI;
     });    
   }
   static async CreateInstance() {
-    const historico = await HistoricoAPI.CreateInstance();
+    const historico = await Registry.API(HistoricoAPI);
     const result    = new UsuariosServidoresAPI(_token, historico);
     await result.Init();
     return result;
