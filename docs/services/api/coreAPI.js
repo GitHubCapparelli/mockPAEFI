@@ -88,7 +88,7 @@ export class CoreAPI {
       });
       
       InMemory.SetAll(this.entity, next);
-      this.historicoAPI.Create(historicoPayload.toJSON());
+      this.historicoAPI.Create(historicoPayload);
 
       return persisted;
 
@@ -129,7 +129,7 @@ export class CoreAPI {
       });
 
       InMemory.SetAll(this.entity, next);
-      this.historicoAPI.Create(historicoPayload.toJSON());
+      this.historicoAPI.Create(historicoPayload);
 
       return after;
 
@@ -178,7 +178,7 @@ export class CoreAPI {
       });
 
       InMemory.SetAll(this.entity, next);
-      this.historicoAPI.Create(historicoPayload.toJSON());
+      this.historicoAPI.Create(historicoPayload);
 
       return true;
 
