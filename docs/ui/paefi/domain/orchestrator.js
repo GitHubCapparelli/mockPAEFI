@@ -82,11 +82,11 @@ export class Orchestrator {
     async onCreate_clicked(e) {
         e.preventDefault();
         const builder   = ModalFormBuilder.Create('Incluindo', this.info, this.render.lookups);
-        const result    = await this.modal.open(builder);
-        await this.#messageOnError(result, `[onCreate_clicked] ERRO ao coletar dados\r\n${response.error}`);
+        const modal     = await this.modal.open(builder);
+        await this.#messageOnError(modal, `[onCreate_clicked] ERRO ao coletar dados\r\n${modal.error}`);
         
-        if (result.action === 'proceed') {
-            const response = await this.gate.Create(result.payload);
+        if (modal.action === 'proceed') {
+            const response = await this.gate.Create(modal.payload);
             await this.#messageOnError(response, `[onCreate_clicked] ERRO ao criar dados\r\n${response.error}`);
         }
     }
@@ -97,15 +97,15 @@ export class Orchestrator {
         const dto       = await this.info.API.GetById(id);
 
         const builder   = ModalFormBuilder.Create('Editando', this.info, this.render.lookups, dto);
-        const result    = await this.modal.open(builder);
-        await this.#messageOnError(result, `[onUpdate_clicked] ERRO ao coletar dados\r\n${result.error}`);
+        const modal     = await this.modal.open(builder);
+        await this.#messageOnError(modal, `[onUpdate_clicked] ERRO ao coletar dados\r\n${modal.error}`);
 
-        if (!Object.keys(result.dirty).length) return;
+        if (!Object.keys(modal.dirty).length) return;
 
-        if (result.action === 'proceed') {
-            const justificativa = await this.#assureJustificativa('update', result, dto);
-            const response      = await this.gate.Update(id, result.payload, justificativa);
-            await this.#messageOnError(result, `[onUpdate_clicked] ERRO ao atualizar dados\r\n${response.error}`);
+        if (modal.action === 'proceed') {
+            const justificativa = await this.#assureJustificativa('update', modal, dto);
+            const response      = await this.gate.Update(modal.payload, justificativa);
+            await this.#messageOnError(modal, `[onUpdate_clicked] ERRO ao atualizar dados\r\n${response.error}`);
         }
     }
 
@@ -120,29 +120,29 @@ export class Orchestrator {
                     : 'Confirmação';
 
         const builder = ModalMessageBuilder.Create(title, 'Deseja realmente excluir este registro ?');
-        const result  = await this.modal.open(builder);
-        await this.#messageOnError(result, `[onDelete_clicked] ERRO ao confirmar exclusão\r\n${result.error}`);
+        const modal  = await this.modal.open(builder);
+        await this.#messageOnError(modal, `[onDelete_clicked] ERRO ao confirmar exclusão\r\n${modal.error}`);
         
-        if (result.action === 'proceed') {
+        if (modal.action === 'proceed') {
             const response = await this.gate.Delete(id, dto);
-            await this.#messageOnError(response, `[onDelete_clicked] ERRO ao excluir dados\r\n${result.error}`);
+            await this.#messageOnError(response, `[onDelete_clicked] ERRO ao excluir dados\r\n${modal.error}`);
         }
     }
 
-    async #assureJustificativa(acao, result, dto = null) {
+    async #assureJustificativa(acao, modal, dto = null) {
         if (acao === 'update') {
-            let fields = this.#getSensitiveFields(result.dirty);
+            let fields = this.#getSensitiveFields(modal.dirty);
             if (fields.length > 0) {
-                const title   = `Editando dados de ${dto.nome}`;
+                const title   = `Dados sensíveis - ${dto.nome}`;
                 const builder = ModalJustificativaBuilder.Create(title, fields);
-                const result  = await this.modal.open(builder);
+                const modal   = await this.modal.open(builder);
 
-                if (result.action === 'proceed' && result.justificativa) {
-                    return result.justificativa
+                if (modal.action === 'proceed' && modal.justificativa) {
+                    return { ...modal, justificativa: modal.justificativa };
                 }
             }
         }
-        return null;
+        return modal;
     }
 
     /// AQUI.... !!!
