@@ -83,10 +83,11 @@ export class Orchestrator {
         e.preventDefault();
         const builder   = ModalFormBuilder.Create('Incluindo', this.info, this.render.lookups);
         const result    = await this.modal.open(builder);
+        await this.#messageOnError(result, `[onCreate_clicked] ERRO ao coletar dados\r\n${response.error}`);
         
         if (result.action === 'proceed') {
             const response = await this.gate.Create(result.payload);
-            await this.#messageOnError(response, 'ERRO ao incluir novos dados');
+            await this.#messageOnError(response, `[onCreate_clicked] ERRO ao criar dados\r\n${response.error}`);
         }
     }
 
@@ -97,12 +98,14 @@ export class Orchestrator {
 
         const builder   = ModalFormBuilder.Create('Editando', this.info, this.render.lookups, dto);
         const result    = await this.modal.open(builder);
+        await this.#messageOnError(result, `[onUpdate_clicked] ERRO ao coletar dados\r\n${result.error}`);
+
         if (!Object.keys(result.dirty).length) return;
 
         if (result.action === 'proceed') {
             const justificativa = await this.#assureJustificativa('update', result, dto);
-            const response      = await this.gate.Update(id, request.payload, justificativa);
-            await this.#messageOnError(response, 'ERRO ao atualizar dados');
+            const response      = await this.gate.Update(id, result.payload, justificativa);
+            await this.#messageOnError(result, `[onUpdate_clicked] ERRO ao atualizar dados\r\n${response.error}`);
         }
     }
 
@@ -118,10 +121,11 @@ export class Orchestrator {
 
         const builder = ModalMessageBuilder.Create(title, 'Deseja realmente excluir este registro ?');
         const result  = await this.modal.open(builder);
+        await this.#messageOnError(result, `[onDelete_clicked] ERRO ao confirmar exclusão\r\n${result.error}`);
         
         if (result.action === 'proceed') {
             const response = await this.gate.Delete(id, dto);
-            await this.#messageOnError(response, 'ERRO ao excluir registro');
+            await this.#messageOnError(response, `[onDelete_clicked] ERRO ao excluir dados\r\n${result.error}`);
         }
     }
 
