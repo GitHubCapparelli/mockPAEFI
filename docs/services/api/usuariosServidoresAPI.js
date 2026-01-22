@@ -17,7 +17,7 @@ export class UsuariosServidoresAPI extends CoreAPI {
       jsonRoot        : 'usuariosServidores',
       defaultOrderBy  : 'nome',
       DTO             : UsuarioServidorDTO,
-      historicoAPI    : historicoAPI;
+      historicoAPI    : historicoAPI
     });    
   }
   static async CreateInstance() {

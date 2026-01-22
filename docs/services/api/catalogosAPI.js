@@ -16,7 +16,7 @@ export class CatalogosAPI extends CoreAPI {
       jsonRoot        : 'catalogos',
       defaultOrderBy  : 'nome',
       DTO             : CatalogoDTO,
-      historicoAPI    : historicoAPI;
+      historicoAPI    : historicoAPI
     });    
   }
   static async CreateInstance() {

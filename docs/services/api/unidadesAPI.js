@@ -16,7 +16,7 @@ export class UnidadesAPI extends CoreAPI {
       jsonRoot        : 'unidades',
       defaultOrderBy  : 'nome',
       DTO             : UnidadeDTO,
-      historicoAPI    : historicoAPI;
+      historicoAPI    : historicoAPI
     });    
   }
   static async CreateInstance() {
