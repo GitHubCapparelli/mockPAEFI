@@ -50,7 +50,7 @@ export class UsuarioServidorDTO extends AuditDTO {
     const schemaOk  = super.validate(this.toJSON());
     const spec      = Spec.Tabela.UsuariosServidores.Campos;
 
-    const cpf       = spec.find(x => x.DbColName === Campo.CpfServidor.DbColName);
+    const cpf       = spec.find(x => x.DbColName === Spec.Campo.CpfServidor.DbColName);
     if (!this.cpf && cpf.Required) {
       this.errors.push('CPF obrigatório');
       return false;
