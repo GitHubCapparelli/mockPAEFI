@@ -103,8 +103,8 @@ export class Orchestrator {
         if (!Object.keys(modal.dirty).length) return;
 
         if (modal.action === 'proceed') {
-            const justificativa = await this.#assureJustificativa('update', modal, dto);
-            const response      = await this.gate.Update(modal.payload, justificativa);
+            const request  = await this.#assureRequest('update', dto, modal);
+            const response = await this.gate.Update(request);
             await this.#messageOnError(modal, `[onUpdate_clicked] ERRO ao atualizar dados\r\n${response.error}`);
         }
     }
@@ -129,7 +129,8 @@ export class Orchestrator {
         }
     }
 
-    async #assureJustificativa(acao, modal, dto = null) {
+    async #assureRequest(acao, dto, diff) {
+        let result = { id: dto.id, ...diff };
         if (acao === 'update') {
             let fields = this.#getSensitiveFields(modal.dirty);
             if (fields.length > 0) {
@@ -138,11 +139,11 @@ export class Orchestrator {
                 const modal   = await this.modal.open(builder);
 
                 if (modal.action === 'proceed' && modal.justificativa) {
-                    return { ...modal, justificativa: modal.justificativa };
+                    return { ...result, justificativa: modal.justificativa };
                 }
             }
         }
-        return modal;
+        return diff;
     }
 
     /// AQUI.... !!!
