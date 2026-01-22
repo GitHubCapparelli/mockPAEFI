@@ -73,7 +73,7 @@ export class ApiGate {
             await this.Read(this.onFilter_hook());
         }
         return result;
-   }
+    }
     
     async Clear() {
         return await this.Read();

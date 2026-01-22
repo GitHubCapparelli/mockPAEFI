@@ -132,7 +132,7 @@ export class Orchestrator {
     async #assureRequest(acao, dto, diff) {
         let result = { id: dto.id, ...diff };
         if (acao === 'update') {
-            let fields = this.#getSensitiveFields(modal.dirty);
+            let fields = this.#getSensitiveFields(diff.dirty);
             if (fields.length > 0) {
                 const title   = `Dados sensíveis - ${dto.nome}`;
                 const builder = ModalJustificativaBuilder.Create(title, fields);
@@ -143,7 +143,7 @@ export class Orchestrator {
                 }
             }
         }
-        return diff;
+        return result;
     }
 
     /// AQUI.... !!!
