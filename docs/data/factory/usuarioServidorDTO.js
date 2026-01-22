@@ -50,11 +50,11 @@ export class UsuarioServidorDTO extends AuditDTO {
     const schemaOk  = super.validate(this.toJSON());
     const spec      = Spec.Tabela.UsuariosServidores.Campos;
 
-    if (!this.cpf && spec.CPF.Required) {
+    if (!this.cpf && spec.CpfServidor.Required) {
       this.errors.push('CPF obrigatório');
       return false;
     }
-    if (this.cpf && (this.cpf.length < spec.CPF.MinLength || this.cpf.length > spec.CPF.MaxLength)) {
+    if (this.cpf && (this.cpf.length < spec.CpfServidor.MinLength || this.cpf.length > spec.CpfServidor.MaxLength)) {
       this.errors.push(`CPF inválido: tamanho ${this.cpf.length}`);
       return false;
     }
