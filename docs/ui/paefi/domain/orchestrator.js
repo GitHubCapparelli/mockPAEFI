@@ -130,7 +130,7 @@ export class Orchestrator {
     }
 
     async #assureRequest(acao, dto, diff) {
-        let result = { id: dto.id, ...diff };
+        let result = { id: dto.id, ...diff.dirty };
         if (acao === 'update') {
             let fields = this.#getSensitiveFields(diff.dirty);
             if (fields.length > 0) {
