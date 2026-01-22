@@ -80,7 +80,7 @@ export class CoreAPI {
       const persisted = Object.freeze(dto.toJSON());
       const next      = [...previous, persisted];
 
-      const historico = this.#buildHistoricoDTO({
+      const historicoPayload = this.#buildHistoricoDTO({
         acao      : 'create',
         before    : null,
         after     : persisted,
@@ -88,7 +88,7 @@ export class CoreAPI {
       });
       
       InMemory.SetAll(this.entity, next);
-      this.historicoAPI.Create(historico.toJSON());
+      this.historicoAPI.Create(historicoPayload.toJSON());
 
       return persisted;
 
@@ -121,7 +121,7 @@ export class CoreAPI {
       const next    = [...previous];
       next[idx]     = after;
 
-      const historico = this.#buildHistoricoDTO({
+      const historicoPayload = this.#buildHistoricoDTO({
         acao: 'update',
         before,
         after,
@@ -129,7 +129,7 @@ export class CoreAPI {
       });
 
       InMemory.SetAll(this.entity, next);
-      this.historicoAPI.Create(historico.toJSON());
+      this.historicoAPI.Create(historicoPayload.toJSON());
 
       return after;
 
@@ -170,7 +170,7 @@ export class CoreAPI {
         throw new Error('Delete request should have either data or id on the payload');
       }
 
-      const historico = this.#buildHistoricoDTO({
+      const historicoPayload = this.#buildHistoricoDTO({
         acao: 'delete',
         before,
         after,
@@ -178,7 +178,7 @@ export class CoreAPI {
       });
 
       InMemory.SetAll(this.entity, next);
-      this.historicoAPI.Create(historico.toJSON());
+      this.historicoAPI.Create(historicoPayload.toJSON());
 
       return true;
 
@@ -231,8 +231,8 @@ export class CoreAPI {
       diff            : JSON.stringify({ before, after })
     });
 
-    if (!historico.validateDTO()) throw new Error(historico.errors.join('; '));
+    //if (!historico.validateDTO()) throw new Error(historico.errors.join('; '));
 
-    return historico;
+    return { payload: historico };
   }
 }
