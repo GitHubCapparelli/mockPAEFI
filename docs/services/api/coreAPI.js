@@ -1,8 +1,5 @@
 // docs/services/api/coreAPI.js 
-
 import { InMemory, Session, CurrentUserKey }  from '../storage.js';
-import { HistoricoDTO }                       from '../../data/factory/historicoDTO.js';
-import { HistoricoAPI }                       from './historicoAPI.js';
 
 export class CoreAPI {
   initialized = false;
@@ -220,7 +217,7 @@ export class CoreAPI {
   }
 
   #buildHistoricoDTO({ acao, before, after, metadata }) {
-    const historico   = HistoricoDTO.CreateInstance({
+    const historico   = this.historicoDTO.CreateInstance({
       userID          : this.user.id,
       catalogoID      : metadata.catalogoID,
       dataHora        : new Date().toISOString(),

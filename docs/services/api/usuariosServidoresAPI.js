@@ -1,5 +1,6 @@
 // docs/services/api/usuariosServidoresAPI.js
 import { CoreAPI }              from './coreAPI.js';
+import { HistoricoDTO }         from '../../data/factory/historicoDTO.js';
 import { UsuarioServidorDTO }   from '../../data/factory/usuarioServidorDTO.js';
 import { HistoricoAPI }         from './historicoAPI.js';
 import { Registry }             from '../storage.js';
@@ -17,7 +18,8 @@ export class UsuariosServidoresAPI extends CoreAPI {
       jsonRoot        : 'usuariosServidores',
       defaultOrderBy  : 'nome',
       DTO             : UsuarioServidorDTO,
-      historicoAPI    : historicoAPI
+      historicoAPI    : historicoAPI,
+      historicoDTO    : HistoricoDTO
     });    
   }
   static async CreateInstance() {

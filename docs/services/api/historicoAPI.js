@@ -13,7 +13,8 @@ export class HistoricoAPI extends CoreAPI {
       dataPath        : '/mockPAEFI/data/mock/historico.json',
       jsonRoot        : 'historico',
       defaultOrderBy  : 'dataHora',
-      DTO             : HistoricoDTO
+      DTO             : HistoricoDTO,
+      historicoDTO    : HistoricoDTO
     });    
   }
   static async CreateInstance() {

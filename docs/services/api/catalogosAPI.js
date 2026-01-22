@@ -1,5 +1,6 @@
 // docs/services/api/catalogosAPI.js
 import { CoreAPI }        from './coreAPI.js';
+import { HistoricoDTO }   from '../../data/factory/historicoDTO.js';
 import { CatalogoDTO }    from '../../data/factory/catalogoDTO.js';
 import { HistoricoAPI}    from './historicoAPI.js';
 import { Registry }       from '../storage.js';
@@ -16,7 +17,8 @@ export class CatalogosAPI extends CoreAPI {
       jsonRoot        : 'catalogos',
       defaultOrderBy  : 'nome',
       DTO             : CatalogoDTO,
-      historicoAPI    : historicoAPI
+      historicoAPI    : historicoAPI,
+      historicoDTO    : HistoricoDTO
     });    
   }
   static async CreateInstance() {

@@ -1,5 +1,6 @@
 // docs/services/api/unidadesAPI.js
 import { CoreAPI }          from './coreAPI.js';
+import { HistoricoDTO }     from '../../data/factory/historicoDTO.js';
 import { UnidadeDTO }       from '../../data/factory/unidadeDTO.js';
 import { HistoricoAPI }     from './historicoAPI.js';
 import { Registry }         from '../storage.js';
@@ -16,7 +17,8 @@ export class UnidadesAPI extends CoreAPI {
       jsonRoot        : 'unidades',
       defaultOrderBy  : 'nome',
       DTO             : UnidadeDTO,
-      historicoAPI    : historicoAPI
+      historicoAPI    : historicoAPI,
+      historicoDTO    : HistoricoDTO
     });    
   }
   static async CreateInstance() {
