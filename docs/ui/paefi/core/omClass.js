@@ -42,17 +42,7 @@ export class CommandEngine {
   constructor(api) {
     this.api        = api;
   }
-
-  Create  = async (request) => this.#exec(() => this.api.Create(request));
-  Update  = async (request) => this.#exec(() => this.api.Update(request));
-  Delete  = async (request) => this.#exec(() => this.api.Delete(request));
-  
-  async #exec(fn) {
-    try {
-      return await fn();
-    } catch (e) {
-      console.error(e);
-      return { error: e.message ?? String(e), exception: e };
-    }
-  }
+  Create  = async (request) => this.api.Create(request);
+  Update  = async (request) => this.api.Update(request);
+  Delete  = async (request) => this.api.Delete(request);
 }
