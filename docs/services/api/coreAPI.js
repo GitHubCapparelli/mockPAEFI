@@ -67,7 +67,8 @@ export class CoreAPI {
   }
 
   Create(request) {
-    if (!this.historicoAPI) throw new Error('HistoricoAPI não configurada');
+    if (!this.historicoAPI && this.entity !== 'historico') 
+      throw new Error('HistoricoAPI não configurada');
 
     const previous = [...this.store];
     try {
@@ -98,7 +99,8 @@ export class CoreAPI {
   }
 
   Update(request) {
-    if (!this.historicoAPI)   throw new Error('HistoricoAPI não configurada');
+    if (!this.historicoAPI && this.entity !== 'historico')   
+      throw new Error('HistoricoAPI não configurada');
 
     const previous = [...this.store];
     try {
@@ -138,7 +140,8 @@ export class CoreAPI {
   }
 
   Delete(request) {
-    if (!this.historicoAPI)   throw new Error('HistoricoAPI não configurada');
+    if (!this.historicoAPI && this.entity !== 'historico')   
+      throw new Error('HistoricoAPI não configurada');
 
     const previous = [...this.store];
     try {
