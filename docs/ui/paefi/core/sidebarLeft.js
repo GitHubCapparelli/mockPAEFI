@@ -20,7 +20,6 @@ function renderOpcoes(moduleKey) {
                   Dominio.CasosDeUso,
                   Dominio.Compromissos,
                   Dominio.Demandas,
-                  Dominio.Denuncias,
                   Dominio.Documentos,
                   Dominio.Historico,
                   Dominio.Tarefas,
@@ -32,8 +31,6 @@ function renderOpcoes(moduleKey) {
                   Dominio.Atendimentos,
                   Dominio.Compromissos,
                   Dominio.Demandas,
-                  Dominio.Denuncias,
-                  Dominio.Tarefas,
                   Dominio.UsuariosCidadaos,
                   Dominio.Violações
                 ];
