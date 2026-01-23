@@ -59,8 +59,8 @@ export class Modulo extends BaseEnum {
 
     static Nenhum       = new Modulo('','Módulo');
     static Admin        = new Modulo('admin','Administração');
-    static Monitor      = new Modulo('monitor','Supervisão');
-    static Atender      = new Modulo('atender','Atendimento');
+    static Monitor      = new Modulo('monitor','Supervisão e Monitoramento');
+    static Atender      = new Modulo('atender','Atendimentos, Acolhimentos e Acompanhamentos');
 
     constructor(key, value) {
         super();
@@ -93,6 +93,7 @@ export class Dominio extends BaseEnum {
     static Enderecos            = new Dominio('enderecos', 'Endereços');
     static Historico            = new Dominio('historico', 'Histórico de eventos');
     static Interfaces           = new Dominio('interfaces', 'Interfaces (wireframes)');
+    static Metadados            = new Dominio('metadados','Metadados');
     static Objetivos            = new Dominio('objetivos', 'Objetivos');
     static Processos            = new Dominio('processos', 'Processos');
     static Riscos               = new Dominio('riscos', 'Riscos');
