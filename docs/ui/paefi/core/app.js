@@ -32,7 +32,7 @@ async function init() {
 
 function resolvecurrentModule() {
   const url     = window.location.href;
-  currentModule = url.includes('index.html') 
+  currentModule = url.includes('index.html') || url.endsWith('paefi/')
                ? Modulo.Atender
                : url.includes('monitor.html') 
                ? Modulo.Monitor
