@@ -161,7 +161,7 @@ export class Orchestrator {
 
     async #messageOnError(response, title) {
         //if (response?.error) {
-            const builder = ModalMessageBuilder.Create(title, response.error);
+            const builder = ModalMessageBuilder.Create(title, 'Descrição do erro'); //response.error);
             await this.modal.open(builder);
         //}
    }
