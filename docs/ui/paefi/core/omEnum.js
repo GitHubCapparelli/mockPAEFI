@@ -10,7 +10,7 @@ export class Elemento extends BaseEnum {
     static TextoOpcaoAtual     = new Elemento('domain-title','Opção');
     static DivOpcoesDominio    = new Elemento('divOpcoes','Opções');
     static DivPreferencias     = new Elemento('divPreferencias','Preferências');
-    static DivOurDocs          = new Elemento('divOurDocs','renderPreferences');
+    static DivOurDocs          = new Elemento('divOurDocs','Ajuda');
     static DivFilterOptions    = new Elemento('divFilterOptions','');
     static DataSection         = new Elemento('dataSection','');
     static PageBody            = new Elemento('page-body','');
