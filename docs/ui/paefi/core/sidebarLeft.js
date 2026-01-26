@@ -12,27 +12,34 @@ function savePrefs(prefs) { Local.Set(PreferencesKey, prefs); }
 /* Behavior */
 function renderOpcoes(moduleKey) {
   const domains = (moduleKey === Modulo.Admin.Key) 
-                ? Dominio.All.filter(x => x.Key !== Dominio.Nenhum.Key)
-                : (moduleKey === Modulo.Monitor.Key)
                 ? [
-                  Dominio.Atendimentos,
+                  Dominio.Unidades,
+                  Dominio.Servicos,
+                  Dominio.Processos,
+                  Dominio.Objetivos,
+                  Dominio.Riscos,
                   Dominio.Atividades,
                   Dominio.CasosDeUso,
-                  Dominio.Compromissos,
-                  Dominio.Demandas,
-                  Dominio.Documentos,
+                  Dominio.Database,
+                  Dominio.Metadados,
+                  Dominio.Interfaces,
+                  Dominio.Anotacoes,
+                  Dominio.Enderecos
+                ]
+                : (moduleKey === Modulo.Monitor.Key)
+                ? [
+                  Dominio.UsuariosServidores,
                   Dominio.Historico,
                   Dominio.Tarefas,
-                  Dominio.UsuariosCidadaos,
-                  Dominio.UsuariosServidores,
-                  Dominio.Violações
+                  Dominio.Documentos,
+                  Dominio.Violacoes,
+                  Dominio.Legislacoes
                 ]
                 : [
-                  Dominio.Atendimentos,
-                  Dominio.Compromissos,
-                  Dominio.Demandas,
                   Dominio.UsuariosCidadaos,
-                  Dominio.Violações
+                  Dominio.Demandas,
+                  Dominio.Atendimentos,
+                  Dominio.Compromissos
                 ];
   Render.Options(domains);
 }

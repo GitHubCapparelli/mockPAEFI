@@ -102,7 +102,8 @@ export class Dominio extends BaseEnum {
     static Unidades             = new Dominio('unidades','Unidades');
     static UsuariosCidadaos     = new Dominio('usuarios-cidadaos','Usuarios Cidadãos');
     static UsuariosServidores   = new Dominio('usuarios-servidores','Usuários Servidores');
-    static Violações            = new Dominio('violacoes','Violações');
+    static Violacoes            = new Dominio('violacoes','Violações');
+    static Legislacoes          = new Dominio('legislacoes','Legislações');
 
     constructor(key, value) {
         super();
