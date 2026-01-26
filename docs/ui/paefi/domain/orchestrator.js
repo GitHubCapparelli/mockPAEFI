@@ -160,9 +160,9 @@ export class Orchestrator {
     }
 
     async #messageOnError(response, title) {
-        if (response?.error) {
+        //if (response?.error) {
             const builder = ModalMessageBuilder.Create(title, response.error);
             await this.modal.open(builder);
-        }
+        //}
    }
 }
