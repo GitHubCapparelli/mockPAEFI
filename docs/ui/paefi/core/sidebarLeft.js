@@ -31,6 +31,7 @@ function renderOpcoes(moduleKey) {
                   Dominio.UsuariosServidores,
                   Dominio.Historico,
                   Dominio.Tarefas,
+                  Dominio.Denuncias,
                   Dominio.Documentos,
                   Dominio.Violacoes,
                   Dominio.Legislacoes
