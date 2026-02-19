@@ -76,10 +76,10 @@ async function initCurrentDomain() {
 export const App = { SetDomain };
 
 $(document).ready(async () => {
-  //if (!currentUser) {
-  //    alert('Usuário não localizado. Redirecionando...');
-  //    window.location.href = '/mockPAEFI/';
-  //    return;
-  //}
+  if (!currentUser) {
+      alert('Usuário não localizado. Redirecionando...');
+      window.location.href = '/mockPAEFI/';
+      return;
+  }
   await init(); 
 });

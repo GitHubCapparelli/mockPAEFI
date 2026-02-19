@@ -3,6 +3,10 @@ export const PreferencesKey   = 'preferences';
 export const LastModuleKey    = 'lastModule';
 export const LastDomainKey    = 'lastDomain';
 
+export const LastAtenderDomainKey   = 'lastDomain';
+export const LastMonitorarDomainKey = 'lastDomain';
+export const LastAdminDomainKey     = 'lastDomain';
+
 /* ---------- Persistent Adapters ---------- */
 export const Local = {
     Set(key, value) {
