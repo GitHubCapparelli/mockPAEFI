@@ -58,10 +58,10 @@ function resolvecurrentDomain() {
 
   currentDomain     = !target
                     ? moduleDomains[0]
-                    : Dominio.All.find(x => x.Key === target);
+                    : Dominio.All.find(x => x.Key === target.Key);
 
   if (currentDomain) {
-    Local.Set(storageKey, currentDomain);
+    Local.Set(storageKey, currentDomain.Key);
   }
 }
 
