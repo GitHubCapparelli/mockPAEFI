@@ -54,15 +54,10 @@ function resolvecurrentDomain() {
   };
 
   const storageKey  = storageKeys[moduleKey];
-  const target      = storageKey ? Local.Get(storageKey) : null;
+  const target      = storageKey ? Local.Get(storageKey) : moduleDomains[0].Key;
 
-  currentDomain     = !target
-                    ? moduleDomains[0]
-                    : Dominio.All.find(x => x.Key === target.Key);
-
-  if (currentDomain) {
-    Local.Set(storageKey, currentDomain.Key);
-  }
+  currentDomain     = Dominio.All.find(x => x.Key === target.Key);
+  Local.Set(storageKey, currentDomain.Key);
 }
 
 function resolvecurrentDomain_deprecated() {
