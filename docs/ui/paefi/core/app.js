@@ -60,7 +60,7 @@ function resolvecurrentDomain() {
                     ? moduleDomains[0]
                     : Dominio.All.find(x => x.Key === target);
 
-  if (storageKey) {
+  if (currentDomain) {
     Local.Set(storageKey, currentDomain);
   }
 }
