@@ -12,15 +12,19 @@ export class DomainView {
     }
 
     static async Create(moduleKey, info) { 
-        const apiTasks   = Object.entries(info.Lookups).map(async ([key, api]) => {
-            const data   = await api.GetAll(); 
-            return [key, data];
-        });
-        
-        const response      = await Promise.all(apiTasks);
-        const namedLists    = Object.fromEntries(response);
+        let namedLists = [];
 
-        const instance      = new DomainView(moduleKey, info, namedLists); 
+        if (info?.Lookups) {
+            const apiTasks = Object.entries(info.Lookups).map(async ([key, api]) => {
+                const data = await api.GetAll();
+                return [key, data];
+            });
+
+            const response  = await Promise.all(apiTasks);
+            namedLists      = Object.fromEntries(response);
+        }
+
+        const instance = new DomainView(moduleKey, info || null, namedLists);
         instance.view();
 
         return instance;
