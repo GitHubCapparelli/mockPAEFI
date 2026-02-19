@@ -79,14 +79,14 @@ function resolvecurrentDomain_deprecated() {
 
 function SetDomain(domainKey) {
   currentDomain   = Dominio.FromKey(domainKey);
-  
-  const domainKey = (currentModule.Key === Modulo.Atender.Key)
-                  ? LastAtenderDomainKey
-                  : (currentModule.Key === Modulo.Monitor.Key)
-                  ? LastMonitorDomainKey
-                  : LastAdminDomainKey;
 
-  Local.Set(domainKey, currentDomain.Key);
+  const currentKey = (currentModule.Key === Modulo.Atender.Key)
+                   ? LastAtenderDomainKey
+                   : (currentModule.Key === Modulo.Monitor.Key)
+                   ? LastMonitorDomainKey
+                   : LastAdminDomainKey;
+
+  Local.Set(currentKey, currentDomain.Key);
   initCurrentDomain();
 }
 
