@@ -54,9 +54,10 @@ function resolvecurrentDomain() {
   };
 
   const storageKey  = storageKeys[moduleKey];
-  const targetKey   = storageKey ? Local.Get(storageKey) : moduleDomains[0].Key;
+  const storedValue = Local.Get(storageKey);
+  const targetedKey = storedValue || moduleDomains[0].Key;
 
-  currentDomain     = Dominio.All.find(x => x.Key === targetKey);
+  currentDomain     = Dominio.All.find(x => x.Key === targetedKey);
   Local.Set(storageKey, currentDomain.Key);
 }
 
