@@ -1,6 +1,6 @@
 // ui paefi core leftSidebar
 
-import { App }                         from './app.js';
+import { App, DomainsOf }              from './app.js';
 import { Render }                      from './renderer.js';
 import { Modulo, Dominio, Elemento }   from './omEnum.js';
 import { Local, PreferencesKey }       from '../../../services/storage.js';
@@ -11,37 +11,7 @@ function savePrefs(prefs) { Local.Set(PreferencesKey, prefs); }
 
 /* Behavior */
 function renderOpcoes(moduleKey) {
-  const domains = (moduleKey === Modulo.Admin.Key) 
-                ? [
-                  Dominio.Unidades,
-                  Dominio.Servicos,
-                  Dominio.Processos,
-                  Dominio.Objetivos,
-                  Dominio.Riscos,
-                  Dominio.Atividades,
-                  Dominio.CasosDeUso,
-                  Dominio.Database,
-                  Dominio.Metadados,
-                  Dominio.Interfaces,
-                  Dominio.Anotacoes,
-                  Dominio.Enderecos
-                ]
-                : (moduleKey === Modulo.Monitor.Key)
-                ? [
-                  Dominio.UsuariosServidores,
-                  Dominio.Historico,
-                  Dominio.Tarefas,
-                  Dominio.Denuncias,
-                  Dominio.Documentos,
-                  Dominio.Violacoes,
-                  Dominio.Legislacoes
-                ]
-                : [
-                  Dominio.UsuariosCidadaos,
-                  Dominio.Demandas,
-                  Dominio.Atendimentos,
-                  Dominio.Compromissos
-                ];
+  const domains = DomainsOf(moduleKey);
   Render.Options(domains);
 }
 

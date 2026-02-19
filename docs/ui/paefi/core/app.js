@@ -4,7 +4,8 @@ import { Render }                    from './renderer.js';
 import { LeftSidebar }               from './sidebarLeft.js';
 import { Modulo, Dominio, Elemento } from './omEnum.js';
 import { Session, CurrentUserKey,
-         Local, LastModuleKey, LastDomainKey
+         Local, LastModuleKey, //LastDomainKey,
+         LastAtenderDomainKey, LastMonitorDomainKey, LastAdminDomainKey
        } from '../../../services/storage.js';
 
 import { Orchestrator }              from '../domain/orchestrator.js';
@@ -43,6 +44,28 @@ function resolvecurrentModule() {
 }
 
 function resolvecurrentDomain() {
+  const moduleKey     = currentModule.Key; 
+  const moduleDomains = DomainsOf(moduleKey);
+  
+  const storageKeys   = {
+    [Modulo.Atender.Key]: LastAtenderDomainKey,
+    [Modulo.Monitor.Key]: LastMonitorDomainKey,
+    [Modulo.Admin.Key]  : LastAdminDomainKey
+  };
+
+  const storageKey  = storageKeys[moduleKey];
+  const target      = storageKey ? Local.Get(storageKey) : null;
+
+  currentDomain     = !target
+                    ? moduleDomains[0]
+                    : Dominio.All.find(x => x.Key === target);
+
+  if (storageKey) {
+    Local.Set(storageKey, currentDomain);
+  }
+}
+
+function resolvecurrentDomain_deprecated() {
   const lastKey = Local.Get(LastDomainKey);
   currentDomain = Dominio.All.find(x => x.Key === lastKey);
 
@@ -55,11 +78,15 @@ function resolvecurrentDomain() {
 }
 
 function SetDomain(domainKey) {
-  if (domainKey === currentDomain.Key) return;
+  currentDomain   = Dominio.FromKey(domainKey);
+  
+  const domainKey = (currentModule.Key === Modulo.Atender.Key)
+                  ? LastAtenderDomainKey
+                  : (currentModule.Key === Modulo.Monitor.Key)
+                  ? LastMonitorDomainKey
+                  : LastAdminDomainKey;
 
-  currentDomain = Dominio.FromKey(domainKey);
-  Local.Set(LastDomainKey, currentDomain.Key);
-
+  Local.Set(domainKey, currentDomain.Key);
   initCurrentDomain();
 }
 
@@ -71,6 +98,40 @@ async function initCurrentDomain() {
   
   $(Elemento.TextoOpcaoAtual.JQuery).text(currentDomain.Value);
   await Orchestrator.CreateInstance(currentModule.Key, currentDomain.Key);
+}
+
+export function DomainsOf(moduleKey) {
+  return (moduleKey === Modulo.Admin.Key)
+    ? [
+      Dominio.Unidades,
+      Dominio.Servicos,
+      Dominio.Processos,
+      Dominio.Objetivos,
+      Dominio.Riscos,
+      Dominio.Atividades,
+      Dominio.CasosDeUso,
+      Dominio.Database,
+      Dominio.Metadados,
+      Dominio.Interfaces,
+      Dominio.Anotacoes,
+      Dominio.Enderecos
+    ]
+    : (moduleKey === Modulo.Monitor.Key)
+      ? [
+        Dominio.UsuariosServidores,
+        Dominio.Historico,
+        Dominio.Tarefas,
+        Dominio.Denuncias,
+        Dominio.Documentos,
+        Dominio.Violacoes,
+        Dominio.Legislacoes
+      ]
+      : [
+        Dominio.UsuariosCidadaos,
+        Dominio.Demandas,
+        Dominio.Atendimentos,
+        Dominio.Compromissos
+      ];
 }
 
 export const App = { SetDomain };
