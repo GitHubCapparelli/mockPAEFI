@@ -115,9 +115,9 @@ export function DomainsOf(moduleKey) {
     : (moduleKey === Modulo.Monitor.Key)
       ? [
         Dominio.UsuariosServidores,
-        Dominio.Historico,
         Dominio.Tarefas,
         Dominio.Documentos,
+        Dominio.Historico,
         Dominio.RegistrosViolacao,
         Dominio.CatalogoViolacoes,
         Dominio.CatalogoLegislacoes
