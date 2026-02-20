@@ -117,8 +117,8 @@ export function DomainsOf(moduleKey) {
         Dominio.UsuariosServidores,
         Dominio.Historico,
         Dominio.Tarefas,
-        Dominio.RegistrosViolacao,
         Dominio.Documentos,
+        Dominio.RegistrosViolacao,
         Dominio.CatalogoViolacoes,
         Dominio.CatalogoLegislacoes
       ]

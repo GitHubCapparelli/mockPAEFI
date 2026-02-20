@@ -88,7 +88,7 @@ export class Dominio extends BaseEnum {
     static CatalogoLegislacoes  = new Dominio('catalogoLegislacoes','Catálogo de Legislações');
     static CatalogoViolacoes    = new Dominio('catalogoViolacoes','Catálogo de Violações');
     static Compromissos         = new Dominio('compromissos', 'Compromissos');
-    static Database             = new Dominio('catalogos', 'Database (Catálogo de dados)');
+    static Database             = new Dominio('catalogos', 'Banco de Dados (Tabelas)');
     static Demandas             = new Dominio('demandas','Demandas');
     static Documentos           = new Dominio('documentos','Documentos');
     static Enderecos            = new Dominio('enderecos', 'Endereços');
