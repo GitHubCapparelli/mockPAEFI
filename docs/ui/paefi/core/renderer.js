@@ -1,6 +1,7 @@
-// ui.paefi.core.renderer
+// ui paefi core renderer
 
-import { Modulo, Elemento, DocLinks } from './omEnum.js';
+import { DomainInfo } from './omData.js';
+import { Modulo, Elemento, DocLinks, FuncaoUnidade, FuncaoUsuario, CargoUsuario, Especialidade } from './omEnum.js';
 
 // Layout structure //
 export function PageStructure() {
@@ -11,16 +12,6 @@ export function PageStructure() {
     .append(leftSidebar(), pageContents());
 
   $('#app-shell').append($appHeader, $appBody);
-}
-
-export function DomainStructure(moduleKey) {
-  const $pageBody = $('#page-body').empty();
-  if (moduleKey == Modulo.Admin.Key) {
-    $pageBody.append(
-      divFilters(),
-      datagrid()
-    );
-  }
 }
 
 function navbar() {
@@ -133,13 +124,20 @@ export function Preferences(prefs) {
     }), $('<label>', { class: 'form-check-label', for: 'chkDarkMode', text: 'Modo escuro' })
   );
 
-  const $resumeDomain = $('<div>', { class: 'form-check form-switch' }).append(
-    $('<input>', {
-      id: 'chkResumeDomain', type: 'checkbox', class: 'form-check-input',
-      checked: !!prefs.resumeLastDomain
-    }), $('<label>', {
-      class: 'form-check-label', for: 'chkResumeDomain',
-      text: 'Lembrar última opção'
+  const $resumeDomain = $('<div>', { 
+    class: 'form-check form-switch', 
+    title: 'Em breve!' })
+    .append($('<input>', {
+      id       : 'chkResumeDomain', 
+      type     : 'checkbox', 
+      class    : 'form-check-input',
+      checked  : true, //!!prefs.resumeLastDomain
+      disabled : true
+    }), 
+    $('<label>', {
+      class    : 'form-check-label', 
+      for      : 'chkResumeDomain',
+      text     : 'Lembrar última opção'
     }));
 
   const container = $(`#${Elemento.DivPreferencias.Key}`).empty();
@@ -155,61 +153,8 @@ export function OurDocs() {
   });
 }
 
-// filters and tables (admin) //
-function divFilters() {
-  return $('<div>', { class: 'filters-bar mx-1' }).append(
-    $('<div>', { id: 'divFilterOptions', class: 'filter-options p-2 d-flex gap-3' }).append(
-      $('<span>', { text: 'Filtros' })
-    )
-  );
-}
-
-function datagrid() {
-  const $actions = $('<div>', { id: 'divDataActionButtons', class: 'mt-4 ms-2 divDataActionButtons d-flex justify-content-between align-items-center gap-3' }).append(
-    $('<div>', { id: 'divDataActionButtons-left', class: 'action-buttons-left d-flex align-items-center gap-3' }).append(
-      $('<button>', { id: 'btnAddNew', class: 'btn btn-primary' }).append(
-        $('<i>', { class: 'fas fa-plus' }), ' Incluir')
-    ),
-    $('<div>', { id: 'divDataActionButtons-right', class: 'action-buttons-right d-flex align-items-center gap-3' }).append(
-      $('<button>', { class: 'btn btn-terciary', id: 'btnExport' }).append(
-        $('<i>', { class: 'fas fa-download' }), ' Exportar')
-    ));
-
-  const $table = $('<div>', { id: 'divdataTable', class: 'divdataTable mt-2 ms-2 table-responsive' }).append(
-    $('<span>', { text: 'Dados' })
-  );
-
-  const $nav = $('<div>', { id: 'divPagination-section', class: 'pagination-section d-flex justify-content-between align-items-center' }).append(
-    $('<div>', { id: 'divPagination-info', class: 'pagination-info' }).append(
-      $('<span>', { id: 'navInfo', text: 'nav info' })
-    ),
-    $('<nav>').append(
-      $('<ul>', { id: 'navControls', class: 'pagination mb-0' })
-    ));
-
-  return $('<section>', { id: 'dataSection', class: 'data-section mx-2' })
-    .append($actions, $table, $nav);
-}
-
-export function Table(columns) {
-  const thead = columns.map(c => `<th>${c.label}</th>`).join('');
-  const colSpan = columns.length;
-
-  const $table = $('<table>', { class: 'table table-striped table-hover' }).append(
-    $('<thead>').append(thead),
-    $('<tbody>', { id: 'dataRows' }).append(
-      $('<tr>').append($('<td>', {
-        colspan: colSpan,
-        class: 'text-center text-muted', text: 'Carregando...'
-      }))
-    )
-  );
-  const $container = $('#divdataTable').empty();
-  $container.append($table);
-}
-
-export function Select(id, value) {
-  return $('<select>', { id,  class: 'form-select form-select-sm'})
+export function Select(id, value) { 
+  return $('<select>', { id: id,  class: 'form-select form-select-sm'})
   .append($('<option>', { value: '', text: value }));
 }
 
@@ -250,15 +195,14 @@ export function Enum(selector, enumType) {
   enumType.All.forEach(e => $select.append($('<option>', { value: e.Key, text: e.Value })));
 }
 
+
 // Public interface //
 export const Render = {
   PageStructure,
-  DomainStructure,
   Options,
   Preferences,
   OurDocs,
   Select,
   Enum,
-  Table,
   Info
 };

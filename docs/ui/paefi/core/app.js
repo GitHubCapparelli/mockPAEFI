@@ -1,38 +1,39 @@
-// ui.paefi.core.app
+// ui.paefi.core.app.js
 
 import { Render }                    from './renderer.js';
-import { LeftSidebar }               from './leftSidebar.js';
+import { LeftSidebar }               from './sidebarLeft.js';
 import { Modulo, Dominio, Elemento } from './omEnum.js';
 import { Session, CurrentUserKey,
-         Local, LastModuleKey, LastDomainKey
+         Local, LastModuleKey, //LastDomainKey,
+         LastAtenderDomainKey, LastMonitorDomainKey, LastAdminDomainKey
        } from '../../../services/storage.js';
 
-import { UnidadesDomain }            from '../domain/unidades.js';
-import { UsuariosServidoresDomain }  from '../domain/usuariosServidores.js';
+import { Orchestrator }              from '../domain/orchestrator.js';
+import { DomainInfo }                from './omData.js';
 
 let currentDomain;
 let currentModule;
 
 const currentUser = Session.Get(CurrentUserKey);
 
-function init() {
+async function init() {
   resolvecurrentModule();
   resolvecurrentDomain();
 
   Render.PageStructure();
-  Render.DomainStructure(currentModule.Key);
-
   $(Elemento.TextoLogin.JQuery).text(currentUser.login);
   $(Elemento.TextoTituloPagina.JQuery).text(currentModule.Value);
   $(Elemento.TextoOpcaoAtual.JQuery).text(currentDomain.Value);
 
   LeftSidebar.Init(currentModule.Key);
+
+  await DomainInfo.Setup(); 
   initCurrentDomain();
 }
 
 function resolvecurrentModule() {
   const url     = window.location.href;
-  currentModule = url.includes('index.html') 
+  currentModule = url.includes('index.html') || url.endsWith('paefi/')
                ? Modulo.Atender
                : url.includes('monitor.html') 
                ? Modulo.Monitor
@@ -43,6 +44,24 @@ function resolvecurrentModule() {
 }
 
 function resolvecurrentDomain() {
+  const moduleKey     = currentModule.Key; 
+  const moduleDomains = DomainsOf(moduleKey);
+  
+  const storageKeys   = {
+    [Modulo.Atender.Key]: LastAtenderDomainKey,
+    [Modulo.Monitor.Key]: LastMonitorDomainKey,
+    [Modulo.Admin.Key]  : LastAdminDomainKey
+  };
+
+  const storageKey  = storageKeys[moduleKey];
+  const storedValue = Local.Get(storageKey);
+  const targetedKey = storedValue || moduleDomains[0].Key;
+
+  currentDomain     = Dominio.All.find(x => x.Key === targetedKey);
+  Local.Set(storageKey, currentDomain.Key);
+}
+
+function resolvecurrentDomain_deprecated() {
   const lastKey = Local.Get(LastDomainKey);
   currentDomain = Dominio.All.find(x => x.Key === lastKey);
 
@@ -55,30 +74,69 @@ function resolvecurrentDomain() {
 }
 
 function SetDomain(domainKey) {
-  if (domainKey === currentDomain.Key) return;
+  currentDomain   = Dominio.FromKey(domainKey);
 
-  currentDomain = Dominio.FromKey(domainKey);
-  Local.Set(LastDomainKey, currentDomain.Key);
-  
-  Render.DomainStructure(currentModule.Key);
+  const currentKey = (currentModule.Key === Modulo.Atender.Key)
+                   ? LastAtenderDomainKey
+                   : (currentModule.Key === Modulo.Monitor.Key)
+                   ? LastMonitorDomainKey
+                   : LastAdminDomainKey;
+
+  Local.Set(currentKey, currentDomain.Key);
   initCurrentDomain();
 }
 
-function initCurrentDomain() {
+async function initCurrentDomain() {
+  $('#page-body').empty();
+
+  $('#modal-root').remove();
+  $('body').append($('<div', { id:'modal-root', class:'modal-root' }));
+  
   $(Elemento.TextoOpcaoAtual.JQuery).text(currentDomain.Value);
-  switch (currentDomain.Key) {
-    case Dominio.UsuariosServidores.Key  : UsuariosServidoresDomain.Create(currentModule); break;
-    case Dominio.Unidades.Key            : UnidadesDomain.Create(currentModule); break;
-  }
+  await Orchestrator.CreateInstance(currentModule.Key, currentDomain.Key);
+}
+
+export function DomainsOf(moduleKey) {
+  return (moduleKey === Modulo.Admin.Key)
+    ? [
+      Dominio.Unidades,
+      Dominio.Servicos,
+      Dominio.Processos,
+      Dominio.Objetivos,
+      Dominio.Riscos,
+      Dominio.Atividades,
+      Dominio.CasosDeUso,
+      Dominio.Database,
+      Dominio.Metadados,
+      Dominio.Interfaces,
+      Dominio.Anotacoes,
+      Dominio.Enderecos
+    ]
+    : (moduleKey === Modulo.Monitor.Key)
+      ? [
+        Dominio.UsuariosServidores,
+        Dominio.Tarefas,
+        Dominio.Documentos,
+        Dominio.Historico,
+        Dominio.RegistrosViolacao,
+        Dominio.CatalogoViolacoes,
+        Dominio.CatalogoLegislacoes
+      ]
+      : [
+        Dominio.UsuariosCidadaos,
+        Dominio.Demandas,
+        Dominio.Atendimentos,
+        Dominio.Compromissos
+      ];
 }
 
 export const App = { SetDomain };
 
 $(document).ready(async () => {
-  // if (!currentUser) {
-  //     alert('Usuário não localizado. Redirecionando...');
-  //     window.location.href = '/mockPAEFI/';
-  //     return;
-  // }
-  init(); 
+  if (!currentUser) {
+      alert('Usuário não localizado. Redirecionando...');
+      window.location.href = '/mockPAEFI/';
+      return;
+  } 
+  await init(); 
 });

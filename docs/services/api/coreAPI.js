@@ -1,155 +1,238 @@
-import { InMemory }              from '../storage.js';
-import { UsuariosServidoresAPI } from './usuariosServidoresAPI.js';
-import { UnidadesAPI }           from './unidadesAPI.js';
+// docs/services/api/coreAPI.js 
+import { InMemory, Session, CurrentUserKey }  from '../storage.js';
 
-export const CoreAPI = {
-  async InitAll() {
-    await Promise.all([
-      UsuariosServidoresAPI.Init(),
-      UnidadesAPI.Init()
-    ]);
-  }
-};
+export class CoreAPI {
+  initialized = false;
+  initPromise = null;
 
-export function CreateCoreAPI({
-  entity,
-  dataPath,
-  jsonRoot,
-  defaultOrderBy,
-  createDTO,
-  validateCreate,
-  applyFilters = (data, filters) => data
-}) {
-
-  // Init
-  let initialized = false;
-  let initPromise = null;
-
-  async function Init() {
-    if (initialized) return;
-    if (initPromise) return initPromise;
-
-    initPromise = (async () => {
-      const data = await loadInitialData();
-      InMemory.InitStore({ [entity]: data });
-      initialized = true;
-    })();
-
-    return initPromise;
+  constructor(config) {
+    this.user = Session.Get(CurrentUserKey);
+    Object.assign(this, config);
   }
 
-  async function loadInitialData() {
-    try {
-      const response = await fetch(dataPath);
-      const json = await response.json();
+  async Init() {
+    if (this.initialized) return;
 
-      if (Array.isArray(json)) return json;
-      if (jsonRoot && Array.isArray(json[jsonRoot])) return json[jsonRoot];
-      if (Array.isArray(json.list)) return json.list;
+    if (!this.initPromise) {
+      this.initPromise = fetch(this.dataPath)
+        .then(r => r.json())
+        .then(json => {
+          const data = Array.isArray(json)
+            ? json
+            : (json[this.jsonRoot] || json.list || []);
 
-      return [];
-    } catch (err) {
-      console.error(`Error loading ${entity}:`, err);
-      return [];
+          InMemory.InitStore({ [this.entity]: data });
+          this.initialized = true;
+        });
     }
+    return this.initPromise;
   }
 
-  function ensureInitialized() {
-    if (!initialized) {
-      throw new Error(`${entity} API used before init()`);
-    }
-  }
-
-  // CRUD
-  function GetAll({ orderBy = defaultOrderBy, order = 'asc' } = {}) {
-    ensureInitialized();
-
-    const response = [...InMemory.GetAll(entity)];
+  GetAll(request) {
+    const result  = [...InMemory.GetAll(this.entity)];
+    const orderBy = this.defaultOrderBy;
+    const order   = 'asc';
 
     if (orderBy) {
-      response.sort((a, b) =>
+      result.sort((a, b) =>
         order === 'asc'
           ? String(a[orderBy]).localeCompare(String(b[orderBy]), 'pt-BR', { sensitivity: 'base' })
           : String(b[orderBy]).localeCompare(String(a[orderBy]), 'pt-BR', { sensitivity: 'base' })
       );
     }
-    return response;
+    return result;
   }
 
-  function GetById(id) {
-    ensureInitialized();
-    return InMemory.GetAll(entity).find(x => x.id === id) ?? null;
+  GetById(request) {
+    return InMemory.GetAll(this.entity).find(x => x.id === request) ?? null;
   }
 
-  function GetPaginated({ page = 1, pageSize = 10, filters = {} }) {
-    ensureInitialized();
+  GetPaginated(request) {
+    let data = this.applyFilters(this.GetAll(request), request.filters);
 
-    let data = applyFilters(GetAll(), filters);
-
-    const totalRecords = data.length;
-    const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
-    const currentPage = Math.min(Math.max(page, 1), totalPages);
+    const page          = request.page;
+    const pageSize      = request.pageSize;
+    
+    const totalRecords  = data.length;
+    const totalPages    = Math.max(1, Math.ceil(totalRecords / pageSize));
+    const currentPage   = Math.min(Math.max(page, 1), totalPages);
 
     const start = (currentPage - 1) * pageSize;
     const end   = start + pageSize;
 
     return {
-      data: data.slice(start, end),
-      pagination: { page: currentPage, pageSize, totalRecords, totalPages }
+      data        : data.slice(start, end),
+      pagination  : { page: currentPage, pageSize, totalRecords, totalPages }
     };
   }
 
-  function Create(rawData) {
-    ensureInitialized();
+  Create(request) {
+    if (!this.historicoAPI && this.entity !== 'historico') 
+      throw new Error('HistoricoAPI não configurada');
 
-    const data = InMemory.GetAll(entity);
-    const dto  = createDTO(rawData);
+    const previous = [...this.store];
+    try {
+      const dto = this.DTO.CreateInstance(request.payload);
+      this.#validateDTO('create', dto, previous);
 
-    if (validateCreate) {
-      validateCreate(dto, data);
+      if (previous.some(x => x.id === dto.id)) throw new Error('ID duplicado');
+
+      const persisted = Object.freeze(dto.toJSON());
+      const next      = [...previous, persisted];
+
+      const historicoPayload = this.#buildHistoricoDTO({
+        acao      : 'create',
+        before    : null,
+        after     : persisted,
+        metadata  : request.metadata
+      });
+      
+      InMemory.SetAll(this.entity, next);
+      this.historicoAPI.Create(historicoPayload);
+
+      return persisted;
+
+    } catch (err) {
+      InMemory.SetAll(this.entity, previous);
+      throw err;
+    }
+  }
+
+  Update(request) {
+    if (!this.historicoAPI && this.entity !== 'historico')   
+      throw new Error('HistoricoAPI não configurada');
+
+    const previous = [...this.store];
+    try {
+      const id = request.payload?.id;
+      if (!id)                throw new Error('ID obrigatório');
+
+      const idx = previous.findIndex(x => x.id === id);
+      if (idx === -1)         throw new Error('Registro não encontrado');
+
+      const before  = previous[idx];
+
+      const dto     = this.DTO.CreateInstance(request.payload);
+      dto.id        = id;
+
+      this.#validateDTO('update', dto, previous);
+
+      const after   = Object.freeze({ ...before, ...dto.toJSON() });
+      const next    = [...previous];
+      next[idx]     = after;
+
+      const historicoPayload = this.#buildHistoricoDTO({
+        acao: 'update',
+        before,
+        after,
+        metadata: request.metadata
+      });
+
+      InMemory.SetAll(this.entity, next);
+      this.historicoAPI.Create(historicoPayload);
+
+      return after;
+
+    } catch (err) {
+      InMemory.SetAll(this.entity, previous);
+      throw err;
+    }
+  }
+
+  Delete(request) {
+    if (!this.historicoAPI && this.entity !== 'historico')   
+      throw new Error('HistoricoAPI não configurada');
+
+    const previous = [...this.store];
+    try {
+      const id  = request.payload.data ? request.payload.data.id : request.payload.id;
+      const idx = previous.findIndex(x => x.id === id);
+      if (idx === -1)         throw new Error('Registro não encontrado');
+
+      const before = previous[idx];
+      let after = null;
+      let next;
+
+      if (request.payload.data) {         // soft delete
+        const dto = this.DTO.CreateInstance(request.payload.data);
+        dto.id    = id;
+
+        this.#validateDTO('delete', dto, previous);
+
+        after     = Object.freeze({ ...before, ...dto.toJSON() });
+        next      = [...previous];
+        next[idx] = after;
+        
+      } else if (request.payload.id) {    // hard delete
+        next      = previous.filter(x => x.id !== request.payload.id);
+
+      } else {
+        throw new Error('Delete request should have either data or id on the payload');
+      }
+
+      const historicoPayload = this.#buildHistoricoDTO({
+        acao: 'delete',
+        before,
+        after,
+        metadata : request.metadata
+      });
+
+      InMemory.SetAll(this.entity, next);
+      this.historicoAPI.Create(historicoPayload);
+
+      return true;
+
+    } catch (err) {
+      InMemory.SetAll(this.entity, previous);
+      throw err;
+    }
+  }
+
+  get store() {
+    if (!this.initialized) {
+      throw new Error(`${this.entity} not initialized`);
+    }
+    return InMemory.GetAll(this.entity);
+  }
+
+  #validateAction(acao) {
+    if (!['create', 'update', 'delete'].includes(acao)) {
+      throw new Error(`[CoreAPI] Ação inválida: ${acao}`);
+    }
+  }
+
+  #validateDTO(acao, dto, state) {
+    this.#validateAction(acao);
+
+    dto.prepare(acao, this.user.id);
+
+    if (!dto.validateDTO()) {
+      throw new Error(dto.errors.join('; '));
     }
 
-    InMemory.SetAll(entity, [...data, dto]);
-    return dto;
+    const validator = acao === 'create' ? this.validateCreate :
+                      acao === 'update' ? this.validateUpdate :
+                                          this.validateDelete;
+
+    if (validator && !validator.call(this, dto, state)) {
+      throw new Error(dto.errors.join('; ') || 'Validação de domínio falhou');
+    }
   }
 
-  function Update(id, rawData) {
-    ensureInitialized();
+  #buildHistoricoDTO({ acao, before, after, metadata }) {
+    const historico   = this.historicoDTO.CreateInstance({
+      userID          : this.user.id,
+      catalogoID      : metadata.catalogoID,
+      dataHora        : new Date().toISOString(),
+      tipo            : metadata.tipo,
+      acao,
+      descricao       : metadata?.descricao     ?? null,
+      justificativa   : metadata?.justificativa ?? null,
+      diff            : JSON.stringify({ before, after })
+    });
 
-    const data = InMemory.GetAll(entity);
-    const idx  = data.findIndex(x => x.id === id);
-    if (idx === -1) return null;
+    //if (!historico.validateDTO()) throw new Error(historico.errors.join('; '));
 
-    const next = [...data];
-    next[idx]  = { ...next[idx], ...rawData };
-
-    InMemory.SetAll(entity, next);
-    return next[idx];
+    return { payload: historico };
   }
-
-  function SoftDelete(id, rawData) {
-    ensureInitialized();
-
-    const data = InMemory.GetAll(entity);
-    const idx  = data.findIndex(x => x.id === id);
-    if (idx === -1) return null;
-
-    const next = [...data];
-    next[idx]  = { ...next[idx], ...rawData };
-
-    InMemory.SetAll(entity, next);
-    return next[idx];
-  }
-
-  
-  return {
-    Init,
-    GetAll,
-    GetById,
-    GetPaginated,
-    Create,
-    Update,
-    SoftDelete
-  };
 }
-

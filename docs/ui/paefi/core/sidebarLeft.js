@@ -1,6 +1,6 @@
-//ui.paefi.core.leftSidebar
+// ui paefi core leftSidebar
 
-import { App }                         from './app.js';
+import { App, DomainsOf }              from './app.js';
 import { Render }                      from './renderer.js';
 import { Modulo, Dominio, Elemento }   from './omEnum.js';
 import { Local, PreferencesKey }       from '../../../services/storage.js';
@@ -11,10 +11,8 @@ function savePrefs(prefs) { Local.Set(PreferencesKey, prefs); }
 
 /* Behavior */
 function renderOpcoes(moduleKey) {
-  if (moduleKey === Modulo.Admin.Key) {
-    const domains = Dominio.All.filter(x => x.Key !== Dominio.Nenhum.Key);
-    Render.Options(domains);
-  }
+  const domains = DomainsOf(moduleKey);
+  Render.Options(domains);
 }
 
 function renderPreferences() {

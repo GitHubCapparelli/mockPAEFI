@@ -165,22 +165,24 @@ body {
 table {
     width: 100%;
     margin-bottom: 1.5rem;
+    table-layout: fixed;
 }
 
 table th {
     background-color: var(--bs-tertiary-bg);
     font-weight: 600;
-    white-space: nowrap;
 }
 
 table th,
 table td {
     padding: 0.75rem 1rem;
     vertical-align: middle;
+    white-space: nowrap;
 }
 
 .table td:last-child,
 .table th:last-child {
+    justify-content: center;
     text-align: center;
     white-space: nowrap;
 }
@@ -214,6 +216,13 @@ table td {
 /* =========================================================
    Modals
    ========================================================= */
+.modal-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
 .modal-header {
     background-color: var(--primary-color);
     color: var(--bs-light);
@@ -221,6 +230,11 @@ table td {
 
 .modal-header .btn-close {
     filter: invert(1);
+}
+
+.modal-body {
+    height: calc(100vh - 200px);
+    overflow-y: auto;
 }
 
 /* =========================================================
@@ -392,7 +406,7 @@ table td {
     background-color: var(--bs-tertiary-bg);
 }
 
-.ellipsis25 {
+.ellipsis25 { 
     max-width: 25%;
     white-space: nowrap;
     overflow: hidden;
@@ -416,3 +430,28 @@ table td {
     background-color: var(--bs-secondary-bg);
 }
 
+.col-actions {
+    width: auto;
+    white-space: nowrap;
+    text-align: center;
+}
+
+/* Hide scrollbars visually — keep scrolling enabled */
+/* Firefox */
+* {
+    scrollbar-width: none;
+}
+
+/* Chromium / WebKit */
+*::-webkit-scrollbar {
+    width: 0 !important;
+    height: 0 !important;
+}
+
+.btn-outline-primary {
+    color: var(--bs-secondary);
+}
+.btn-outline-primary:hover {
+    color: var(--bs-primary);
+    font-weight: bolder;
+}

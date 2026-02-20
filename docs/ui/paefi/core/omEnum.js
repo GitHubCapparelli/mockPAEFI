@@ -1,22 +1,22 @@
-export class Elemento {
-    static All = [];
+// ui paefi core omEnum.js
 
-    static FromKey(key)        { return Elemento.All.find(x => x.Key === key) ?? null; }
-    static FromValue(value)    { return Elemento.All.find(x => x.Value === value) ?? null; }
-    static ValueFromKey(key)   { return Elemento.FromKey(key)?.Value ?? null; }
-    static KeyFromValue(value) { return Elemento.FromValue(value)?.Key ?? null; }
+import { BaseEnum } from "../../../data/factory/_omSpec.js";
+
+export class Elemento extends BaseEnum {
+    static All = [];
 
     static TextoLogin          = new Elemento('txtUser-login','Login');
     static TextoTituloPagina   = new Elemento('page-title-text','Página');
     static TextoOpcaoAtual     = new Elemento('domain-title','Opção');
     static DivOpcoesDominio    = new Elemento('divOpcoes','Opções');
     static DivPreferencias     = new Elemento('divPreferencias','Preferências');
-    static DivOurDocs          = new Elemento('divOurDocs','Documentos');
+    static DivOurDocs          = new Elemento('divOurDocs','Ajuda');
     static DivFilterOptions    = new Elemento('divFilterOptions','');
     static DataSection         = new Elemento('dataSection','');
     static PageBody            = new Elemento('page-body','');
 
     constructor(key, value) {
+        super();
         this.Key    = key;
         this.Value  = value;
         this.JQuery = `#${key}`;
@@ -26,25 +26,19 @@ export class Elemento {
         }
         Object.freeze(this);
     }
- 
-    toJSON() { return this.Key; }
 }
 Object.freeze(Elemento.All);
 
 
-export class DocLinks {
+export class DocLinks extends BaseEnum {
     static All = [];
-
-    static FromKey(key)        { return DocLinks.All.find(x => x.Key === key) ?? null; }
-    static FromValue(value)    { return DocLinks.All.find(x => x.Value === value) ?? null; }
-    static ValueFromKey(key)   { return DocLinks.FromKey(key)?.Value ?? null; }
-    static KeyFromValue(value) { return DocLinks.FromValue(value)?.Key ?? null; }
 
     static DocExecutivo        = new DocLinks('docExecutivo','Documento Executivo');
     static DocTecnico          = new DocLinks('docTecnico','Documetação Técnica');
     static DocUsuario          = new DocLinks('docUsuario','Manual do Usuário');
 
     constructor(key, value) {
+        super();
         this.Key = key;
         this.Value = value;
         this.JQuery = `#${key}`;
@@ -54,26 +48,22 @@ export class DocLinks {
         }
         Object.freeze(this);
     }
- 
-    toJSON() { return this.Key; }
+    
+    toJSON() { return JSON.stringify(this); }
 }
 Object.freeze(DocLinks.All);
 
 
-export class Modulo {
+export class Modulo extends BaseEnum {
     static All = [];
-
-    static FromKey(key)        { return Modulo.All.find(x => x.Key === key) ?? null; }
-    static FromValue(value)    { return Modulo.All.find(x => x.Value === value) ?? null; }
-    static ValueFromKey(key)   { return Modulo.FromKey(key)?.Value ?? null; }
-    static KeyFromValue(value) { return Modulo.FromValue(value)?.Key ?? null; }
 
     static Nenhum       = new Modulo('','Módulo');
     static Admin        = new Modulo('admin','Administração');
-    static Monitor      = new Modulo('monitor','Supervisão');
-    static Atender      = new Modulo('atender','Atendimento');
+    static Monitor      = new Modulo('monitor','Supervisão e Monitoramento');
+    static Atender      = new Modulo('atender','Atendimentos, Acolhimentos e Acompanhamentos');
 
     constructor(key, value) {
+        super();
         this.Key = key;
         this.Value = value;
         this.JQuery = `#${key}`;
@@ -83,43 +73,40 @@ export class Modulo {
         }
         Object.freeze(this);
     }
- 
-    toJSON() { return this.Key; }
 }
 Object.freeze(Modulo.All);
 
 
-export class Dominio {
+export class Dominio extends BaseEnum {
     static All = [];
-
-    static FromKey(key)        { return Dominio.All.find(x => x.Key === key) ?? null; }
-    static FromValue(value)    { return Dominio.All.find(x => x.Value === value) ?? null; }
-    static ValueFromKey(key)   { return Dominio.FromKey(key)?.Value ?? null; }
-    static KeyFromValue(value) { return Dominio.FromValue(value)?.Key ?? null; }
 
     static Nenhum               = new Dominio('','Domínio');
     static Anotacoes            = new Dominio('anotacoes', 'Anotações');
     static Atendimentos         = new Dominio('atendimentos', 'Atendimentos');
     static Atividades           = new Dominio('atividades', 'Atividades');
-    static CasosDeUso           = new Dominio('casos-de-uso', 'Casos de Uso');
+    static CasosDeUso           = new Dominio('casosDeUso', 'Casos de Uso');
+    static CatalogoLegislacoes  = new Dominio('catalogoLegislacoes','Catálogo de Legislações');
+    static CatalogoViolacoes    = new Dominio('catalogoViolacoes','Catálogo de Violações');
     static Compromissos         = new Dominio('compromissos', 'Compromissos');
+    static Database             = new Dominio('catalogos', 'Banco de Dados (Tabelas)');
     static Demandas             = new Dominio('demandas','Demandas');
-    static Denuncias            = new Dominio('denuncias', 'Denuncias');
     static Documentos           = new Dominio('documentos','Documentos');
     static Enderecos            = new Dominio('enderecos', 'Endereços');
-    static Historico            = new Dominio('historico', 'Histórico de Operacoes');
+    static Historico            = new Dominio('historico', 'Histórico de eventos');
     static Interfaces           = new Dominio('interfaces', 'Interfaces (wireframes)');
+    static Metadados            = new Dominio('metadados','Metadados (Dicionário de termos)');
     static Objetivos            = new Dominio('objetivos', 'Objetivos');
     static Processos            = new Dominio('processos', 'Processos');
+    static RegistrosViolacao    = new Dominio('registrosViolacao', 'Registros de Violação');
     static Riscos               = new Dominio('riscos', 'Riscos');
     static Servicos             = new Dominio('servicos', 'Serviços');
     static Tarefas              = new Dominio('tarefas', 'Tarefas');
     static Unidades             = new Dominio('unidades','Unidades');
-    static usuariosCidadaos     = new Dominio('usuarios-cidadaos','Usuarios Cidadãos');
-    static UsuariosServidores   = new Dominio('usuarios-servidores','Usuários Servidores');
-    static Violações            = new Dominio('violacoes','Violações');
+    static UsuariosCidadaos     = new Dominio('usuariosCidadaos','Usuarios Cidadãos');
+    static UsuariosServidores   = new Dominio('usuariosServidores','Usuários Servidores');
 
     constructor(key, value) {
+        super();
         this.Key       = key;
         this.Value     = value;
         this.JQuery    = `#${key}`;
@@ -129,21 +116,14 @@ export class Dominio {
         }
         Object.freeze(this);
     }
- 
-    toJSON() { return this.Key; }
 }
 Object.freeze(Dominio.All);
 
 
-export class FuncaoUnidade {
+export class FuncaoUnidade extends BaseEnum {
     static All = [];
 
-    static FromKey(key)        { return FuncaoUnidade.All.find(x => x.Key === key) ?? null; }
-    static FromValue(value)    { return FuncaoUnidade.All.find(x => x.Value === value) ?? null; }
-    static ValueFromKey(key)   { return FuncaoUnidade.FromKey(key)?.Value ?? null; }
-    static KeyFromValue(value) { return FuncaoUnidade.FromValue(value)?.Key ?? null; }
-
-    static NaoInformada        = new FuncaoUnidade('NaoInformada','Não Informada');
+    static NaoInformada        = new FuncaoUnidade('NaoInformada','Não Informada', true);
     static Direcao             = new FuncaoUnidade('Direcao','Direção');
     static Coordenacao         = new FuncaoUnidade('Coordenacao','Coordenação');
     static Gestao              = new FuncaoUnidade('Gestao','Gestão');
@@ -151,31 +131,26 @@ export class FuncaoUnidade {
     static AssistenciaSocial   = new FuncaoUnidade('AssistenciaSocial','Assistencia Social');
     static Outra               = new FuncaoUnidade('Outra','Outra');
 
-    constructor(key, value) {
+    constructor(key, value, isDefault = false) {
+        super();
         this.Key = key;
         this.Value = value;
         this.JQuery = `#${key}`;
+        this.IsDefault = isDefault;
 
         if (!FuncaoUnidade.All.some(x => x.Key === key)) {
             FuncaoUnidade.All.push(this);
         }
         Object.freeze(this);
     }
- 
-    toJSON() { return this.Key; }
 }
 Object.freeze(FuncaoUnidade.All);
 
 
-export class FuncaoUsuario {
+export class FuncaoUsuario extends BaseEnum {
     static All = [];
 
-    static FromKey(key)        { return FuncaoUsuario.All.find(x => x.Key === key) ?? null; }
-    static FromValue(value)    { return FuncaoUsuario.All.find(x => x.Value === value) ?? null; }
-    static ValueFromKey(key)   { return FuncaoUsuario.FromKey(key)?.Value ?? null; }
-    static KeyFromValue(value) { return FuncaoUsuario.FromValue(value)?.Key ?? null; }
-
-    static NaoInformada        = new FuncaoUsuario('NaoInformada','Não Informada');
+    static NaoInformada        = new FuncaoUsuario('NaoInformada','Não Informada', true);
     static Assessor            = new FuncaoUsuario('Assessor','Assessor');
     static AssessorEspecial    = new FuncaoUsuario('AssessorEspecial','Assessor Especial');
     static AssessorTecnico     = new FuncaoUsuario('AssessorTecnico','Assessor Técnico');
@@ -191,31 +166,26 @@ export class FuncaoUsuario {
     static SubSecretario       = new FuncaoUsuario('SubSecretario','Sub-Secretário');
     static Outra               = new FuncaoUsuario('Outra','Outra');
 
-    constructor(key, value) {
+    constructor(key, value, isDefault = false) {
+        super();
         this.Key = key;
         this.Value = value;
         this.JQuery = `#${key}`;
+        this.IsDefault = isDefault;
 
         if (!FuncaoUsuario.All.some(x => x.Key === key)) {
             FuncaoUsuario.All.push(this);
         }
         Object.freeze(this);
     }
- 
-    toJSON() { return this.Key; }
 }
 Object.freeze(FuncaoUsuario.All);
 
 
-export class CargoUsuario {
+export class CargoUsuario extends BaseEnum {
     static All = [];
 
-    static FromKey(key)        { return CargoUsuario.All.find(x => x.Key === key) ?? null; }
-    static FromValue(value)    { return CargoUsuario.All.find(x => x.Value === value) ?? null; }
-    static ValueFromKey(key)   { return CargoUsuario.FromKey(key)?.Value ?? null; }
-    static KeyFromValue(value) { return CargoUsuario.FromValue(value)?.Key ?? null; }
-
-    static NaoInformado               = new CargoUsuario('NaoInformado','Não Informado');
+    static NaoInformado               = new CargoUsuario('NaoInformado','Não Informado', true);
     static AnalistaPlanejamento       = new CargoUsuario('AnalistaPlanejamento','Analista de Planejamento');
     static AnalistaPoliticasPublicas  = new CargoUsuario('AnalistaPoliticasPublicas','Analista de Políticas Públicas');
     static GestorPoliticasPublicas    = new CargoUsuario('GestorPoliticasPublicas','Gestor de Políticas Públicas');
@@ -225,31 +195,26 @@ export class CargoUsuario {
     static Tecnico                    = new CargoUsuario('Tecnico','Técnico');
     static Outro                      = new CargoUsuario('Outro','Outro');
 
-    constructor(key, value) {
+    constructor(key, value, isDefault = false) {
+        super();
         this.Key = key;
         this.Value = value;
         this.JQuery = `#${key}`;
+        this.IsDefault = isDefault;
 
         if (!CargoUsuario.All.some(x => x.Key === key)) {
             CargoUsuario.All.push(this);
         }
         Object.freeze(this);
     }
- 
-    toJSON() { return this.Key; }
 }
 Object.freeze(CargoUsuario.All);
 
 
-export class Especialidade {
+export class Especialidade extends BaseEnum {
     static All = [];
 
-    static FromKey(key)        { return Especialidade.All.find(x => x.Key === key) ?? null; }
-    static FromValue(value)    { return Especialidade.All.find(x => x.Value === value) ?? null; }
-    static ValueFromKey(key)   { return Especialidade.FromKey(key)?.Value ?? null; }
-    static KeyFromValue(value) { return Especialidade.FromValue(value)?.Key ?? null; }
-
-    static NaoInformada           = new Especialidade('NaoInformada','Não Informada');
+    static NaoInformada           = new Especialidade('NaoInformada','Não Informada', true);
     static Administrador          = new Especialidade('Administrador','Administrador');
     static AgenteAdministrativo   = new Especialidade('AgenteAdministrativo','Agente Administrativo');
     static AgenteSocial           = new Especialidade('AgenteSocial','Agente Social');
@@ -270,17 +235,46 @@ export class Especialidade {
     static TecnicoEducacional     = new Especialidade('TecnicoEducacional','Técnico Educacional');
     static Outra                  = new Especialidade('Outra','Outra');
 
-    constructor(key, value) {
+    constructor(key, value, isDefault = false) {
+        super();
         this.Key = key;
         this.Value = value;
         this.JQuery = `#${key}`;
+        this.IsDefault = isDefault;
 
         if (!Especialidade.All.some(x => x.Key === key)) {
             Especialidade.All.push(this);
         }
         Object.freeze(this);
     }
- 
-    toJSON() { return this.Key; }
 }
 Object.freeze(Especialidade.All);
+
+
+
+
+export class TipoRegistro extends BaseEnum {
+    static All = [];
+
+    static NaoInformada     = new TipoRegistro('NaoInformado','Não Informado', true);
+    static Erro             = new TipoRegistro('Erro','Erro');
+    static Backend          = new TipoRegistro('Backend','Backend');
+    static Frontend         = new TipoRegistro('Frontend','Frontend');
+    static Qualidade        = new TipoRegistro('Qualidade','Qualidade');
+    static Desempenho       = new TipoRegistro('Desempenho','Desempenho');
+    static Compliance       = new TipoRegistro('Compliance','Compliance');
+
+    constructor(key, value, isDefault = false) {
+        super();
+        this.Key = key;
+        this.Value = value;
+        this.JQuery = `#${key}`;
+        this.IsDefault = isDefault;
+
+        if (!TipoRegistro.All.some(x => x.Key === key)) {
+            TipoRegistro.All.push(this);
+        }
+        Object.freeze(this);
+    }
+}
+Object.freeze(TipoRegistro.All);

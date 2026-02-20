@@ -1,0 +1,56 @@
+{
+    "catalogos": [
+        {
+            "id": "126b9986-56a6-46f3-a0be-9af897c21b3a",
+            "nome": "Historico",
+            "versao": "0.1",
+            "finalidade": "Armazenar dados de eventos operacionais",
+            "criadoEm": "2025-12-01T00:00:00Z",
+            "criadoPor": "",
+            "alteradoEm": "",
+            "alteradoPor": "",
+            "excluidoEm": "",
+            "excluidoPor": "",
+            "exclusaoFisica": false
+        },
+        {
+            "id": "f756dff1-bbbe-43ba-8d0e-a6dcf871f8c0",
+            "nome": "Catalogos",
+            "versao": "0.1",
+            "finalidade": "Armazenar metadados das tabelas (data sources)",
+            "criadoEm": "2025-12-01T00:00:00Z",
+            "criadoPor": "",
+            "alteradoEm": "",
+            "alteradoPor": "",
+            "excluidoEm": "",
+            "excluidoPor": "",
+            "exclusaoFisica": false
+        },
+        {
+            "id": "a6c3db3e-e105-4864-b0fd-108230dfc796",
+            "nome": "Unidades",
+            "versao": "0.1",
+            "finalidade": "Armazenar dados de unidades organizacionais",
+            "criadoEm": "2025-12-01T00:00:00Z",
+            "criadoPor": "",
+            "alteradoEm": "",
+            "alteradoPor": "",
+            "excluidoEm": "",
+            "excluidoPor": "",
+            "exclusaoFisica": false
+        },
+        {
+            "id": "9f882f42-6c85-4ab1-817a-eff1c63d1845",
+            "nome": "UsuariosServidores",
+            "versao": "0.1",
+            "finalidade": "Armazenar dados de servidores",
+            "criadoEm": "2025-12-01T00:00:00Z",
+            "criadoPor": "",
+            "alteradoEm": "",
+            "alteradoPor": "",
+            "excluidoEm": "",
+            "excluidoPor": "",
+            "exclusaoFisica": false
+        }
+    ]
+}

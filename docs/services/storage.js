@@ -1,7 +1,12 @@
 export const CurrentUserKey   = 'currentUser';
 export const PreferencesKey   = 'preferences';
 export const LastModuleKey    = 'lastModule';
-export const LastDomainKey    = 'lastDomain';
+
+//export const LastDomainKey    = 'lastDomain';
+
+export const LastAtenderDomainKey  = 'lastAtenderDomain';
+export const LastMonitorDomainKey  = 'lastMonitorDomain';
+export const LastAdminDomainKey    = 'lastAdminDomain';
 
 /* ---------- Persistent Adapters ---------- */
 export const Local = {
@@ -52,3 +57,15 @@ export const InMemory = {
     store[entity] = data;
   }
 };
+
+/* ---------- Registry ---------- */
+export class Registry {
+    static #apis = new Map();
+    static async API(x) {
+        if (!this.#apis.has(x)) {
+            const instance = await x.CreateInstance();
+            this.#apis.set(x, instance);
+        }
+        return this.#apis.get(x);
+    }
+}

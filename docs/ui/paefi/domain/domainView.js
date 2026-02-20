@@ -1,0 +1,200 @@
+// ui paefi domain domainView
+
+import { Render }                                               from '../core/renderer.js';
+import { Bindings, DomainInfo }                                 from '../core/omData.js';
+import { FuncaoUsuario, CargoUsuario, Especialidade, Modulo }   from '../core/omEnum.js'; 
+
+export class DomainView {
+    constructor(moduleKey, info, namedLists) { 
+        this.moduleKey  = moduleKey;
+        this.info       = info;
+        this.lookups    = namedLists; 
+    }
+
+    static async Create(moduleKey, info) { 
+        let namedLists = [];
+
+        if (info?.Lookups) {
+            const apiTasks = Object.entries(info.Lookups).map(async ([key, api]) => {
+                const data = await api.GetAll();
+                return [key, data];
+            });
+
+            const response  = await Promise.all(apiTasks);
+            namedLists      = Object.fromEntries(response);
+        }
+
+        const instance = new DomainView(moduleKey, info || null, namedLists);
+        instance.view();
+
+        return instance;
+    }  
+
+    assureCleanFilterOptions() {
+        let $div = $('#divFilterOptions');
+        if ($div.length === 0) {
+            $('#page-body')
+                .append($('<div>', { class: 'filters-bar mx-1' })
+                .append($('<div>', { id: 'divFilterOptions', class: 'filter-options p-2 d-flex gap-3' })));
+        } else {
+            $div.empty();
+        }
+        return $('#divFilterOptions');
+    }
+
+    Filtros() { 
+        const $divFiltros = this.assureCleanFilterOptions();
+        const campos      = this.info?.Bindings?.filter(x => x.Lookup || x.LookupId);
+
+        campos?.forEach(c => {
+            const filtroId = c.UiFilterKey.startsWith('#') ? c.UiFilterKey.substring(1) : c.UiFilterKey;
+            const filtro   = Render.Select(filtroId, c.UiFilterTitle);
+            $divFiltros.append(filtro);
+
+            if (c.Lookup) {
+                Render.Enum(c.UiFilterKey, c.Lookup);
+
+            } else if (c.LookupId) {
+                const list = this.lookups[c.LookupId] || [];
+                list.forEach(row => {
+                    const txt = row[c.DisplayId] || '---'; 
+                    filtro.append($('<option>', { 
+                        value: row.id || row.Id, 
+                        text: txt 
+                    }));
+                });
+            }
+        });
+    }
+
+    Grid() {
+        if (!this.info) return;
+        
+        const $actions = $('<div>', { id: 'divDataActionButtons', class: 'mt-4 ms-2 divDataActionButtons d-flex justify-content-between align-items-center gap-3' }).append(
+            $('<div>', { id: 'divDataActionButtons-left', class: 'action-buttons-left d-flex align-items-center gap-3' }).append(
+                $('<button>', { id: 'btnAddNew', class: 'btn btn-primary' }).append(
+                    $('<i>', { class: 'fas fa-plus' }), ' Incluir')
+            ),
+            $('<div>', { id: 'divDataActionButtons-right', class: 'action-buttons-right d-flex align-items-center gap-3' }).append(
+                $('<button>', { class: 'btn btn-terciary', id: 'btnExport' }).append(
+                    $('<i>', { class: 'fas fa-download' }), ' Exportar')
+            ));
+
+        const $table = $('<div>', { id: 'divdataTable', class: 'divdataTable mt-2 ms-2 table-responsive' }).append(
+            $('<span>', { text: 'Dados' })
+        );
+
+        const $nav = $('<div>', { id: 'divPagination-section', class: 'pagination-section d-flex justify-content-between align-items-center' }).append(
+            $('<div>', { id: 'divPagination-info', class: 'pagination-info' }).append(
+                $('<span>', { id: 'navInfo', text: 'nav info' })
+            ),
+            $('<nav>').append(
+                $('<ul>', { id: 'navControls', class: 'pagination mb-0' })
+            ));
+
+        const $section = $('<section>', { id: 'dataSection', class: 'data-section mx-2' });
+
+        if (this.info?.Key !== DomainInfo.Historico.Key) {
+            $section.append($actions);
+        }
+        $section.append($table, $nav);
+ 
+        $('#page-body').append($section);
+        this.Table();
+    }
+
+    Table() {
+        const columns = this.info?.Bindings?.filter(x => x.OnGrid);
+        const header  = columns?.map(c => `<th>${c.UiFieldTitle}</th>`) || [];
+
+        if (this.moduleKey === Modulo.Admin.Key) {
+            header.push('<th>Ações</th>');
+        }
+
+        const $table  = $('<table>', { class: 'table table-striped table-hover' }).append(
+            $('<thead>').append(header.join('')),
+            $('<tbody>', { id: 'dataRows' }).append(
+                $('<tr>').append($('<td>', {
+                    colspan: header.length,
+                    class: 'text-center text-muted', text: 'Carregando...'
+                }))
+            )
+        );
+
+        const $div = $('#divdataTable').empty();
+        $div.append($table);
+    }
+
+    Rows(response) {
+        const cols   = this.info?.Bindings?.filter(x => x.OnGrid) || [];
+        const $tbody = $('#dataRows');
+
+        if (!$tbody.length) return; 
+
+        $tbody.empty();
+        if (!response?.data?.length) {
+            $tbody.append($('<tr>').append($('<td>', { colspan: cols.length + 1, text: 'Nenhum registro' })));
+            return;
+        }
+
+        response?.data?.forEach(dto => { 
+            const $tr = $('<tr>');
+            cols.forEach(c => $tr.append(this.getCell(dto, c)));
+
+            if (this.moduleKey === Modulo.Admin.Key) {
+                $tr.append(this.actionsButtonsCell(dto.id));
+            }
+            $tbody.append($tr);
+        });
+        Render.Info(response?.pagination);
+    }
+
+    getCell(dto, campo) { 
+        let val = null;
+        if (campo.LookupId) {
+            const  row = this.lookups[campo.LookupId]?.find(x => x.id === dto[campo.DtoId]);
+            val = row[campo.DisplayId] ?? '';
+        
+        } else if (campo.Lookup) {
+            const  x = campo.Lookup.FromKey(dto[campo.DtoId]);
+            val = x.IsDefault ? '' : x.Value;
+        } else {
+            val = dto[campo.DtoId] ?? '';
+        }
+        const  result = $('<td>', { text: val }).toggleClass('ellipsis25', campo.DtoId === 'nome');
+        return result;
+    }
+
+    actionsButtonsCell(id) {
+        if (this.info.Key == DomainInfo.Historico.Key) {
+            const $td = $('<td>', { class: 'col-actions d-flex gap-1 justify-content-center' });
+            $td.append($('<span>', { text: '...' }));
+            return $td;
+            
+        } else {
+            const $td = $('<td>', { class: 'col-actions d-flex gap-1 justify-content-center' });
+            $td.append(
+                $('<button>', { class: 'btn btn-sm btn-primary js-edit', 'data-id': id, title: 'Editar' })
+                    .append($('<i>', { class: 'fas fa-edit' }))
+            );
+            $td.append(
+                $('<button>', { class: 'btn btn-sm btn-danger js-delete', 'data-id': id, title: 'Deletar' })
+                    .append($('<i>', { class: 'fas fa-trash' }))
+            );
+            return $td;
+        }
+    }
+    
+    //
+
+    async view() {
+        if (this.moduleKey === Modulo.Admin.Key) {
+            await this.viewAdmin();
+        }
+    }
+
+    async viewAdmin() {
+        this.Filtros();
+        this.Grid();
+    }    
+}

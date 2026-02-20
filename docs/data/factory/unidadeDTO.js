@@ -1,12 +1,59 @@
-import { CreateBaseDTO } from './baseDTO.js';
+// docs/data/factory/unidadeDTO.js
+import { AuditDTO }   from './baseDTO.js';
+import * as Spec      from './_omSpec.js';
+import schema         from '../contracts/js/unidadeSchema.js';
 
-export function CreateUnidadeDTO(data, audit = {}) {
-  return CreateBaseDTO({
-    hierarquiaID : data.hierarquiaID ?? null,
-    sigla        : data.sigla,
-    nome         : data.nome,
-    funcao       : data.funcao,
-    ibgeId       : data.ibgeId ?? null,
-    ...audit
-  });
+const _token = Symbol('UnidadeDTO');
+
+export class UnidadeDTO extends AuditDTO {
+  constructor(token, data, audit = {}) {
+    if (token !== _token) throw new Error('Use UnidadeDTO.CreateInstance() para criar instâncias');
+
+    super(schema, audit);
+
+    this.hierarquiaID   = data.hierarquiaID ?? null;
+    this.sigla          = data.sigla;
+    this.nome           = data.nome;
+    this.funcao         = data.funcao;
+    this.ibgeId         = data.ibgeId ?? null;
+  }
+  static CreateInstance(data, audit = {}) {
+    return new UnidadeDTO(_token, data, audit)
+  }
+
+  toJSON() {
+    return {
+      id              : this.id, 
+      sigla           : this.sigla,
+      nome            : this.nome,
+      funcao          : this.login,
+      ibgeId          : this.ibgeId,
+      criadoEm        : this.criadoEm,
+      criadoPor       : this.criadoPor,
+      alteradoEm      : this.alteradoEm,
+      alteradoPor     : this.alteradoPor,
+      excluidoEm      : this.excluidoEm,
+      excluidoPor     : this.excluidoPor,
+      exclusaoFisica  : this.exclusaoFisica
+    };
+  }
+
+  validateDTO() {
+    const schemaOk  = super.validate(this.toJSON());
+    const spec      = Spec.Tabela.Unidades.Campos;
+
+    const sigla     = spec.find(x => x.DbColName === Spec.Campo.Sigla.DbColName);
+    if (!this.sigla && sigla.Required) {
+      this.errors.push('Sigla obrigatória');
+      return false;
+    }
+    if (this.sigla && (this.sigla.length < sigla.MinLength || this.sigla.length > sigla.MaxLength)) {
+      this.errors.push(`Sigla inválida: tamanho ${this.sigla.length}`);
+      return false;
+    }
+    // TODO: Validate other fields
+    
+    // return schemaOk;
+    return true;
+  }
 }
