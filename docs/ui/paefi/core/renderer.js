@@ -135,7 +135,7 @@ export function Preferences(prefs) {
     $('<label>', {
       class    : 'form-check-label', 
       for      : 'chkResumeDomain',
-      text     : 'Lembrar última opção (Em breve)'
+      text     : 'Lembrar última opção'
     }));
 
   const container = $(`#${Elemento.DivPreferencias.Key}`).empty();
