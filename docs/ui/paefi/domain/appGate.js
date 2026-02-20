@@ -14,34 +14,40 @@ export class ApiGate {
         this.onFilter_hook  = fnGetFilters;
         this.user           = Session.Get(CurrentUserKey);
 
-        this.#query         = new QueryEngine(info.API);
-        this.#command       = new CommandEngine(info.API);
+        this.#query         = info?.API ? new QueryEngine(info.API) : null;
+        this.#command       = info?.API ? new CommandEngine(info.API) : null;
     }
 
     async Read(filters = null) {
+        if (!this.#query) return null;
+
         const response = await this.#query.GetPaginated(filters);
         const result = this.#assureOnResponse(response);
         if (!result?.error) {
-            this.onLoaded_hook(response);
+            this.onLoaded_hook?.(response);
         }
         return result;
     }
 
     async ReadPage(e, page) {
+        if (!this.#query) return null;
+
         const response = await this.#query.Navigate(e, page);
         const result = this.#assureOnResponse(response);
         if (!result?.error) {
-            this.onLoaded_hook(response);
+            this.onLoaded_hook?.(response);
         }
         return result;
     }
 
     async Create(data) {
+        if (!this.#command) return null;
+
         const request   = this.#enforceOnRequest(data);
         if (request.error) return request;
 
         const response  = await this.#command.Create(request);
-        const result    = this.#assureOnResponse(response);
+        const result    = this.#assureOnResponse?.(response);
 
         if (!result?.error) {
             await this.Read(this.onFilter_hook());
@@ -50,11 +56,13 @@ export class ApiGate {
     }
 
     async Update(data, justificativa = null) {
+        if (!this.#command) return null;
+
         const request   = this.#enforceOnRequest(data, justificativa);
         if (request.error) return request;
 
         const response  = await this.#command.Update(request);
-        const result    = this.#assureOnResponse(response);
+        const result    = this.#assureOnResponse?.(response);
 
         if (!result?.error) {
             await this.Read(this.onFilter_hook());
@@ -63,11 +71,13 @@ export class ApiGate {
     }
 
     async Delete(id, data = null) {
+        if (!this.#command) return null;
+
         const request   = this.#enforceOnRequest(data ? { data } : { id })
         if (request.error) return request;
 
         const response  = await this.#command.Delete(request);
-        const result    = this.#assureOnResponse(response);
+        const result    = this.#assureOnResponse?.(response);
 
         if (!result?.error) {
             await this.Read(this.onFilter_hook());
