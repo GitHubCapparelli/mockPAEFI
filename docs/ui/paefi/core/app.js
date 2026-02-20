@@ -137,6 +137,6 @@ $(document).ready(async () => {
       alert('Usuário não localizado. Redirecionando...');
       window.location.href = '/mockPAEFI/';
       return;
-  }
+  } 
   await init(); 
 });
