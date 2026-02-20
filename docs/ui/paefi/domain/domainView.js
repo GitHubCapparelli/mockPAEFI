@@ -68,6 +68,8 @@ export class DomainView {
     }
 
     Grid() {
+        if (!this.info) return;
+        
         const $actions = $('<div>', { id: 'divDataActionButtons', class: 'mt-4 ms-2 divDataActionButtons d-flex justify-content-between align-items-center gap-3' }).append(
             $('<div>', { id: 'divDataActionButtons-left', class: 'action-buttons-left d-flex align-items-center gap-3' }).append(
                 $('<button>', { id: 'btnAddNew', class: 'btn btn-primary' }).append(
