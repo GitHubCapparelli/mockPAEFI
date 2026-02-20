@@ -126,11 +126,16 @@ export function Preferences(prefs) {
 
   const $resumeDomain = $('<div>', { class: 'form-check form-switch' }).append(
     $('<input>', {
-      id: 'chkResumeDomain', type: 'checkbox', class: 'form-check-input',
-      checked: !!prefs.resumeLastDomain
-    }), $('<label>', {
-      class: 'form-check-label', for: 'chkResumeDomain',
-      text: 'Lembrar última opção'
+      id       : 'chkResumeDomain', 
+      type     : 'checkbox', 
+      class    : 'form-check-input',
+      checked  : true, //!!prefs.resumeLastDomain
+      disabled : true
+    }), 
+    $('<label>', {
+      class    : 'form-check-label', 
+      for      : 'chkResumeDomain',
+      text     : 'Lembrar última opção (Em breve)'
     }));
 
   const container = $(`#${Elemento.DivPreferencias.Key}`).empty();
