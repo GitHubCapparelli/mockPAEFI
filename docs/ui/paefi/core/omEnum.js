@@ -84,26 +84,26 @@ export class Dominio extends BaseEnum {
     static Anotacoes            = new Dominio('anotacoes', 'Anotações');
     static Atendimentos         = new Dominio('atendimentos', 'Atendimentos');
     static Atividades           = new Dominio('atividades', 'Atividades');
-    static CasosDeUso           = new Dominio('casos-de-uso', 'Casos de Uso');
+    static CasosDeUso           = new Dominio('casosDeUso', 'Casos de Uso');
+    static CatalogoLegislacoes  = new Dominio('catalogoLegislacoes','Catálogo de Legislações');
+    static CatalogoViolacoes    = new Dominio('catalogoViolacoes','Catálogo de Violações');
     static Compromissos         = new Dominio('compromissos', 'Compromissos');
-    static Database             = new Dominio('catalogos', 'Database (tabelas)');
+    static Database             = new Dominio('catalogos', 'Database (Catálogo de dados)');
     static Demandas             = new Dominio('demandas','Demandas');
-    static Denuncias            = new Dominio('denuncias', 'Registros de violação');
     static Documentos           = new Dominio('documentos','Documentos');
     static Enderecos            = new Dominio('enderecos', 'Endereços');
     static Historico            = new Dominio('historico', 'Histórico de eventos');
     static Interfaces           = new Dominio('interfaces', 'Interfaces (wireframes)');
-    static Metadados            = new Dominio('metadados','Metadados');
+    static Metadados            = new Dominio('metadados','Metadados (Dicionário de termos)');
     static Objetivos            = new Dominio('objetivos', 'Objetivos');
     static Processos            = new Dominio('processos', 'Processos');
+    static RegistrosViolacao    = new Dominio('registrosViolacao', 'Registros de Violação');
     static Riscos               = new Dominio('riscos', 'Riscos');
     static Servicos             = new Dominio('servicos', 'Serviços');
     static Tarefas              = new Dominio('tarefas', 'Tarefas');
     static Unidades             = new Dominio('unidades','Unidades');
-    static UsuariosCidadaos     = new Dominio('usuarios-cidadaos','Usuarios Cidadãos');
-    static UsuariosServidores   = new Dominio('usuarios-servidores','Usuários Servidores');
-    static Violacoes            = new Dominio('violacoes','Violações');
-    static Legislacoes          = new Dominio('legislacoes','Legislações');
+    static UsuariosCidadaos     = new Dominio('usuariosCidadaos','Usuarios Cidadãos');
+    static UsuariosServidores   = new Dominio('usuariosServidores','Usuários Servidores');
 
     constructor(key, value) {
         super();
