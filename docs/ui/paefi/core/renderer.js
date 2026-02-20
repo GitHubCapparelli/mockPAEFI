@@ -124,8 +124,10 @@ export function Preferences(prefs) {
     }), $('<label>', { class: 'form-check-label', for: 'chkDarkMode', text: 'Modo escuro' })
   );
 
-  const $resumeDomain = $('<div>', { class: 'form-check form-switch' }).append(
-    $('<input>', {
+  const $resumeDomain = $('<div>', { 
+    class: 'form-check form-switch', 
+    title: 'Em breve!' })
+    .append($('<input>', {
       id       : 'chkResumeDomain', 
       type     : 'checkbox', 
       class    : 'form-check-input',
