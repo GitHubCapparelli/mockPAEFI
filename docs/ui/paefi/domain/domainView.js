@@ -44,9 +44,9 @@ export class DomainView {
 
     Filtros() { 
         const $divFiltros = this.assureCleanFilterOptions();
-        const campos      = this.info.Bindings.filter(x => x.Lookup || x.LookupId);
+        const campos      = this.info?.Bindings?.filter(x => x.Lookup || x.LookupId);
 
-        campos.forEach(c => {
+        campos?.forEach(c => {
             const filtroId = c.UiFilterKey.startsWith('#') ? c.UiFilterKey.substring(1) : c.UiFilterKey;
             const filtro   = Render.Select(filtroId, c.UiFilterTitle);
             $divFiltros.append(filtro);
@@ -92,7 +92,7 @@ export class DomainView {
 
         const $section = $('<section>', { id: 'dataSection', class: 'data-section mx-2' });
 
-        if (this.info.Key !== DomainInfo.Historico.Key) {
+        if (this.info?.Key !== DomainInfo.Historico.Key) {
             $section.append($actions);
         }
         $section.append($table, $nav);
@@ -102,8 +102,8 @@ export class DomainView {
     }
 
     Table() {
-        const columns = this.info.Bindings.filter(x => x.OnGrid);
-        const header  = columns.map(c => `<th>${c.UiFieldTitle}</th>`);
+        const columns = this.info?.Bindings?.filter(x => x.OnGrid);
+        const header  = columns?.map(c => `<th>${c.UiFieldTitle}</th>`) || [];
 
         if (this.moduleKey === Modulo.Admin.Key) {
             header.push('<th>Ações</th>');
@@ -124,15 +124,18 @@ export class DomainView {
     }
 
     Rows(response) {
-        const cols   = this.info.Bindings.filter(x => x.OnGrid);
-        const $tbody = $('#dataRows').empty();
+        const cols   = this.info?.Bindings?.filter(x => x.OnGrid) || [];
+        const $tbody = $('#dataRows');
 
-        if (!response.data.length) {
+        if (!$tbody.length) return; 
+
+        $tbody.empty();
+        if (!response?.data?.length) {
             $tbody.append($('<tr>').append($('<td>', { colspan: cols.length + 1, text: 'Nenhum registro' })));
             return;
         }
 
-        response.data.forEach(dto => { 
+        response?.data?.forEach(dto => { 
             const $tr = $('<tr>');
             cols.forEach(c => $tr.append(this.getCell(dto, c)));
 
@@ -141,7 +144,7 @@ export class DomainView {
             }
             $tbody.append($tr);
         });
-        Render.Info(response.pagination);
+        Render.Info(response?.pagination);
     }
 
     getCell(dto, campo) { 
