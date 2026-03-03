@@ -1,0 +1,27 @@
+// packages/data/repositories/historicoRepository.js
+import { BaseRepository } from './_baseRepo.js';
+
+export class HistoricoRepository extends BaseRepository {
+
+    constructor() {
+        super('historico', {
+            defaultOrderBy: 'dataHora',
+            filterableColumns: ['usuarioID', 'catalogoID', 'tipo', 'acao']
+        });
+    }
+
+    // Sobrescreve para deixar explícito que histórico é imutável
+    update() {
+        throw new Error('Registros históricos não podem ser alterados.');
+    }
+
+    softDelete() {
+        throw new Error('Registros históricos não podem ser excluídos.');
+    }
+
+    hardDelete() {
+        throw new Error('Registros históricos não podem ser excluídos.');
+    }
+}
+
+export default new HistoricoRepository();

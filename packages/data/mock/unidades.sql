@@ -1,0 +1,21 @@
+-- // packages/data/mock/unidades.sql
+INSERT INTO unidades (id, hierarquiaID, sigla, nome, funcao, ibgeId, criadoEm, criadoPor, exclusaoFisica) VALUES 
+('91185997-fc12-4326-ae3c-26094ca25477', NULL, 'SUBSAS', 'Subsecretaria de Assistência Social', 'Governanca', NULL,
+ '2026-01-01T00:00:00Z', '58a74744-5ddd-449a-85f6-686cc8d109c5', 0),
+
+('f4cc6f63-78b9-4a34-b156-2b19a2d20a4f', '91185997-fc12-4326-ae3c-26094ca25477', 'CPSA', 
+ 'Coordenação de Proteção Social Especial de Alta Complexidade', 'Coordenacao', NULL,
+ '2026-01-01T00:00:00Z', '58a74744-5ddd-449a-85f6-686cc8d109c5', 0),
+
+('a76d143b-3bad-4aaa-8ba8-6c44cb4ad2cd', '91185997-fc12-4326-ae3c-26094ca25477', 'CPSB', 
+ 'Coordenação de Proteção Social Básica', 'Coordenacao', NULL,
+ '2026-01-01T00:00:00Z', '58a74744-5ddd-449a-85f6-686cc8d109c5', 0),
+
+('72edb629-9965-4fc7-bb84-48c8c6ba67c6', '91185997-fc12-4326-ae3c-26094ca25477', 'CPSM', 
+ 'Coordenação de Proteção Social Especial de Média Complexidade', 'Coordenacao', NULL,
+ '2026-01-01T00:00:00Z', '58a74744-5ddd-449a-85f6-686cc8d109c5', 0),
+
+('358fe016-a6df-41be-9f4a-ebcaee484aee', '72edb629-9965-4fc7-bb84-48c8c6ba67c6', 'CREAS BRAZLANDIA', 
+ NULL, 'AssistenciaSocial', '53001002909', 
+ '2026-01-01T00:00:00Z', '58a74744-5ddd-449a-85f6-686cc8d109c5', 0) -- ibgeID corresponde ? (TODO: confirmar !!!)
+;
