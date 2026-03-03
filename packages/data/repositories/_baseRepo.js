@@ -8,11 +8,11 @@ export class BaseRepository {
      * @param {string} options.defaultOrderBy - Coluna padrão de ordenação
      * @param {string[]} options.filterableColumns - Colunas aceitas como filtro
      */
-    constructor(tableName, { defaultOrderBy = 'rowid', filterableColumns = [] } = {}) {
-        this.table = tableName;
-        this.defaultOrderBy = defaultOrderBy;
-        this.filterableColumns = filterableColumns;
-        this.db = conn.db;
+    constructor(db, tableName, { defaultOrderBy = 'rowid', filterableColumns = [] } = {}) {
+        this.db                 = db;   // recebe de fora, não mais singleton
+        this.table              = tableName;
+        this.defaultOrderBy     = defaultOrderBy;
+        this.filterableColumns  = filterableColumns;
     }
 
     // ── Leitura ─────────────────────────────────────────────────────────────

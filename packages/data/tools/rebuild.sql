@@ -3,12 +3,12 @@ DROP TABLE IF EXISTS usuariosServidores;
 DROP TABLE IF EXISTS unidades;
 DROP TABLE IF EXISTS catalogos;
 
-.read ddl/catalogos.sql
-.read ddl/unidades.sql
-.read ddl/usuariosServidores.sql
-.read ddl/historico.sql
+.read ../ddl/catalogos.sql
+.read ../ddl/unidades.sql
+.read ../ddl/usuariosServidores.sql
+.read ../ddl/historico.sql
 
-.read seed/catalogos.sql
-.read mock/unidades.sql
-.read mock/usuariosServidores.sql
-.read mock/historico.sql
+.read ../seed/catalogos.sql
+.read ../mock/unidades.sql
+.read ../mock/usuariosServidores.sql
+.read ../mock/historico.sql
