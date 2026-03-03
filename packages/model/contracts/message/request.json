@@ -1,0 +1,16 @@
+{
+  "$schema"    : "http://json-schema.org/draft-07/schema#",
+  "title"      : "Request",
+  "type"       : "object",
+  "required"   : ["metadata", "payload"],
+  "properties" : {
+    "metadata" : { "type": "object", 
+    "required"       : ["catalogoID", "tipo"],
+    "properties"     : {
+       "catalogoID"  : { "type": "string", "format": "uuid" },
+       "tipo"        : { "type": "string", 
+                         "enum": ["Erro","Backend","Frontend","Qualidade","Desempenho","Compliance"] }
+    } },
+    "payload": { "type": "object" }
+  }
+}

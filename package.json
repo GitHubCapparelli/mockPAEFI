@@ -1,0 +1,5 @@
+{
+  "name"      : "mockPAEFI",
+  "private"   : true,
+  "workspaces": ["packages/*"]
+}
