@@ -1,4 +1,4 @@
-// mockPAEFI-api/src/db/connectionFactory.js
+// packages/data/db/connectionFactory.js
 import Database from 'better-sqlite3';
 import path     from 'path';
 

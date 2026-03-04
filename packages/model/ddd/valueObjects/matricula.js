@@ -1,6 +1,5 @@
 // packages/model/ddd/valueObjects/matricula.js
 import { DomainError } from "../errors/domainError.js";
-
 export class Matricula {
     constructor(value) {
         if (!Matricula.isValid(value)) {

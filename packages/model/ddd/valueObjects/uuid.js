@@ -1,6 +1,5 @@
 // packages/model/ddd/valueObjects/uuid.js
 import { DomainError } from "../errors/domainError.js";
-
 export class UUID {
     constructor(value) {
         if (!UUID.isValid(value)) {

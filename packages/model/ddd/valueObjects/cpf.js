@@ -1,6 +1,5 @@
 // packages/model/ddd/valueObjects/cpf.js
 import { DomainError } from "../errors/domainError.js";
-
 export class CPF {
     constructor(value) {
         if (!CPF.isValid(value)) {

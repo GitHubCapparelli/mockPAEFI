@@ -1,3 +1,4 @@
+-- // packages/data/tools/rebuild.sql
 DROP TABLE IF EXISTS historico;
 DROP TABLE IF EXISTS usuariosServidores;
 DROP TABLE IF EXISTS unidades;

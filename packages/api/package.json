@@ -1,5 +1,5 @@
 {
-  "name"   : "mockpaefi-api",
+  "name"   : "mockPAEFI-api",
   "version": "0.1.0",
   "type"   : "module",
   "main"   : "src/server.js",

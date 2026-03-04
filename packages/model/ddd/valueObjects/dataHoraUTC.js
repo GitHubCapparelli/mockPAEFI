@@ -1,6 +1,5 @@
 // packages/model/ddd/valueObjects/dataHoraUTC.js
 import { DomainError } from "../errors/domainError.js";
-
 export class DataHoraUTC {
     constructor(value) {
         if (!DataHoraUTC.isValid(value)) {
