@@ -1,0 +1,138 @@
+// packages/api/src/services/unidades.js
+import { Router }              from 'express';
+import { UnidadesRepository }  from '../../../data/repositories/unidades.js';
+import { HistoricoService }    from './historico.js';
+
+export class UnidadesService {
+    static router() {
+        const r = Router();
+        r.get('/lookup', UnidadesService.#lookup);    // ANTES de /:id !
+        r.get('/',       UnidadesService.#listar);
+        r.get('/:id',    UnidadesService.#obter);
+        r.post('/',      UnidadesService.#criar);
+        r.put('/:id',    UnidadesService.#atualizar);
+        r.delete('/:id', UnidadesService.#excluir);
+        return r;
+    }
+
+    // GET /api/unidades?page=1&pageSize=5&funcao=Coordenacao
+    static #listar(req, res, next) {
+        try {
+            const { page = 1, pageSize = 5, ...filters } = req.query;
+            const repo = new UnidadesRepository(req.db);
+            res.json(repo.findAll({ filters, page: +page, pageSize: +pageSize }));
+        } catch (err) { next(err); }
+    }
+
+    // GET /api/unidades/lookup
+    static #lookup(req, res, next) {
+        try {
+            res.json({ data: new UnidadesRepository(req.db).findAllForLookup() });
+        } catch (err) { next(err); }
+    }
+
+    // GET /api/unidades/:id
+    static #obter(req, res, next) {
+        try {
+            const item = new UnidadesRepository(req.db).findById(req.params.id);
+            if (!item) return res.status(404).json({ error: 'Unidade não encontrada.' });
+            res.json({ data: item });
+        } catch (err) { next(err); }
+    }
+
+    // POST /api/unidades
+    static #criar(req, res, next) {
+        try {
+            const { metadata, payload } = req.body;
+            const repo                  = new UnidadesRepository(req.db);
+
+            if (repo.isSiglaDuplicada(payload.sigla))
+                return res.status(409).json({ error: 'Sigla já cadastrada.' });
+
+            const row = {
+                id             : crypto.randomUUID(),
+                criadoEm       : UnidadesService.#now(),
+                criadoPor      : req.currentUser.id,   // .id corrigido
+                exclusaoFisica : 0,
+                ...payload
+            };
+            const result = repo.insert(row);
+
+            HistoricoService.registrarEvento(req.db, {
+                usuarioID   : req.currentUser.id,
+                catalogoID  : metadata?.catalogoID,
+                sessionId   : req.headers['x-session-id'],
+                tipo        : metadata?.tipo || 'Frontend',
+                acao        : 'create',
+                descricao   : `Unidade criada: ${row.sigla}`,
+                diff        : { before: null, after: result }
+            });
+
+            res.status(201).json({ data: result });
+        } catch (err) { next(err); }
+    }
+
+    // PUT /api/unidades/:id
+    static #atualizar(req, res, next) {
+        try {
+            const { metadata, payload } = req.body;
+            const repo   = new UnidadesRepository(req.db);
+            const before = repo.findById(req.params.id);
+
+            if (!before) return res.status(404).json({ error: 'Unidade não encontrada.' });
+
+            if (repo.isSiglaDuplicada(payload.sigla, req.params.id))
+                return res.status(409).json({ error: 'Sigla já cadastrada.' });
+
+            const row = {
+                ...payload,
+                id: req.params.id,
+                alteradoEm: UnidadesService.#now(),
+                alteradoPor: req.currentUser.id
+            };
+            const result = repo.update(row);
+
+            HistoricoService.registrarEvento(req.db, {
+                usuarioID   : req.currentUser.id,
+                catalogoID  : metadata?.catalogoID,
+                sessionId   : req.headers['x-session-id'],
+                tipo        : metadata?.tipo || 'Frontend',
+                acao        : 'update',
+                descricao   : `Unidade atualizada: ${row.sigla}`,
+                diff        : { before, after: result }
+            });
+
+            res.json({ data: result });
+        } catch (err) { next(err); }
+    }
+
+    // DELETE /api/unidades/:id
+    static #excluir(req, res, next) {
+        try {
+            const { metadata } = req.body || {};
+            const repo         = new UnidadesRepository(req.db);
+            const before       = repo.findById(req.params.id);
+
+            if (!before) return res.status(404).json({ error: 'Unidade não encontrada.' });
+
+            const now = UnidadesService.#now();
+            repo.softDelete(req.params.id, req.currentUser.id, now);
+
+            HistoricoService.registrarEvento(req.db, {
+                usuarioID   : req.currentUser.id,
+                catalogoID  : metadata?.catalogoID,
+                sessionId   : req.headers['x-session-id'],
+                tipo        : metadata?.tipo || 'Frontend',
+                acao        : 'delete',
+                descricao   : `Unidade excluída: ${before.sigla}`,
+                diff        : { before, after: null }
+            });
+
+            res.status(204).send();
+        } catch (err) { next(err); }
+    }
+
+    static #now() {
+        return new Date().toISOString().replace(/\.\d{3}Z$/, 'Z');
+    }
+}

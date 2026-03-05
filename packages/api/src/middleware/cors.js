@@ -1,27 +1,26 @@
 // packages/api/src/middleware/cors.js
 import corsLib from 'cors';
-
-const ALLOWED_ORIGINS = [
-    process.env.ALLOWED_ORIGIN,    // GitHub Pages (produção do PoC)
-    'http://localhost:5500',       // Live Server do VS Code
+const ALLOWED = [
+    process.env.ALLOWED_ORIGIN,
+    'http://localhost:5500',
     'http://127.0.0.1:5500',
-    'http://localhost:3000'        // caso sirva a UI localmente
+    'http://localhost:3000',
+    'http://127.0.0.1:3000'
 ].filter(Boolean);
 
-export const corsMiddleware = corsLib({
-    origin(origin, callback) {
-        // Permite requests sem origin (Postman, curl, Thunder Client)
-        if (!origin) return callback(null, true);
-
-        if (ALLOWED_ORIGINS.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error(`CORS bloqueado para origem: ${origin}`));
-        }
+const _cors = corsLib({
+    origin(origin, cb) {
+        if (!origin) return cb(null, true);      // Postman / curl / Thunder Client
+        
+        ALLOWED.includes(origin) ? cb(null, true) : cb(new Error(`CORS bloqueado: ${origin}`));
     },
-    methods          : ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders   : ['Content-Type', 'X-User-Id', 'X-Data-Origin'],
-    exposedHeaders   : ['X-Total-Count'],
-    credentials      : false,   // sem cookies neste PoC
-    optionsSuccessStatus: 204
+    methods               : ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders        : ['Content-Type', 'X-User-Id', 'X-Data-Origin'],
+    exposedHeaders        : ['X-Total-Count'],
+    credentials           : false,
+    optionsSuccessStatus  : 204
 });
+
+export class CorsMiddleware {
+    static handle(req, res, next) { return _cors(req, res, next); }
+}

@@ -1,0 +1,39 @@
+// packages/api/src/connectionFactory.js
+import Database           from 'better-sqlite3';
+import path               from 'path';
+import { fileURLToPath }  from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Caminhos resolvidos a partir deste arquivo (packages/api/src/)
+const ORIGINS = {
+  RemotePoC   : process.env.DB_REMOTE_POC ?? path.resolve(__dirname, '../../data/db/mockPAEFI.sqlite'),
+  Research    : process.env.DB_RESEARCH   ?? null,   // R&D interno (GERVIS)
+  Homolog     : process.env.DB_HOMOLOG    ?? null,   // Homologação (SUGIP)
+  Producao    : process.env.DB_PROD       ?? null    // Produção
+};
+
+const cache = new Map();
+
+export class ConnectionFactory {
+
+  static get(origin = 'RemotePoC') {
+    if (cache.has(origin)) return cache.get(origin);
+
+    const dbPath = ORIGINS[origin];
+    if (!dbPath)
+      throw new Error(`DataOrigin não configurado: ${origin}`);
+
+    const db = new Database(dbPath);
+    db.pragma('journal_mode = WAL');
+    db.pragma('foreign_keys = ON');
+
+    cache.set(origin, db);
+    return db;
+  }
+
+  static closeAll() {
+    for (const db of cache.values()) db.close();
+    cache.clear();
+  }
+}

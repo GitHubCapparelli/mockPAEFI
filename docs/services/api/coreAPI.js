@@ -1,238 +1,99 @@
-// docs/services/api/coreAPI.js 
-import { InMemory, Session, CurrentUserKey }  from '../storage.js';
+// docs/services/api/coreAPI.js
+import { Session, CurrentUserKey } from '../storage.js';
+
+const API_BASE    = 'http://localhost:3001';
+const DATA_ORIGIN = 'RemotePoC';   // ← enum DataOrigin.RemotePoC.Key
 
 export class CoreAPI {
-  initialized = false;
-  initPromise = null;
+    initialized = true;     // no REST mode, always ready
 
-  constructor(config) {
-    this.user = Session.Get(CurrentUserKey);
-    Object.assign(this, config);
-  }
+    constructor(config) {
+        this.user = Session.Get(CurrentUserKey);
+        Object.assign(this, config);
+    }
 
-  async Init() {
-    if (this.initialized) return;
+    // No-op: dados não são mais carregados em memória
+    async Init() { return; }
 
-    if (!this.initPromise) {
-      this.initPromise = fetch(this.dataPath)
-        .then(r => r.json())
-        .then(json => {
-          const data = Array.isArray(json)
-            ? json
-            : (json[this.jsonRoot] || json.list || []);
+    // ── Headers padrão ─────────────────────────────────────────────────
+    #headers(extra = {}) {
+        return {
+            'Content-Type'  : 'application/json',
+            'X-User-Id'     : this.user?.id     || '',
+            'X-Data-Origin' : this.user?.origin || DATA_ORIGIN,
+            ...extra
+        };
+    }
 
-          InMemory.InitStore({ [this.entity]: data });
-          this.initialized = true;
+    // ── Leitura ────────────────────────────────────────────────────────
+    async GetAll() {
+        const r = await fetch(`${API_BASE}/api/${this.entity}?pageSize=9999`, { headers: this.#headers() });
+        const json = await r.json();
+        return json.data || [];
+    }
+
+    async GetPaginated(request = {}) {
+        const params = new URLSearchParams({
+            page     : request.page     || 1,
+            pageSize : request.pageSize || 5,
+            ...(request.filters         || {})
         });
-    }
-    return this.initPromise;
-  }
-
-  GetAll(request) {
-    const result  = [...InMemory.GetAll(this.entity)];
-    const orderBy = this.defaultOrderBy;
-    const order   = 'asc';
-
-    if (orderBy) {
-      result.sort((a, b) =>
-        order === 'asc'
-          ? String(a[orderBy]).localeCompare(String(b[orderBy]), 'pt-BR', { sensitivity: 'base' })
-          : String(b[orderBy]).localeCompare(String(a[orderBy]), 'pt-BR', { sensitivity: 'base' })
-      );
-    }
-    return result;
-  }
-
-  GetById(request) {
-    return InMemory.GetAll(this.entity).find(x => x.id === request) ?? null;
-  }
-
-  GetPaginated(request) {
-    let data = this.applyFilters(this.GetAll(request), request.filters);
-
-    const page          = request.page;
-    const pageSize      = request.pageSize;
-    
-    const totalRecords  = data.length;
-    const totalPages    = Math.max(1, Math.ceil(totalRecords / pageSize));
-    const currentPage   = Math.min(Math.max(page, 1), totalPages);
-
-    const start = (currentPage - 1) * pageSize;
-    const end   = start + pageSize;
-
-    return {
-      data        : data.slice(start, end),
-      pagination  : { page: currentPage, pageSize, totalRecords, totalPages }
-    };
-  }
-
-  Create(request) {
-    if (!this.historicoAPI && this.entity !== 'historico') 
-      throw new Error('HistoricoAPI não configurada');
-
-    const previous = [...this.store];
-    try {
-      const dto = this.DTO.CreateInstance(request.payload);
-      this.#validateDTO('create', dto, previous);
-
-      if (previous.some(x => x.id === dto.id)) throw new Error('ID duplicado');
-
-      const persisted = Object.freeze(dto.toJSON());
-      const next      = [...previous, persisted];
-
-      const historicoPayload = this.#buildHistoricoDTO({
-        acao      : 'create',
-        before    : null,
-        after     : persisted,
-        metadata  : request.metadata
-      });
-      
-      InMemory.SetAll(this.entity, next);
-      this.historicoAPI.Create(historicoPayload);
-
-      return persisted;
-
-    } catch (err) {
-      InMemory.SetAll(this.entity, previous);
-      throw err;
-    }
-  }
-
-  Update(request) {
-    if (!this.historicoAPI && this.entity !== 'historico')   
-      throw new Error('HistoricoAPI não configurada');
-
-    const previous = [...this.store];
-    try {
-      const id = request.payload?.id;
-      if (!id)                throw new Error('ID obrigatório');
-
-      const idx = previous.findIndex(x => x.id === id);
-      if (idx === -1)         throw new Error('Registro não encontrado');
-
-      const before  = previous[idx];
-
-      const dto     = this.DTO.CreateInstance(request.payload);
-      dto.id        = id;
-
-      this.#validateDTO('update', dto, previous);
-
-      const after   = Object.freeze({ ...before, ...dto.toJSON() });
-      const next    = [...previous];
-      next[idx]     = after;
-
-      const historicoPayload = this.#buildHistoricoDTO({
-        acao: 'update',
-        before,
-        after,
-        metadata: request.metadata
-      });
-
-      InMemory.SetAll(this.entity, next);
-      this.historicoAPI.Create(historicoPayload);
-
-      return after;
-
-    } catch (err) {
-      InMemory.SetAll(this.entity, previous);
-      throw err;
-    }
-  }
-
-  Delete(request) {
-    if (!this.historicoAPI && this.entity !== 'historico')   
-      throw new Error('HistoricoAPI não configurada');
-
-    const previous = [...this.store];
-    try {
-      const id  = request.payload.data ? request.payload.data.id : request.payload.id;
-      const idx = previous.findIndex(x => x.id === id);
-      if (idx === -1)         throw new Error('Registro não encontrado');
-
-      const before = previous[idx];
-      let after = null;
-      let next;
-
-      if (request.payload.data) {         // soft delete
-        const dto = this.DTO.CreateInstance(request.payload.data);
-        dto.id    = id;
-
-        this.#validateDTO('delete', dto, previous);
-
-        after     = Object.freeze({ ...before, ...dto.toJSON() });
-        next      = [...previous];
-        next[idx] = after;
-        
-      } else if (request.payload.id) {    // hard delete
-        next      = previous.filter(x => x.id !== request.payload.id);
-
-      } else {
-        throw new Error('Delete request should have either data or id on the payload');
-      }
-
-      const historicoPayload = this.#buildHistoricoDTO({
-        acao: 'delete',
-        before,
-        after,
-        metadata : request.metadata
-      });
-
-      InMemory.SetAll(this.entity, next);
-      this.historicoAPI.Create(historicoPayload);
-
-      return true;
-
-    } catch (err) {
-      InMemory.SetAll(this.entity, previous);
-      throw err;
-    }
-  }
-
-  get store() {
-    if (!this.initialized) {
-      throw new Error(`${this.entity} not initialized`);
-    }
-    return InMemory.GetAll(this.entity);
-  }
-
-  #validateAction(acao) {
-    if (!['create', 'update', 'delete'].includes(acao)) {
-      throw new Error(`[CoreAPI] Ação inválida: ${acao}`);
-    }
-  }
-
-  #validateDTO(acao, dto, state) {
-    this.#validateAction(acao);
-
-    dto.prepare(acao, this.user.id);
-
-    if (!dto.validateDTO()) {
-      throw new Error(dto.errors.join('; '));
+        const r = await fetch(`${API_BASE}/api/${this.entity}?${params}`, { headers: this.#headers() });
+        if (!r.ok) return this.#errorFromResponse(r);
+        return r.json();   // → { data: [], pagination: {...} }
     }
 
-    const validator = acao === 'create' ? this.validateCreate :
-                      acao === 'update' ? this.validateUpdate :
-                                          this.validateDelete;
-
-    if (validator && !validator.call(this, dto, state)) {
-      throw new Error(dto.errors.join('; ') || 'Validação de domínio falhou');
+    async Navigate(e, page) {
+        return this.GetPaginated({ ...this._lastRequest, page });
     }
-  }
 
-  #buildHistoricoDTO({ acao, before, after, metadata }) {
-    const historico   = this.historicoDTO.CreateInstance({
-      userID          : this.user.id,
-      catalogoID      : metadata.catalogoID,
-      dataHora        : new Date().toISOString(),
-      tipo            : metadata.tipo,
-      acao,
-      descricao       : metadata?.descricao     ?? null,
-      justificativa   : metadata?.justificativa ?? null,
-      diff            : JSON.stringify({ before, after })
-    });
+    async GetById(id) {
+        const r    = await fetch(`${API_BASE}/api/${this.entity}/${id}`, { headers: this.#headers() });
+        const json = await r.json();
+        return json.data ?? null;
+    }
 
-    //if (!historico.validateDTO()) throw new Error(historico.errors.join('; '));
+    // ── Escrita ────────────────────────────────────────────────────────
+    async Create(request) {
+        const r = await fetch(`${API_BASE}/api/${this.entity}`, {
+            method  : 'POST',
+            headers : this.#headers(),
+            body    : JSON.stringify(request)   // { metadata, payload }
+        });
+        if (!r.ok) return this.#errorFromResponse(r);
+        return r.json();
+    }
 
-    return { payload: historico };
-  }
+    async Update(request) {
+        const id = request.payload?.id;
+        const r  = await fetch(`${API_BASE}/api/${this.entity}/${id}`, {
+            method  : 'PUT',
+            headers : this.#headers(),
+            body    : JSON.stringify(request)
+        });
+        if (!r.ok) return this.#errorFromResponse(r);
+        return r.json();
+    }
+
+    async Delete(request) {
+        const id = request.payload?.data?.id || request.payload?.id;
+        const r  = await fetch(`${API_BASE}/api/${this.entity}/${id}`, {
+            method  : 'DELETE',
+            headers : this.#headers(),
+            body    : JSON.stringify(request)
+        });
+        if (r.status === 204) return true;
+        if (!r.ok) return this.#errorFromResponse(r);
+        return r.json();
+    }
+
+    // ── Privado ────────────────────────────────────────────────────────
+    async #errorFromResponse(r) {
+        try {
+            const json = await r.json();
+            return { error: json.error || `HTTP ${r.status}` };
+        } catch {
+            return { error: `HTTP ${r.status}` };
+        }
+    }
 }

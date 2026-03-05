@@ -1,0 +1,13 @@
+// packages/api/src/middleware/OriginMiddleware.js
+import { DataOrigin } from '../../../model/ddd/enums/dataOrigin.js';
+
+const VALID_ORIGINS = DataOrigin.All.map(o => o.Key).filter(k => k !== 'NaoInformado');
+
+export class OriginMiddleware {
+    static handle(req, res, next) {
+        const raw = req.headers['x-data-origin'];
+        const origin = raw && VALID_ORIGINS.includes(raw) ? raw : 'RemotePoC';
+        req.dataOrigin = origin;
+        next();
+    }
+}

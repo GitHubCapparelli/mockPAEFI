@@ -1,0 +1,140 @@
+// packages/api/src/services/UsuariosServidoresService.js
+import { Router }                         from 'express';
+import { UsuariosServidoresRepository }   from '../../../data/repositories/usuariosServidores.js';
+import { HistoricoService }               from './historico.js';
+
+export class UsuariosServidoresService {
+    static router() {
+        const r = Router();
+        r.get('/lookup', UsuariosServidoresService.#lookup);  // ANTES de /:id !
+        r.get('/',       UsuariosServidoresService.#listar);
+        r.get('/:id',    UsuariosServidoresService.#obter);
+        r.post('/',      UsuariosServidoresService.#criar);
+        r.put('/:id',    UsuariosServidoresService.#atualizar);
+        r.delete('/:id', UsuariosServidoresService.#excluir);
+        return r;
+    }
+
+    static #listar(req, res, next) {
+        try {
+            const { page = 1, pageSize = 5, ...filters } = req.query;
+            res.json(new UsuariosServidoresRepository(req.db)
+                .findAll({ filters, page: +page, pageSize: +pageSize }));
+        } catch (err) { next(err); }
+    }
+
+    static #lookup(req, res, next) {
+        try {
+            res.json({ data: new UsuariosServidoresRepository(req.db).findAllForLookup() });
+        } catch (err) { next(err); }
+    }
+
+    static #obter(req, res, next) {
+        try {
+            const item = new UsuariosServidoresRepository(req.db).findById(req.params.id);
+            if (!item) return res.status(404).json({ error: 'Usuário não encontrado.' });
+            res.json({ data: item });
+        } catch (err) { next(err); }
+    }
+
+    static #criar(req, res, next) {
+        try {
+            const { metadata, payload } = req.body;
+            const repo                  = new UsuariosServidoresRepository(req.db);
+
+            if (repo.isLoginDuplicado(payload.login))
+                return res.status(409).json({ error: 'Login já cadastrado.' });
+            if (repo.isMatriculaDuplicada(payload.matricula))
+                return res.status(409).json({ error: 'Matrícula já cadastrada.' });
+            if (repo.isCpfDuplicado(payload.cpf))
+                return res.status(409).json({ error: 'CPF já cadastrado.' });
+
+            const row = {
+                id              : crypto.randomUUID(),
+                criadoEm        : UsuariosServidoresService.#now(),
+                criadoPor       : req.currentUser.id,
+                exclusaoFisica  : 0,
+                ...payload
+            };
+            const result = repo.insert(row);
+
+            HistoricoService.registrarEvento(req.db, {
+                usuarioID   : req.currentUser.id,
+                catalogoID  : metadata?.catalogoID,
+                sessionId   : req.headers['x-session-id'],
+                tipo        : metadata?.tipo || 'Frontend',
+                acao        : 'create',
+                descricao   : `Servidor criado: ${row.login}`,
+                diff        : { before: null, after: result }
+            });
+
+            res.status(201).json({ data: result });
+        } catch (err) { next(err); }
+    }
+
+    static #atualizar(req, res, next) {
+        try {
+            const { metadata, payload } = req.body;
+            const repo                  = new UsuariosServidoresRepository(req.db);
+            const before                = repo.findById(req.params.id);
+
+            if (!before) return res.status(404).json({ error: 'Usuário não encontrado.' });
+
+            if (repo.isLoginDuplicado(payload.login, req.params.id))
+                return res.status(409).json({ error: 'Login já cadastrado.' });
+            if (repo.isMatriculaDuplicada(payload.matricula, req.params.id))
+                return res.status(409).json({ error: 'Matrícula já cadastrada.' });
+            if (repo.isCpfDuplicado(payload.cpf, req.params.id))
+                return res.status(409).json({ error: 'CPF já cadastrado.' });
+
+            const row = {
+                ...payload,
+                id          : req.params.id,
+                alteradoEm  : UsuariosServidoresService.#now(),
+                alteradoPor : req.currentUser.id
+            };
+            const result = repo.update(row);
+
+            HistoricoService.registrarEvento(req.db, {
+                usuarioID   : req.currentUser.id,
+                catalogoID  : metadata?.catalogoID,
+                sessionId   : req.headers['x-session-id'],
+                tipo        : metadata?.tipo || 'Frontend',
+                acao        : 'update',
+                descricao   : `Servidor atualizado: ${row.login}`,
+                diff        : { before, after: result }
+            });
+
+            res.json({ data: result });
+        } catch (err) { next(err); }
+    }
+
+    static #excluir(req, res, next) {
+        try {
+            const { metadata } = req.body || {};
+            const repo         = new UsuariosServidoresRepository(req.db);
+            const before       = repo.findById(req.params.id);
+
+            if (!before) return res.status(404).json({ error: 'Usuário não encontrado.' });
+
+            const now = UsuariosServidoresService.#now();
+            repo.softDelete(req.params.id, req.currentUser.id, now);
+
+            HistoricoService.registrarEvento(req.db, {
+                usuarioID   : req.currentUser.id,
+                catalogoID  : metadata?.catalogoID,
+                sessionId   : req.headers['x-session-id'],
+                tipo        : metadata?.tipo || 'Frontend',
+                acao        : 'delete',
+                descricao   : `Servidor excluído: ${before.login}`,
+                diff        : { before, after: null }
+            });
+
+            res.status(204).send();
+        } catch (err) { next(err); }
+    }
+
+    static #now() {
+        return new Date().toISOString().replace(/\.\d{3}Z$/, 'Z');
+    }
+}
