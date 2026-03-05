@@ -1,5 +1,6 @@
 {
   "name"      : "mockPAEFI",
   "private"   : true,
+  "type"      : "module",
   "workspaces": ["packages/*"]
 }
