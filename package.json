@@ -1,6 +1,6 @@
 {
-  "name"      : "mockpaefi",
-  "private"   : true,
-  "type"      : "module",
-  "workspaces": ["packages/*"]
+  "name"        : "mockpaefi",
+  "private"     : true,
+  "type"        : "module",
+  "workspaces"  : ["packages/*"]
 }

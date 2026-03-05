@@ -1,11 +1,11 @@
 {
-    "name": "mockpaefi-data",
-    "version": "0.1.0",
-    "type": "module",
-    "scripts": {
-        "rebuild": "sqlite3 db/mockPAEFI.sqlite < tools/rebuild.sql"
+    "name"    : "mockpaefi-data",
+    "version" : "0.1.0",
+    "type"    : "module",
+    "scripts"      : {
+        "rebuild"  : "sqlite3 db/mockPAEFI.sqlite < tools/rebuild.sql"
     },
-    "dependencies": {
-        "better-sqlite3": "^9.4.3"
+    "dependencies"        : {
+        "better-sqlite3"  : "^9.4.3"
     }
 }
