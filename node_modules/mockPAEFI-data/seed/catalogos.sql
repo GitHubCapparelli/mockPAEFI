@@ -1,0 +1,18 @@
+-- // packages/data/seed/catalogos.sql
+INSERT INTO catalogos (id, nome, versao, finalidade, criadoEm, criadoPor, exclusaoFisica) VALUES 
+('f756dff1-bbbe-43ba-8d0e-a6dcf871f8c0', 'Catalogos', '0.1',
+ 'Define as tabelas gerenciadas (catálogo de dados)',
+ '2026-01-01T00:00:00Z', '58a74744-5ddd-449a-85f6-686cc8d109c5', 0),
+
+('126b9986-56a6-46f3-a0be-9af897c21b3a', 'Historico', '0.1',
+ 'Armazena dados históricos (eventos operacionais)',
+ '2026-01-01T00:00:00Z', '58a74744-5ddd-449a-85f6-686cc8d109c5', 0),
+
+('a6c3db3e-e105-4864-b0fd-108230dfc796', 'Unidades', '0.1',
+ 'Armazena dados de unidades da SEDES',
+ '2026-01-01T00:00:00Z', '58a74744-5ddd-449a-85f6-686cc8d109c5', 0),
+
+('9f882f42-6c85-4ab1-817a-eff1c63d1845', 'UsuariosServidores', '0.1',
+ 'Armazena dados de servidores da SEDES',
+ '2026-01-01T00:00:00Z', '58a74744-5ddd-449a-85f6-686cc8d109c5', 0)
+;

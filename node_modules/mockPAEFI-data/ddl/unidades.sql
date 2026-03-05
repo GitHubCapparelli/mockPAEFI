@@ -1,0 +1,34 @@
+-- // packages/data/ddl/unidades.sql
+CREATE TABLE unidades (
+    id              TEXT PRIMARY KEY             CHECK (length(id) = 36),
+    hierarquiaID    TEXT NULL                    CHECK (hierarquiaID IS NULL OR length(hierarquiaID) = 36),
+    sigla           TEXT NOT NULL                CHECK (length(sigla) BETWEEN 3 AND 100),
+    nome            TEXT                         CHECK (nome IS NULL OR length(nome) BETWEEN 10 AND 200),
+    funcao          TEXT NOT NULL                CHECK (funcao IN ('NaoInformada','Direcao','Coordenacao','Gestao','Governanca','AssistenciaSocial','Outra')),
+    ibgeId          TEXT                         CHECK (ibgeId IS NULL OR length(ibgeId) = 11),
+    criadoEm        TEXT NOT NULL                CHECK (length(criadoEm) = 20),                              -- datetime UTC
+    criadoPor       TEXT NOT NULL                CHECK (length(criadoPor) = 36),                             -- UUID FK usuariosServidores
+    alteradoEm      TEXT                         CHECK (alteradoEm  IS NULL OR length(alteradoEm) = 20),     -- datetime UTC
+    alteradoPor     TEXT                         CHECK (alteradoPor IS NULL OR length(alteradoPor) = 36),    -- UUID FK usuariosServidores
+    excluidoEm      TEXT                         CHECK (excluidoEm  IS NULL OR length(excluidoEm) = 20),     -- datetime UTC
+    excluidoPor     TEXT                         CHECK (excluidoPor IS NULL OR length(excluidoPor) = 36),    -- UUID FK usuariosServidores
+    exclusaoFisica  INTEGER NOT NULL DEFAULT 0   CHECK (exclusaoFisica IN (0,1)),
+
+    FOREIGN KEY (hierarquiaID) REFERENCES unidades(id),
+
+    CHECK (id LIKE '________-____-____-____-____________'),
+    CHECK (hierarquiaID IS NULL OR hierarquiaID LIKE '________-____-____-____-____________'),
+
+    CHECK (criadoPor LIKE '________-____-____-____-____________'),
+    CHECK (alteradoPor IS NULL OR alteradoPor LIKE '________-____-____-____-____________'),
+    CHECK (excluidoPor IS NULL OR excluidoPor LIKE '________-____-____-____-____________'),
+
+    CHECK (criadoEm GLOB '????-??-??T??:??:??Z'),
+    CHECK (alteradoEm IS NULL OR alteradoEm GLOB '????-??-??T??:??:??Z'),
+    CHECK (excluidoEm IS NULL OR excluidoEm GLOB '????-??-??T??:??:??Z'),
+    
+    CHECK (ibgeId IS NULL OR ibgeId GLOB '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
+
+    CHECK ((funcao =  'AssistenciaSocial' AND ibgeId IS NOT NULL) OR
+           (funcao != 'AssistenciaSocial' AND ibgeId IS NULL      AND nome IS NOT NULL))
+);

@@ -1,10 +1,10 @@
 // packages/api/src/server.js
 import 'dotenv/config';
 import express                          from 'express';
-import { CorsMiddleware }               from './middleware/CorsMiddleware.js';
-import { OriginMiddleware }             from './middleware/OriginMiddleware.js';
-import { AuthMiddleware }               from './middleware/AuthMiddleware.js';
-import { ErrorHandler }                 from './middleware/ErrorHandler.js';
+import { CorsMiddleware }               from './middleware/cors.js';
+import { OriginMiddleware }             from './middleware/origin.js';
+import { AuthMiddleware }               from './middleware/auth.js';
+import { ErrorHandler }                 from './middleware/errorHandler.js';
 import { CatalogosService }             from './services/catalogos.js';
 import { HistoricoService }             from './services/historico.js';
 import { UnidadesService }              from './services/unidades.js';
