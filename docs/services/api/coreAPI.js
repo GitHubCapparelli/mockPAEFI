@@ -1,11 +1,13 @@
 // docs/services/api/coreAPI.js
 import { Session, CurrentUserKey } from '../storage.js';
 
-const API_BASE    = 'http://localhost:3001';
-const DATA_ORIGIN = 'RemotePoC';   // ← enum DataOrigin.RemotePoC.Key
+const DATA_ORIGIN = 'RemotePoC';               // ← enum DataOrigin.RemotePoC.Key
+const API_BASE    = (window?.location?.hostname === 'localhost' || window?.location?.hostname === '127.0.0.1')
+                  ? 'http://localhost:3001'
+                  : 'http://localhost:3001';   // futuramente: URL do servidor de homologação
 
 export class CoreAPI {
-    initialized = true;     // no REST mode, always ready
+    initialized = true;                        // no REST mode, always ready
 
     constructor(config) {
         this.user = Session.Get(CurrentUserKey);
