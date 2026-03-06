@@ -2,9 +2,19 @@
 import { Session, CurrentUserKey } from '../storage.js';
 
 const DATA_ORIGIN = 'RemotePoC';               // ← enum DataOrigin.RemotePoC.Key
-const API_BASE    = (window?.location?.hostname === 'localhost' || window?.location?.hostname === '127.0.0.1')
-                  ? 'http://localhost:3001'
-                  : 'http://localhost:3001';   // futuramente: URL do servidor de homologação
+const CONFIG_URL  = '/mockPAEFI/api.config.json';
+let API_BASE      = 'http://localhost:3001';   // fallback local
+
+async function loadConfig() {
+    try {
+        const r      = await fetch(CONFIG_URL);
+        const config = await r.json();
+        if (config.apiBase) API_BASE = config.apiBase;
+    } catch {
+        console.warn('api.config.json não encontrado — usando localhost');
+    }
+}
+await loadConfig();
 
 export class CoreAPI {
     initialized = true;                        // no REST mode, always ready
