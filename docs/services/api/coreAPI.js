@@ -7,12 +7,14 @@ let API_BASE      = 'http://localhost:3001';   // fallback local
 
 async function loadConfig() {
     try {
-        const r      = await fetch(CONFIG_URL);
+        const r = await fetch(CONFIG_URL, {
+            headers: { 'ngrok-skip-browser-warning': 'true' }
+        });
         const config = await r.json();
         if (config.apiBase) API_BASE = config.apiBase;
     } catch {
         console.warn('api.config.json não encontrado — usando localhost');
-    }
+    }    
 }
 await loadConfig();
 
