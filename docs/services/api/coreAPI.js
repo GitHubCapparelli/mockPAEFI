@@ -1,47 +1,50 @@
 // docs/services/api/coreAPI.js
 import { Session, CurrentUserKey } from '../storage.js';
 
-const DATA_ORIGIN = 'RemotePoC';               // ← enum DataOrigin.RemotePoC.Key
-const CONFIG_URL  = '/mockPAEFI/api.config.json';
-let API_BASE      = 'http://localhost:3001';   // fallback local
+// ── Configuração dinâmica da URL da API ──────────────────────────────
+const CONFIG_URL = '/mockPAEFI/api.config.json';
+let API_BASE     = 'http://localhost:3001';   // fallback local
 
 async function loadConfig() {
     try {
-        const r = await fetch(CONFIG_URL, {
-            headers: { 'ngrok-skip-browser-warning': 'true' }
-        });
+        const r = await fetch(CONFIG_URL);
+        if (!r.ok) return;
         const config = await r.json();
         if (config.apiBase) API_BASE = config.apiBase;
     } catch {
-        console.warn('api.config.json não encontrado — usando localhost');
-    }    
+        console.warn('[coreAPI] api.config.json não encontrado — usando localhost');
+    }
 }
 await loadConfig();
 
+const DATA_ORIGIN = 'RemotePoC';
+const NGROK_HDR   = 'ngrok-skip-browser-warning';
+
 export class CoreAPI {
-    initialized = true;                        // no REST mode, always ready
+    initialized = true;
 
     constructor(config) {
         this.user = Session.Get(CurrentUserKey);
         Object.assign(this, config);
     }
 
-    // No-op: dados não são mais carregados em memória
     async Init() { return; }
 
-    // ── Headers padrão ─────────────────────────────────────────────────
+    // ── Headers padrão ────────────────────────────────────────────────
     #headers(extra = {}) {
         return {
-            'Content-Type'  : 'application/json',
-            'X-User-Id'     : this.user?.id     || '',
-            'X-Data-Origin' : this.user?.origin || DATA_ORIGIN,
+            'Content-Type'   : 'application/json',
+            'X-User-Id'      : this.user?.id     || '',
+            'X-Data-Origin'  : this.user?.origin || DATA_ORIGIN,
+            [NGROK_HDR]      : 'true',
             ...extra
         };
     }
 
-    // ── Leitura ────────────────────────────────────────────────────────
+    // ── Leitura ───────────────────────────────────────────────────────
     async GetAll() {
-        const r = await fetch(`${API_BASE}/api/${this.entity}?pageSize=9999`, { headers: this.#headers() });
+        const r    = await fetch(`${API_BASE}/api/${this.entity}?pageSize=9999`,
+                         { headers: this.#headers() });
         const json = await r.json();
         return json.data || [];
     }
@@ -52,9 +55,10 @@ export class CoreAPI {
             pageSize : request.pageSize || 5,
             ...(request.filters         || {})
         });
-        const r = await fetch(`${API_BASE}/api/${this.entity}?${params}`, { headers: this.#headers() });
+        const r = await fetch(`${API_BASE}/api/${this.entity}?${params}`,
+                      { headers: this.#headers() });
         if (!r.ok) return this.#errorFromResponse(r);
-        return r.json();   // → { data: [], pagination: {...} }
+        return r.json();
     }
 
     async Navigate(e, page) {
@@ -62,17 +66,18 @@ export class CoreAPI {
     }
 
     async GetById(id) {
-        const r    = await fetch(`${API_BASE}/api/${this.entity}/${id}`, { headers: this.#headers() });
+        const r    = await fetch(`${API_BASE}/api/${this.entity}/${id}`,
+                         { headers: this.#headers() });
         const json = await r.json();
         return json.data ?? null;
     }
 
-    // ── Escrita ────────────────────────────────────────────────────────
+    // ── Escrita ───────────────────────────────────────────────────────
     async Create(request) {
         const r = await fetch(`${API_BASE}/api/${this.entity}`, {
             method  : 'POST',
             headers : this.#headers(),
-            body    : JSON.stringify(request)   // { metadata, payload }
+            body    : JSON.stringify(request)
         });
         if (!r.ok) return this.#errorFromResponse(r);
         return r.json();
@@ -101,7 +106,7 @@ export class CoreAPI {
         return r.json();
     }
 
-    // ── Privado ────────────────────────────────────────────────────────
+    // ── Privado ───────────────────────────────────────────────────────
     async #errorFromResponse(r) {
         try {
             const json = await r.json();
