@@ -15,7 +15,7 @@ const _cors = corsLib({
         ALLOWED.includes(origin) ? cb(null, true) : cb(new Error(`CORS bloqueado: ${origin}`));
     },
     methods               : ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders        : ['Content-Type', 'X-User-Id', 'X-Data-Origin'],
+    allowedHeaders        : ['Content-Type', 'X-User-Id', 'X-Data-Origin','ngrok-skip-browser-warning'],
     exposedHeaders        : ['X-Total-Count'],
     credentials           : false,
     optionsSuccessStatus  : 204
