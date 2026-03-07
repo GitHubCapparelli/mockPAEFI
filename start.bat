@@ -11,9 +11,9 @@ cd /d %ROOT%\packages\api
 start /b cmd /c "npm run dev > %ROOT%\logs\api.log 2>&1"
 
 echo [2/3] Iniciando ngrok...
-start /b cmd /c "ngrok http --domain=%DOMAIN% 3001 > %ROOT%\logs\ngrok.log 2>&1"
+start /b cmd /c "ngrok http --url=%DOMAIN% 3001 > %ROOT%\logs\ngrok.log 2>&1"
 
-echo [3/3] Aguardando servicos subirem...
+echo [3/3] Aguardando servicos...
 timeout /t 6 /nobreak > nul
 
 echo.
@@ -24,9 +24,11 @@ echo.
 echo.
 echo ============================================
 echo  Sistema no ar!
-echo  Local:   http://localhost:3001/health
-echo  Publico: https://%DOMAIN%/health
-echo  Logs:    %ROOT%\logs\
+echo.
+echo  Local   : http://localhost:3001/health
+echo  Publico : https://%DOMAIN%/health
+echo.
 echo ============================================
+echo [%date% %time%] 
 echo.
 pause
