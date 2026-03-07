@@ -1,7 +1,7 @@
-npm error Lifecycle script `dev REM` failed with error:
-npm error workspace mockpaefi-api@0.1.0
-npm error location C:\.Capparelli\Work\hosted\SEDES\gervis\poc\PAEFI\mockPAEFI\packages\api
-npm error Missing script: "dev REM"
-npm error
-npm error To see a list of scripts, run:
-npm error   npm run --workspace=mockpaefi-api@0.1.0
+
+> mockpaefi-api@0.1.0 dev
+> node --watch src/server.js
+
+mockPAEFI-api  →  http://localhost:3001
+Health check   →  http://localhost:3001/health
+^C^C
