@@ -1,0 +1,74 @@
+// packages/api/src/dto/usuarioServidor.js
+import { BaseDTO } from './_baseDTO.js';
+export class UsuarioServidorDTO extends BaseDTO {
+
+    static fromRow(row) {
+        if (!row) return null;
+        return {
+            id            : row.id,
+            unidadeID     : row.unidadeID,
+            funcao        : row.funcao        || 'NaoInformado',
+            cargo         : row.cargo         || 'NaoInformado',
+            especialidade : row.especialidade || 'NaoInformada',
+            nome          : row.nome,
+            login         : row.login,
+            matricula     : row.matricula,
+            cpf           : row.cpf           || null,
+            criadoEm      : row.criadoEm,
+            criadoPor     : row.criadoPor,
+            alteradoEm    : row.alteradoEm    || null,
+            alteradoPor   : row.alteradoPor   || null,
+            excluidoEm    : row.excluidoEm    || null,
+            excluidoPor   : row.excluidoPor   || null,
+            exclusaoFisica: row.exclusaoFisica ?? 0
+        };
+    }
+
+    static fromRows(rows) {
+        return (rows || []).map(UsuarioServidorDTO.fromRow);
+    }
+
+    static toInsert(payload, userId) {
+        const r = BaseDTO.newRecord(payload, userId);
+        return {
+            id            : r.id,
+            unidadeID     : r.unidadeID,
+            funcao        : r.funcao        || 'NaoInformado',
+            cargo         : r.cargo         || 'NaoInformado',
+            especialidade : r.especialidade || 'NaoInformada',
+            nome          : r.nome,
+            login         : r.login,
+            matricula     : r.matricula,
+            cpf           : r.cpf           || null,
+            criadoEm      : r.criadoEm,
+            criadoPor     : r.criadoPor,
+            alteradoEm    : null,
+            alteradoPor   : null,
+            excluidoEm    : null,
+            excluidoPor   : null,
+            exclusaoFisica: 0
+        };
+    }
+
+    static toUpdate(existing, payload, userId) {
+        return BaseDTO.updatedRecord(existing, {
+            unidadeID    : payload.unidadeID     ?? existing.unidadeID,
+            funcao       : payload.funcao        ?? existing.funcao,
+            cargo        : payload.cargo         ?? existing.cargo,
+            especialidade: payload.especialidade ?? existing.especialidade,
+            nome         : payload.nome          ?? existing.nome,
+            login        : payload.login         ?? existing.login,
+            matricula    : payload.matricula     ?? existing.matricula,
+            cpf          : payload.cpf           ?? existing.cpf
+        }, userId);
+    }
+
+    static validate(dto) {
+        const errors = [];
+        if (!dto.unidadeID?.trim()) errors.push('unidadeID é obrigatório');
+        if (!dto.nome?.trim())      errors.push('nome é obrigatório');
+        if (!dto.login?.trim())     errors.push('login é obrigatório');
+        if (!dto.matricula?.trim()) errors.push('matricula é obrigatória');
+        return errors;
+    }
+}
