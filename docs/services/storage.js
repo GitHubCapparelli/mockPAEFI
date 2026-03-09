@@ -1,3 +1,4 @@
+// docs/services/storage.js
 export const CurrentUserKey   = 'currentUser';
 export const PreferencesKey   = 'preferences';
 export const LastModuleKey    = 'lastModule';

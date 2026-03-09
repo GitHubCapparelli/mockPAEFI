@@ -1,36 +1,39 @@
 // packages/api/src/server.js
 import 'dotenv/config';
-import express                          from 'express';
-import { CorsMiddleware }               from './middleware/cors.js';
-import { OriginMiddleware }             from './middleware/origin.js';
-import { AuthMiddleware }               from './middleware/auth.js';
-import { ErrorHandler }                 from './middleware/errorHandler.js';
-import { CatalogosService }             from './services/catalogos.js';
-import { HistoricoService }             from './services/historico.js';
-import { UnidadesService }              from './services/unidades.js';
-import { UsuariosServidoresService }    from './services/usuariosServidores.js';
+import express              from 'express';
+import { CorsMiddleware }   from './middleware/cors.js';
+import { OriginMiddleware } from './middleware/origin.js';
+import { AuthMiddleware }   from './middleware/auth.js';
+import { ErrorHandler }     from './middleware/errorHandler.js';
 
-const app = express();
+import { AuthService }      from './services/authService.js';
+import { ServiceRegistry }  from './services/_registry.js';
+
+const app  = express();
 const PORT = process.env.PORT || 3001;
 
-// ── Middleware global ─────────────────────────────────────────────────
+// ── Middlewares globais ───────────────────────────────────────────────────────
 app.use(CorsMiddleware.handle);
 app.use(express.json());
-app.use(OriginMiddleware.handle);          // resolve X-Data-Origin antes da auth
+app.use(OriginMiddleware.handle);
 
-// ── Health check (sem autenticação) ──────────────────────────────────
-app.get('/health', (req, res) => {
-    res.json({ status: 'ok', ts: new Date().toISOString(), port: PORT });
-});
+// ── Health check (sem autenticação) ──────────────────────────────────────────
+app.get('/health', (_req, res) => res.json({
+    status: 'ok',
+    ts    : new Date().toISOString(),
+    port  : PORT
+}));
 
-// ── Rotas protegidas ──────────────────────────────────────────────────
-app.use('/api', AuthMiddleware.handle);
-app.use('/api/catalogos', CatalogosService.router());
-app.use('/api/historico', HistoricoService.router());
-app.use('/api/unidades', UnidadesService.router());
-app.use('/api/usuarios-servidores', UsuariosServidoresService.router());
+// ── Auth (sem AuthMiddleware — login não requer token) ────────────────────────
+app.use('/api/auth', AuthService.router());
 
-// ── Error handler (último middleware) ────────────────────────────────
+// ── Rotas protegidas via registry ─────────────────────────────────────────────
+// Para adicionar novos domínios, edite apenas services/_registry.js
+for (const { path, Service } of ServiceRegistry) {
+    app.use(`/api/${path}`, AuthMiddleware.handle, Service.router());
+}
+
+// ── Error handler global ──────────────────────────────────────────────────────
 app.use(ErrorHandler.handle);
 
 app.listen(PORT, () => {
