@@ -7,15 +7,15 @@ export class CatalogoDTO extends BaseDTO {
         return {
             id            : row.id,
             nome          : row.nome,
-            versao        : row.versao        || null,
-            descricao     : row.descricao     || null,
+            versao        : row.versao      || null,
+            finalidade    : row.finalidade  || null,
             criadoEm      : row.criadoEm,
-            criadoPor     : row.criadoPor,
-            alteradoEm    : row.alteradoEm    || null,
-            alteradoPor   : row.alteradoPor   || null,
-            excluidoEm    : row.excluidoEm    || null,
-            excluidoPor   : row.excluidoPor   || null,
-            exclusaoFisica: row.exclusaoFisica ?? 0
+            criadoPor     : row.criadoPor   || null,
+            alteradoEm    : row.alteradoEm  || null,
+            alteradoPor   : row.alteradoPor || null,
+            excluidoEm    : row.excluidoEm  || null,
+            excluidoPor   : row.excluidoPor || null,
+            exclusaoFisica: row.exclusaoFisica === 1 || row.exclusaoFisica === true
         };
     }
 
@@ -28,29 +28,29 @@ export class CatalogoDTO extends BaseDTO {
         return {
             id            : r.id,
             nome          : r.nome,
-            versao        : r.versao    || '0.1',
-            descricao     : r.descricao || null,
+            versao        : r.versao     || '0.1',
+            finalidade    : r.finalidade || null,
             criadoEm      : r.criadoEm,
             criadoPor     : r.criadoPor,
             alteradoEm    : null,
             alteradoPor   : null,
             excluidoEm    : null,
             excluidoPor   : null,
-            exclusaoFisica: 0
+            exclusaoFisica: false
         };
     }
 
     static toUpdate(existing, payload, userId) {
         return BaseDTO.updatedRecord(existing, {
-            nome     : payload.nome      ?? existing.nome,
-            versao   : payload.versao    ?? existing.versao,
-            descricao: payload.descricao ?? existing.descricao
+            nome      : payload.nome       ?? existing.nome,
+            versao    : payload.versao     ?? existing.versao,
+            finalidade: payload.finalidade ?? existing.finalidade
         }, userId);
     }
 
     static validate(dto) {
         const errors = [];
-        if (!dto.nome?.trim())  errors.push('nome é obrigatório');
+        if (!dto.nome?.trim())   errors.push('nome é obrigatório');
         if (!dto.versao?.trim()) errors.push('versao é obrigatória');
         return errors;
     }

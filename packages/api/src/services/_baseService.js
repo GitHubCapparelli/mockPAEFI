@@ -1,8 +1,9 @@
-// packages/api/src/services/BaseService.js
+// packages/api/src/services/_baseService.js
 import Ajv                from 'ajv';
 import addFormats         from 'ajv-formats';
 import { readFileSync }   from 'fs';
 import { fileURLToPath }  from 'url';
+import crypto             from 'crypto';
 import path               from 'path';
 
 const __dir = path.dirname(fileURLToPath(import.meta.url));
@@ -10,8 +11,8 @@ const MODEL = path.resolve(__dir, '../../../..', 'packages/model/contracts');
 
 export class BaseService {
 
-    // ── Schema cache ─────────────────────────────────────────────────────────
-    static #ajv = addFormats(new Ajv({ allErrors: true }));
+    // ── Schema cache ──────────────────────────────────────────────────────────
+    static #ajv     = addFormats(new Ajv({ allErrors: true }));
     static #schemas = {};
 
     static #loadSchema(rel) {
@@ -45,8 +46,6 @@ export class BaseService {
     }
 
     // ── Transação atômica ─────────────────────────────────────────────────────
-    // Executa fn(db) dentro de BEGIN / COMMIT.
-    // Qualquer exceção em fn dispara ROLLBACK automático.
     static inTransaction(db, fn) {
         return new Promise((resolve, reject) => {
             db.run('BEGIN', async (err) => {
@@ -64,11 +63,39 @@ export class BaseService {
         });
     }
 
+    // ── Registro de evento no histórico (compartilhado por todos os services) ─
+    static registrarEvento(db, evento) {
+        return BaseService.run(db,
+            `INSERT INTO historico
+             (id, userID, catalogoID, dataHora, tipo, acao, descricao, justificativa, diff)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [evento.id, evento.userID, evento.catalogoID, evento.dataHora,
+             evento.tipo, evento.acao, evento.descricao,
+             evento.justificativa, evento.diff]
+        );
+    }
+
+    // ── Helpers de banco (compartilhados por todos os services) ───────────────
+    static query(db, sql, params = []) {
+        return new Promise((resolve, reject) =>
+            db.all(sql, params, (err, rows) => err ? reject(err) : resolve(rows)));
+    }
+
+    static queryOne(db, sql, params = []) {
+        return new Promise((resolve, reject) =>
+            db.get(sql, params, (err, row) => err ? reject(err) : resolve(row)));
+    }
+
+    static run(db, sql, params = []) {
+        return new Promise((resolve, reject) =>
+            db.run(sql, params, function (err) { err ? reject(err) : resolve(this); }));
+    }
+
     // ── Respostas padrão ──────────────────────────────────────────────────────
     static ok(res, data, pagination = null, status = 200) {
         const body = { data, pagination, token: null, error: null };
-        const v = BaseService.validateResponse(body);
-        if (!v.ok) console.warn(`[${new Date().toISOString()}] [BaseService] Response fora do schema:`, v.error);
+        const v    = BaseService.validateResponse(body);
+        if (!v.ok) console.warn(`[${BaseService.now()}] [BaseService] Response fora do schema:`, v.error);
         return res.status(status).json(body);
     }
 
@@ -76,8 +103,12 @@ export class BaseService {
         return res.status(status).json({ data: null, pagination: null, token: null, error });
     }
 
-    // ── Timestamp UTC ─────────────────────────────────────────────────────────
+    // ── Utilidades ────────────────────────────────────────────────────────────
     static now() {
         return new Date().toISOString().replace(/\.\d{3}Z$/, 'Z');
+    }
+
+    static uuid() {
+        return crypto.randomUUID();
     }
 }

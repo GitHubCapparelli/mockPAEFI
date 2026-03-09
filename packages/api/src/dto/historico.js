@@ -1,30 +1,21 @@
 // packages/api/src/dto/historico.js
 import { BaseDTO } from './_baseDTO.js';
+import crypto      from 'crypto';
 
 export class HistoricoDTO extends BaseDTO {
 
     static fromRow(row) {
         if (!row) return null;
         return {
-            id            : row.id,
-            catalogoID    : row.catalogoID,
-            servidorID    : row.servidorID,
-            tipo          : row.tipo          || 'NaoInformado',
-            nome          : row.nome          || null,
-            descricao     : row.descricao     || null,
-            justificativa : row.justificativa || null,
-            ip            : row.ip            || null,
-            userAgent     : row.userAgent     || null,
-            contexto      : row.contexto      || null,
-            acao          : row.acao          || null,
-            evidencia     : row.evidencia     || null,
-            criadoEm      : row.criadoEm,
-            criadoPor     : row.criadoPor,
-            alteradoEm    : row.alteradoEm    || null,
-            alteradoPor   : row.alteradoPor   || null,
-            excluidoEm    : row.excluidoEm    || null,
-            excluidoPor   : row.excluidoPor   || null,
-            exclusaoFisica: row.exclusaoFisica ?? 0
+            id           : row.id,
+            userID       : row.userID,
+            catalogoID   : row.catalogoID    || null,
+            dataHora     : row.dataHora,
+            tipo         : row.tipo,
+            acao         : row.acao,
+            descricao    : row.descricao     || null,
+            justificativa: row.justificativa || null,
+            diff         : row.diff          || null
         };
     }
 
@@ -32,35 +23,25 @@ export class HistoricoDTO extends BaseDTO {
         return (rows || []).map(HistoricoDTO.fromRow);
     }
 
-    // Cria registro de evento — chamado internamente pelos services
-    static toEvento({ catalogoID, servidorID, tipo, nome, acao, descricao, evidencia, req }) {
-        const now = new Date().toISOString().replace(/\.\d{3}Z$/, 'Z');
+    // Cria registro de evento — chamado internamente pelos services via BaseService
+    static toEvento({ userID, catalogoID, tipo, acao, descricao, justificativa, antes, depois }) {
         return {
-            catalogoID,
-            servidorID,
-            tipo          : tipo    || 'Backend',
-            nome          : nome    || acao,
-            acao          : acao    || null,
-            descricao     : descricao    || null,
-            justificativa : null,
-            ip            : req?.ip      || null,
-            userAgent     : req?.headers?.['user-agent'] || null,
-            contexto      : req?.dataOrigin || 'RemotePoC',
-            evidencia     : evidencia ? JSON.stringify(evidencia) : null,
-            criadoEm      : now,
-            criadoPor     : servidorID,
-            alteradoEm    : null,
-            alteradoPor   : null,
-            excluidoEm    : null,
-            excluidoPor   : null,
-            exclusaoFisica: 0
+            id           : crypto.randomUUID(),
+            userID,
+            catalogoID   : catalogoID || null,
+            dataHora     : new Date().toISOString().replace(/\.\d{3}Z$/, 'Z'),
+            tipo         : tipo || 'Backend',
+            acao,
+            descricao    : descricao    || null,
+            justificativa: justificativa || null,
+            diff         : JSON.stringify({ antes: antes ?? null, depois: depois ?? null })
         };
     }
 
     static validate(dto) {
         const errors = [];
-        if (!dto.catalogoID?.trim()) errors.push('catalogoID é obrigatório');
-        if (!dto.servidorID?.trim()) errors.push('servidorID é obrigatório');
+        if (!dto.userID?.trim()) errors.push('userID é obrigatório');
+        if (!dto.acao?.trim())   errors.push('acao é obrigatória');
         return errors;
     }
 }
