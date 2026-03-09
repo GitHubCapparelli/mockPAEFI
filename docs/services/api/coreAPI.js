@@ -1,9 +1,11 @@
 // docs/services/api/coreAPI.js
 import { Session, CurrentUserKey } from '../storage.js';
 
-// ── Configuração dinâmica da URL da API ──────────────────────────────
-const CONFIG_URL = '/mockPAEFI/api.config.json';
-let API_BASE     = 'http://localhost:3001';   // fallback local
+const CONFIG_URL  = '/mockPAEFI/api.config.json';
+const DATA_ORIGIN = 'RemotePoC';
+const NGROK_HDR   = 'ngrok-skip-browser-warning';
+
+let API_BASE = 'http://localhost:3001';
 
 async function loadConfig() {
     try {
@@ -17,10 +19,8 @@ async function loadConfig() {
 }
 await loadConfig();
 
-const DATA_ORIGIN = 'RemotePoC';
-const NGROK_HDR   = 'ngrok-skip-browser-warning';
-
 export class CoreAPI {
+
     initialized = true;
 
     constructor(config) {
@@ -30,83 +30,99 @@ export class CoreAPI {
 
     async Init() { return; }
 
-    // ── Headers padrão ────────────────────────────────────────────────
+    // ── Headers ───────────────────────────────────────────────────────────────
     #headers(extra = {}) {
-        return {
-            'Content-Type'   : 'application/json',
-            'X-User-Id'      : this.user?.id     || '',
-            'X-Data-Origin'  : this.user?.origin || DATA_ORIGIN,
-            [NGROK_HDR]      : 'true',
+        const user    = Session.Get(CurrentUserKey);
+        const headers = {
+            'Content-Type'              : 'application/json',
+            'X-User-Id'                 : user?.id          || '',
+            'X-Data-Origin'             : user?.origin      || DATA_ORIGIN, 
+            [NGROK_HDR]                 : 'true',
             ...extra
+        };
+        // Acrescentar JWT se disponível
+        const token = user?.token;
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+        return headers;
+    }
+
+    // ── Envelope de request (command) ─────────────────────────────────────────
+    #body(payload, tipo = 'Backend') {
+        const user = Session.Get(CurrentUserKey);
+        return {
+            metadata: {
+                tipo,
+                catalogoID: user?.catalogoID || undefined
+            },
+            payload
         };
     }
 
-    // ── Leitura ───────────────────────────────────────────────────────
+    // ── Queries ───────────────────────────────────────────────────────────────
     async GetAll() {
-        const r    = await fetch(`${API_BASE}/api/${this.entity}?pageSize=9999`,
-                         { headers: this.#headers() });
+        const r    = await fetch(
+            `${API_BASE}/api/${this.entity}?pageSize=9999`,
+            { headers: this.#headers() }
+        );
         const json = await r.json();
         return json.data || [];
     }
 
     async GetPaginated(request = {}) {
         const params = new URLSearchParams({
-            page     : request.page     || 1,
-            pageSize : request.pageSize || 5,
-            ...(request.filters         || {})
+            page    : request.page     || 1,
+            pageSize: request.pageSize || 5,
+            ...(request.filters || {})
         });
-        const r = await fetch(`${API_BASE}/api/${this.entity}?${params}`,
-                      { headers: this.#headers() });
+        const r = await fetch(
+            `${API_BASE}/api/${this.entity}?${params}`,
+            { headers: this.#headers() }
+        );
         if (!r.ok) return this.#errorFromResponse(r);
         return r.json();
     }
 
-    async Navigate(e, page) {
-        return this.GetPaginated({ ...this._lastRequest, page });
-    }
-
     async GetById(id) {
-        const r    = await fetch(`${API_BASE}/api/${this.entity}/${id}`,
-                         { headers: this.#headers() });
+        const r    = await fetch(
+            `${API_BASE}/api/${this.entity}/${id}`,
+            { headers: this.#headers() }
+        );
         const json = await r.json();
         return json.data ?? null;
     }
 
-    // ── Escrita ───────────────────────────────────────────────────────
-    async Create(request) {
-        const r = await fetch(`${API_BASE}/api/${this.entity}`, {
-            method  : 'POST',
-            headers : this.#headers(),
-            body    : JSON.stringify(request)
-        });
+    // ── Commands ──────────────────────────────────────────────────────────────
+    async Create(payload) {
+        const r = await fetch(
+            `${API_BASE}/api/${this.entity}`,
+            { method: 'POST', headers: this.#headers(), body: JSON.stringify(this.#body(payload)) }
+        );
         if (!r.ok) return this.#errorFromResponse(r);
         return r.json();
     }
 
-    async Update(request) {
-        const id = request.payload?.id;
-        const r  = await fetch(`${API_BASE}/api/${this.entity}/${id}`, {
-            method  : 'PUT',
-            headers : this.#headers(),
-            body    : JSON.stringify(request)
-        });
+    async Update(payload) {
+        const id = payload?.id;
+        const r  = await fetch(
+            `${API_BASE}/api/${this.entity}/${id}`,
+            { method: 'PUT', headers: this.#headers(), body: JSON.stringify(this.#body(payload)) }
+        );
         if (!r.ok) return this.#errorFromResponse(r);
         return r.json();
     }
 
-    async Delete(request) {
-        const id = request.payload?.data?.id || request.payload?.id;
-        const r  = await fetch(`${API_BASE}/api/${this.entity}/${id}`, {
-            method  : 'DELETE',
-            headers : this.#headers(),
-            body    : JSON.stringify(request)
-        });
+    async Delete(payload) {
+        const id = payload?.id;
+        const r  = await fetch(
+            `${API_BASE}/api/${this.entity}/${id}`,
+            { method: 'DELETE', headers: this.#headers(), body: JSON.stringify(this.#body(payload)) }
+        );
         if (r.status === 204) return true;
         if (!r.ok) return this.#errorFromResponse(r);
         return r.json();
     }
 
-    // ── Privado ───────────────────────────────────────────────────────
+    // ── Helper ────────────────────────────────────────────────────────────────
     async #errorFromResponse(r) {
         try {
             const json = await r.json();

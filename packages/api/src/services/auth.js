@@ -1,8 +1,8 @@
-// packages/api/src/services/AuthService.js
-import { Router }             from 'express';
-import jwt                    from 'jsonwebtoken';
-import { ConnectionFactory }  from '../connectionFactory.js';
-import { BaseService }        from './BaseService.js';
+// packages/api/src/services/auth.js
+import { Router }            from 'express';
+import jwt                   from 'jsonwebtoken';
+import { ConnectionFactory } from '../connectionFactory.js';
+import { BaseService }       from './BaseService.js';
 
 const JWT_SECRET  = process.env.JWT_SECRET  || 'mockpaefi-dev-secret-change-in-prod';
 const JWT_EXPIRES = process.env.JWT_EXPIRES || '8h';
@@ -19,14 +19,14 @@ export class AuthService {
 
     // ── Mapa de roles por função do usuário ───────────────────────────────────
     static #ROLE_MAP = {
-        Diretor           : { role: 'CentralAdmin',   scope: 'Central', admin: 'maintain', monitor: 'maintain', atender: 'view' },
-        SubSecretario     : { role: 'CentralAdmin',   scope: 'Central', admin: 'maintain', monitor: 'maintain', atender: 'view' },
-        Gerente           : { role: 'GerenteUnidade', scope: 'Unidade', admin: 'view',     monitor: 'maintain', atender: 'maintain' },
-        Coordenador       : { role: 'GerenteUnidade', scope: 'Unidade', admin: 'view',     monitor: 'maintain', atender: 'maintain' },
-        Assessor          : { role: 'CentralAdmin',   scope: 'Central', admin: 'maintain', monitor: 'maintain', atender: 'view' },
-        AssessorTecnico   : { role: 'CentralView',    scope: 'Central', admin: 'view',     monitor: 'view',     atender: 'view' },
-        AgenteSocial      : { role: 'AgenteSocial',   scope: 'Unidade', admin: 'none',     monitor: 'view',     atender: 'maintain' },
-        Especialista      : { role: 'Especialista',   scope: 'Unidade', admin: 'none',     monitor: 'view',     atender: 'maintain' },
+        Diretor         : { role: 'CentralAdmin',   scope: 'Central',  admin: 'maintain', monitor: 'maintain', atender: 'view'     },
+        SubSecretario   : { role: 'CentralAdmin',   scope: 'Central',  admin: 'maintain', monitor: 'maintain', atender: 'view'     },
+        Gerente         : { role: 'GerenteUnidade', scope: 'Unidade',  admin: 'view',     monitor: 'maintain', atender: 'maintain' },
+        Coordenador     : { role: 'GerenteUnidade', scope: 'Unidade',  admin: 'view',     monitor: 'maintain', atender: 'maintain' },
+        Assessor        : { role: 'CentralAdmin',   scope: 'Central',  admin: 'maintain', monitor: 'maintain', atender: 'view'     },
+        AssessorTecnico : { role: 'CentralView',    scope: 'Central',  admin: 'view',     monitor: 'view',     atender: 'view'     },
+        AgenteSocial    : { role: 'AgenteSocial',   scope: 'Unidade',  admin: 'none',     monitor: 'view',     atender: 'maintain' },
+        Especialista    : { role: 'Especialista',   scope: 'Unidade',  admin: 'none',     monitor: 'view',     atender: 'maintain' },
     };
 
     // ── Helpers privados ──────────────────────────────────────────────────────
@@ -39,13 +39,13 @@ export class AuthService {
             : 'NaoInformado';
 
         return {
-            unidadeID: usuario.unidadeID,
+            unidadeID   : usuario.unidadeID,
             siglaUnidade: unidade?.sigla || 'NaoInformado',
             hierarquia,
-            role: map.role,
-            scope: map.scope,
-            permissions: {
-                admin: map.admin,
+            role        : map.role,
+            scope       : map.scope,
+            permissions : {
+                admin  : map.admin,
                 monitor: map.monitor,
                 atender: map.atender
             }
@@ -54,43 +54,44 @@ export class AuthService {
 
     static #buildUsuarioConectado(usuario, context) {
         return {
-            id: usuario.id,
+            id  : usuario.id,
             info: {
-                funcao: usuario.funcao || 'NaoInformado',
-                cargo: usuario.cargo || 'NaoInformado',
+                funcao       : usuario.funcao        || 'NaoInformado',
+                cargo        : usuario.cargo         || 'NaoInformado',
                 especialidade: usuario.especialidade || 'NaoInformada',
-                nome: usuario.nome,
-                login: usuario.login,
-                matricula: usuario.matricula,
-                cpf: usuario.cpf || null,
-                criadoEm: usuario.criadoEm,
-                criadoPor: usuario.criadoPor,
-                alteradoEm: usuario.alteradoEm || null,
-                alteradoPor: usuario.alteradoPor || null,
-                excluidoEm: null,
-                excluidoPor: null
+                nome         : usuario.nome,
+                login        : usuario.login,
+                matricula    : usuario.matricula,
+                cpf          : usuario.cpf           || null,
+                criadoEm     : usuario.criadoEm,
+                criadoPor    : usuario.criadoPor,
+                alteradoEm   : usuario.alteradoEm   || null,
+                alteradoPor  : usuario.alteradoPor  || null,
+                excluidoEm   : null,
+                excluidoPor  : null
             },
             context
         };
     }
 
     // ── POST /api/auth/login ──────────────────────────────────────────────────
+    // Aceita { id } (fakeLogin via UUID) ou { login } (futura autenticação real)
     static #login = async (req, res) => {
         try {
-            const { login } = req.body || {};
-            if (!login) return BaseService.fail(res, 'Campo "login" obrigatório.', 400);
+            const { id, login } = req.body || {};
+            if (!id && !login) return BaseService.fail(res, 'Informe "id" ou "login".', 400);
 
-            const db = ConnectionFactory.get(req.dataOrigin || 'RemotePoC');
+            const db    = ConnectionFactory.get(req.dataOrigin || 'RemotePoC');
+            const sql   = id
+                ? `SELECT * FROM usuariosServidores WHERE id = ?    AND excluidoEm IS NULL`
+                : `SELECT * FROM usuariosServidores WHERE login = ? AND excluidoEm IS NULL`;
+            const param = id || login;
 
             const usuario = await new Promise((resolve, reject) =>
-                db.get(
-                    `SELECT * FROM usuariosServidores WHERE login = ? AND excluidoEm IS NULL`,
-                    [login],
-                    (err, row) => err ? reject(err) : resolve(row)
-                )
+                db.get(sql, [param], (err, row) => err ? reject(err) : resolve(row))
             );
 
-            if (!usuario) return BaseService.fail(res, `Usuário "${login}" não encontrado.`, 404);
+            if (!usuario) return BaseService.fail(res, 'Usuário não encontrado.', 404);
 
             const unidade = await new Promise((resolve, reject) =>
                 db.get(
@@ -100,7 +101,7 @@ export class AuthService {
                 )
             );
 
-            const context = AuthService.#resolveContext(usuario, unidade);
+            const context          = AuthService.#resolveContext(usuario, unidade);
             const usuarioConectado = AuthService.#buildUsuarioConectado(usuario, context);
 
             const token = jwt.sign(
@@ -110,28 +111,26 @@ export class AuthService {
             );
 
             return res.status(200).json({
-                data: usuarioConectado,
+                data      : usuarioConectado,
                 pagination: null,
                 token,
-                error: null
+                error     : null
             });
 
         } catch (e) {
-            console.error(`[${new Date().toISOString()}]`, e.message);
+            console.error(`[${BaseService.now()}] [AuthService]`, e.message);
             return BaseService.fail(res, 'Erro interno do servidor.', 500);
         }
     };
 
     // ── POST /api/auth/logout ─────────────────────────────────────────────────
-    // JWT é stateless — logout é responsabilidade da UI (descartar token).
-    // Este endpoint existe para padronização e futura blacklist.
     static #logout = async (req, res) => {
         return res.status(200).json({
             data: null, pagination: null, token: null, error: null
         });
     };
 
-    // ── Verificação de token (usada pelo AuthMiddleware) ───────────────────────
+    // ── Verificação de token (usada pelo AuthMiddleware) ──────────────────────
     static verify(token) {
         try {
             return { ok: true, payload: jwt.verify(token, JWT_SECRET) };
