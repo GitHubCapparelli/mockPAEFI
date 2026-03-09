@@ -1,12 +1,13 @@
 // packages/api/src/services/unidades.js
-import { Router }              from 'express';
-import { UnidadesRepository }  from '../../../data/repositories/unidades.js';
-import { HistoricoService }    from './historico.js';
+import { Router }       from 'express';
+import { BaseService }  from './BaseService.js';
+import { UnidadeDTO }   from '../dto/UnidadeDTO.js';
+import { HistoricoDTO } from '../dto/HistoricoDTO.js';
 
 export class UnidadesService {
     static router() {
         const r = Router();
-        r.get('/lookup', UnidadesService.#lookup);    // ANTES de /:id !
+        r.get('/lookup', UnidadesService.#lookup);
         r.get('/',       UnidadesService.#listar);
         r.get('/:id',    UnidadesService.#obter);
         r.post('/',      UnidadesService.#criar);
@@ -15,124 +16,160 @@ export class UnidadesService {
         return r;
     }
 
-    // GET /api/unidades?page=1&pageSize=5&funcao=Coordenacao
-    static #listar(req, res, next) {
+    // ── GET /api/unidades?page=1&pageSize=5 ───────────────────────────────────
+    static #listar = async (req, res) => {
         try {
-            const { page = 1, pageSize = 5, ...filters } = req.query;
-            const repo = new UnidadesRepository(req.db);
-            res.json(repo.findAll({ filters, page: +page, pageSize: +pageSize }));
-        } catch (err) { next(err); }
-    }
+            const { page = 1, pageSize = 5 } = req.query;
+            const offset = (Number(page) - 1) * Number(pageSize);
 
-    // GET /api/unidades/lookup
-    static #lookup(req, res, next) {
+            const [rows, countRow] = await Promise.all([
+                BaseService.query(req.db,
+                    `SELECT * FROM unidades
+                     WHERE excluidoEm IS NULL
+                     ORDER BY sigla LIMIT ? OFFSET ?`,
+                    [Number(pageSize), offset]),
+                BaseService.queryOne(req.db,
+                    `SELECT COUNT(*) as total FROM unidades WHERE excluidoEm IS NULL`)
+            ]);
+
+            return BaseService.ok(res, UnidadeDTO.fromRows(rows), {
+                page        : Number(page),
+                pageSize    : Number(pageSize),
+                totalRecords: countRow.total,
+                totalPages  : Math.ceil(countRow.total / Number(pageSize))
+            });
+        } catch (e) { return UnidadesService.#erro(res, e); }
+    };
+
+    // ── GET /api/unidades/lookup ──────────────────────────────────────────────
+    static #lookup = async (req, res) => {
         try {
-            res.json({ data: new UnidadesRepository(req.db).findAllForLookup() });
-        } catch (err) { next(err); }
-    }
+            const rows = await BaseService.query(req.db,
+                `SELECT id, sigla, funcao FROM unidades
+                 WHERE excluidoEm IS NULL ORDER BY sigla`);
+            return BaseService.ok(res, rows);
+        } catch (e) { return UnidadesService.#erro(res, e); }
+    };
 
-    // GET /api/unidades/:id
-    static #obter(req, res, next) {
+    // ── GET /api/unidades/:id ─────────────────────────────────────────────────
+    static #obter = async (req, res) => {
         try {
-            const item = new UnidadesRepository(req.db).findById(req.params.id);
-            if (!item) return res.status(404).json({ error: 'Unidade não encontrada.' });
-            res.json({ data: item });
-        } catch (err) { next(err); }
-    }
+            const row = await BaseService.queryOne(req.db,
+                `SELECT * FROM unidades WHERE id = ? AND excluidoEm IS NULL`,
+                [req.params.id]);
+            if (!row) return BaseService.fail(res, 'Unidade não encontrada.', 404);
+            return BaseService.ok(res, UnidadeDTO.fromRow(row));
+        } catch (e) { return UnidadesService.#erro(res, e); }
+    };
 
-    // POST /api/unidades
-    static #criar(req, res, next) {
+    // ── POST /api/unidades ────────────────────────────────────────────────────
+    static #criar = async (req, res) => {
         try {
-            const { metadata, payload } = req.body;
-            const repo                  = new UnidadesRepository(req.db);
+            const v = BaseService.validateRequest(req.body);
+            if (!v.ok) return BaseService.fail(res, v.error, 422);
 
-            if (repo.isSiglaDuplicada(payload.sigla))
-                return res.status(409).json({ error: 'Sigla já cadastrada.' });
+            const dto    = UnidadeDTO.toInsert(req.body.payload || {}, req.currentUser.id);
+            const errors = UnidadeDTO.validate(dto);
+            if (errors.length) return BaseService.fail(res, errors.join('; '), 422);
 
-            const row = {
-                id             : crypto.randomUUID(),
-                criadoEm       : UnidadesService.#now(),
-                criadoPor      : req.currentUser.id,   // .id corrigido
-                exclusaoFisica : 0,
-                ...payload
-            };
-            const result = repo.insert(row);
+            await BaseService.inTransaction(req.db, async (db) => {
+                await BaseService.run(db,
+                    `INSERT INTO unidades
+                     (id, hierarquiaID, sigla, nome, funcao, ibgeId,
+                      criadoEm, criadoPor, alteradoEm, alteradoPor,
+                      excluidoEm, excluidoPor, exclusaoFisica)
+                     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+                    [dto.id, dto.hierarquiaID, dto.sigla, dto.nome,
+                     dto.funcao, dto.ibgeId, dto.criadoEm, dto.criadoPor,
+                     null, null, null, null, 0]);
 
-            HistoricoService.registrarEvento(req.db, {
-                usuarioID   : req.currentUser.id,
-                catalogoID  : metadata?.catalogoID,
-                sessionId   : req.headers['x-session-id'],
-                tipo        : metadata?.tipo || 'Frontend',
-                acao        : 'create',
-                descricao   : `Unidade criada: ${row.sigla}`,
-                diff        : { before: null, after: result }
+                await BaseService.registrarEvento(db, HistoricoDTO.toEvento({
+                    userID    : req.currentUser.id,
+                    catalogoID: null,
+                    tipo      : 'Backend',
+                    acao      : 'CREATE',
+                    descricao : `Unidade "${dto.sigla}" criada.`,
+                    antes     : null,
+                    depois    : dto
+                }));
             });
 
-            res.status(201).json({ data: result });
-        } catch (err) { next(err); }
-    }
+            return BaseService.ok(res, UnidadeDTO.fromRow(dto), null, 201);
+        } catch (e) { return UnidadesService.#erro(res, e); }
+    };
 
-    // PUT /api/unidades/:id
-    static #atualizar(req, res, next) {
+    // ── PUT /api/unidades/:id ─────────────────────────────────────────────────
+    static #atualizar = async (req, res) => {
         try {
-            const { metadata, payload } = req.body;
-            const repo   = new UnidadesRepository(req.db);
-            const before = repo.findById(req.params.id);
+            const v = BaseService.validateRequest(req.body);
+            if (!v.ok) return BaseService.fail(res, v.error, 422);
 
-            if (!before) return res.status(404).json({ error: 'Unidade não encontrada.' });
+            const existing = await BaseService.queryOne(req.db,
+                `SELECT * FROM unidades WHERE id = ? AND excluidoEm IS NULL`,
+                [req.params.id]);
+            if (!existing) return BaseService.fail(res, 'Unidade não encontrada.', 404);
 
-            if (repo.isSiglaDuplicada(payload.sigla, req.params.id))
-                return res.status(409).json({ error: 'Sigla já cadastrada.' });
+            const dto    = UnidadeDTO.toUpdate(existing, req.body.payload || {}, req.currentUser.id);
+            const errors = UnidadeDTO.validate(dto);
+            if (errors.length) return BaseService.fail(res, errors.join('; '), 422);
 
-            const row = {
-                ...payload,
-                id: req.params.id,
-                alteradoEm: UnidadesService.#now(),
-                alteradoPor: req.currentUser.id
-            };
-            const result = repo.update(row);
+            await BaseService.inTransaction(req.db, async (db) => {
+                await BaseService.run(db,
+                    `UPDATE unidades
+                     SET hierarquiaID=?, sigla=?, nome=?, funcao=?, ibgeId=?,
+                         alteradoEm=?, alteradoPor=?
+                     WHERE id=?`,
+                    [dto.hierarquiaID, dto.sigla, dto.nome, dto.funcao, dto.ibgeId,
+                     dto.alteradoEm, dto.alteradoPor, dto.id]);
 
-            HistoricoService.registrarEvento(req.db, {
-                usuarioID   : req.currentUser.id,
-                catalogoID  : metadata?.catalogoID,
-                sessionId   : req.headers['x-session-id'],
-                tipo        : metadata?.tipo || 'Frontend',
-                acao        : 'update',
-                descricao   : `Unidade atualizada: ${row.sigla}`,
-                diff        : { before, after: result }
+                await BaseService.registrarEvento(db, HistoricoDTO.toEvento({
+                    userID    : req.currentUser.id,
+                    catalogoID: null,
+                    tipo      : 'Backend',
+                    acao      : 'UPDATE',
+                    descricao : `Unidade "${dto.sigla}" atualizada.`,
+                    antes     : UnidadeDTO.fromRow(existing),
+                    depois    : dto
+                }));
             });
 
-            res.json({ data: result });
-        } catch (err) { next(err); }
-    }
+            return BaseService.ok(res, UnidadeDTO.fromRow(dto));
+        } catch (e) { return UnidadesService.#erro(res, e); }
+    };
 
-    // DELETE /api/unidades/:id
-    static #excluir(req, res, next) {
+    // ── DELETE /api/unidades/:id ──────────────────────────────────────────────
+    static #excluir = async (req, res) => {
         try {
-            const { metadata } = req.body || {};
-            const repo         = new UnidadesRepository(req.db);
-            const before       = repo.findById(req.params.id);
+            const existing = await BaseService.queryOne(req.db,
+                `SELECT * FROM unidades WHERE id = ? AND excluidoEm IS NULL`,
+                [req.params.id]);
+            if (!existing) return BaseService.fail(res, 'Unidade não encontrada.', 404);
 
-            if (!before) return res.status(404).json({ error: 'Unidade não encontrada.' });
+            const agora = BaseService.now();
 
-            const now = UnidadesService.#now();
-            repo.softDelete(req.params.id, req.currentUser.id, now);
+            await BaseService.inTransaction(req.db, async (db) => {
+                await BaseService.run(db,
+                    `UPDATE unidades SET excluidoEm=?, excluidoPor=? WHERE id=?`,
+                    [agora, req.currentUser.id, existing.id]);
 
-            HistoricoService.registrarEvento(req.db, {
-                usuarioID   : req.currentUser.id,
-                catalogoID  : metadata?.catalogoID,
-                sessionId   : req.headers['x-session-id'],
-                tipo        : metadata?.tipo || 'Frontend',
-                acao        : 'delete',
-                descricao   : `Unidade excluída: ${before.sigla}`,
-                diff        : { before, after: null }
+                await BaseService.registrarEvento(db, HistoricoDTO.toEvento({
+                    userID    : req.currentUser.id,
+                    catalogoID: null,
+                    tipo      : 'Backend',
+                    acao      : 'DELETE',
+                    descricao : `Unidade "${existing.sigla}" excluída.`,
+                    antes     : UnidadeDTO.fromRow(existing),
+                    depois    : null
+                }));
             });
 
-            res.status(204).send();
-        } catch (err) { next(err); }
-    }
+            return res.status(204).send();
+        } catch (e) { return UnidadesService.#erro(res, e); }
+    };
 
-    static #now() {
-        return new Date().toISOString().replace(/\.\d{3}Z$/, 'Z');
+    // ── Error handler local ───────────────────────────────────────────────────
+    static #erro(res, e) {
+        console.error(`[${BaseService.now()}] [UnidadesService]`, e.message);
+        return BaseService.fail(res, 'Erro interno do servidor.', 500);
     }
 }

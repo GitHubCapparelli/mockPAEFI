@@ -12,7 +12,7 @@ export class AuthService {
     // ── Roteamento ────────────────────────────────────────────────────────────
     static router() {
         const r = Router();
-        r.post('/login', AuthService.#login);
+        r.post('/login',  AuthService.#login);
         r.post('/logout', AuthService.#logout);
         return r;
     }

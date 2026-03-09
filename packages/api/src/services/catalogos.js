@@ -1,11 +1,13 @@
 // packages/api/src/services/catalogos.js
-import { Router }               from 'express';
-import { CatalogosRepository }  from '../../../data/repositories/catalogos.js';
-import { HistoricoService }     from './historico.js';
+import { Router }       from 'express';
+import { BaseService }  from './BaseService.js';
+import { CatalogoDTO }  from '../dto/CatalogoDTO.js';
+import { HistoricoDTO } from '../dto/HistoricoDTO.js';
 
 export class CatalogosService {
     static router() {
         const r = Router();
+        r.get('/lookup', CatalogosService.#lookup);
         r.get('/',       CatalogosService.#listar);
         r.get('/:id',    CatalogosService.#obter);
         r.post('/',      CatalogosService.#criar);
@@ -14,114 +16,159 @@ export class CatalogosService {
         return r;
     }
 
-    // GET /api/catalogos?page=1&pageSize=5
-    static #listar(req, res, next) {
+    // ── GET /api/catalogos?page=1&pageSize=5 ──────────────────────────────────
+    static #listar = async (req, res) => {
         try {
             const { page = 1, pageSize = 5 } = req.query;
-            const repo = new CatalogosRepository(req.db);
-            res.json(repo.findAll({ page: +page, pageSize: +pageSize }));
-        } catch (err) { next(err); }
-    }
+            const offset = (Number(page) - 1) * Number(pageSize);
 
-    // GET /api/catalogos/:id
-    static #obter(req, res, next) {
+            const [rows, countRow] = await Promise.all([
+                BaseService.query(req.db,
+                    `SELECT * FROM catalogos
+                     WHERE excluidoEm IS NULL
+                     ORDER BY nome LIMIT ? OFFSET ?`,
+                    [Number(pageSize), offset]),
+                BaseService.queryOne(req.db,
+                    `SELECT COUNT(*) as total FROM catalogos WHERE excluidoEm IS NULL`)
+            ]);
+
+            return BaseService.ok(res, CatalogoDTO.fromRows(rows), {
+                page        : Number(page),
+                pageSize    : Number(pageSize),
+                totalRecords: countRow.total,
+                totalPages  : Math.ceil(countRow.total / Number(pageSize))
+            });
+        } catch (e) { return CatalogosService.#erro(res, e); }
+    };
+
+    // ── GET /api/catalogos/lookup ─────────────────────────────────────────────
+    static #lookup = async (req, res) => {
         try {
-            const item = new CatalogosRepository(req.db).findById(req.params.id);
-            if (!item) return res.status(404).json({ error: 'Catálogo não encontrado.' });
-            res.json({ data: item });
-        } catch (err) { next(err); }
-    }
+            const rows = await BaseService.query(req.db,
+                `SELECT id, nome FROM catalogos
+                 WHERE excluidoEm IS NULL ORDER BY nome`);
+            return BaseService.ok(res, rows);
+        } catch (e) { return CatalogosService.#erro(res, e); }
+    };
 
-    // POST /api/catalogos  body: { metadata, payload }
-    static #criar(req, res, next) {
+    // ── GET /api/catalogos/:id ────────────────────────────────────────────────
+    static #obter = async (req, res) => {
         try {
-            const { metadata, payload } = req.body;
-            const repo                  = new CatalogosRepository(req.db);
+            const row = await BaseService.queryOne(req.db,
+                `SELECT * FROM catalogos WHERE id = ? AND excluidoEm IS NULL`,
+                [req.params.id]);
+            if (!row) return BaseService.fail(res, 'Catálogo não encontrado.', 404);
+            return BaseService.ok(res, CatalogoDTO.fromRow(row));
+        } catch (e) { return CatalogosService.#erro(res, e); }
+    };
 
-            if (repo.isNomeDuplicado(payload.nome))
-                return res.status(409).json({ error: 'Nome de catálogo já cadastrado.' });
+    // ── POST /api/catalogos ───────────────────────────────────────────────────
+    static #criar = async (req, res) => {
+        try {
+            const v = BaseService.validateRequest(req.body);
+            if (!v.ok) return BaseService.fail(res, v.error, 422);
 
-            const row = {
-                id             : crypto.randomUUID(),
-                criadoEm       : CatalogosService.#now(),
-                criadoPor      : req.currentUser.id,
-                exclusaoFisica : 0,
-                ...payload
-            };
-            const result = repo.insert(row);
+            const dto    = CatalogoDTO.toInsert(req.body.payload || {}, req.currentUser.id);
+            const errors = CatalogoDTO.validate(dto);
+            if (errors.length) return BaseService.fail(res, errors.join('; '), 422);
 
-            HistoricoService.registrarEvento(req.db, {
-                usuarioID   : req.currentUser.id,
-                catalogoID  : metadata?.catalogoID,
-                sessionId   : req.headers['x-session-id'],
-                tipo        : metadata?.tipo || 'Frontend',
-                acao        : 'create',
-                descricao   : `Catálogo criada: ${row.sigla}`,
-                diff        : { before: null, after: result }
+            await BaseService.inTransaction(req.db, async (db) => {
+                await BaseService.run(db,
+                    `INSERT INTO catalogos
+                     (id, nome, versao, finalidade,
+                      criadoEm, criadoPor, alteradoEm, alteradoPor,
+                      excluidoEm, excluidoPor, exclusaoFisica)
+                     VALUES (?,?,?,?,?,?,?,?,?,?,?)`,
+                    [dto.id, dto.nome, dto.versao, dto.finalidade,
+                     dto.criadoEm, dto.criadoPor, null, null, null, null, 0]);
+
+                await BaseService.registrarEvento(db, HistoricoDTO.toEvento({
+                    userID    : req.currentUser.id,
+                    catalogoID: dto.id,
+                    tipo      : 'Backend',
+                    acao      : 'CREATE',
+                    descricao : `Catálogo "${dto.nome}" criado.`,
+                    antes     : null,
+                    depois    : dto
+                }));
             });
 
-            res.status(201).json({ data: result });
-        } catch (err) { next(err); }
-    }
+            return BaseService.ok(res, CatalogoDTO.fromRow(dto), null, 201);
+        } catch (e) { return CatalogosService.#erro(res, e); }
+    };
 
-    // PUT /api/catalogos/:id  body: { metadata, payload }
-    static #atualizar(req, res, next) {
+    // ── PUT /api/catalogos/:id ────────────────────────────────────────────────
+    static #atualizar = async (req, res) => {
         try {
-            const { payload } = req.body;
-            const repo        = new CatalogosRepository(req.db);
+            const v = BaseService.validateRequest(req.body);
+            if (!v.ok) return BaseService.fail(res, v.error, 422);
 
-            if (repo.isNomeDuplicado(payload.nome, req.params.id))
-                return res.status(409).json({ error: 'Nome de catálogo já cadastrado.' });
+            const existing = await BaseService.queryOne(req.db,
+                `SELECT * FROM catalogos WHERE id = ? AND excluidoEm IS NULL`,
+                [req.params.id]);
+            if (!existing) return BaseService.fail(res, 'Catálogo não encontrado.', 404);
 
-            const row = {
-                ...payload,
-                id          : req.params.id,
-                alteradoEm  : CatalogosService.#now(),
-                alteradoPor : req.currentUser.id
-            };
-            const result = repo.update(row);
+            const dto    = CatalogoDTO.toUpdate(existing, req.body.payload || {}, req.currentUser.id);
+            const errors = CatalogoDTO.validate(dto);
+            if (errors.length) return BaseService.fail(res, errors.join('; '), 422);
 
-            HistoricoService.registrarEvento(req.db, {
-                usuarioID   : req.currentUser.id,
-                catalogoID  : metadata?.catalogoID,
-                sessionId   : req.headers['x-session-id'],
-                tipo        : metadata?.tipo || 'Frontend',
-                acao        : 'update',
-                descricao   : `Catálogo atualizado: ${row.sigla}`,
-                diff        : { before, after: result }
+            await BaseService.inTransaction(req.db, async (db) => {
+                await BaseService.run(db,
+                    `UPDATE catalogos
+                     SET nome=?, versao=?, finalidade=?, alteradoEm=?, alteradoPor=?
+                     WHERE id=?`,
+                    [dto.nome, dto.versao, dto.finalidade,
+                     dto.alteradoEm, dto.alteradoPor, dto.id]);
+
+                await BaseService.registrarEvento(db, HistoricoDTO.toEvento({
+                    userID    : req.currentUser.id,
+                    catalogoID: dto.id,
+                    tipo      : 'Backend',
+                    acao      : 'UPDATE',
+                    descricao : `Catálogo "${dto.nome}" atualizado.`,
+                    antes     : CatalogoDTO.fromRow(existing),
+                    depois    : dto
+                }));
             });
 
-            res.json({ data: result });
-        } catch (err) { next(err); }
-    }
+            return BaseService.ok(res, CatalogoDTO.fromRow(dto));
+        } catch (e) { return CatalogosService.#erro(res, e); }
+    };
 
-    // DELETE /api/catalogos/:id
-    static #excluir(req, res, next) {
+    // ── DELETE /api/catalogos/:id ─────────────────────────────────────────────
+    static #excluir = async (req, res) => {
         try {
-            const { metadata } = req.body || {};
-            const repo         = new CatalogosRepository(req.db);
-            const before       = repo.findById(req.params.id);
+            const existing = await BaseService.queryOne(req.db,
+                `SELECT * FROM catalogos WHERE id = ? AND excluidoEm IS NULL`,
+                [req.params.id]);
+            if (!existing) return BaseService.fail(res, 'Catálogo não encontrado.', 404);
 
-            if (!before) return res.status(404).json({ error: 'Catálogo não encontrado.' });
+            const agora = BaseService.now();
 
-            const now = UnidadesService.#now();
-            repo.softDelete(req.params.id, req.currentUser.id, now);
+            await BaseService.inTransaction(req.db, async (db) => {
+                await BaseService.run(db,
+                    `UPDATE catalogos
+                     SET excluidoEm=?, excluidoPor=? WHERE id=?`,
+                    [agora, req.currentUser.id, existing.id]);
 
-            HistoricoService.registrarEvento(req.db, {
-                usuarioID   : req.currentUser.id,
-                catalogoID  : metadata?.catalogoID,
-                sessionId   : req.headers['x-session-id'],
-                tipo        : metadata?.tipo || 'Frontend',
-                acao        : 'delete',
-                descricao   : `Catálogo excluído: ${before.nome}`,
-                diff        : { before, after: null }
+                await BaseService.registrarEvento(db, HistoricoDTO.toEvento({
+                    userID    : req.currentUser.id,
+                    catalogoID: existing.id,
+                    tipo      : 'Backend',
+                    acao      : 'DELETE',
+                    descricao : `Catálogo "${existing.nome}" excluído.`,
+                    antes     : CatalogoDTO.fromRow(existing),
+                    depois    : null
+                }));
             });
 
-            res.status(204).send();
-        } catch (err) { next(err); }
-    }
+            return res.status(204).send();
+        } catch (e) { return CatalogosService.#erro(res, e); }
+    };
 
-    static #now() {
-        return new Date().toISOString().replace(/\.\d{3}Z$/, 'Z');
+    // ── Error handler local ───────────────────────────────────────────────────
+    static #erro(res, e) {
+        console.error(`[${BaseService.now()}] [CatalogosService]`, e.message);
+        return BaseService.fail(res, 'Erro interno do servidor.', 500);
     }
 }
