@@ -4,4 +4,3 @@
 
 mockPAEFI-api  →  http://localhost:3001
 Health check   →  http://localhost:3001/health
-^C^C
