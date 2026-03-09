@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title"  : "UsuarioConectado",
+  "type"   : "object",
+  "required": ["id", "info", "context"],
+  "properties": {
+    "id": { "type": "string", "format": "uuid" },
+    "info": {
+      "type"    : "object",
+      "required": ["nome", "login", "matricula"],
+      "properties": {
+        "funcao"       : { "type": "string" },
+        "cargo"        : { "type": "string" },
+        "especialidade": { "type": "string" },
+        "nome"         : { "type": "string" },
+        "login"        : { "type": "string" },
+        "matricula"    : { "type": "string" },
+        "cpf"          : { "type": "string" },
+        "criadoEm"     : { "type": "string", "format": "date-time" },
+        "criadoPor"    : { "type": "string", "format": "uuid" },
+        "alteradoEm"   : { "type": ["string", "null"] },
+        "alteradoPor"  : { "type": ["string", "null"] },
+        "excluidoEm"   : { "type": ["string", "null"] },
+        "excluidoPor"  : { "type": ["string", "null"] }
+      }
+    },
+    "context": {
+      "type"    : "object",
+      "required": ["unidadeID", "role", "scope", "permissions"],
+      "properties": {
+        "unidadeID"   : { "type": "string", "format": "uuid" },
+        "siglaUnidade": { "type": "string" },
+        "hierarquia"  : { "type": "string" },
+        "role"        : { "type": "string",
+                          "enum": ["CentralAdmin","CentralView","GerenteUnidade","AgenteSocial","Especialista","ReadOnly"] },
+        "scope"       : { "type": "string",
+                          "enum": ["Central","Unidade","Restrito"] },
+        "permissions" : {
+          "type": "object",
+          "properties": {
+            "admin"  : { "type": "string", "enum": ["maintain","view","none"] },
+            "monitor": { "type": "string", "enum": ["maintain","view","none"] },
+            "atender": { "type": "string", "enum": ["maintain","view","none"] }
+          }
+        }
+      }
+    }
+  }
+}
