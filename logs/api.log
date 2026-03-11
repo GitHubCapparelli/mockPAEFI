@@ -1,6 +1,0 @@
-
-> mockpaefi-api@0.1.0 dev
-> node --watch src/server.js
-
-mockPAEFI-api  →  http://localhost:3001
-Health check   →  http://localhost:3001/health
