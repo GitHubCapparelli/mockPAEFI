@@ -1,8 +1,8 @@
 // packages/api/src/services/unidades.js
 import { Router }       from 'express';
-import { BaseService }  from './BaseService.js';
-import { UnidadeDTO }   from '../dto/UnidadeDTO.js';
-import { HistoricoDTO } from '../dto/HistoricoDTO.js';
+import { BaseService }  from './_baseService.js';
+import { UnidadeDTO }   from '../dto/unidade.js';
+import { HistoricoDTO } from '../dto/historico.js';
 
 export class UnidadesService {
     static router() {

@@ -1,9 +1,8 @@
 // packages/api/src/services/usuariosServidores.js
-// packages/api/src/services/UsuariosServidoresService.js
 import { Router }             from 'express';
-import { BaseService }        from './BaseService.js';
-import { UsuarioServidorDTO } from '../dto/UsuarioServidorDTO.js';
-import { HistoricoDTO }       from '../dto/HistoricoDTO.js';
+import { BaseService }        from './_baseService.js';
+import { UsuarioServidorDTO } from '../dto/usuarioServidor.js';
+import { HistoricoDTO }       from '../dto/historico.js';
 
 export class UsuariosServidoresService {
     static router() {

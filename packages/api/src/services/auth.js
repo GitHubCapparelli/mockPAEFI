@@ -1,8 +1,8 @@
 // packages/api/src/services/auth.js
 import { Router }            from 'express';
 import jwt                   from 'jsonwebtoken';
+import { BaseService }       from './_baseService.js';
 import { ConnectionFactory } from '../connectionFactory.js';
-import { BaseService }       from './BaseService.js';
 
 const JWT_SECRET  = process.env.JWT_SECRET  || 'mockpaefi-dev-secret-change-in-prod';
 const JWT_EXPIRES = process.env.JWT_EXPIRES || '8h';

@@ -1,13 +1,16 @@
 @echo off
+chcp 65001 > nul
 echo ============================================
-echo  mockPAEFI - Parando servicos
+echo  mockPAEFI - Encerrando serviços
 echo ============================================
 echo.
-echo Parando API (node)...
-taskkill /f /im node.exe > nul 2>&1
-echo Parando ngrok...
+echo Fechando tunel...
 taskkill /f /im ngrok.exe > nul 2>&1
+echo Finalizando APIs...
+taskkill /f /im node.exe > nul 2>&1
 echo.
-echo Servicos encerrados.
+echo Serviços encerrados.
 echo ============================================
+echo [%date% %time%] 
+echo.
 pause

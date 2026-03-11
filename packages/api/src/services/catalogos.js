@@ -1,8 +1,8 @@
 // packages/api/src/services/catalogos.js
 import { Router }       from 'express';
-import { BaseService }  from './BaseService.js';
-import { CatalogoDTO }  from '../dto/CatalogoDTO.js';
-import { HistoricoDTO } from '../dto/HistoricoDTO.js';
+import { BaseService }  from './_baseService.js';
+import { CatalogoDTO }  from '../dto/catalogo.js';
+import { HistoricoDTO } from '../dto/historico.js';
 
 export class CatalogosService {
     static router() {

@@ -6,7 +6,7 @@ import { OriginMiddleware } from './middleware/origin.js';
 import { AuthMiddleware }   from './middleware/auth.js';
 import { ErrorHandler }     from './middleware/errorHandler.js';
 
-import { AuthService }      from './services/authService.js';
+import { AuthService }      from './services/auth.js';
 import { ServiceRegistry }  from './services/_registry.js';
 
 const app  = express();

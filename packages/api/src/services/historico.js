@@ -1,7 +1,7 @@
 // packages/api/src/services/historico.js
 import { Router }       from 'express';
-import { BaseService }  from './BaseService.js';
-import { HistoricoDTO } from '../dto/HistoricoDTO.js';
+import { BaseService }  from './_baseService.js';
+import { HistoricoDTO } from '../dto/historico.js';
 
 export class HistoricoService {
     static router() {

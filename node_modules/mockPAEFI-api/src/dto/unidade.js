@@ -1,0 +1,62 @@
+// packages/api/src/dto/unidade.js
+import { BaseDTO } from './_baseDTO.js';
+export class UnidadeDTO extends BaseDTO {
+
+    static fromRow(row) {
+        if (!row) return null;
+        return {
+            id            : row.id,
+            hierarquiaID  : row.hierarquiaID  || null,
+            sigla         : row.sigla,
+            nome          : row.nome          || null,
+            funcao        : row.funcao        || null,
+            ibgeId        : row.ibgeId        || null,
+            criadoEm      : row.criadoEm,
+            criadoPor     : row.criadoPor,
+            alteradoEm    : row.alteradoEm    || null,
+            alteradoPor   : row.alteradoPor   || null,
+            excluidoEm    : row.excluidoEm    || null,
+            excluidoPor   : row.excluidoPor   || null,
+            exclusaoFisica: row.exclusaoFisica ?? 0
+        };
+    }
+
+    static fromRows(rows) {
+        return (rows || []).map(UnidadeDTO.fromRow);
+    }
+
+    static toInsert(payload, userId) {
+        const r = BaseDTO.newRecord(payload, userId);
+        return {
+            id            : r.id,
+            hierarquiaID  : r.hierarquiaID  || null,
+            sigla         : r.sigla,
+            nome          : r.nome          || null,
+            funcao        : r.funcao        || null,
+            ibgeId        : r.ibgeId        || null,
+            criadoEm      : r.criadoEm,
+            criadoPor     : r.criadoPor,
+            alteradoEm    : null,
+            alteradoPor   : null,
+            excluidoEm    : null,
+            excluidoPor   : null,
+            exclusaoFisica: 0
+        };
+    }
+
+    static toUpdate(existing, payload, userId) {
+        return BaseDTO.updatedRecord(existing, {
+            hierarquiaID: payload.hierarquiaID ?? existing.hierarquiaID,
+            sigla       : payload.sigla        ?? existing.sigla,
+            nome        : payload.nome         ?? existing.nome,
+            funcao      : payload.funcao       ?? existing.funcao,
+            ibgeId      : payload.ibgeId       ?? existing.ibgeId
+        }, userId);
+    }
+
+    static validate(dto) {
+        const errors = [];
+        if (!dto.sigla?.trim()) errors.push('sigla é obrigatória');
+        return errors;
+    }
+}
